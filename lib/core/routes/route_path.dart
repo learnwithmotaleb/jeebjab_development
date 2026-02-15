@@ -9,6 +9,16 @@ class RoutePath {
   static const String signup = '/SignupScreen';
   static const String customerVerification = '/CustomerVerificationScreen';
   static const String completeVarification = '/CompleteVarificationScreen';
+  static const String vehicleType = '/ChooseVehicleTypeScreen';
+  static const String vehicleInformation = '/VehicleInformationScreen';
+  static const String licenseNumber = '/LicenseNumberScreen';
+  static const String uploadDocument = '/UploadDocumentScreen';
+  static const String driverSignup = '/DriverSignupScreen';
+  static const String driverVerification = '/DriverVerificationScreen';
+  static const String selectCompany = '/SelectCompanyScreen';
+  static const String forget = '/ForgetScreen';
+  static const String reset = '/ResetPasswordScreen';
+  static const String welcome = '/WelcomeScreen';
 
 
 

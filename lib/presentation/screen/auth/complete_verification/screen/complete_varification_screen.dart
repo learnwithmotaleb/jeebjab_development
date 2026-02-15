@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
 
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../core/responsive_layout/responsive_layout.dart';
@@ -77,7 +80,9 @@ class _CompleteVarificationScreenState
                   width: double.infinity,
                   child: AppButton(
                     label: AppStrings.continueButton.tr,
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(RoutePath.vehicleType);
+                    },
                   ),
                 ),
               ],

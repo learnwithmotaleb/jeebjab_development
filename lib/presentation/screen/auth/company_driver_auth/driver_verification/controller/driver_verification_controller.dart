@@ -2,13 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/widget/show_snackbar.dart';
 
-import '../../../../../core/routes/route_path.dart';
-import '../../../../../helper/local_db/local_db.dart';
-import '../../../../../service/api_service.dart';
-import '../../../../../service/api_url.dart';
-import '../../signup/controller/signup_controller.dart';
+import '../../../../../../core/routes/route_path.dart';
 
-class CustomerVerificationController extends GetxController{
+
+class DriverVerificationController extends GetxController{
   final otpController = TextEditingController();
   RxBool isLoading = false.obs;
   RxBool isLoadingResend = false.obs;
@@ -49,7 +46,7 @@ class CustomerVerificationController extends GetxController{
     // }
 
 
-    Get.toNamed(RoutePath.completeVarification);
+    Get.toNamed(RoutePath.selectCompany);
 
   }
 

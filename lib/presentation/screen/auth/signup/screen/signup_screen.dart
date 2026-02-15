@@ -157,7 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         height: Dimensions.h(55),
                         borderRadius: Dimensions.r(16),
                         onPressed: () {
-                          //controller.submit();
+                          controller.selectCustomer();
                           Get.toNamed(RoutePath.customerVerification);
                         },
                       ),
@@ -186,7 +186,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         borderSideColor: AppColors.primaryColor,
                         borderRadius: Dimensions.r(16),
                         onPressed: () {
-                         Get.toNamed(RoutePath.login);
+
+                          controller.selectDriver();
+                         Get.toNamed(RoutePath.driverSignup);
                         },
                       ),
                     ],

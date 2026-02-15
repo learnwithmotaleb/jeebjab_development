@@ -123,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscure: true,
                         prefixIcon: Icon(Icons.lock, color: AppColors.primaryColor),
                         validator: AppValidators.password(min: 6),
-                        onTap: () {},
+                        onTap: () {
+                        },
                       ),
                       SizedBox(height: Dimensions.h(24)),
 
@@ -142,7 +143,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(RoutePath.welcome);
+
+                          },
                           child: Text(
                             AppStrings.forgotPassword.tr,
                             style: AppTextStyles.label.copyWith(

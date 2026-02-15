@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../../../../helper/role_controller/role_controller.dart';
-import '../../../role/controller/select_role_controller.dart';
+class DriverSignupController extends GetxController{
 
-class SignupController extends GetxController{
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -40,28 +40,6 @@ class SignupController extends GetxController{
     return isValid;
   }
 
-  var selectedRole = UserRole.customer.obs;
-
-  final _role = RoleController();
-
-
-  Future<void> selectCustomer() async {
-    selectedRole.value = UserRole.customer;
-    await _role.setCustomer().then((value){
-      print("Role Customer Set successfully");
-     // Get.toNamed(RoutePath.signup);
-    });
-  }
-
-  void selectDriver()async{
-    selectedRole.value = UserRole.driver;
-    await _role.setDriver().then((value){
-      print("Role Driver Set successfully");
-      // Get.toNamed(RoutePath.signup);
-    });
-
-  }
-
   void submit() {
     if (validateForm()) {
       // Form is valid → proceed to login
@@ -71,6 +49,8 @@ class SignupController extends GetxController{
       print("Confirm Password: ${confirmPasswordController.text}");
     }
   }
+
+
 
 
 
