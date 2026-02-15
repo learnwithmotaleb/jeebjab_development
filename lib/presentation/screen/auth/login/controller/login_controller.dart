@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -28,10 +31,11 @@ class LoginController extends GetxController {
   }
 
   void submit() {
-    if (validateForm()) {
-      // Form is valid → proceed to login
-      print("Email: ${emailController.text}");
-      print("Password: ${passwordController.text}");
-    }
+    // if (validateForm()) {
+    //   // Form is valid → proceed to login
+    //   print("Email: ${emailController.text}");
+    //   print("Password: ${passwordController.text}");
+    // }
+    Get.toNamed(RoutePath.home);
   }
 }
