@@ -7,6 +7,9 @@ class AppImages {
   static const String profileImage = "assets/images/profile_image.png";
   static const String completeVerificationImage = "assets/images/complete_verification_image.png";
   static const String welcomeImage = "assets/images/welcome_image.png";
+  static const String homeImage1 = "assets/images/home_image2.png";
+  static const String homeImage2 = "assets/images/home_image3.png";
+  static const String trackingImage = "assets/images/tracking_image.png";
 
 
 

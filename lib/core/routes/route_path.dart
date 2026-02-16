@@ -20,6 +20,10 @@ class RoutePath {
   static const String reset = '/ResetPasswordScreen';
   static const String welcome = '/WelcomeScreen';
   static const String home = '/HomeScreen';
+  static const String myPost = '/MyPostScreen';
+  static const String notification = '/NotificationScreen';
+  static const String notificationDetails = '/NotificationDetailsScreen';
+  static const String chat = '/ChatScreen';
 
 
 

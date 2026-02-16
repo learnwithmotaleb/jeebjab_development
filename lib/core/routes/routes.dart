@@ -20,8 +20,16 @@ import 'package:jeebjab/presentation/screen/auth/upload_document/controller/uplo
 import 'package:jeebjab/presentation/screen/auth/upload_document/screen/upload_document_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/vehicle_information/controller/vehicle_information_controller.dart';
 import 'package:jeebjab/presentation/screen/auth/vehicle_information/screen/vehicle_information_screen.dart';
+import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
+import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
 import 'package:jeebjab/presentation/screen/home/controller/home_controller.dart';
 import 'package:jeebjab/presentation/screen/home/screen/home_screen.dart';
+import 'package:jeebjab/presentation/screen/my_post/controller/my_post_controller.dart';
+import 'package:jeebjab/presentation/screen/my_post/screen/my_post_screen.dart';
+import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
+import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
+import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
+import 'package:jeebjab/presentation/screen/notification_detalis/screen/notification_details_screen.dart';
 import 'package:jeebjab/presentation/screen/role/controller/select_role_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
@@ -215,6 +223,48 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(HomeController());
+      }),
+    ),
+
+
+
+   GetPage(
+      name: RoutePath.myPost,
+      page: () => const MyPostScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MyPostController());
+      }),
+    ),
+
+   GetPage(
+      name: RoutePath.notification,
+      page: () => const NotificationScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(NotificationController());
+      }),
+    ),
+
+
+
+   GetPage(
+      name: RoutePath.notificationDetails,
+      page: () =>  NotificationDetailsScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(NotificationDetailsController());
+      }),
+    ),
+
+
+
+   GetPage(
+      name: RoutePath.chat,
+      page: () =>  ChatScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ChatController());
       }),
     ),
 

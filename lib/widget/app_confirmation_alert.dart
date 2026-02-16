@@ -1,105 +1,71 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/app_colors/app_colors.dart';
-
-class AppConfirmationAlert {
-  static show({
+class AppSuccessAlert {
+  static void show({
     required BuildContext context,
-    required String title,
-    required String body,
-    VoidCallback? onYes,
-    VoidCallback? onNo,
+    required String message,
   }) {
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (_) {
+      barrierDismissible: false, // user cannot dismiss by tapping outside
+      builder: (dialogContext) {
+        // Automatically pop after 5 seconds
+        Future.delayed(const Duration(seconds: 1), () {
+          if (Navigator.canPop(dialogContext)) {
+            Navigator.of(dialogContext).pop();
+          }
+        });
+
         return Dialog(
-          backgroundColor: AppColors.whiteColor,
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Title
+                /// Success Icon
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.teal,
+                      width: 3,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.teal,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                /// Message
                 Text(
-                  title,
+                  message,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
 
-                /// Body
-                Text(
-                  body,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                /// Actions
-                Row(
-                  children: [
-                    /// NO Button
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: onNo ?? () => Navigator.pop(context),
-                        child: Container(
-                          height: 45,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: Border.all(
-                              color: AppColors.primaryColor,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Text(
-                            "No",
-                            style: TextStyle(
-                              color:AppColors.primaryColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    /// YES Button
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: onYes,
-                        child: Container(
-                          height: 45,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: const Text(
-                            "Yes",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
+                /// OK Button (optional, still allows manual dismiss)
+                // ElevatedButton(
+                //   onPressed: () {
+                //     if (Navigator.canPop(dialogContext)) {
+                //       Navigator.of(dialogContext).pop();
+                //     }
+                //   },
+                //   child: const Text("OK"),
+                // ),
               ],
             ),
           ),
