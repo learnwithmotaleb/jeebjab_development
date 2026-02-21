@@ -9,6 +9,10 @@ class AppColors {
   static const Color hintColor = Color(0xFF5B5B5B);
   static const Color hintTextColor = Color(0xFF5B5B5B);
 
+  static const Color pendingColor = Color(0xFFEAD24B);
+  static const Color activeColor = Color(0xFF726EF5);
+  static const Color completeColor = Color(0xFF17C5B5);
+
 
   static const Color blackColor = Colors.black;
   static const Color whiteColor = Colors.white;

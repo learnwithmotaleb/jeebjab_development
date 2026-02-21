@@ -8,14 +8,14 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../utils/assets_image/app_images.dart';
 
-class MyPostScreen extends StatefulWidget {
-  const MyPostScreen({super.key});
+class ReadMoreScreen extends StatefulWidget {
+  const ReadMoreScreen({super.key});
 
   @override
-  State<MyPostScreen> createState() => _MyPostScreenState();
+  State<ReadMoreScreen> createState() => _ReadMoreScreenState();
 }
 
-class _MyPostScreenState extends State<MyPostScreen> {
+class _ReadMoreScreenState extends State<ReadMoreScreen> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(

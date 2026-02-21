@@ -47,6 +47,7 @@ class NotificationDetailsController extends GetxController {
   // Action handlers
   void onLiveTrackingPressed() {
     // TODO: Navigate to live tracking screen
+    Get.toNamed(RoutePath.showMap);
     print('Live tracking pressed');
   }
 

@@ -8,8 +8,9 @@ import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/widget/app_button.dart';
 
-import '../../../../core/responsive_layout/responsive_layout.dart';
-import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../../../core/responsive_layout/responsive_layout.dart';
+import '../../../../../../utils/app_colors/app_colors.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -315,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Get.toNamed(RoutePath.myPost);
+                  Get.toNamed(RoutePath.readMore);
                 },
                 child: Text(
                   "Read More",

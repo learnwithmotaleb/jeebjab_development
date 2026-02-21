@@ -36,6 +36,6 @@ class LoginController extends GetxController {
     //   print("Email: ${emailController.text}");
     //   print("Password: ${passwordController.text}");
     // }
-    Get.toNamed(RoutePath.home);
+    Get.toNamed(RoutePath.bottomNav);
   }
 }

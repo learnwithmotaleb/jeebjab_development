@@ -1,7 +1,6 @@
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
@@ -20,17 +19,24 @@ import 'package:jeebjab/presentation/screen/auth/upload_document/controller/uplo
 import 'package:jeebjab/presentation/screen/auth/upload_document/screen/upload_document_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/vehicle_information/controller/vehicle_information_controller.dart';
 import 'package:jeebjab/presentation/screen/auth/vehicle_information/screen/vehicle_information_screen.dart';
+import 'package:jeebjab/presentation/screen/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/controller/my_post_controller.dart';
+import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
+import 'package:jeebjab/presentation/screen/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
-import 'package:jeebjab/presentation/screen/home/controller/home_controller.dart';
-import 'package:jeebjab/presentation/screen/home/screen/home_screen.dart';
-import 'package:jeebjab/presentation/screen/my_post/controller/my_post_controller.dart';
-import 'package:jeebjab/presentation/screen/my_post/screen/my_post_screen.dart';
+
 import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/screen/notification_details_screen.dart';
+import 'package:jeebjab/presentation/screen/pickup_details/controller/pickup_details_controller.dart';
+import 'package:jeebjab/presentation/screen/pickup_details/screen/pickup_details_screen.dart';
+import 'package:jeebjab/presentation/screen/read_more/controller/read_more_post_controller.dart';
+import 'package:jeebjab/presentation/screen/read_more/screen/read_more_post_screen.dart';
 import 'package:jeebjab/presentation/screen/role/controller/select_role_controller.dart';
+import 'package:jeebjab/presentation/screen/show_map/controller/show_map_controller.dart';
+import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
 
@@ -45,6 +51,8 @@ import '../../presentation/screen/auth/forget/controller/forget_controller.dart'
 import '../../presentation/screen/auth/license_number/controller/license_number_controller.dart';
 import '../../presentation/screen/auth/login/controller/login_controller.dart';
 import '../../presentation/screen/auth/login/screen/login_screen.dart';
+import '../../presentation/screen/bottom_nav/page/home/controller/home_controller.dart';
+import '../../presentation/screen/bottom_nav/page/home/screen/home_screen.dart';
 import '../../presentation/screen/role/screen/select_role_screen.dart';
 import '../../presentation/screen/splash/controller/splash_controller.dart';
 import '../../presentation/screen/splash/screen/splash_screen.dart';
@@ -229,11 +237,11 @@ class AppRouter {
 
 
    GetPage(
-      name: RoutePath.myPost,
-      page: () => const MyPostScreen(),
+      name: RoutePath.readMore,
+      page: () => const ReadMoreScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
-        Get.put(MyPostController());
+        Get.put(ReadMoreController());
       }),
     ),
 
@@ -265,6 +273,44 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(ChatController());
+      }),
+    ),
+
+   GetPage(
+      name: RoutePath.showMap,
+      page: () =>  ShowMapScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ShowMapController());
+      }),
+    ),
+
+
+
+   GetPage(
+      name: RoutePath.bottomNav,
+      page: () =>  BottomNavScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(BottomNavController());
+      }),
+    ),
+
+   GetPage(
+      name: RoutePath.myPost,
+      page: () =>  MyPostScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MyPostController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.pickUpDetails,
+      page: () =>  PickupDetailsScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PickupDetailsController());
       }),
     ),
 

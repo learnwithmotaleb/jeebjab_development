@@ -10,6 +10,7 @@ class AppImages {
   static const String homeImage1 = "assets/images/home_image2.png";
   static const String homeImage2 = "assets/images/home_image3.png";
   static const String trackingImage = "assets/images/tracking_image.png";
+  static const String mapImage = "assets/images/map_image.png";
 
 
 
