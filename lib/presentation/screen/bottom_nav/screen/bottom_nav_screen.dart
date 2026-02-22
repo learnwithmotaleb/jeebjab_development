@@ -5,6 +5,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
+import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
 import '../page/home/screen/home_screen.dart';
@@ -25,10 +26,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
       color: Colors.white,
       child: const Center(child: Text("Jobs")),
     ),
-    Container(
-      color: Colors.white,
-      child: const Center(child: Text("Create Page")),
-    ),
+    CreatePostScreen(),
 
     MyPostScreen(),
     Container(

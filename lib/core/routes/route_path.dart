@@ -28,6 +28,14 @@ class RoutePath {
   static const String bottomNav = '/BottomNavScreen';
   static const String myPost = '/MyPostScreen';
   static const String pickUpDetails = '/PickupDetailsScreen';
+  static const String reviewProfile = '/ReviewProfileScreen';
+  static const String reviewList = '/ReviewsListScreen';
+  static const String createPost = '/CreatePostScreen';
+  static const String captureImage = '/CaptureImageScreen';
+  static const String captureInfo = '/CaptureInfoScreen';
+  static const String pickupDateTime = '/PickupDatetimeScreen';
+  static const String pickupAddress = '/PickupAddressScreen';
+  static const String placementPickup = '/PlacementPickupScreen';
 
 
 

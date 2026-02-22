@@ -23,17 +23,31 @@ import 'package:jeebjab/presentation/screen/bottom_nav/controller/bottom_nav_con
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/controller/my_post_controller.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/screen/bottom_nav_screen.dart';
+import 'package:jeebjab/presentation/screen/capture_image/controller/capture_image_controller.dart';
+import 'package:jeebjab/presentation/screen/capture_image/screen/capture_image_screen.dart';
+import 'package:jeebjab/presentation/screen/capture_info/controller/capture_info_controller.dart';
+import 'package:jeebjab/presentation/screen/capture_info/screen/capture_info_screen.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
+import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
+import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
 
 import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/screen/notification_details_screen.dart';
+import 'package:jeebjab/presentation/screen/pickup_address/controller/pickup_address_controller.dart';
+import 'package:jeebjab/presentation/screen/pickup_date_time/controller/pickup_datetime_controller.dart';
+import 'package:jeebjab/presentation/screen/pickup_date_time/screen/pickup_datetime_screen.dart';
 import 'package:jeebjab/presentation/screen/pickup_details/controller/pickup_details_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_details/screen/pickup_details_screen.dart';
+import 'package:jeebjab/presentation/screen/placement_pickup/controller/placement_pickup_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/controller/read_more_post_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/screen/read_more_post_screen.dart';
+import 'package:jeebjab/presentation/screen/review_list/controller/reviews_list_controller.dart';
+import 'package:jeebjab/presentation/screen/review_list/screen/reviews_list_screen.dart';
+import 'package:jeebjab/presentation/screen/review_profile/controller/review_profile_controller.dart';
+import 'package:jeebjab/presentation/screen/review_profile/screen/review_profile_screen.dart';
 import 'package:jeebjab/presentation/screen/role/controller/select_role_controller.dart';
 import 'package:jeebjab/presentation/screen/show_map/controller/show_map_controller.dart';
 import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
@@ -53,6 +67,8 @@ import '../../presentation/screen/auth/login/controller/login_controller.dart';
 import '../../presentation/screen/auth/login/screen/login_screen.dart';
 import '../../presentation/screen/bottom_nav/page/home/controller/home_controller.dart';
 import '../../presentation/screen/bottom_nav/page/home/screen/home_screen.dart';
+import '../../presentation/screen/pickup_address/screen/pickup_address_screen.dart';
+import '../../presentation/screen/placement_pickup/screen/placement_pickup_screen.dart';
 import '../../presentation/screen/role/screen/select_role_screen.dart';
 import '../../presentation/screen/splash/controller/splash_controller.dart';
 import '../../presentation/screen/splash/screen/splash_screen.dart';
@@ -314,6 +330,84 @@ class AppRouter {
       }),
     ),
 
+    GetPage(
+      name: RoutePath.reviewProfile,
+      page: () =>  ReviewProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ReviewProfileController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.reviewList,
+      page: () =>  ReviewsListScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ReviewsListController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.createPost,
+      page: () =>  CreatePostScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CreatePostController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.captureImage,
+      page: () =>  CaptureImageScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CaptureImageController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.captureInfo,
+      page: () =>  CaptureInfoScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CaptureInfoController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.pickupDateTime,
+      page: () =>  PickupDatetimeScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PickupDatetimeController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.pickupAddress,
+      page: () =>  PickupAddressScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PickupAddressController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.placementPickup,
+      page: () =>  PlacementPickupScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PlacementPickupController());
+      }),
+    ),
 
 
 

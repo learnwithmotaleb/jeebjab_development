@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 
 import '../controller/pickup_details_controller.dart';
 import '../widget/adviser_widget.dart';
@@ -27,130 +28,127 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
   Widget _mobile() {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // ── Scrollable Content ──────────────────────────────────────
-            SingleChildScrollView(
-              child: Obx(() => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ── 1. Image Carousel ─────────────────────────────
-                  ImageCarouselWidget(images: controller.images),
+      body: Stack(
+        children: [
+          // ── Scrollable Content ──────────────────────────────────────
+          SingleChildScrollView(
+            child: Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── 1. Image Carousel ─────────────────────────────
+                ImageCarouselWidget(images: controller.images),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // ── 2. Item Info ──────────────────────────
-                        _ItemInfoWidget(
-                          title: controller.itemType.value,
-                          subtitle: controller.itemSubtype.value,
-                          publishedTime: controller.publishedTime.value,
-                          price: controller.itemPrice.value,
-                        ),
-
-                        const SizedBox(height: 8),
-                        const Divider(color: Color(0xFFEEEEEE)),
-                        const SizedBox(height: 8),
-
-                        // ── 3. Size + Pickup Time ─────────────────
-                        _MetaRowWidget(
-                            label: 'Size', value: controller.size.value),
-                        const SizedBox(height: 8),
-                        _MetaRowWidget(
-                          label: 'Preferred Pick-Up Time',
-                          value: controller.preferredPickupTime.value,
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // ── 4. Pick-Up Card ───────────────────────
-                        LocationCardWidget(
-                          title: 'Pick-Up',
-                          address: controller.pickupAddress.value,
-                          features: controller.pickupFeatures,
-                          onOpenMap: controller.onOpenPickupMap,
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // ── 5. Delivery Card ──────────────────────
-                        LocationCardWidget(
-                          title: 'Delivery',
-                          address: controller.deliveryAddress.value,
-                          features: controller.deliveryFeatures,
-                          onOpenMap: controller.onOpenDeliveryMap,
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // ── 6. Advertiser ─────────────────────────
-                        AdvertiserWidget(
-                          name: controller.advertiserName.value,
-                          rating: controller.advertiserRating.value,
-                          imageUrl: controller.advertiserImage.value,
-                        ),
-
-                        const SizedBox(height: 8),
-                        const Divider(color: Color(0xFFEEEEEE)),
-
-                        // ── 7. Share ──────────────────────────────
-                        _ActionRowWidget(
-                          icon: Icons.share_outlined,
-                          label: 'Share',
-                          onTap: controller.onShare,
-                        ),
-
-                        const Divider(color: Color(0xFFEEEEEE), height: 0),
-
-                        // ── 8. Report Ad ──────────────────────────
-                        _ActionRowWidget(
-                          icon: Icons.flag_outlined,
-                          label: 'Report Ad',
-                          onTap: controller.onReportAd,
-                          color: Colors.red.shade400,
-                        ),
-
-                        const SizedBox(height: 40),
-                      ],
-                    ),
-                  ),
-                ],
-              )),
-            ),
-
-            // ── Back Button Overlay ─────────────────────────────────────
-            Positioned(
-              top: 12,
-              left: 12,
-              child: GestureDetector(
-                onTap: () => Get.back(),
-                child: Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
-                        blurRadius: 8,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── 2. Item Info ──────────────────────────
+                      _ItemInfoWidget(
+                        title: controller.itemType.value,
+                        subtitle: controller.itemSubtype.value,
+                        publishedTime: controller.publishedTime.value,
+                        price: controller.itemPrice.value,
                       ),
+
+                      const SizedBox(height: 8),
+                      const Divider(color: Color(0xFFEEEEEE)),
+                      const SizedBox(height: 8),
+
+                      // ── 3. Size + Pickup Time ─────────────────
+                      _MetaRowWidget(
+                          label: 'Size', value: controller.size.value),
+                      const SizedBox(height: 8),
+                      _MetaRowWidget(
+                        label: 'Preferred Pick-Up Time',
+                        value: controller.preferredPickupTime.value,
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // ── 4. Pick-Up Card ───────────────────────
+                      LocationCardWidget(
+                        title: 'Pick-Up',
+                        address: controller.pickupAddress.value,
+                        features: controller.pickupFeatures,
+                        onOpenMap: controller.onOpenPickupMap,
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // ── 5. Delivery Card ──────────────────────
+                      LocationCardWidget(
+                        title: 'Delivery',
+                        address: controller.deliveryAddress.value,
+                        features: controller.deliveryFeatures,
+                        onOpenMap: controller.onOpenDeliveryMap,
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // ── 6. Advertiser ─────────────────────────
+                      AdvertiserWidget(
+                        name: controller.advertiserName.value,
+                        rating: controller.advertiserRating.value,
+                        imageUrl: controller.advertiserImage.value,
+                      ),
+
+                      const SizedBox(height: 8),
+                      const Divider(color: Color(0xFFEEEEEE)),
+
+                      // ── 7. Share ──────────────────────────────
+                      _ActionRowWidget(
+                        label: 'Share',
+                        onTap: controller.onShare,
+                        color: AppColors.blackColor,
+                      ),
+
+                      const Divider(color: Color(0xFFEEEEEE), height: 0),
+
+                      // ── 8. Report Ad ──────────────────────────
+                      _ActionRowWidget(
+                        label: 'Report Ad',
+                        onTap: controller.onReportAd,
+                        color: AppColors.blackColor,
+                      ),
+
+                      const SizedBox(height: 40),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 18,
-                    color: Colors.black87,
-                  ),
+                ),
+              ],
+            )),
+          ),
+
+          // ── Back Button Overlay ─────────────────────────────────────
+          Positioned(
+            top: 40,
+            left: 12,
+            child: GestureDetector(
+              onTap: () => Get.back(),
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.12),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 18,
+                  color: Colors.black87,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -240,13 +238,9 @@ class _MetaRowWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style: const TextStyle(fontSize: 13, color: Colors.grey)),
+            style: AppTextStyles.body),
         Text(value,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A2E),
-            )),
+            style: AppTextStyles.body),
       ],
     );
   }
@@ -254,13 +248,12 @@ class _MetaRowWidget extends StatelessWidget {
 
 // ── Action Row Widget (Share / Report) ───────────────────────────────────────
 class _ActionRowWidget extends StatelessWidget {
-  final IconData icon;
+
   final String label;
   final VoidCallback onTap;
   final Color color;
 
   const _ActionRowWidget({
-    required this.icon,
     required this.label,
     required this.onTap,
     this.color = const Color(0xFF1A1A2E),
@@ -271,11 +264,9 @@ class _ActionRowWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: color),
-            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,

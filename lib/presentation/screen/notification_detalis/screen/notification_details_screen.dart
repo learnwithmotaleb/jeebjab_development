@@ -5,7 +5,10 @@ import 'package:jeebjab/presentation/screen/notification_detalis/controller/noti
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../core/responsive_layout/responsive_layout.dart';
+import '../../../../core/routes/route_path.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../widget/custom_alert.dart';
 
 class NotificationDetailsScreen extends StatefulWidget {
   const NotificationDetailsScreen({super.key});
@@ -30,7 +33,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
       body: SingleChildScrollView(
         child: Obx(() => Column(
           children: [
-            const SizedBox(height: 16),
+
 
             // Item Information Card
             _buildItemCard(),
@@ -72,84 +75,100 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
 
   // Item Information Card
   Widget _buildItemCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          // Item Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              controller.imagePath.value,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.image, color: Colors.grey),
-                );
-              },
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(
+          RoutePath.pickUpDetails, // ← add this route to your RoutePath
+          arguments: {
+            'itemType': controller.itemType.value,
+            'itemSubtype': controller.itemSubtype.value,
+            'itemDate': controller.itemDate.value,
+            'price': 156, // pass real price if available in controller
+            'status': controller.status.value,
+            'pickupAddress': 'Abu Dhabi - 23052, Level 2, Door 6',
+            'deliveryAddress': 'Abu Dhabi - 23052',
+          },
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            // Item Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                controller.imagePath.value,
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.image, color: Colors.grey),
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
+            const SizedBox(width: 12),
 
-          // Item Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  controller.itemType.value,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            // Item Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    controller.itemType.value,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  controller.itemSubtype.value,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color:AppColors.blackColor,
+                  const SizedBox(height: 4),
+                  Text(
+                    controller.itemSubtype.value,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color:AppColors.blackColor,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  controller.itemDate.value,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color:AppColors.blackColor,
+                  const SizedBox(height: 4),
+                  Text(
+                    controller.itemDate.value,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color:AppColors.blackColor,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color:AppColors.blackColor,
+                  const SizedBox(height: 4),
+                  Text(
+                    'Tracking Number',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color:AppColors.blackColor,
+                    ),
                   ),
-                ),
-                Text(
-                  controller.trackingNumber.value,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                  Text(
+                    controller.trackingNumber.value,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -365,7 +384,20 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
         children: [
           Expanded(
             child: OutlinedButton(
-              onPressed: controller.onDeletePressed,
+              onPressed:(){
+                CustomAlertDialog.show(
+                  context: context,
+                  title: "Do you want to Delete",
+                  body: "Are you sure you want to Delete ? Your ad will be deleted.",
+                  onYes: () {
+
+                    AppSnackBar.success("Delete Successfully");
+                    Get.back();
+
+                  },
+                  onNo: () => Get.back(),
+                );
+              },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 side: const BorderSide(color: AppColors.greyColor, width: 1),
@@ -411,157 +443,166 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
 
   // Driver Card
   Widget _buildDriverCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        children: [
-          // Driver Info Row
-          Row(
-            children: [
-              // Driver Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  controller.driverImage.value,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.person, color: Colors.grey),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
+    return GestureDetector(
+      onTap: (){
 
-              // Driver Name and Phone
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      controller.driverName.value,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      controller.driverPhone.value,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        Get.toNamed(RoutePath.reviewProfile);
 
-              // Rating
-              Column(
-                children: [
-                  Text(
-                    controller.driverRating.value.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+
+
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Column(
+          children: [
+            // Driver Info Row
+            Row(
+              children: [
+                // Driver Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    controller.driverImage.value,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.person, color: Colors.grey),
+                      );
+                    },
                   ),
-                  Row(
+                ),
+                const SizedBox(width: 12),
+
+                // Driver Name and Phone
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.star, size: 14, color: Colors.amber[600]),
-                      const SizedBox(width: 2),
-                      const Text(
-                        'Rating',
+                      Text(
+                        controller.driverName.value,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        controller.driverPhone.value,
                         style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
+                          fontSize: 13,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ],
-          ),
-
-           SizedBox(height: Dimensions.h(20)),
-
-          // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: controller.onMessagePressed,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    side: BorderSide(color: AppColors.primaryColor, width: 1.5),
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Message',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.whiteColor,
-                    ),
-                  ),
                 ),
-              ),
 
-              if (controller.showAcceptButton.value) ...[
-                const SizedBox(width: 12),
+                // Rating
+                Column(
+                  children: [
+                    Text(
+                      controller.driverRating.value.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.star, size: 14, color: Colors.amber[600]),
+                        const SizedBox(width: 2),
+                        const Text(
+                          'Rating',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+             SizedBox(height: Dimensions.h(40)),
+
+            // Action Buttons
+            Row(
+              children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: (){
-                      controller.onAcceptPressed(context);
-                      controller.showAcceptButton.value = false;
-                      controller.status.value = "in_transit";
-                      //// "pending", "in_transit", "delivered"
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
+                  child: OutlinedButton(
+                    onPressed: controller.onMessagePressed,
+                    style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(color: AppColors.primaryColor, width: 1.5),
+                      backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      elevation: 0,
                     ),
                     child: const Text(
-                      'Accept',
+                      'Message',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: AppColors.whiteColor,
                       ),
                     ),
                   ),
                 ),
 
+                if (controller.showAcceptButton.value) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: (){
+                        controller.onAcceptPressed(context);
+                        controller.showAcceptButton.value = false;
+                        controller.status.value = "in_transit";
+                        //// "pending", "in_transit", "delivered"
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Accept',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+
+
               ],
+            ),
+            SizedBox(height: Dimensions.h(10)),
 
-
-            ],
-          ),
-          SizedBox(height: Dimensions.h(10)),
-
-        ],
+          ],
+        ),
       ),
     );
   }

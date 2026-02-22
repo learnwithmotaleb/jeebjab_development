@@ -1,94 +1,110 @@
-// simple_alert.dart
 import 'package:flutter/material.dart';
 
-
 import '../../utils/app_colors/app_colors.dart';
-import '../core/responsive_layout/dimensions.dart';
-import 'app_button.dart';
 
-
-class SimpleAlert extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String message;
-  final String buttonText;
-  final Function onButtonPressed;
-  final Color color;
-
-  const SimpleAlert({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.message,
-    required this.buttonText,
-    required this.onButtonPressed,
-    this.color = AppColors.primaryColor,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 16.0),
-            Container(
-              width: 80.0,
-              height: 80.0,
-              decoration: BoxDecoration(
-                color: Color(0xffF5F8FF),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(
-                  icon,
-                  color: AppColors.primaryColor,
-                  size: 40.0,
+class CustomAlertDialog {
+  static show({
+    required BuildContext context,
+    required String title,
+    required String body,
+    VoidCallback? onYes,
+    VoidCallback? onNo,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: AppColors.whiteColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Title
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+
+                const SizedBox(height: 12),
+
+                /// Body
+                Text(
+                  body,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.blackColor,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                /// Actions
+                Row(
+                  children: [
+                    /// NO Button
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onNo ?? () => Navigator.pop(context),
+                        child: Container(
+                          height: 45,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(
+                              color: AppColors.primaryColor,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Text(
+                            "No",
+                            style: TextStyle(
+                              color:AppColors.primaryColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    /// YES Button
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: onYes,
+                        child: Container(
+                          height: 45,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: const Text(
+                            "Yes",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-
-            const SizedBox(height: 16.0),
-
-            // Title
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 10.0),
-
-            // Body/Message
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16.0,
-                color: AppColors.hintColor,
-              ),
-            ),
-
-             SizedBox(height: Dimensions.h(40)),
-
-            // Button
-            AppButton(
-              width: 250,
-                height: 50,
-                label: buttonText,
-                onPressed: () => onButtonPressed()),
-            SizedBox(height: Dimensions.h(40)),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

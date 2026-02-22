@@ -76,7 +76,7 @@ class LocationCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(Icons.location_on_outlined,
-                    size: 16, color: Colors.grey),
+                    size: 16, color: AppColors.blackColor),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -112,8 +112,8 @@ class _CheckItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          const Icon(Icons.check_circle_rounded,
-              size: 16, color: AppColors.primaryColor),
+          const Icon(Icons.check_circle_outline,
+              size: 16, color: AppColors.checkboxColor,fontWeight: FontWeight.bold,),
           const SizedBox(width: 8),
           Text(
             label,

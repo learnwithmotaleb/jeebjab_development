@@ -12,6 +12,7 @@ class AppColors {
   static const Color pendingColor = Color(0xFFEAD24B);
   static const Color activeColor = Color(0xFF726EF5);
   static const Color completeColor = Color(0xFF17C5B5);
+  static const Color checkboxColor = Color(0xFF17C200);
 
 
   static const Color blackColor = Colors.black;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class ImageCarouselWidget extends StatefulWidget {
@@ -24,7 +25,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 250,
+      height: 350,
       width: double.infinity,
       child: Stack(
         children: [

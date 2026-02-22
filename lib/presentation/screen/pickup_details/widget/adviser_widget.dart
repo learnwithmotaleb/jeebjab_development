@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
+import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class AdvertiserWidget extends StatelessWidget {
   final String name;
@@ -31,11 +33,11 @@ class AdvertiserWidget extends StatelessWidget {
             // ── Avatar ────────────────────────────────────────────────────
             CircleAvatar(
               radius: 24,
-              backgroundColor: const Color(0xFFEEEEEE),
+              backgroundColor:AppColors.whiteColor,
               backgroundImage: NetworkImage(imageUrl),
               onBackgroundImageError: (_, __) {},
             ),
-            const SizedBox(width: 12),
+             SizedBox(width: Dimensions.w(20)),
 
             // ── Name + Stars ──────────────────────────────────────────────
             Column(

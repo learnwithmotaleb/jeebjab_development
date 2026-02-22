@@ -4,6 +4,11 @@ import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/widget/app_confirmation_alert.dart';
 
+import '../../../../helper/local_db/local_db.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
+import '../../../../utils/static_strings/static_strings.dart';
+import '../../../../widget/custom_alert.dart';
+
 class NotificationDetailsController extends GetxController {
   // Observable variables
   RxString itemType = 'Move'.obs;
@@ -58,6 +63,17 @@ class NotificationDetailsController extends GetxController {
 
   void onDeletePressed() {
     // TODO: Show delete confirmation dialog
+    // CustomAlertDialog.show(
+    //   context: context,
+    //   title: "Do you want to Delete",
+    //   body: "Are you sure you want to Delete ? Your ad will be deleted.",
+    //   onYes: () {
+    //
+    //       AppSnackBar.success("Delete Successfully");
+    //
+    //   },
+    //   onNo: () => Get.back(),
+    // );
     print('Delete pressed');
   }
 
