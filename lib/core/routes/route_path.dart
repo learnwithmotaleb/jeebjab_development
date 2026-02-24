@@ -36,6 +36,12 @@ class RoutePath {
   static const String pickupDateTime = '/PickupDatetimeScreen';
   static const String pickupAddress = '/PickupAddressScreen';
   static const String placementPickup = '/PlacementPickupScreen';
+  static const String pickupFloor = '/PickupFloorScreen';
+  static const String setDropOffAddress = '/SetDropOfAddressScreen';
+  static const String placementDropOff = '/PlacementDropOffScreen';
+  static const String dropOffFloor = '/DropOffFloorScreen';
+  static const String iWillPay = '/IWillPayScreen';
+  static const String overview = '/OverviewScreen';
 
 
 

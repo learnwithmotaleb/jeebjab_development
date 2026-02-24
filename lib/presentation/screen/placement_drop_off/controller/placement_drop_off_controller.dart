@@ -1,14 +1,9 @@
 import 'package:get/get.dart';
-import 'package:jeebjab/core/routes/route_path.dart';
 
-class PlacementOption {
-  final String label;
-  final String icon; // icon name reference
+import '../../../../core/routes/route_path.dart';
+import '../../placement_pickup/controller/placement_pickup_controller.dart';
 
-  PlacementOption({required this.label, required this.icon});
-}
-
-class PlacementPickupController extends GetxController {
+class PlacementDropOffController extends GetxController{
   // ── Single choice (only one) ──────────────────────────────────────────────
   final RxString selectedPlacement = ''.obs;
 
@@ -49,6 +44,8 @@ class PlacementPickupController extends GetxController {
   void onContinue() {
     // if (!isValid) return;
     // // TODO: Navigate to next step
-    Get.toNamed(RoutePath.pickupFloor);
+    Get.toNamed(RoutePath.dropOffFloor);
   }
+
+
 }

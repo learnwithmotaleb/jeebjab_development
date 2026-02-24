@@ -31,16 +31,25 @@ import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart
 import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
+import 'package:jeebjab/presentation/screen/drop_off_floor/screen/drop_off_floor_screen.dart';
+import 'package:jeebjab/presentation/screen/i_will_pay/controller/i_will_pay_controller.dart';
+import 'package:jeebjab/presentation/screen/i_will_pay/screen/i_will_pay_screen.dart';
 
 import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/screen/notification_details_screen.dart';
+import 'package:jeebjab/presentation/screen/overview/controller/overview_controller.dart';
+import 'package:jeebjab/presentation/screen/overview/screen/overview_screen.dart';
 import 'package:jeebjab/presentation/screen/pickup_address/controller/pickup_address_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_date_time/controller/pickup_datetime_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_date_time/screen/pickup_datetime_screen.dart';
 import 'package:jeebjab/presentation/screen/pickup_details/controller/pickup_details_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_details/screen/pickup_details_screen.dart';
+import 'package:jeebjab/presentation/screen/pickup_floor/controller/pickup_floor_controller.dart';
+import 'package:jeebjab/presentation/screen/pickup_floor/screen/pickup_floor_screen.dart';
+import 'package:jeebjab/presentation/screen/placement_drop_off/controller/placement_drop_off_controller.dart';
+import 'package:jeebjab/presentation/screen/placement_drop_off/screen/placement_drop_off_screen.dart';
 import 'package:jeebjab/presentation/screen/placement_pickup/controller/placement_pickup_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/controller/read_more_post_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/screen/read_more_post_screen.dart';
@@ -49,6 +58,8 @@ import 'package:jeebjab/presentation/screen/review_list/screen/reviews_list_scre
 import 'package:jeebjab/presentation/screen/review_profile/controller/review_profile_controller.dart';
 import 'package:jeebjab/presentation/screen/review_profile/screen/review_profile_screen.dart';
 import 'package:jeebjab/presentation/screen/role/controller/select_role_controller.dart';
+import 'package:jeebjab/presentation/screen/set_drop_off_address/controller/set_drop_of_address_controller.dart';
+import 'package:jeebjab/presentation/screen/set_drop_off_address/screen/set_drop_of_address_screen.dart';
 import 'package:jeebjab/presentation/screen/show_map/controller/show_map_controller.dart';
 import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
@@ -67,6 +78,7 @@ import '../../presentation/screen/auth/login/controller/login_controller.dart';
 import '../../presentation/screen/auth/login/screen/login_screen.dart';
 import '../../presentation/screen/bottom_nav/page/home/controller/home_controller.dart';
 import '../../presentation/screen/bottom_nav/page/home/screen/home_screen.dart';
+import '../../presentation/screen/drop_off_floor/controller/drop_off_floor_controller.dart';
 import '../../presentation/screen/pickup_address/screen/pickup_address_screen.dart';
 import '../../presentation/screen/placement_pickup/screen/placement_pickup_screen.dart';
 import '../../presentation/screen/role/screen/select_role_screen.dart';
@@ -406,6 +418,65 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(PlacementPickupController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.pickupFloor,
+      page: () =>  PickupFloorScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PickupFloorController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.setDropOffAddress,
+      page: () =>  SetDropOfAddressScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(SetDropOfAddressController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.placementDropOff,
+      page: () =>  PlacementDropOffScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PlacementDropOffController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.dropOffFloor,
+      page: () =>  DropOffFloorScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DropOffFloorController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.iWillPay,
+      page: () =>  IWillPayScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(IWillPayController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.overview,
+      page: () =>  OverviewScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(OverviewController());
       }),
     ),
 
