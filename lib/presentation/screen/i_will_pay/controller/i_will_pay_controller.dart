@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
 
 class IWillPayController extends GetxController {
   final TextEditingController priceController = TextEditingController(text: '120');
@@ -45,8 +46,9 @@ class IWillPayController extends GetxController {
   bool get isValid => price.value > 0;
 
   void onContinue() {
-    if (!isValid) return;
-    // TODO: Navigate to next step with price
+    // if (!isValid) return;
+    // // TODO: Navigate to next step with price
+    Get.toNamed(RoutePath.overview);
   }
 
   @override
