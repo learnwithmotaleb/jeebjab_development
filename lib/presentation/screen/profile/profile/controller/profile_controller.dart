@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/widget/app_confirmation_alert.dart';
+import 'package:jeebjab/widget/confirmataion_alert.dart';
+
+import '../../../../../helper/local_db/local_db.dart';
+import '../../../../../helper/tost_message/show_snackbar.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
+import '../../../../../widget/custom_alert.dart';
 
 class ProfileMenuItem {
   final String title;
@@ -68,7 +75,11 @@ class ProfileController extends GetxController {
         icon: Icons.logout_rounded,
         iconColor: Colors.red,
         onTap: () {
-          // TODO: show logout confirmation
+          
+      AppAlerts.confirm(title: "Are Your Sure Logout", message: "Are you sure logout from", onConfirm: (){
+        Get.back();
+      });
+    
         },
       ),
     ];
