@@ -18,6 +18,11 @@ class OverviewController extends GetxController{
   RxString dateTime = "Anytime".obs;
   RxString price = "120 SAR".obs;
 
+  RxBool termsAccepted = false.obs;
 
+  RxBool acknowledgePickup = false.obs;
+  RxBool correspondsWithPictures = false.obs;
+  RxBool notToxicOrHarmful = false.obs;
+  RxBool willBeAvailableForPickup = false.obs;
 
 }

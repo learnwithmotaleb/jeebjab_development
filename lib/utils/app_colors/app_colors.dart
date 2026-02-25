@@ -8,6 +8,8 @@ class AppColors {
   static const Color textFieldBackgroundColor = Color(0xFFF0F0F0);
   static const Color hintColor = Color(0xFF5B5B5B);
   static const Color hintTextColor = Color(0xFF5B5B5B);
+  static const Color backgroundColor = Color(0xFFF3F3F3);
+  static const Color forgroundColor = Color(0xFFFFFFFF);
 
   static const Color pendingColor = Color(0xFFEAD24B);
   static const Color activeColor = Color(0xFF726EF5);

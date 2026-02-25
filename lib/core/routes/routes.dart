@@ -4,6 +4,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/presentation/screen/add_card/controller/add_card_controller.dart';
 import 'package:jeebjab/presentation/screen/auth/Customer_Verification/controller/customer_verification_controller.dart';
 import 'package:jeebjab/presentation/screen/auth/company_driver_auth/driver_verification/screen/driver_verification_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/company_driver_auth/select_company/screen/select_company_screen.dart';
@@ -51,6 +52,19 @@ import 'package:jeebjab/presentation/screen/pickup_floor/screen/pickup_floor_scr
 import 'package:jeebjab/presentation/screen/placement_drop_off/controller/placement_drop_off_controller.dart';
 import 'package:jeebjab/presentation/screen/placement_drop_off/screen/placement_drop_off_screen.dart';
 import 'package:jeebjab/presentation/screen/placement_pickup/controller/placement_pickup_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/account/controller/account_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/bank_card/controller/bank_card_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/bank_card/screen/bank_card_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/change_password/controller/change_password_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/change_password/screen/change_password_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/driver_profile/controller/driver_profile_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/driver_profile/screen/driver_profile_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/edit_driver_profile/controller/edit_driver_profile_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/edit_driver_profile/screen/edit_driver_profile_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profile/controller/edit_profile_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profile/screen/edit_profile_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/profile/controller/profile_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
 import 'package:jeebjab/presentation/screen/read_more/controller/read_more_post_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/screen/read_more_post_screen.dart';
 import 'package:jeebjab/presentation/screen/review_list/controller/reviews_list_controller.dart';
@@ -65,6 +79,7 @@ import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
 
+import '../../presentation/screen/add_card/screen/add_card_screen.dart';
 import '../../presentation/screen/auth/Customer_Verification/screen/customer_verification_screen.dart';
 import '../../presentation/screen/auth/choose_vehicle_type/controller/choose_vehicle_type_controller.dart';
 import '../../presentation/screen/auth/choose_vehicle_type/screen/choose_vehicle_type_screen.dart';
@@ -81,6 +96,7 @@ import '../../presentation/screen/bottom_nav/page/home/screen/home_screen.dart';
 import '../../presentation/screen/drop_off_floor/controller/drop_off_floor_controller.dart';
 import '../../presentation/screen/pickup_address/screen/pickup_address_screen.dart';
 import '../../presentation/screen/placement_pickup/screen/placement_pickup_screen.dart';
+import '../../presentation/screen/profile/account_settings/account/screen/account_screen.dart';
 import '../../presentation/screen/role/screen/select_role_screen.dart';
 import '../../presentation/screen/splash/controller/splash_controller.dart';
 import '../../presentation/screen/splash/screen/splash_screen.dart';
@@ -477,6 +493,82 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(OverviewController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.addCard,
+      page: () =>  AddCardScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(AddCardController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.profile,
+      page: () =>  ProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ProfileController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.account,
+      page: () =>  AccountScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(AccountController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.editProfile,
+      page: () =>  EditProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(EditProfileController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.changePassword,
+      page: () =>  ChangePasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ChangePasswordController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.driverProfile,
+      page: () =>  DriverProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DriverProfileController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.editDriverProfile,
+      page: () =>  EditDriverProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(EditDriverProfileController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.bankCard,
+      page: () =>  BankCardScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(BankCardController());
       }),
     ),
 

@@ -42,6 +42,18 @@ class RoutePath {
   static const String dropOffFloor = '/DropOffFloorScreen';
   static const String iWillPay = '/IWillPayScreen';
   static const String overview = '/OverviewScreen';
+  static const String addCard = '/AddCardScreen';
+  //=================================================Profile=====================
+
+  static const String profile = '/ProfileScreen';
+  static const String account = '/AccountScreen';
+  static const String editProfile = '/EditProfileScreen';
+  static const String changePassword = '/ChangePasswordScreen';
+  static const String driverProfile = '/DriverProfileScreen';
+  static const String editDriverProfile = '/EditDriverProfileScreen';
+  static const String bankCard = '/BankCardScreen';
+
+
 
 
 

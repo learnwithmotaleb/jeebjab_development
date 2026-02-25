@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/routes/route_path.dart';
+import '../../../../utils/app_colors/app_colors.dart';
 import '../controller/overview_controller.dart';
 import 'overview_info_tile.dart';
 
@@ -51,7 +52,8 @@ class OverviewServiceSection extends StatelessWidget {
   BoxDecoration _boxDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(12),
-      color: Colors.grey.shade100,
+      color: AppColors.forgroundColor,
+
     );
   }
 }

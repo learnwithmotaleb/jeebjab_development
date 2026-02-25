@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+
+import '../../../../utils/app_colors/app_colors.dart';
 
 class OverviewInfoTile extends StatelessWidget {
   final String title;
@@ -24,11 +27,11 @@ class OverviewInfoTile extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(color:AppColors.blackColor),
             ),
             Row(
               children: [
-                Text(value),
+                Text(value,style: AppTextStyles.hint.copyWith(fontSize: 14),),
                 const SizedBox(width: 5),
                 const Icon(Icons.arrow_forward_ios, size: 14),
               ],

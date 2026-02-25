@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get.dart';
+import 'package:jeebjab/presentation/screen/overview/widget/acknowledgement_section.dart';
 import 'package:jeebjab/presentation/screen/overview/widget/i_will_pay_section_widget.dart';
 
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -24,7 +24,7 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
 
-  OverviewController controller = Get.put(OverviewController());
+  final OverviewController controller = Get.put(OverviewController());
 
 
   @override
@@ -36,7 +36,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(title: "Overview"),
       body: Column(
         children: [
@@ -44,25 +44,29 @@ class _OverviewScreenState extends State<OverviewScreen> {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(12),
               child: Column(
-                children: const [
-                  OverviewPhotosSection(),
-                  SizedBox(height: 12),
-                  OverviewServiceSection(),
-                  SizedBox(height: 12),
-                  OverviewAddressSection(),
-                  SizedBox(height: 12),
-                  DropAddressSection(),
-                  SizedBox(height: 12),
-                  OverviewDatetimeBottomSection(),
-                  SizedBox(height: 12),
-                  OverviewIWillPayBottomSection(
-                  ),
+                children: [  
+                  const OverviewPhotosSection(),
+                  const SizedBox(height: 12),
+                  const OverviewServiceSection(),
+                  const SizedBox(height: 12),
+                  const OverviewAddressSection(),
+                  const SizedBox(height: 12),
+                  const DropAddressSection(),
+                  const SizedBox(height: 12),
+                  const OverviewDatetimeBottomSection(),
+
+                  const SizedBox(height: 12),
+                  const OverviewIWillPayBottomSection(),
+                  const SizedBox(height: 12),
+
+                  const AcknowledgementSection(),
+
                 ],
               ),
             ),
           ),
           const OverviewPublishSection(),
-          SizedBox(height: 12)
+          const SizedBox(height: 12)
         ],
       ),
     );

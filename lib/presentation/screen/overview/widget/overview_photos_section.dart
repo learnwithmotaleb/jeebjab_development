@@ -17,8 +17,8 @@ class OverviewPhotosSection extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
+          color: AppColors.forgroundColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.blue),
         ),
         child: Column(
           children: [
