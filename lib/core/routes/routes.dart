@@ -63,8 +63,16 @@ import 'package:jeebjab/presentation/screen/profile/account_settings/edit_driver
 import 'package:jeebjab/presentation/screen/profile/account_settings/edit_driver_profile/screen/edit_driver_profile_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profile/controller/edit_profile_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profile/screen/edit_profile_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/contact_&_support/controller/contact_and_support_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/contact_&_support/screen/contact_and_support_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/language/controller/language_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/language/screen/language_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/privacy_&_policy/controller/privacy_and_policy_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/privacy_&_policy/screen/privacy_and_policy_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/controller/profile_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/terms_&_condition/controller/terms_and_condition_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/terms_&_condition/screen/terms_and_condition_screen.dart';
 import 'package:jeebjab/presentation/screen/read_more/controller/read_more_post_controller.dart';
 import 'package:jeebjab/presentation/screen/read_more/screen/read_more_post_screen.dart';
 import 'package:jeebjab/presentation/screen/review_list/controller/reviews_list_controller.dart';
@@ -569,6 +577,43 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(BankCardController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.contactAndSupport,
+      page: () =>  ContactAndSupportScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ContactAndSupportController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.termAndCondition,
+      page: () =>  TermsAndConditionScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(TermsAndConditionController());
+      }),
+    ),
+    GetPage(
+      name: RoutePath.policyAndPrivacy,
+      page: () =>  PrivacyAndPolicyScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PrivacyAndPolicyController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.profileLanguage,
+      page: () =>  ProfileLanguageScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ProfileLanguageController());
       }),
     ),
 

@@ -38,28 +38,29 @@ class ProfileController extends GetxController {
         title: 'Language',
         icon: Icons.language_outlined,
         onTap: () {
-          // TODO: Get.toNamed(RoutePath.language);
+          Get.toNamed(RoutePath.profileLanguage);
         },
       ),
       ProfileMenuItem(
         title: 'Contact & Support',
         icon: Icons.help_outline_rounded,
         onTap: () {
-          // TODO: Get.toNamed(RoutePath.contactSupport);
+          Get.toNamed(RoutePath.contactAndSupport);
         },
       ),
       ProfileMenuItem(
         title: 'Terms & Condition',
         icon: Icons.description_outlined,
         onTap: () {
-          // TODO: Get.toNamed(RoutePath.terms);
+          Get.toNamed(RoutePath.termAndCondition);
         },
       ),
       ProfileMenuItem(
         title: 'Privacy & Policy',
         icon: Icons.privacy_tip_outlined,
         onTap: () {
-          // TODO: Get.toNamed(RoutePath.privacy);
+          Get.toNamed(RoutePath.policyAndPrivacy);
+
         },
       ),
       ProfileMenuItem(

@@ -52,6 +52,10 @@ class RoutePath {
   static const String driverProfile = '/DriverProfileScreen';
   static const String editDriverProfile = '/EditDriverProfileScreen';
   static const String bankCard = '/BankCardScreen';
+  static const String contactAndSupport = '/ContactAndSupportScreen';
+  static const String termAndCondition = '/TermsAndConditionScreen';
+  static const String policyAndPrivacy = '/PrivacyAndPolicyScreen';
+  static const String profileLanguage = '/ProfileLanguageScreen';
 
 
 

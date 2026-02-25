@@ -21,6 +21,8 @@ class AppImages {
   static const String shadowImage = "assets/icons/shadow_image.png";
   static const String ios = "assets/icons/ios.png";
   static const String google = "assets/icons/google.png";
+  static const String arabic = "assets/icons/arabic.png";
+  static const String english = "assets/icons/english.png";
 
 
 
