@@ -35,6 +35,8 @@ import 'package:jeebjab/presentation/screen/create_post/screen/create_post_scree
 import 'package:jeebjab/presentation/screen/drop_off_floor/screen/drop_off_floor_screen.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/controller/i_will_pay_controller.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/screen/i_will_pay_screen.dart';
+import 'package:jeebjab/presentation/screen/job/be_come_a_driver/controller/be_come_driver_controller.dart';
+import 'package:jeebjab/presentation/screen/job/be_come_a_driver/screen/be_come_driver_screen.dart';
 import 'package:jeebjab/presentation/screen/job/category_status/controller/category_status_controller.dart';
 import 'package:jeebjab/presentation/screen/job/category_status/screen/category_status_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/controller/job_post_controller.dart';
@@ -665,6 +667,15 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(NotAllowController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.becomeDriver,
+      page: () =>  BecomeDriverScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(BecomeDriverController());
       }),
     ),
 

@@ -173,7 +173,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
 
                           SizedBox(width: Dimensions.w(16)),
-                          _socialLoginButton(AppImages.google),
+                          GestureDetector(
+                            onTap: (){
+                              Get.toNamed(RoutePath.becomeDriver);
+                            },
+                            child: _socialLoginButton(AppImages.google),
+
+                          ),
                         ],
                       ),
                       SizedBox(height: Dimensions.h(24)),

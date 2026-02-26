@@ -62,6 +62,7 @@ class RoutePath {
   static const String categoryStatus = '/CategoryStatusScreen';
   static const String westType = '/WestTypeScreen';
   static const String notAllowWest = '/NotAllowScreen';
+  static const String becomeDriver = '/BecomeDriverScreen';
 
 
 
