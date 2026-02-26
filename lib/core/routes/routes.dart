@@ -35,6 +35,12 @@ import 'package:jeebjab/presentation/screen/create_post/screen/create_post_scree
 import 'package:jeebjab/presentation/screen/drop_off_floor/screen/drop_off_floor_screen.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/controller/i_will_pay_controller.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/screen/i_will_pay_screen.dart';
+import 'package:jeebjab/presentation/screen/job/category_status/controller/category_status_controller.dart';
+import 'package:jeebjab/presentation/screen/job/category_status/screen/category_status_screen.dart';
+import 'package:jeebjab/presentation/screen/job/job_post/controller/job_post_controller.dart';
+import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
+import 'package:jeebjab/presentation/screen/not_allow/controller/not_allow_controller.dart';
+import 'package:jeebjab/presentation/screen/not_allow/screen/not_allow_screen.dart';
 
 import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
@@ -86,6 +92,8 @@ import 'package:jeebjab/presentation/screen/show_map/controller/show_map_control
 import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
+import 'package:jeebjab/presentation/screen/west_type/controller/west_type_controller.dart';
+import 'package:jeebjab/presentation/screen/west_type/screen/west_type_screen.dart';
 
 import '../../presentation/screen/add_card/screen/add_card_screen.dart';
 import '../../presentation/screen/auth/Customer_Verification/screen/customer_verification_screen.dart';
@@ -616,6 +624,51 @@ class AppRouter {
         Get.put(ProfileLanguageController());
       }),
     ),
+
+
+    GetPage(
+      name: RoutePath.jobPost,
+      page: () =>  JobPostScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(JobPostController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.categoryStatus,
+      page: () =>  CategoryStatusScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CategoryStatusController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.westType,
+      page: () =>  WestTypeScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(WestTypeController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.notAllowWest,
+      page: () =>  NotAllowScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(NotAllowController());
+      }),
+    ),
+
+
 
 
 

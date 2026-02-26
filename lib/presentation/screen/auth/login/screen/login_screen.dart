@@ -165,7 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _socialLoginButton(AppImages.ios),
+                          GestureDetector(
+                            onTap: (){
+                              Get.toNamed(RoutePath.westType);
+                            },
+                            child: _socialLoginButton(AppImages.ios),
+                          ),
+
                           SizedBox(width: Dimensions.w(16)),
                           _socialLoginButton(AppImages.google),
                         ],

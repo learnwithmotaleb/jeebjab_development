@@ -57,6 +57,14 @@ class RoutePath {
   static const String policyAndPrivacy = '/PrivacyAndPolicyScreen';
   static const String profileLanguage = '/ProfileLanguageScreen';
 
+  //=========================================Job====================
+  static const String jobPost = '/JobPostScreen';
+  static const String categoryStatus = '/CategoryStatusScreen';
+  static const String westType = '/WestTypeScreen';
+  static const String notAllowWest = '/NotAllowScreen';
+
+
+
 
 
 

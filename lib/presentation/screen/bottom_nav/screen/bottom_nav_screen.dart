@@ -6,6 +6,7 @@ import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
+import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
@@ -23,15 +24,10 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   final List<dynamic> _pages = [
     HomeScreen(),
-    Container(
-      color: Colors.white,
-      child: const Center(child: Text("Jobs")),
-    ),
+    JobPostScreen(),
     CreatePostScreen(),
-
     MyPostScreen(),
-    ProfileScreen()
-
+    ProfileScreen(),
   ];
 
   @override
