@@ -39,19 +39,24 @@ class _BecomeDriverScreenState extends State<BecomeDriverScreen> {
             child: DriverTypeCard(controller: controller),
           ),
 
-          SizedBox(height: Dimensions.h(20),),
+          SizedBox(height: Dimensions.h(20)),
 
-          Obx(() => Padding(
-            padding: EdgeInsets.fromLTRB(
-              Dimensions.w(16), 0, Dimensions.w(16), Dimensions.h(24),
+          Obx(
+            () => Padding(
+              padding: EdgeInsets.fromLTRB(
+                Dimensions.w(16),
+                0,
+                Dimensions.w(16),
+                Dimensions.h(24),
+              ),
+
+              child: AppButton(
+                label: AppStrings.continueButton.tr,
+                onPressed: controller.onContinue,
+                height: 65,
+              ),
             ),
-
-            child: AppButton(label: AppStrings.continueButton.tr,  onPressed:  controller.onContinue,
-           height: 65,
-
-            )
-
-          )),
+          ),
         ],
       ),
     );

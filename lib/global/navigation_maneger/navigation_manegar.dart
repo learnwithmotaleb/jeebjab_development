@@ -3,49 +3,42 @@ import '../../core/routes/route_path.dart';
 import '../../helper/local_db/local_db.dart';
 import '../../helper/local_db/shareprefs_helper.dart';
 import '../../widget/show_snackbar.dart';
+import '../../core/enums/app_role.dart';
 
 class AppNavigator {
 
-  /// =================== Role Based Navigation ====================
+  /// =================== After Login ====================
   static Future<void> navigateAfterLogin() async {
-    final role = (await SharePrefsHelper.getRole())?.toUpperCase() ?? "USER";
+    final role = SharePrefsHelper.getRole();
 
     print("🔍 User Role: $role");
 
-    if (role == "PROVIDER") {
-      //Get.offAllNamed(RoutePath.providerNav);
+    if (role == AppRole.DRIVER) {
+      Get.offAllNamed(RoutePath.driverBottomNav);
+    } else if (role == AppRole.CUSTOMER) {
+      Get.offAllNamed(RoutePath.bottomNav);
     } else {
-     // Get.offAllNamed(RoutePath.bottomNav); // USER
+      Get.offAllNamed(RoutePath.login);
     }
   }
 
-  /// =================== Navigate By Stored Role ====================
-  static Future<void> navigateByRole() async {
-    final role = (await SharePrefsHelper.getRole())?.toUpperCase() ?? "USER";
-
-    if (role == "PROVIDER") {
-     // Get.offAllNamed(RoutePath.providerNav);
-    } else {
-     // Get.offAllNamed(RoutePath.bottomNav);
-    }
-  }
-
-  /// =================== Initial Navigation (Splash) ====================
+  /// =================== Splash Start ====================
   static Future<void> checkAppStartNavigation() async {
     final token = SharePrefsHelper.getToken();
-    final role  = (await SharePrefsHelper.getRole())?.toUpperCase() ?? "USER";
+    final role  = SharePrefsHelper.getRole();
 
     if (token != null && token.isNotEmpty) {
-      print("🔐 Token found: $token");
 
-      if (role == "PROVIDER") {
-      //  Get.offAllNamed(RoutePath.providerNav);
+      if (role == AppRole.DRIVER) {
+        Get.offAllNamed(RoutePath.driverBottomNav);
+      } else if (role == AppRole.CUSTOMER) {
+        Get.offAllNamed(RoutePath.bottomNav);
       } else {
-       // Get.offAllNamed(RoutePath.bottomNav); // USER
+        Get.offAllNamed(RoutePath.selectRole);
       }
+
     } else {
-      print("❌ No token → Navigate to login");
-     // Get.offAllNamed(RoutePath.login);
+      Get.offAllNamed(RoutePath.login);
     }
   }
 
@@ -54,19 +47,14 @@ class AppNavigator {
     await SharePrefsHelper.clearAll();
 
     ShowAppSnackBar.success("Logged out successfully");
-    //Get.offAllNamed(RoutePath.login);
+    Get.offAllNamed(RoutePath.login);
   }
 
-  /// =================== Force Screen Reload ====================
-  static void refreshScreen() {
-    Get.offAllNamed(Get.currentRoute);
-  }
-
-  /// =================== Debug Info ====================
-  static Future<void> debugInfo() async {
+  /// =================== Debug ====================
+  static void debugInfo() {
     print("===== DEBUG INFO START =====");
-    print("Token: ${await SharePrefsHelper.getToken()}");
-    print("Role: ${await SharePrefsHelper.getRole()}");
+    print("Token: ${SharePrefsHelper.getToken()}");
+    print("Role: ${SharePrefsHelper.getRole()}");
     print("Current Route: ${Get.currentRoute}");
     print("===== DEBUG INFO END =====");
   }

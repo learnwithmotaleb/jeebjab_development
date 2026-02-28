@@ -81,7 +81,7 @@ class _CompleteVarificationScreenState
                   child: AppButton(
                     label: AppStrings.continueButton.tr,
                     onPressed: () {
-                      Get.toNamed(RoutePath.vehicleType);
+                      Get.toNamed(RoutePath.bottomNav);
                     },
                   ),
                 ),

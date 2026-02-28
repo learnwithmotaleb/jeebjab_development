@@ -1,43 +1,40 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:get/get.dart';
 import '../../../helper/local_db/local_db.dart';
 import '../../../utils/app_const/app_const.dart';
-import '../eng/eng.dart';
-import '../greek/greek.dart';
-
-class Language extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-    "en_US": english,
-    "el_GR": greek,
-  };
-}
 
 class LanguageController extends GetxController {
-  static LanguageController get to => Get.find();
 
-  RxBool isEnglish = true.obs;
+  // Reactive Locale
+  Rx<Locale> currentLocale = const Locale("en", "US").obs;
 
-  // Load saved language
-  Future<void> loadLanguage() async {
-    isEnglish.value =
-        await SharePrefsHelper.getBool(AppConstants.language) ?? true;
-    _updateLocale();
+  @override
+  void onInit() {
+    super.onInit();
+    loadLanguage();
   }
 
-  // Switch language
+  /// Load saved language from SharedPrefs
+  void loadLanguage() {
+    final isEnglish = SharePrefsHelper.getBool(AppConstants.languageKey) ?? true;
+
+    currentLocale.value = isEnglish ? const Locale("en", "US") : const Locale("ar", "SA");
+
+    // Update app locale
+    Get.updateLocale(currentLocale.value);
+  }
+
+  /// Switch language dynamically
   Future<void> switchLanguage(bool englishSelected) async {
-    isEnglish.value = englishSelected;
-    _updateLocale();
-    await SharePrefsHelper.setBool(AppConstants.language, englishSelected);
+    currentLocale.value = englishSelected ? const Locale("en", "US") : const Locale("ar", "SA");
+
+    // Update app locale immediately
+    Get.updateLocale(currentLocale.value);
+
+    // Save choice in SharedPrefs
+    await SharePrefsHelper.setBool(AppConstants.languageKey, englishSelected);
   }
 
-  void _updateLocale() {
-    if (isEnglish.value) {
-      Get.updateLocale(const Locale("en", "US"));
-    } else {
-      Get.updateLocale(const Locale("el", "GR"));
-    }
-  }
-
+  /// Convenience getter
+  bool get isEnglish => currentLocale.value.languageCode == "en";
 }

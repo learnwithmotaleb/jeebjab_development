@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 
+import '../../../../core/enums/app_role.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../utils/app_colors/app_colors.dart';
@@ -66,34 +67,37 @@ class _SelectRoleScreenState extends State<SelectRoleScreen> {
 
                   Obx(() => AppButton(
                     label: "Customer",
-                    backgroundColor: controller.selectedRole.value == UserRole.customer
+                    backgroundColor:
+                    controller.selectedRole.value == AppRole.CUSTOMER
                         ? AppColors.secondaryColor
                         : AppColors.primaryColor,
-                    textColor: controller.selectedRole.value == UserRole.customer
+                    textColor:
+                    controller.selectedRole.value == AppRole.CUSTOMER
                         ? AppColors.primaryColor
                         : AppColors.whiteColor,
                     height: Dimensions.h(55),
                     borderSideColor: AppColors.whiteColor,
                     borderRadius: Dimensions.r(16),
-                    onPressed: controller.selectCustomer,
+                    onPressed: () => controller.selectRole(AppRole.CUSTOMER),
                   )),
 
                   SizedBox(height: Dimensions.h(20)),
 
                   Obx(() => AppButton(
                     label: "Driver",
-                    backgroundColor: controller.selectedRole.value ==  UserRole.driver
+                    backgroundColor:
+                    controller.selectedRole.value == AppRole.DRIVER
                         ? AppColors.secondaryColor
                         : AppColors.primaryColor,
-                    textColor: controller.selectedRole.value == UserRole.driver
+                    textColor:
+                    controller.selectedRole.value == AppRole.DRIVER
                         ? AppColors.primaryColor
                         : AppColors.whiteColor,
                     height: Dimensions.h(55),
                     borderSideColor: AppColors.whiteColor,
                     borderRadius: Dimensions.r(16),
-                    onPressed: controller.selectDriver,
+                    onPressed: () => controller.selectRole(AppRole.DRIVER),
                   )),
-
                 ],
 
 

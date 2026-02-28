@@ -63,6 +63,10 @@ class RoutePath {
   static const String westType = '/WestTypeScreen';
   static const String notAllowWest = '/NotAllowScreen';
   static const String becomeDriver = '/BecomeDriverScreen';
+  static const String driverBottomNav = '/DriverBottomNavScreen';
+
+  static const String taskScreen = '/TaskScreen';
+  static const String driverHome = '/DriverHomeScreen';
 
 
 

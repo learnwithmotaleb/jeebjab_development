@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/helper/local_db/role_selection_controller.dart';
 
-import '../../../../../helper/role_controller/role_controller.dart';
-import '../../../role/controller/select_role_controller.dart';
+import '../../../../../core/enums/app_role.dart';
 
 class SignupController extends GetxController{
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -40,25 +40,20 @@ class SignupController extends GetxController{
     return isValid;
   }
 
-  var selectedRole = UserRole.customer.obs;
-
-  final _role = RoleController();
-
+  final role = RoleSelectionController();
 
   Future<void> selectCustomer() async {
-    selectedRole.value = UserRole.customer;
-    await _role.setCustomer().then((value){
-      print("Role Customer Set successfully");
-     // Get.toNamed(RoutePath.signup);
+
+    role.selectRole(AppRole.CUSTOMER).then((value){
+      print("Set Successfully Role Customer");
     });
   }
 
   void selectDriver()async{
-    selectedRole.value = UserRole.driver;
-    await _role.setDriver().then((value){
-      print("Role Driver Set successfully");
-      // Get.toNamed(RoutePath.signup);
+    role.selectRole(AppRole.DRIVER).then((value){
+      print("Set Successfully Role Driver");
     });
+
 
   }
 

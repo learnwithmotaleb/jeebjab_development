@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:jeebjab/helper/role_controller/role_controller.dart';
 import 'package:jeebjab/widget/show_snackbar.dart';
 
+import '../../../../../core/enums/app_role.dart';
 import '../../../../../core/routes/route_path.dart';
 import '../../../../../helper/local_db/local_db.dart';
 import '../../../../../service/api_service.dart';
@@ -15,25 +15,28 @@ class CustomerVerificationController extends GetxController{
   RxBool isLoadingResend = false.obs;
 
 
-  final roleController = RoleController();
+  final role = SharePrefsHelper.getRole();
+  final token = SharePrefsHelper.getToken();
 
 
   Future<void> emailVerifyProcess() async {
 
-    final role = await roleController.getRole();
 
-    if (role == AppRole.CUSTOMER) {
-      print("Customer");
-      Get.toNamed(RoutePath.customerVerification);
-    } else if (role == AppRole.DRIVER) {
-      print("Driver");
 
-      Get.toNamed(RoutePath.driverVerification);
-    } else {
-      print("No role set");
+    // if (role == AppRole.CUSTOMER) {
+    //   print("Customer");
+    //   Get.toNamed(RoutePath.customerVerification);
+    // } else if (role == AppRole.DRIVER) {
+    //   print("Driver");
+    //
+    //   Get.toNamed(RoutePath.driverVerification);
+    // } else {
+    //   print("No role set");
+    //
+    //   Get.toNamed(RoutePath.reset);
+    // }
 
-      Get.toNamed(RoutePath.reset);
-    }
+    Get.toNamed(RoutePath.completeVarification);
 
 
 

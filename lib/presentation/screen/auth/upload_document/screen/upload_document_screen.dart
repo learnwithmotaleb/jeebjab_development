@@ -12,7 +12,9 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../widget/app_button.dart';
+import '../../../../../widget/app_confirmation_alert.dart';
 import '../../../../../widget/app_text_field.dart';
+import '../../../../../widget/confirmataion_alert.dart';
 import '../../../../../widget/custom_appbar.dart';
 import '../controller/upload_document_controller.dart';
 import '../widget/upload_image_widget.dart';
@@ -80,7 +82,12 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
 
                 label: AppStrings.continueButton.tr,
                 onPressed: (){
-                  Get.toNamed(RoutePath.completeVarification);
+                  AppAlerts.confirm(title: 'Success', message: 'Account Create Successfully Go To Login Screen', onConfirm: () {
+
+                    Get.toNamed(    RoutePath.login);
+
+                  });
+
                 },
 
 

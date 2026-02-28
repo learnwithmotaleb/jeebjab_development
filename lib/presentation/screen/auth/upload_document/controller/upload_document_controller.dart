@@ -18,4 +18,11 @@ class UploadDocumentController extends GetxController {
   void removeImage() {
     imageFile.value = null;
   }
+
+
+
+
+
+
+
 }

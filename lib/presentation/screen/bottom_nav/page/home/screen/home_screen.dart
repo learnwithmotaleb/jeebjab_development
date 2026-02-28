@@ -11,7 +11,6 @@ import 'package:jeebjab/widget/app_button.dart';
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -52,9 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: Dimensions.h(15)),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: AssetImage(AppImages.profileImage),
+                    leading: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RoutePath.profile);
+                      },
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: AssetImage(AppImages.profileImage),
+                      ),
                     ),
                     title: Text(
                       "Rayyan Hassan",

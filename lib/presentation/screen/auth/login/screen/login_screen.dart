@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
                           onTap: () {
-                            Get.toNamed(RoutePath.welcome);
+                            Get.toNamed(RoutePath.forget);
 
                           },
                           child: Text(

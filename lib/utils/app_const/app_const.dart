@@ -1,34 +1,47 @@
 // /utils/app_const/app_const.dart
 class AppConstants {
+
   // ===================== Language =====================
   static const String english = "en";
-  static const String greek = "el";
-  static String language = english;
+  static const String arabic = "ar";
+  static String language = english; // default
 
-  // ===================== User ========================
-  static String? userID;      // Store user ID after login
-  static String? userName;    // Optional: Store user name
-  static String? userEmail;   // Optional: Store user email
-  static String? token;       // Store user token after login
+  // ===================== User Session =================
+  static String? userId;      // Logged-in user ID
+  static String? userName;    // Optional: User name
+  static String? userEmail;   // Optional: User email
+  static String? token;       // Auth token
 
   // ===================== App Info ====================
   static const String baseUrl = "https://api.yourapp.com";
   static const String appVersion = "1.0.0";
   static const int splashDelaySeconds = 3;
 
-  // ===================== Tokens ======================
+  // ===================== SharedPrefs Keys =============
   static const String tokenKey = "user_token";
+  static const String languageKey = "app_language";
+  static const String roleKey = "app_role";
+  static const String onboardSeenKey = "onboard_seen";
+  static const String themeModeKey = "theme_mode";
 
   // ===================== Helpers =====================
-  /// Set token
-  static void setToken(String userToken) {
+  /// Set token and optional user info
+  static void setToken({
+    required String userToken,
+    String? id,
+    String? name,
+    String? email,
+  }) {
     token = userToken;
+    userId = id;
+    userName = name;
+    userEmail = email;
   }
 
-  /// Clear token (logout)
-  static void clearToken() {
+  /// Clear all user session info (logout)
+  static void clearSession() {
     token = null;
-    userID = null;
+    userId = null;
     userName = null;
     userEmail = null;
   }

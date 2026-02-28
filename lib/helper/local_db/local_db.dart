@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:jeebjab/helper/local_db/shareprefs_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/enums/app_role.dart';
+
 class SharePrefsHelper {
   static SharedPreferences? _prefs;
 
-  // Initialize once in main()
   static Future init() async {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
-  // ----------------- General Setters -----------------
+  // ================= GENERIC BOOL =================
 
   static Future<void> setBool(String key, bool value) async {
     await _prefs?.setBool(key, value);
@@ -20,48 +21,27 @@ class SharePrefsHelper {
     return _prefs?.getBool(key);
   }
 
-  static Future<void> setString(String key, String value) async {
-    await _prefs?.setString(key, value);
+  // ================= ROLE =================
+
+  static Future<void> saveRole(AppRole role) async {
+    await _prefs?.setString(SharePrefsKeys.role, role.name);
   }
 
-  static String? getString(String key) {
-    return _prefs?.getString(key);
+  static AppRole? getRole() {
+    final value = _prefs?.getString(SharePrefsKeys.role);
+    if (value == null) return null;
+
+    return AppRole.values.firstWhere(
+          (e) => e.name == value,
+      orElse: () => AppRole.CUSTOMER,
+    );
   }
 
-  // ----------------- Theme Mode -----------------
-
-  static const String _themeKey = 'theme_mode';
-
-  static ThemeMode getThemeMode() {
-    switch (_prefs?.getString(_themeKey)) {
-      case 'light': return ThemeMode.light;
-      case 'dark':  return ThemeMode.dark;
-      default:      return ThemeMode.system;
-    }
+  static Future<void> clearRole() async {
+    await _prefs?.remove(SharePrefsKeys.role);
   }
 
-
-  static Future<void> saveThemeMode(ThemeMode mode) async {
-    final value = mode == ThemeMode.light
-        ? 'light'
-        : mode == ThemeMode.dark
-        ? 'dark'
-        : 'system';
-
-    await _prefs?.setString(_themeKey, value);
-  }
-
-  // ----------------- Role -----------------
-
-  static Future<void> saveRole(String value) async {
-    await _prefs?.setString(SharePrefsKeys.role, value);
-  }
-
-  static String? getRole() {
-    return _prefs?.getString(SharePrefsKeys.role);
-  }
-
-  // ----------------- Token -----------------
+  // ================= TOKEN =================
 
   static Future<void> saveToken(String token) async {
     await _prefs?.setString(SharePrefsKeys.token, token);
@@ -71,7 +51,7 @@ class SharePrefsHelper {
     return _prefs?.getString(SharePrefsKeys.token);
   }
 
-  // ----------------- User ID -----------------
+  // ================= USER ID =================
 
   static Future<void> saveUserId(String id) async {
     await _prefs?.setString(SharePrefsKeys.userId, id);
@@ -81,10 +61,7 @@ class SharePrefsHelper {
     return _prefs?.getString(SharePrefsKeys.userId);
   }
 
-
-
-
-  // ----------------- Profile ID -----------------
+  // ================= PROFILE ID =================
 
   static Future<void> saveProfileId(String profileId) async {
     await _prefs?.setString(SharePrefsKeys.profileId, profileId);
@@ -94,7 +71,7 @@ class SharePrefsHelper {
     return _prefs?.getString(SharePrefsKeys.profileId);
   }
 
-  // ----------------- Onboard Seen -----------------
+  // ================= ONBOARD =================
 
   static Future<void> setOnboardSeen(bool value) async {
     await _prefs?.setBool(SharePrefsKeys.onboardSeen, value);
@@ -104,9 +81,31 @@ class SharePrefsHelper {
     return _prefs?.getBool(SharePrefsKeys.onboardSeen) ?? false;
   }
 
+  // ================= THEME =================
 
+  static ThemeMode getThemeMode() {
+    switch (_prefs?.getString(SharePrefsKeys.themeMode)) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
 
-  // ----------------- Clear All -----------------
+  static Future<void> saveThemeMode(ThemeMode mode) async {
+    final value = mode == ThemeMode.light
+        ? 'light'
+        : mode == ThemeMode.dark
+        ? 'dark'
+        : 'system';
+
+    await _prefs?.setString(SharePrefsKeys.themeMode, value);
+  }
+
+  // ================= CLEAR ALL =================
+
   static Future<void> clearAll() async {
     await _prefs?.clear();
   }

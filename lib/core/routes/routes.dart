@@ -32,6 +32,11 @@ import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart
 import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/controller/driver_bottom_nav_controller.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/driver_home/controller/driver_home_controller.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/driver_home/home/driver_home_screen.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task/controller/task_controller.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/screen/driver_bottom_nav_screen.dart';
 import 'package:jeebjab/presentation/screen/drop_off_floor/screen/drop_off_floor_screen.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/controller/i_will_pay_controller.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/screen/i_will_pay_screen.dart';
@@ -111,6 +116,7 @@ import '../../presentation/screen/auth/login/controller/login_controller.dart';
 import '../../presentation/screen/auth/login/screen/login_screen.dart';
 import '../../presentation/screen/bottom_nav/page/home/controller/home_controller.dart';
 import '../../presentation/screen/bottom_nav/page/home/screen/home_screen.dart';
+import '../../presentation/screen/driver_section/driver_bottom_nav/page/task/screen/task_screen.dart';
 import '../../presentation/screen/drop_off_floor/controller/drop_off_floor_controller.dart';
 import '../../presentation/screen/pickup_address/screen/pickup_address_screen.dart';
 import '../../presentation/screen/placement_pickup/screen/placement_pickup_screen.dart';
@@ -676,6 +682,36 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(BecomeDriverController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.driverBottomNav,
+      page: () =>  DriverBottomNavScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DriverBottomNavController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.taskScreen,
+      page: () =>  TaskScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(TaskController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.driverHome,
+      page: () =>  DriverHomeScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DriverHomeController());
       }),
     ),
 

@@ -1,30 +1,24 @@
-import 'package:get/get.dart';
-import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-import '../../../../helper/role_controller/role_controller.dart';
-
-enum UserRole { customer, driver }
+import '../../../../core/enums/app_role.dart';
+import '../../../../core/routes/route_path.dart';
+import '../../../../helper/local_db/local_db.dart';
 
 class SelectRoleController extends GetxController {
-  var selectedRole = UserRole.customer.obs;
 
-  final _role = RoleController();
+  var selectedRole = Rx<AppRole?>(null);
 
+  Future<void> selectRole(AppRole role) async {
 
-  Future<void> selectCustomer() async {
-    selectedRole.value = UserRole.customer;
-    await _role.setCustomer().then((value){
-      print("Role Customer Set successfully");
-      Get.toNamed(RoutePath.signup);
-    });
-  }
+    selectedRole.value = role;
 
-  void selectDriver()async{
-    selectedRole.value = UserRole.driver;
-    await _role.setDriver().then((value){
-      print("Role Driver Set successfully");
-      Get.toNamed(RoutePath.signup);
-    });
+    await SharePrefsHelper.saveRole(role);
 
+    print("Role ${role.name} saved");
+
+    Get.toNamed(RoutePath.signup);
   }
 }

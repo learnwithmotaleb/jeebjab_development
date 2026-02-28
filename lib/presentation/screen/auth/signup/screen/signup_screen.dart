@@ -25,6 +25,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  SignupController controller = Get.put(SignupController());
 
 
   @override
@@ -36,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildMobile() {
-    final controller = Get.put(SignupController());
+
 
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
