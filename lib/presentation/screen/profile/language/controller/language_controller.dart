@@ -1,36 +1,29 @@
-import 'dart:ui';
-
 import 'package:get/get.dart';
+import '../../../../../global/language/controller/language_controller.dart';
 
 class ProfileLanguageController extends GetxController {
   static ProfileLanguageController get to => Get.find();
 
-  // ── Selected language code ────────────────────────────────────────────────
-  final RxString selectedLanguage = ''.obs;
+  // Mirrors the global controller's current selection
+  final RxString selectedLanguage = 'en'.obs;
 
-  // ── Is English flag ───────────────────────────────────────────────────────
-  final RxBool isEnglish = true.obs;
+  final LanguageController _languageController = Get.find<LanguageController>();
 
   @override
   void onInit() {
     super.onInit();
-    // Default to English
-    selectedLanguage.value = isEnglish.value ? 'en' : 'el';
+    // Load whatever language is currently active
+    selectedLanguage.value =
+    _languageController.isEnglish ? 'en' : 'ar';
   }
 
-  // ── Switch app locale ─────────────────────────────────────────────────────
-  void switchLanguage(bool toEnglish) {
-    isEnglish.value = toEnglish;
-    if (toEnglish) {
-      Get.updateLocale(const Locale('en', 'US'));
-    } else {
-      Get.updateLocale(const Locale('el', 'GR')); // Greek / Arabic
-    }
-  }
-
-  // ── Change language (called from UI) ──────────────────────────────────────
+  /// Called from UI when user taps a language row
   void changeLanguage(String value) {
     selectedLanguage.value = value;
-    switchLanguage(value == 'en');
+  }
+
+  /// Called when user presses "Change Language" button
+  Future<void> applyLanguage() async {
+    await _languageController.switchLanguage(selectedLanguage.value == 'en');
   }
 }

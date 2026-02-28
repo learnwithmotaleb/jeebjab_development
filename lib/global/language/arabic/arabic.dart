@@ -3,7 +3,7 @@ import '../../../utils/static_strings/static_strings.dart';
 Map<String, String> arabic = {
   AppStrings.appName: "أوروبي",
   AppStrings.english: "الإنجليزية",
-  AppStrings.greek: "العربية",
+  AppStrings.arabic: "العربية",
   AppStrings.continueButton: "استمرار",
   AppStrings.next: "التالي",
   AppStrings.language: "اللغة",

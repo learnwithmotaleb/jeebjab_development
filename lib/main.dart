@@ -16,12 +16,9 @@ void main() async {
   // Lock device orientation
   DeviceUtils.lockDevicePortrait();
 
-  // Initialize Internet Controller permanently
-  Get.put(InternetController(), permanent: true);
 
-  // Initialize LanguageController and load saved language
-  final languageController = Get.put(LanguageController(), permanent: true);
-  languageController.loadLanguage();
+  Get.put(InternetController(), permanent: true);
+  Get.put(LanguageController(), permanent: true); //
 
   runApp(MyApp());
 }

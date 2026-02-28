@@ -1,7 +1,7 @@
 class AppStrings {
   static const String appName = "Jeeb Jab";
   static const String english = "English";
-  static const String greek = "Arabic";
+  static const String arabic = "Arabic";
   static const String continueButton = "Continue";
   static const String next = "Next";
   static const String language = "Language";

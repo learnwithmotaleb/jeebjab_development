@@ -28,40 +28,42 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Language"),
+      appBar: CommonAppBar(title: AppStrings.language.tr),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
         child: Column(
           children: [
             SizedBox(height: Dimensions.h(20)),
 
-            // ── Arabic ────────────────────────────────────────────────
+            // ── Arabic ─────────────────────────────────────────────
             _LanguageOptionRow(
               flag: AppImages.arabic,
-              title: AppStrings.greek,
-              value: 'ar',
+              title: AppStrings.arabic.tr, // still uses the key — value is "Arabic"
+              value: 'ar',               // ← fixed: was 'el'
               controller: lsc,
             ),
 
             SizedBox(height: Dimensions.h(12)),
 
-            // ── English ───────────────────────────────────────────────
+            // ── English ────────────────────────────────────────────
             _LanguageOptionRow(
               flag: AppImages.english,
-              title: AppStrings.english,
+              title: AppStrings.english.tr,
               value: 'en',
               controller: lsc,
             ),
 
             SizedBox(height: Dimensions.h(300)),
 
-            // ── Change Language Button ────────────────────────────────
+            // ── Change Language Button ─────────────────────────────
             AppButton(
               label: 'Change Language',
               height: 65,
-              onPressed: () => Get.back(),
+              onPressed: () async {
+                await lsc.applyLanguage(); // ← saves + updates locale
+                Get.back();
+              },
             ),
-
           ],
         ),
       ),
@@ -69,7 +71,6 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
   }
 }
 
-// ── Language Option Row (external widget) ────────────────────────────────────
 class _LanguageOptionRow extends StatelessWidget {
   final String flag;
   final String title;
@@ -100,25 +101,17 @@ class _LanguageOptionRow extends StatelessWidget {
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(Dimensions.r(10)),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.primaryColor
-                  : const Color(0xFFE0E0E0),
-              width: isSelected ? 1 : 1,
+              color: isSelected ? AppColors.primaryColor : const Color(0xFFE0E0E0),
             ),
-
           ),
           child: Row(
             children: [
-              // ── Flag icon ───────────────────────────────────────────
               CircleAvatar(
                 radius: Dimensions.r(10),
                 backgroundImage: AssetImage(flag),
                 backgroundColor: const Color(0xFFF0F0F0),
               ),
-
               SizedBox(width: Dimensions.w(14)),
-
-              // ── Language name ────────────────────────────────────────
               Expanded(
                 child: Text(
                   title,
@@ -129,16 +122,12 @@ class _LanguageOptionRow extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // ── Check icon ───────────────────────────────────────────
               Icon(
                 isSelected
                     ? Icons.check_circle_outline_rounded
                     : Icons.radio_button_unchecked_rounded,
                 size: Dimensions.w(22),
-                color: isSelected
-                    ? AppColors.primaryColor
-                    : const Color(0xFFCCCCCC),
+                color: isSelected ? AppColors.primaryColor : const Color(0xFFCCCCCC),
               ),
             ],
           ),
