@@ -32,7 +32,7 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Information"),
+      appBar: CommonAppBar(title: AppStrings.information.tr),
       body: Column(
         children: [
           Expanded(
@@ -43,23 +43,10 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                 children: [
                   const SizedBox(height: 8),
 
-                  // ── Captured Images Preview ──────────────────────────
-                  // Shows all photos taken in CaptureImageScreen
-                  // Obx(() {
-                  //   final images = controller.capturedImages;
-                  //   if (images.isEmpty) return const SizedBox.shrink();
-                  //   return Column(
-                  //     children: [
-                  //       CapturedImagesPreview(images: images),
-                  //       const SizedBox(height: 20),
-                  //     ],
-                  //   );
-                  // }),
-
                   // ── Name Field ───────────────────────────────────────
                   AppTextField(
                     controller: controller.nameController,
-                    hint: 'Name of item/products',
+                    hint: AppStrings.nameOfItemProducts.tr,
                     hintTextStyle: AppTextStyles.hint,
                     maxLines: 1,
                   ),
@@ -70,17 +57,17 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                   AppTextField(
                     controller: controller.descriptionController,
                     hintTextStyle: AppTextStyles.hint,
-                    hint: 'Description Write Here',
+                    hint: AppStrings.descriptionWriteHere.tr,
                     maxLines: 3,
                   ),
 
                   const SizedBox(height: 24),
 
                   // ── Size Section ─────────────────────────────────────
-                  const Center(
+                  Center(
                     child: Text(
-                      'Size Of Product',
-                      style: TextStyle(
+                      AppStrings.sizeOfProduct.tr,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF1A1A2E),
@@ -92,7 +79,7 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
                   // ── Size Cards Grid ──────────────────────────────────
                   Obx(
-                    () => Row(
+                        () => Row(
                       children: controller.sizes.map((size) {
                         final isSelected =
                             controller.selectedSize.value == size.label;
@@ -134,7 +121,7 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
               onPressed: controller.onContinue,
             ),
           ),
-           SizedBox(height: Dimensions.h(30)),
+          SizedBox(height: Dimensions.h(30)),
         ],
       ),
     );

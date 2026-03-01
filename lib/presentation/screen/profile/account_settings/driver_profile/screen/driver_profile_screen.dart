@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -28,7 +29,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Driver Profile"),
+      appBar: CommonAppBar(title: AppStrings.driverProfile.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -41,7 +42,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 children: [
                   // ── Driver Information Card ───────────────────────
                   InfoSectionCard(
-                    sectionTitle: 'Driver Information',
+                    sectionTitle: AppStrings.driverInformation.tr,
                     data: controller.driverInfo,
                   ),
 
@@ -49,7 +50,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
                   // ── Bank Information Card ─────────────────────────
                   InfoSectionCard(
-                    sectionTitle: 'Bank Information',
+                    sectionTitle:AppStrings.bankInformation.tr,
                     data: controller.bankInfo,
                   ),
 
@@ -71,7 +72,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               color: AppColors.whiteColor,
 
             ),
-            child: AppButton(label: 'Edit Profile',
+            child: AppButton(label: AppStrings.editProfile.tr,
               onPressed: controller.onEditProfile,
               backgroundColor: AppColors.whiteColor,
               textColor: AppColors.primaryColor,

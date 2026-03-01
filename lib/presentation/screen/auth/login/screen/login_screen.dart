@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
-                        "Sign In",
+                        AppStrings.signIn.tr,
                         style: AppTextStyles.title.copyWith(
 
                             color: AppColors.whiteColor, fontSize: 20,
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
-                        "Get started",
+                       AppStrings.getStarted.tr,
                         style: AppTextStyles.body.copyWith(
                             color: AppColors.whiteColor, fontSize: 20),
                       ),
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       AppTextField(
                         controller: controller.emailController,
                         focusNode: controller.emailFocus,
-                        hint: "Enter Email Address",
+                        hint: AppStrings.enterYourEmailAddress.tr,
                         keyboardType: TextInputType.emailAddress,
                         validator: AppValidators.email(),
                         onSubmitted: () {
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       AppTextField(
                         controller: controller.passwordController,
                         focusNode: controller.passwordFocus,
-                        hint: "Enter Password",
+                        hint: AppStrings.enterYourPassword.tr,
                         obscure: true,
                         prefixIcon: Icon(Icons.lock, color: AppColors.primaryColor),
                         validator: AppValidators.password(min: 6),
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: Dimensions.h(24)),
 
                       // OR Text
-                      Text("OR", style: AppTextStyles.body),
+                      Text(AppStrings.or.tr, style: AppTextStyles.body),
                       SizedBox(height: Dimensions.h(16)),
 
                       // Social login buttons
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Create Account Button
                       AppButton(
-                        label: "Create New Account",
+                        label: AppStrings.createNewAccount.tr,
                         backgroundColor: AppColors.whiteColor,
                         textColor: AppColors.primaryColor,
                         height: Dimensions.h(55),

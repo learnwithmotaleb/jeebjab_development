@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../widget/custom_appbar.dart';
@@ -25,17 +27,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Create Post"),
+      appBar: CommonAppBar(title: AppStrings.createPost.tr),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 32),
 
           // ── Heading ────────────────────────────────────────────────────
-          const Text(
-            'What Do You Need Help With ?',
+          Text(
+            AppStrings.whatDoYouNeedHelpWith.tr,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: Color(0xFF1A1A2E),
@@ -45,12 +47,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           const SizedBox(height: 24),
 
           // ── Category Cards ─────────────────────────────────────────────
-          // ✅ Fix: Obx must directly read an Rx variable.
-          // We read controller.selectedCategory.value here so GetX
-          // registers it as a dependency and rebuilds on change.
           Expanded(
             child: Obx(() {
-              final selected = controller.selectedCategory.value; // ← Rx read
+              final selected = controller.selectedCategory.value;
               return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -59,7 +58,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   final category = controller.categories[index];
                   return CategoryCardWidget(
                     category: category,
-                    isSelected: selected?.title == category.title, // ← direct compare
+                    isSelected: selected?.title == category.title,
                     onTap: () => controller.selectCategory(category),
                   );
                 },

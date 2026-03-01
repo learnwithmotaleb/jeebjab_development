@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class WasteItem {
   final String label;
@@ -18,65 +19,52 @@ class WasteCategory {
 }
 
 class WestTypeController extends GetxController {
+  // ── Selected items set ─────────────────────────────
   final RxSet<String> selectedItems = <String>{}.obs;
 
+  // ── Waste categories and items ─────────────────────
   final List<WasteCategory> categories = [
     WasteCategory(
-      title: 'Recyclable',
+      title: AppStrings.recyclable.tr,
       items: [
-        WasteItem(label: 'Paper, Cardboard', icon: Icons.description_outlined),
-        WasteItem(label: 'Glass', icon: Icons.local_drink_outlined),
-        WasteItem(label: 'Newspaper', icon: Icons.newspaper_outlined),
-        WasteItem(label: 'Plastic', icon: Icons.water_drop_outlined),
-        WasteItem(label: 'Metal', icon: Icons.hardware_outlined),
-        WasteItem(label: 'Furniture', icon: Icons.chair_outlined),
-        WasteItem(
-            label: 'Food Waste',
-            icon: Icons.no_food_outlined,
-            hasInfo: true),
+        WasteItem(label: AppStrings.paperCardboard.tr, icon: Icons.description_outlined),
+        WasteItem(label: AppStrings.glass.tr, icon: Icons.local_drink_outlined),
+        WasteItem(label: AppStrings.newspaper.tr, icon: Icons.newspaper_outlined),
+        WasteItem(label: AppStrings.plastic.tr, icon: Icons.water_drop_outlined),
+        WasteItem(label: AppStrings.metal.tr, icon: Icons.hardware_outlined),
+        WasteItem(label: AppStrings.furniture.tr, icon: Icons.chair_outlined),
+        WasteItem(label: AppStrings.foodWaste.tr, icon: Icons.no_food_outlined, hasInfo: true),
       ],
     ),
     WasteCategory(
-      title: 'Bulky Waste',
+      title: AppStrings.bulkyWaste.tr,
       items: [
-        WasteItem(label: 'Garden Waste', icon: Icons.grass_outlined),
-        WasteItem(
-            label: 'Broken Furniture', icon: Icons.weekend_outlined),
-        WasteItem(label: 'Wood', icon: Icons.forest_outlined),
-        WasteItem(
-            label: 'Sorted Construction',
-            icon: Icons.construction_outlined,
-            hasInfo: true),
-        WasteItem(label: 'Sanitary Ware', icon: Icons.bathtub_outlined),
-        WasteItem(
-            label: 'Rigid Plastic, Safe PVC, Styrofoam',
-            icon: Icons.inventory_2_outlined,
-            hasInfo: true),
-        WasteItem(label: 'Tyres', icon: Icons.album_outlined),
-        WasteItem(
-            label: 'Kitchen Appliances', icon: Icons.kitchen_outlined),
-        WasteItem(label: 'Electronics', icon: Icons.devices_outlined),
-        WasteItem(label: 'Reuse', icon: Icons.recycling_outlined),
-        WasteItem(label: 'Other Waste', icon: Icons.delete_outline_rounded),
+        WasteItem(label: AppStrings.gardenWaste.tr, icon: Icons.grass_outlined),
+        WasteItem(label: AppStrings.brokenFurniture.tr, icon: Icons.weekend_outlined),
+        WasteItem(label: AppStrings.wood.tr, icon: Icons.forest_outlined),
+        WasteItem(label: AppStrings.sortedConstruction.tr, icon: Icons.construction_outlined, hasInfo: true),
+        WasteItem(label: AppStrings.sanitaryWare.tr, icon: Icons.bathtub_outlined),
+        WasteItem(label: AppStrings.rigidPlastic.tr, icon: Icons.inventory_2_outlined, hasInfo: true),
+        WasteItem(label: AppStrings.tyres.tr, icon: Icons.album_outlined),
+        WasteItem(label: AppStrings.kitchenAppliances.tr, icon: Icons.kitchen_outlined),
+        WasteItem(label: AppStrings.electronics.tr, icon: Icons.devices_outlined),
+        WasteItem(label: AppStrings.reuse.tr, icon: Icons.recycling_outlined),
+        WasteItem(label: AppStrings.otherWaste.tr, icon: Icons.delete_outline_rounded),
       ],
     ),
     WasteCategory(
-      title: 'Household Hazardous Waste',
+      title: AppStrings.householdHazardousWaste.tr,
       items: [
-        WasteItem(
-            label: 'Impregnated Wood',
-            icon: Icons.forest_outlined),
-        WasteItem(label: 'Paint', icon: Icons.format_paint_outlined),
-        WasteItem(label: 'Waste Oil', icon: Icons.opacity_outlined),
-        WasteItem(label: 'Asbestos', icon: Icons.warning_amber_outlined, hasInfo: true),
-        WasteItem(
-            label: 'Others Hazardous Waste',
-            icon: Icons.dangerous_outlined,
-            hasInfo: true),
+        WasteItem(label: AppStrings.impregnatedWood.tr, icon: Icons.forest_outlined),
+        WasteItem(label: AppStrings.paint.tr, icon: Icons.format_paint_outlined),
+        WasteItem(label: AppStrings.wasteOil.tr, icon: Icons.opacity_outlined),
+        WasteItem(label: AppStrings.asbestos.tr, icon: Icons.warning_amber_outlined, hasInfo: true),
+        WasteItem(label: AppStrings.otherHazardousWaste.tr, icon: Icons.dangerous_outlined, hasInfo: true),
       ],
     ),
   ];
 
+  // ── Select/Deselect an item ───────────────────────
   void toggleItem(String label) {
     if (selectedItems.contains(label)) {
       selectedItems.remove(label);
@@ -85,33 +73,26 @@ class WestTypeController extends GetxController {
     }
   }
 
-  // ── Info items → navigate, not selectable ─────────────────────────────────
+  // ── Info items → navigate, not selectable ─────────
   void onInfoItemTap(String label) {
-    // TODO: Get.toNamed(RoutePath.wasteItemInfo, arguments: {'label': label});
-    // Get.snackbar(
-    //   label,
-    //   'More information about this waste type.',
-    //   snackPosition: SnackPosition.BOTTOM,
-    //   backgroundColor: const Color(0xFF1A1A2E),
-    //   colorText: Colors.white,
-    //   borderRadius: 12,
-    //   margin: const EdgeInsets.all(16),
-    // );
+    // Navigate to info screen or show snackbar
     Get.toNamed(RoutePath.notAllowWest);
   }
 
+  // ── Check if selected ─────────────────────────────
   bool isSelected(String label) => selectedItems.contains(label);
 
+  // ── Count of selected items ───────────────────────
   int get selectedCount => selectedItems.length;
 
+  // ── Continue button action ────────────────────────
   void onContinue() {
     if (selectedItems.isEmpty) return;
-    // TODO: navigate next
+    // TODO: navigate to next screen
   }
 
-  // ── Add new waste item (future) ───────────────────────────────────────────
+  // ── Add new waste item (future) ───────────────────
   void onAddItem() {
     // TODO: Get.toNamed(RoutePath.addWasteItem);
-    // On return, append new WasteItem to relevant category
   }
 }

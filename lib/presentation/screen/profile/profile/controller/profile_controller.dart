@@ -35,35 +35,35 @@ class ProfileController extends GetxController {
     super.onInit();
     menuItems = [
       ProfileMenuItem(
-        title: 'Account Settings',
+        title: AppStrings.accountSetting.tr,
         icon: Icons.settings_outlined,
         onTap: () {
           Get.toNamed(RoutePath.account);// TODO: Get.toNamed(RoutePath.accountSettings);
         },
       ),
       ProfileMenuItem(
-        title: 'Language',
+        title: AppStrings.language.tr,
         icon: Icons.language_outlined,
         onTap: () {
           Get.toNamed(RoutePath.profileLanguage);
         },
       ),
       ProfileMenuItem(
-        title: 'Contact & Support',
+        title:  AppStrings.contactAndSupport.tr,
         icon: Icons.help_outline_rounded,
         onTap: () {
           Get.toNamed(RoutePath.contactAndSupport);
         },
       ),
       ProfileMenuItem(
-        title: 'Terms & Condition',
+        title: AppStrings.termsAndCondition.tr,
         icon: Icons.description_outlined,
         onTap: () {
           Get.toNamed(RoutePath.termAndCondition);
         },
       ),
       ProfileMenuItem(
-        title: 'Privacy & Policy',
+        title: AppStrings.privacyPolicy.tr,
         icon: Icons.privacy_tip_outlined,
         onTap: () {
           Get.toNamed(RoutePath.policyAndPrivacy);
@@ -71,12 +71,12 @@ class ProfileController extends GetxController {
         },
       ),
       ProfileMenuItem(
-        title: 'Logout',
+        title: AppStrings.logOut.tr,
         icon: Icons.logout_rounded,
         iconColor: Colors.red,
         onTap: () {
           
-      AppAlerts.confirm(title: "Are Your Sure Logout", message: "Are you sure logout from", onConfirm: (){
+      AppAlerts.confirm(title: AppStrings.areYourSureLogout.tr, message: AppStrings.areYourSureLogoutFrom.tr, onConfirm: (){
         Get.back();
       });
     

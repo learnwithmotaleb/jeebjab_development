@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
 import '../page/home/screen/home_screen.dart';
@@ -38,7 +40,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   Widget _buildMobile() {
     return Scaffold(
       body: _pages[_currentIndex],
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
@@ -51,32 +52,30 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           });
         },
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: "Home",
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: AppStrings.home.tr,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.work_outline),
-            activeIcon: Icon(Icons.work),
-            label: "Jobs",
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.work_outline),
+            activeIcon: const Icon(Icons.work),
+            label: AppStrings.jobs.tr,
           ),
-
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            activeIcon: Icon(Icons.add),
-            label: "Create",
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.add_circle_outline),
+            activeIcon: const Icon(Icons.add),
+            label: AppStrings.create.tr,
           ),
-
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article),
-            label: "My Post",
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.article_outlined),
+            activeIcon: const Icon(Icons.article),
+            label: AppStrings.myPost.tr,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: "Profile",
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person_outline),
+            activeIcon: const Icon(Icons.person),
+            label: AppStrings.profile.tr,
           ),
         ],
       ),

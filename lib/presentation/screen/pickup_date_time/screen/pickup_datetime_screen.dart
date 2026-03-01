@@ -30,7 +30,7 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Set Pick-Up  Date & Time"),
+      appBar: CommonAppBar(title: AppStrings.pickupDateTime.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -47,8 +47,8 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                     // ── Option 1: Regular ─────────────────────────────
                     PickupOptionCard(
-                      type: 'Regular',
-                      title: 'Anytime',
+                      type: AppStrings.regular.tr,
+                      title: AppStrings.anytime.tr,
                       isSelected: selected == PickupType.regular,
                       onTap: () => controller.selectType(PickupType.regular),
                     ),
@@ -57,8 +57,8 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                     // ── Option 2: Priority ────────────────────────────
                     PickupOptionCard(
-                      type: 'Priority',
-                      title: 'As soon as possible',
+                      type: AppStrings.priority.tr,
+                      title: AppStrings.asap.tr,
                       isSelected: selected == PickupType.priority,
                       onTap: () => controller.selectType(PickupType.priority),
                     ),
@@ -67,8 +67,8 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                     // ── Option 3: Custom (expandable) ─────────────────
                     PickupOptionCard(
-                      type: 'Priority',
-                      title: 'Select your convenient time',
+                      type: AppStrings.custom.tr,
+                      title: AppStrings.selectConvenientTime.tr,
                       isSelected: selected == PickupType.custom,
                       showArrow: true,
                       arrowDown: !expanded,
@@ -77,26 +77,22 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                     // ── Time Slots (expanded panel) ───────────────────
                     AnimatedSize(
-                      duration:  Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       child: expanded
                           ? Container(
-
                         width: double.infinity,
-
-
-                        margin:  EdgeInsets.only(top: 10),
-                        padding:  EdgeInsets.all(16),
+                        margin: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color:  Color(0xFFE8E8E8)),
+                          border: Border.all(color: const Color(0xFFE8E8E8)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.04),
                               blurRadius: 6,
-                              offset:  Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
@@ -105,11 +101,10 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                           children: [
                             // Today slots
                             TimeSlotsWidget(
-                              dayLabel: 'Today',
+                              dayLabel: AppStrings.today.tr,
                               dayKey: 'today',
                               slots: controller.timeSlots,
-                              selectedSlotKey:
-                              controller.selectedSlot.value,
+                              selectedSlotKey: controller.selectedSlot.value,
                               onSlotTap: controller.selectSlot,
                             ),
 
@@ -117,17 +112,16 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                             // Tomorrow slots
                             TimeSlotsWidget(
-                              dayLabel: 'Tomorrow',
+                              dayLabel: AppStrings.tomorrow.tr,
                               dayKey: 'tomorrow',
                               slots: controller.timeSlots,
-                              selectedSlotKey:
-                              controller.selectedSlot.value,
+                              selectedSlotKey: controller.selectedSlot.value,
                               onSlotTap: controller.selectSlot,
                             ),
                           ],
                         ),
                       )
-                          :  SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ),
                   ],
                 );
@@ -136,15 +130,15 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
           ),
 
           // ── Continue Button pinned bottom ───────────────────────────
-
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),            child: AppButton(label: AppStrings.continueButton.tr,
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: AppButton(
+              label: AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
               height: 60,
-
             ),
           ),
-          SizedBox(height: Dimensions.h(20),)
+          SizedBox(height: Dimensions.h(20)),
         ],
       ),
     );

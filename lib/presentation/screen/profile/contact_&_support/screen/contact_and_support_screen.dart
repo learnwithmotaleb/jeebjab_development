@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/profile/contact_&_support/controller/contact_and_support_controller.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
@@ -34,7 +36,7 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
   Widget _buildMobile() {
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
-        appBar: CommonAppBar(title: "Contact And Support"),
+        appBar: CommonAppBar(title: AppStrings.contactAndSupport.tr),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -46,7 +48,7 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
                   AppTextField(
 
                       controller: controller.nameController,
-                    hint: "Enter Name",
+                    hint: AppStrings.enterName.tr,
                     hintTextStyle: AppTextStyles.hint,
 
                   ),
@@ -54,7 +56,7 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
 
                   AppTextField(
                       controller: controller.emailController,
-                    hint: "Enter E-mail",
+                    hint: AppStrings.enterEmail.tr,
                     hintTextStyle: AppTextStyles.hint,
 
                   ),
@@ -62,7 +64,7 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
 
                   AppTextField(
                     controller: controller.descriptionController,
-                    hint: "Write Message",
+                    hint:AppStrings.writeMessage.tr,
                     hintTextStyle: AppTextStyles.hint,
                   maxLines: 4,
 
@@ -70,10 +72,10 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
 
 
                   SizedBox(height: Dimensions.h(30),),
-                  AppButton(label: "Contact", onPressed: (){
+                  AppButton(label: AppStrings.contact.tr, onPressed: (){
                     ShowAppSnackBar.success(
-                      title: "Jeebjab",
-                        "Thank you. Send Message Request");
+                      title: AppStrings.appName.tr,
+                        AppStrings.thankYouSendMessageRequest.tr);
 
 
                   },

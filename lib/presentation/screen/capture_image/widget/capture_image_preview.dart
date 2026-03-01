@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class CapturedImagesPreview extends StatelessWidget {
   final List<File> images;
@@ -14,8 +16,8 @@ class CapturedImagesPreview extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Selected Photos',
+         Text(
+          AppStrings.selectedPhotos.tr,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,

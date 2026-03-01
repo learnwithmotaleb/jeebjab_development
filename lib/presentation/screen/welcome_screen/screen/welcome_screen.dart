@@ -54,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 alignment: AlignmentGeometry.center,
 
                 child: Text(
-                  "Welcome Back",
+                  AppStrings.welcomeBack.tr,
                   style: AppTextStyles.title.copyWith(
                       fontWeight: FontWeight.normal,
                       color: AppColors.blackColor,
@@ -68,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Align(
                 alignment: AlignmentGeometry.center,
                 child: Text(
-                  "your password has been changed continue to login",
+                  AppStrings.yourPasswordHasBeeChangedContinueToLogin.tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body,
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../../core/responsive_layout/responsive_layout.dart';
@@ -32,7 +33,7 @@ class _TermsAndConditionScreenState
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: const CommonAppBar(title: "Terms & Conditions"),
+      appBar:  CommonAppBar(title: AppStrings.termsAndConditions.tr),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -43,7 +44,7 @@ class _TermsAndConditionScreenState
 
               /// Overview Section
               _buildSection(
-                title: "Overview of Our Service",
+                title: AppStrings.overviewOfService.tr,
                 description: controller.overview.value,
               ),
 
@@ -51,7 +52,7 @@ class _TermsAndConditionScreenState
 
               /// User Eligibility Section
               _buildSection(
-                title: "User Eligibility",
+                title:AppStrings.userEligibility.tr,
                 description: controller.userEligibility.value,
               ),
 

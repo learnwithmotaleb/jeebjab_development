@@ -28,7 +28,6 @@ class _CompleteVarificationScreenState
     return ResponsiveLayout(mobile: _buildMobile());
   }
 
-  /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
@@ -40,7 +39,6 @@ class _CompleteVarificationScreenState
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                /// Image
                 Image.asset(
                   AppImages.completeVerificationImage,
                   width: double.infinity,
@@ -49,9 +47,8 @@ class _CompleteVarificationScreenState
 
                 SizedBox(height: Dimensions.h(32)),
 
-                /// Title
                 Text(
-                  "Thank you for trusting us!",
+                  AppStrings.thankYouForTrustingUs.tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.title.copyWith(
                     color: AppColors.blackColor,
@@ -62,20 +59,18 @@ class _CompleteVarificationScreenState
 
                 SizedBox(height: Dimensions.h(12)),
 
-                /// Subtitle
                 Text(
-                  "Reliable moving, delivery, buying, recycling, and giveaways — all in one trusted app.",
+                  AppStrings.completeVerificationSubTitle.tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body.copyWith(
                     color: AppColors.greyColor,
-                    fontSize:14,
+                    fontSize: 14,
                     height: 1.5,
                   ),
                 ),
 
                 SizedBox(height: Dimensions.h(40)),
 
-                /// Button
                 SizedBox(
                   width: double.infinity,
                   child: AppButton(

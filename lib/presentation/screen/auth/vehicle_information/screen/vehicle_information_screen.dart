@@ -20,12 +20,13 @@ class VehicleInformationScreen extends StatefulWidget {
   const VehicleInformationScreen({super.key});
 
   @override
-  State<VehicleInformationScreen> createState() => _VehicleInformationScreenState();
+  State<VehicleInformationScreen> createState() =>
+      _VehicleInformationScreenState();
 }
 
 class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
-
-  VehicleInformationController controller = Get.put(VehicleInformationController());
+  VehicleInformationController controller =
+  Get.put(VehicleInformationController());
 
   @override
   Widget build(BuildContext context) {
@@ -47,49 +48,43 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              Text("Your vehicle Information",style: AppTextStyles.body.copyWith(
+              Text(
+                AppStrings.yourVehicleInformation.tr,
+                style: AppTextStyles.body.copyWith(
                   fontSize: 24,
                   color: AppColors.blackColor,
-              ),),
-
-
-              Text("Enter your vehicle information",style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor
-              ),),
-
-              SizedBox(height:  Dimensions.h(40)),
-
-              AppTextField(controller: controller.vehicleBrand,
-                hint: "Vehicle Brand",
-
+                ),
               ),
-              SizedBox(height:  Dimensions.h(20)),
-              AppTextField(controller: controller.vehicleModel,
-                hint: "Vehicle Model",),
 
+              Text(
+                AppStrings.enterYourVehicleInformation.tr,
+                style: AppTextStyles.title.copyWith(
+                  fontSize: 16,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
+              SizedBox(height: Dimensions.h(40)),
 
+              AppTextField(
+                controller: controller.vehicleBrand,
+                hint: AppStrings.vehicleBrand.tr,
+              ),
+              SizedBox(height: Dimensions.h(20)),
 
+              AppTextField(
+                controller: controller.vehicleModel,
+                hint: AppStrings.vehicleModel.tr,
+              ),
 
+              SizedBox(height: Dimensions.h(100)),
 
-
-
-
-              SizedBox(height:  Dimensions.h(100)),
-
-              /// Continue Button
               AppButton(
                 height: Dimensions.h(70),
-
                 label: AppStrings.continueButton.tr,
-                onPressed: (){
-
+                onPressed: () {
                   Get.toNamed(RoutePath.licenseNumber);
                 },
-
-
               ),
             ],
           ),
@@ -97,9 +92,6 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
       ),
     );
   }
-
-
-
 
   Widget _buildTablet() {
     return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));

@@ -4,6 +4,7 @@ import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
@@ -48,9 +49,9 @@ class ProfileHeaderWidget extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const Expanded(
+               Expanded(
                 child: Text(
-                  'Profile',
+                 AppStrings.profile.tr,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.whiteColor,

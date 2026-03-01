@@ -28,7 +28,7 @@ class _PlacementPickupScreenState extends State<PlacementPickupScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Placement For Pick-Up"),
+      appBar: CommonAppBar(title: AppStrings.placementForPickUp.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -42,32 +42,32 @@ class _PlacementPickupScreenState extends State<PlacementPickupScreen> {
 
                   // ── Placement Section (single select) ────────────
                   PlacementOptionRow(
-                    label: 'Inside The House/Apartment',
+                    label:'${AppStrings.insideHouse.tr}/Apartment',
                     icon: Icons.home_outlined,
                     isSelected: controller.isPlacementSelected(
-                        'Inside The House/Apartment'),
+                        '${AppStrings.insideHouse}/Apartment'),
                     isRadio: true,
                     onTap: () => controller
-                        .selectPlacement('Inside The House/Apartment'),
+                        .selectPlacement('${AppStrings.insideHouse}/Apartment'),
                   ),
 
                   const SizedBox(height: 10),
 
                   PlacementOptionRow(
-                    label: 'Outside The House/Apartment',
+                    label: '${AppStrings.outsideHouse.tr}/Apartment',
                     icon: Icons.house_siding_outlined,
                     isSelected: controller.isPlacementSelected(
-                        'Outside The House/Apartment'),
+                        '${AppStrings.outsideHouse.tr}/Apartment'),
                     isRadio: true,
                     onTap: () => controller
-                        .selectPlacement('Outside The House/Apartment'),
+                        .selectPlacement('${AppStrings.outsideHouse.tr}/Apartment'),
                   ),
 
                   const SizedBox(height: 8),
 
                   // ── Hint text ────────────────────────────────────
-                  const Text(
-                    'You are able to choose only one option',
+                   Text(
+                   AppStrings.selectBothHint.tr,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey,
@@ -77,8 +77,8 @@ class _PlacementPickupScreenState extends State<PlacementPickupScreen> {
                   const SizedBox(height: 24),
 
                   // ── Additional Section (multi select) ────────────
-                  const Text(
-                    'Additional',
+                   Text(
+                    AppStrings.additional.tr,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -89,32 +89,32 @@ class _PlacementPickupScreenState extends State<PlacementPickupScreen> {
                   const SizedBox(height: 12),
 
                   PlacementOptionRow(
-                    label: 'Need To Meet',
+                    label: AppStrings.needToMeet.tr,
                     icon: Icons.people_outline_rounded,
                     isSelected:
-                    controller.isAdditionalSelected('Need To Meet'),
+                    controller.isAdditionalSelected( AppStrings.needToMeet.tr,),
                     isRadio: false,
                     onTap: () =>
-                        controller.toggleAdditional('Need To Meet'),
+                        controller.toggleAdditional( AppStrings.needToMeet.tr,),
                   ),
 
                   const SizedBox(height: 10),
 
                   PlacementOptionRow(
-                    label: 'Can Help Carry At Pick-Up',
+                    label:  AppStrings.canHelpCarry.tr,
                     icon: Icons.sports_handball_outlined,
                     isSelected: controller
-                        .isAdditionalSelected('Can Help Carry At Pick-Up'),
+                        .isAdditionalSelected('${AppStrings.canHelpCarry} At Pick-Up'),
                     isRadio: false,
                     onTap: () => controller
-                        .toggleAdditional('Can Help Carry At Pick-Up'),
+                        .toggleAdditional('${AppStrings.canHelpCarry} At Pick-Up'),
                   ),
 
                   const SizedBox(height: 8),
 
                   // ── Hint text ────────────────────────────────────
-                  const Text(
-                    'You are able to choose both option',
+                   Text(
+                   AppStrings.selectBothHint.tr,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey,

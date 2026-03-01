@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../controller/west_type_controller.dart';
@@ -27,7 +28,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Waste Types"),
+      appBar: CommonAppBar(title: AppStrings.wasteTypes.tr),
       body: Column(
         children: [
           // ── Top info banner ───────────────────────────────────────────
@@ -49,18 +50,16 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                         color: AppColors.greyColor,
                         height: 1.5,
                       ),
-                      children: const [
+                      children: [
                         TextSpan(
-                          text: 'All Waste Is Sorted\n',
-                          style: TextStyle(
+                          text: "${AppStrings.allWasteSorted.tr}\n",
+                          style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF1A1A2E),
                           ),
                         ),
-                        TextSpan(
-                          text:
-                          'We sort all the waste types and you can be sure that all the waste items will be handled correctly.',
-                        ),
+                         TextSpan(
+                          text:AppStrings.wasteSortedDescription.tr),
                       ],
                     ),
                   ),
@@ -182,7 +181,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Select All Relevant Waste Types',
+                         AppStrings.selectAllRelevantWaste.tr,
                           style: TextStyle(
                             fontSize: Dimensions.f(12),
                             fontWeight: FontWeight.w600,
@@ -219,7 +218,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                       elevation: 0,
                     ),
                     child: Text(
-                      'Continue',
+                     AppStrings.continueButton.tr,
                       style: TextStyle(
                         fontSize: Dimensions.f(16),
                         fontWeight: FontWeight.w700,

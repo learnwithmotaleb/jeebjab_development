@@ -9,7 +9,6 @@ import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../controller/pickup_floor_controller.dart';
 import '../widget/inline_label_field_widget.dart';
-
 import '../widget/toggle_option_row_widget.dart';
 
 class PickupFloorScreen extends StatefulWidget {
@@ -30,7 +29,7 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Pick-Up Floor & Door Code"),
+      appBar: CommonAppBar(title: AppStrings.pickupFloorTitle.tr),
       body: Column(
         children: [
           // ── Scrollable Content ────────────────────────────────────────
@@ -44,9 +43,9 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
 
                   // ── Floor Field ─────────────────────────────────
                   InlineLabelField(
-                    label: 'Floor',
+                    label: AppStrings.floorLabel.tr,
                     controller: controller.floorController,
-                    hint: '12',
+                    hint: AppStrings.floorHint.tr,
                     keyboardType: TextInputType.number,
                   ),
 
@@ -54,9 +53,9 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
 
                   // ── Door Code Field ─────────────────────────────
                   InlineLabelField(
-                    label: 'Door Code',
+                    label: AppStrings.doorCodeLabel.tr,
                     controller: controller.doorCodeController,
-                    hint: 'E36',
+                    hint: AppStrings.doorCodeHint.tr,
                     keyboardType: TextInputType.text,
                   ),
 
@@ -64,7 +63,7 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
 
                   // ── Fits In Elevator toggle ─────────────────────
                   ToggleOptionRow(
-                    label: 'Fits In The Elevator',
+                    label: AppStrings.fitsInElevator.tr,
                     isSelected: controller.fitsInElevator.value,
                     onTap: controller.toggleElevator,
                   ),
@@ -75,8 +74,7 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF0F0F0),
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.r(10)),
+                      borderRadius: BorderRadius.circular(Dimensions.r(10)),
                       border: Border.all(color: const Color(0xFFE8E8E8)),
                     ),
                     child: TextField(
@@ -87,7 +85,7 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
                         color: AppColors.labelColor,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Write Other Info',
+                        hintText: AppStrings.otherInfoHint.tr,
                         hintStyle: TextStyle(
                           fontSize: Dimensions.f(14),
                           color: AppColors.hintColor,
@@ -114,16 +112,11 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
             ),
             child: AppButton(
               height: 65,
-            label: AppStrings.continueButton.tr,
-    onPressed: controller.onContinue,
-
-    )
-
-
-
+              label: AppStrings.continueButton.tr,
+              onPressed: controller.onContinue,
+            ),
           ),
           SizedBox(height: Dimensions.h(24)),
-
         ],
       ),
     );

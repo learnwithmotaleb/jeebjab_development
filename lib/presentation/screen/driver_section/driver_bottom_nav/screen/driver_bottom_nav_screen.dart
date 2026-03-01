@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
@@ -12,6 +13,7 @@ import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
 
 import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 
 
 class DriverBottomNavScreen extends StatefulWidget {
@@ -53,27 +55,27 @@ class _DriverBottomNavScreenState extends State<DriverBottomNavScreen> {
           });
         },
         items: [
-          const BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: "Home",
+            label: AppStrings.home.tr,
           ),
-          const BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.work_outline),
             activeIcon: Icon(Icons.work),
-            label: "Jobs",
+            label: AppStrings.jobs.tr,
           ),
 
-          const BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.task_outlined),
             activeIcon: Icon(Icons.task),
-            label: "Task",
+            label: AppStrings.task.tr,
           ),
 
-          const BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: "Profile",
+            label:AppStrings.profile.tr,
           ),
         ],
       ),

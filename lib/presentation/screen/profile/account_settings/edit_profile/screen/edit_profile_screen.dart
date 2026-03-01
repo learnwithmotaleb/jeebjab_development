@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -28,7 +29,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Edit Profile"),
+      appBar: CommonAppBar(title: AppStrings.editProfile.tr),
       body: Column(
         children: [
           Expanded(
@@ -53,7 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   // ── Name ─────────────────────────────────────────────
                   ProfileTextField(
-                    label: 'Name',
+                    label: AppStrings.name.tr,
                     controller: controller.nameController,
                   ),
 
@@ -61,7 +62,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   // ── Gender (tap to show bottom sheet) ────────────────
                   ProfileTextField(
-                    label: 'Gender',
+                    label: AppStrings.gender.tr,
                     controller: controller.genderController,
                     readOnly: true,
                     onTap: () => _showGenderPicker(context),
@@ -76,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   // ── Date of Birth ─────────────────────────────────────
                   ProfileTextField(
-                    label: 'Date of Birth',
+                    label: AppStrings.dateOfBirth.tr,
                     controller: controller.dobController,
                     readOnly: true,
                     onTap: () => controller.pickDate(context),
@@ -102,7 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Dimensions.h(24),
             ),
             child: AppButton(
-              label: 'Update Profile',
+              label: AppStrings.updateProfile.tr,
               onPressed: controller.onUpdateProfile,
               height: 65,
             ),

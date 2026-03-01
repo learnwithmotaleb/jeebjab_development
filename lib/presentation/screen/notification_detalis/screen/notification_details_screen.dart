@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../core/responsive_layout/responsive_layout.dart';
@@ -29,7 +30,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Details"),
+      appBar: CommonAppBar(title: AppStrings.details.tr),
       body: SingleChildScrollView(
         child: Obx(() => Column(
           children: [
@@ -150,7 +151,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Tracking Number',
+                    AppStrings.trackingNumber.tr,
                     style: TextStyle(
                       fontSize: 11,
                       color:AppColors.blackColor,
@@ -180,15 +181,15 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
 
     switch (controller.status.value) {
       case 'pending':
-        statusText = 'Pending';
+        statusText = AppStrings.pending.tr;
         statusColor = Colors.grey[300]!;
         break;
       case 'in_transit':
-        statusText = 'Estimated Delivery Time 2 Hour';
+        statusText = AppStrings.estimatedDeliveryTime.tr;
         statusColor = Colors.grey[300]!;
         break;
       case 'delivered':
-        statusText = 'Delivered';
+        statusText = AppStrings.delivered.tr;
         statusColor = Colors.grey[300]!;
         break;
     }
@@ -222,29 +223,29 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
         children: [
           _buildStepItem(
             icon: Icons.check_circle,
-            title: 'Request Confirmation',
-            subtitle: 'We Pic Up Your Product Soon',
+            title: AppStrings.requestConfirmation.tr,
+            subtitle: AppStrings.wePickUpYourProductSoon.tr,
             isCompleted: true,
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.check_circle,
-            title: 'Pic-Up',
-            subtitle: 'Parcel Has Been Picked Up',
+            title: AppStrings.pickup.tr,
+            subtitle: AppStrings.parcelHasBeenPickedUp,
             isCompleted: controller.status.value == 'in_transit' || controller.status.value == 'delivered',
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.local_shipping,
-            title: 'In Transit',
-            subtitle: 'On The Way, Soon Delivered',
+            title: AppStrings.inTransit.tr,
+            subtitle: AppStrings.onTheWaySoonDelivered.tr,
             isCompleted: controller.status.value == 'in_transit' || controller.status.value == 'delivered',
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.done_all,
-            title: 'Delivered',
-            subtitle: 'Parcel Has Been Shipped',
+            title: AppStrings.delivered.tr,
+            subtitle: AppStrings.parcelHasBeenShipped.tr,
             isCompleted: controller.status.value == 'delivered',
             isLast: true,
           ),

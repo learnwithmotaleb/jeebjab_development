@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
@@ -29,7 +30,7 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Advertiser"),
+      appBar: CommonAppBar(title: AppStrings.advertiser.tr),
       body: Obx(
             () => SingleChildScrollView(
           child: Column(
@@ -45,13 +46,13 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
               ),
 
               // ── 2. Section Title ────────────────────────────────────────
-              const Padding(
+               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Review & Ratings',
+                     AppStrings.reviewAndRatings.tr,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -60,7 +61,7 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
                     ),
                     SizedBox(height: 6),
                     Text(
-                      'What Others Think About You',
+                      AppStrings.whatOthersThinkAboutYou.tr,
                       style: AppTextStyles.body,
                     ),
                   ],
@@ -78,8 +79,8 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Reviews & Ratings',
+                         Text(
+                          AppStrings.reviewAndRatings.tr,
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,

@@ -25,21 +25,16 @@ class ForgetScreen extends StatefulWidget {
 }
 
 class _ForgetScreenState extends State<ForgetScreen> {
-
   final controller = Get.put(ForgetController());
-
-
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
-
     );
   }
 
   Widget _buildMobile() {
-
     return Scaffold(
       appBar: CommonAppBar(title: ""),
       backgroundColor: AppColors.whiteColor,
@@ -50,26 +45,28 @@ class _ForgetScreenState extends State<ForgetScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Forgot Password",style: AppTextStyles.body.copyWith(
-                fontSize: 24,
-                color: AppColors.blackColor,
-              ),),
+              Text(
+                AppStrings.forgotPassword.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 24,
+                  color: AppColors.blackColor,
+                ),
+              ),
               SizedBox(height: Dimensions.h(8)),
 
-              Text("We’ll Send a Verification Code to This Email to Confirm Your Account",style: AppTextStyles.body.copyWith(
-                fontSize: 16,
-                color: AppColors.blackColor,
-              ),),
-
-
-
+              Text(
+                AppStrings.forgotPasswordSubTitle.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 16,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
               SizedBox(height: Dimensions.h(30)),
 
-
               AppTextField(
                 controller: controller.emailController,
-                hint: "Enter Your Email",
+                hint: AppStrings.enterYourEmail.tr,
                 keyboardType: TextInputType.name,
                 validator: AppValidators.email(),
                 onTap: () {},
@@ -77,10 +74,6 @@ class _ForgetScreenState extends State<ForgetScreen> {
 
               SizedBox(height: Dimensions.h(50)),
 
-
-
-
-              // Sign In Button
               AppButton(
                 label: AppStrings.continueButton.tr,
                 height: Dimensions.h(55),
@@ -89,10 +82,6 @@ class _ForgetScreenState extends State<ForgetScreen> {
                   Get.toNamed(RoutePath.customerVerification);
                 },
               ),
-
-
-
-
             ],
           ),
         ),

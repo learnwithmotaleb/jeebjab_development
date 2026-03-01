@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/routes/route_path.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../controller/overview_controller.dart';
 import 'overview_info_tile.dart';
-
 class OverviewServiceSection extends StatelessWidget {
   const OverviewServiceSection({super.key});
 
@@ -18,29 +18,29 @@ class OverviewServiceSection extends StatelessWidget {
       child: Column(
         children: [
           Obx(() => OverviewInfoTile(
-              title: "Type Of Service",
-              onPressed: (){
+              title: AppStrings.typeOfService.tr,
+              onPressed: () {
                 Get.toNamed(RoutePath.captureInfo);
               },
               value: controller.serviceType.value)),
 
           Obx(() => OverviewInfoTile(
-              title: "Title",
-              onPressed: (){
+              title: AppStrings.titleOfService.tr,
+              onPressed: () {
                 Get.toNamed(RoutePath.captureInfo);
               },
               value: controller.serviceTitle.value)),
 
           Obx(() => OverviewInfoTile(
-              title: "Description",
-              onPressed: (){
+              title: AppStrings.descriptionOfService.tr,
+              onPressed: () {
                 Get.toNamed(RoutePath.captureInfo);
               },
               value: controller.description.value)),
 
           Obx(() => OverviewInfoTile(
-              title: "Size Of Product",
-              onPressed: (){
+              title: AppStrings.sizeOfProduct.tr,
+              onPressed: () {
                 Get.toNamed(RoutePath.captureInfo);
               },
               value: controller.sizeOfProduct.value)),
@@ -53,7 +53,6 @@ class OverviewServiceSection extends StatelessWidget {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(12),
       color: AppColors.forgroundColor,
-
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -30,7 +31,7 @@ class _EditDriverProfileScreenState extends State<EditDriverProfileScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Edit"),
+      appBar: CommonAppBar(title: AppStrings.edit.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -44,36 +45,37 @@ class _EditDriverProfileScreenState extends State<EditDriverProfileScreen> {
                 children: [
                   // ── Driver Information ──────────────────────────────
                   EditableInfoSection(
-                    sectionTitle: 'Driver Information',
+                    sectionTitle: AppStrings.driverInformation.tr,
                     rows: [
                       EditableInfoRow(
-                        label: 'Driver Name',
+                        label: AppStrings.driverName.tr,
+
                         controller: controller.driverNameController,
                       ),
                       EditableInfoRow(
-                        label: 'License Number',
+                        label: AppStrings.licenseNumber.tr,
                         controller: controller.licenseNumberController,
                         keyboardType: TextInputType.number,
                       ),
                       EditableInfoRow(
-                        label: 'Vehicle Type',
+                        label: AppStrings.vehicleType.tr,
                         controller: controller.vehicleTypeController,
                       ),
                       EditableInfoRow(
-                        label: 'Brand',
+                        label: AppStrings.brand.tr,
                         controller: controller.brandController,
                       ),
                       EditableInfoRow(
-                        label: 'Model',
+                        label: AppStrings.model.tr,
                         controller: controller.modelController,
                       ),
                       EditableInfoRow(
-                        label: 'Contact Number',
+                        label: AppStrings.contactNumber.tr,
                         controller: controller.contactNumberController,
                         keyboardType: TextInputType.phone,
                       ),
                       EditableInfoRow(
-                        label: 'Contact Email',
+                        label:AppStrings.contactEmail.tr,
                         controller: controller.contactEmailController,
                         keyboardType: TextInputType.emailAddress,
                       ),
@@ -84,18 +86,18 @@ class _EditDriverProfileScreenState extends State<EditDriverProfileScreen> {
 
                   // ── Bank Information ────────────────────────────────
                   EditableInfoSection(
-                    sectionTitle: 'Bank Information',
+                    sectionTitle: AppStrings.bankInformation.tr,
                     rows: [
                       EditableInfoRow(
-                        label: 'Bank Name',
+                        label: AppStrings.bankName.tr,
                         controller: controller.bankNameController,
                       ),
                       EditableInfoRow(
-                        label: 'Account Holder Name',
+                        label: AppStrings.accountHolderName.tr,
                         controller: controller.accountHolderController,
                       ),
                       EditableInfoRow(
-                        label: 'Account Number',
+                        label:AppStrings.accountNumber.tr,
                         controller: controller.accountNumberController,
                         keyboardType: TextInputType.number,
                       ),
@@ -116,7 +118,7 @@ class _EditDriverProfileScreenState extends State<EditDriverProfileScreen> {
               Dimensions.w(16),
               Dimensions.h(24),
             ),
-            child: AppButton(label: 'Update Profile',  onPressed: controller.onUpdateProfile,
+            child: AppButton(label: AppStrings.updateProfile.tr,  onPressed: controller.onUpdateProfile,
             height: 65,)
 
 

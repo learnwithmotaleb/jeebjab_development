@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../controller/overview_controller.dart';
 import 'overview_info_tile.dart';
 
@@ -21,7 +22,7 @@ class OverviewDatetimeBottomSection extends StatelessWidget {
       child: Column(
         children: [
           Obx(() => OverviewInfoTile(
-              title: "Date & Time Slot",
+              title: AppStrings.dateTimeSlot.tr,
               value: controller.dateTime.value)),
         ],
       ),

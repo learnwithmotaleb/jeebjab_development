@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../controller/task_controller.dart';
@@ -27,7 +28,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: 'My Task'),
+      appBar: CommonAppBar(title: AppStrings.myTask.tr),
       body: Column(
         children: [
           // ── Tab switcher ──────────────────────────────────────────────

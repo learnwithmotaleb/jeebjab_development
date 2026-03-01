@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../controller/bank_card_controller.dart';
@@ -26,7 +27,7 @@ class _BankCardScreenState extends State<BankCardScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Bank Card"),
+      appBar: CommonAppBar(title: AppStrings.bankCard.tr),
       body: Obx(() => SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.w(16),

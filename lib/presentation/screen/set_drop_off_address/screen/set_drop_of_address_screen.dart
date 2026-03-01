@@ -31,7 +31,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Set Drop-Off Address"),
+      appBar: CommonAppBar(title: AppStrings.setDropOffAddress.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -64,7 +64,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                         color: AppColors.labelColor,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Enter Drop-Off Address',
+                        hintText: AppStrings.enterDropOffAddress.tr,
                         hintStyle: TextStyle(
                           fontSize: Dimensions.f(14),
                           color: AppColors.hintColor,
@@ -110,7 +110,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                           ),
                           SizedBox(width: Dimensions.w(10)),
                           Text(
-                            'Choose On Map',
+                            AppStrings.chooseOnMap.tr,
                             style: TextStyle(
                               fontSize: Dimensions.f(14),
                               fontWeight: FontWeight.w600,
@@ -126,7 +126,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
 
                   // ── Recent Used Address label ──────────────────────────
                   Text(
-                    'Recent Used Address',
+                    AppStrings.recentUsedAddress.tr,
                     style: TextStyle(
                       fontSize: Dimensions.f(14),
                       fontWeight: FontWeight.w700,

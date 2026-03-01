@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/capture_image_controller.dart';
 import '../widget/camera_control_widget.dart';
-
 import '../widget/image_thumnail_slot_widget.dart';
 
 class CaptureImageScreen extends StatefulWidget {
@@ -34,7 +35,6 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
             Expanded(
               child: Stack(
                 children: [
-                  // Camera preview area
                   Obx(() {
                     final preview = controller.previewImage.value;
                     return Container(
@@ -129,8 +129,9 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                             child: ImageThumbnailSlot(
                               image: img,
                               isSelected: isSelected,
-                              onTap: () =>
-                              img != null ? controller.selectPreview(img) : null,
+                              onTap: () => img != null
+                                  ? controller.selectPreview(img)
+                                  : null,
                             ),
                           );
                         },
@@ -143,10 +144,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                     CameraControlsWidget(
                       onGallery: controller.pickFromGallery,
                       onCapture: controller.captureFromCamera,
-                      onFlip: () {}, // TODO: flip camera if using camera package
+                      onFlip: () {},
                     ),
 
-                    // ── Next Button (appears when images selected) ─────
+                    // ── Next Button ────────────────────────────────────
                     AnimatedSize(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeInOut,
@@ -166,9 +167,9 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
-                              'Next',
-                              style: TextStyle(
+                            child: Text(
+                              AppStrings.next.tr,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,

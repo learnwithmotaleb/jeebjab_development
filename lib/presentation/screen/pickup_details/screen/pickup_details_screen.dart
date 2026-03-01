@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/pickup_details_controller.dart';
 import '../widget/adviser_widget.dart';
 import '../widget/image_carousel_widget.dart';
 import '../widget/location_card_widget.dart';
-
 
 class PickupDetailsScreen extends StatefulWidget {
   const PickupDetailsScreen({super.key});
@@ -39,16 +39,16 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
                 ImageCarouselWidget(images: controller.images),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 16),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ── 2. Item Info ──────────────────────────
                       _ItemInfoWidget(
-                        title: controller.itemType.value,
-                        subtitle: controller.itemSubtype.value,
-                        publishedTime: controller.publishedTime.value,
+                        title: controller.itemType.value.tr,
+                        subtitle: controller.itemSubtype.value.tr,
+                        publishedTime: controller.publishedTime.value.tr,
                         price: controller.itemPrice.value,
                       ),
 
@@ -58,18 +58,18 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
 
                       // ── 3. Size + Pickup Time ─────────────────
                       _MetaRowWidget(
-                          label: 'Size', value: controller.size.value),
+                          label: AppStrings.size.tr, value: controller.size.value.tr),
                       const SizedBox(height: 8),
                       _MetaRowWidget(
-                        label: 'Preferred Pick-Up Time',
-                        value: controller.preferredPickupTime.value,
+                        label: AppStrings.preferredPickupTime.tr,
+                        value: controller.preferredPickupTime.value.tr,
                       ),
 
                       const SizedBox(height: 20),
 
                       // ── 4. Pick-Up Card ───────────────────────
                       LocationCardWidget(
-                        title: 'Pick-Up',
+                        title: AppStrings.pickUp.tr,
                         address: controller.pickupAddress.value,
                         features: controller.pickupFeatures,
                         onOpenMap: controller.onOpenPickupMap,
@@ -79,7 +79,7 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
 
                       // ── 5. Delivery Card ──────────────────────
                       LocationCardWidget(
-                        title: 'Delivery',
+                        title: AppStrings.delivery.tr,
                         address: controller.deliveryAddress.value,
                         features: controller.deliveryFeatures,
                         onOpenMap: controller.onOpenDeliveryMap,
@@ -99,7 +99,7 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
 
                       // ── 7. Share ──────────────────────────────
                       _ActionRowWidget(
-                        label: 'Share',
+                        label: AppStrings.share.tr,
                         onTap: controller.onShare,
                         color: AppColors.blackColor,
                       ),
@@ -108,7 +108,7 @@ class _PickupDetailsScreenState extends State<PickupDetailsScreen> {
 
                       // ── 8. Report Ad ──────────────────────────
                       _ActionRowWidget(
-                        label: 'Report Ad',
+                        label: AppStrings.reportAd.tr,
                         onTap: controller.onReportAd,
                         color: AppColors.blackColor,
                       ),
@@ -177,33 +177,27 @@ class _ItemInfoWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1A1A2E),
-                ),
-              ),
+              Text(title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1A1A2E),
+                  )),
               const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
+              Text(subtitle,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
               const SizedBox(height: 4),
-              Text(
-                publishedTime,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-              ),
+              Text(publishedTime,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
             ],
           ),
         ),
         RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
-                text: 'SAR ',
-                style: TextStyle(
+              TextSpan(
+                text: '${AppStrings.currency.tr} ',
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1A1A2E),
@@ -237,10 +231,8 @@ class _MetaRowWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: AppTextStyles.body),
-        Text(value,
-            style: AppTextStyles.body),
+        Text(label, style: AppTextStyles.body),
+        Text(value, style: AppTextStyles.body),
       ],
     );
   }
@@ -248,7 +240,6 @@ class _MetaRowWidget extends StatelessWidget {
 
 // ── Action Row Widget (Share / Report) ───────────────────────────────────────
 class _ActionRowWidget extends StatelessWidget {
-
   final String label;
   final VoidCallback onTap;
   final Color color;
@@ -264,18 +255,16 @@ class _ActionRowWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
-              ),
+              child: Text(label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  )),
             ),
             Icon(Icons.arrow_forward_ios_rounded,
                 size: 14, color: Colors.grey.shade400),

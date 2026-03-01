@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 
 class OverviewPhotosSection extends StatelessWidget {
@@ -24,8 +26,8 @@ class OverviewPhotosSection extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text("Photos", style: TextStyle(fontWeight: FontWeight.bold)),
+              children:  [
+                Text(AppStrings.photos.tr, style: TextStyle(fontWeight: FontWeight.bold)),
                 Icon(Icons.arrow_forward_ios, size: 18),
               ],
             ),

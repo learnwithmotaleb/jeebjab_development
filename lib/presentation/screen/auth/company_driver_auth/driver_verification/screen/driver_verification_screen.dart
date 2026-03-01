@@ -8,12 +8,10 @@ import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-
 import '../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../../utils/static_strings/static_strings.dart';
-
 import '../../../Customer_Verification/widget/timer_widget.dart';
 import '../controller/driver_verification_controller.dart';
 
@@ -21,11 +19,11 @@ class DriverVerificationScreen extends StatefulWidget {
   const DriverVerificationScreen({super.key});
 
   @override
-  State<DriverVerificationScreen> createState() => _DriverVerificationScreenState();
+  State<DriverVerificationScreen> createState() =>
+      _DriverVerificationScreenState();
 }
 
 class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
-
   late DriverVerificationController controller;
 
   @override
@@ -33,8 +31,6 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
     super.initState();
     controller = Get.put(DriverVerificationController());
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +42,21 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Verify Your Account"),
+      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             Align(
               alignment: AlignmentGeometry.centerLeft,
-
               child: Text(
-               "Enter your 6 digit code",
+                AppStrings.verifyYourAccount.tr,
                 style: AppTextStyles.title.copyWith(
-                    fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.normal,
                   color: AppColors.blackColor,
-                  fontSize: 24
+                  fontSize: 24,
                 ),
               ),
             ),
@@ -72,7 +66,7 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
             Align(
               alignment: AlignmentGeometry.centerLeft,
               child: Text(
-                "Enter the code we’ve sent to your mail",
+                AppStrings.enterTheCodeSentToMail.tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.body,
               ),
@@ -80,30 +74,27 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
 
             SizedBox(height: Dimensions.h(24)),
 
-
             PinCodeTextField(
               appContext: context,
               length: 6,
               controller: controller.otpController,
               keyboardType: TextInputType.number,
               animationType: AnimationType.fade,
-
               pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                  fieldHeight: Dimensions.h(48),
-                  fieldWidth: Dimensions.w(48),
-
-                  borderWidth: 1,
-                  activeColor: AppColors.primaryColor,
-                  selectedColor: AppColors.primaryColor,
-                  inactiveColor: AppColors.greyColor,
-                  activeFillColor: AppColors.greyColor
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                fieldHeight: Dimensions.h(48),
+                fieldWidth: Dimensions.w(48),
+                borderWidth: 1,
+                activeColor: AppColors.primaryColor,
+                selectedColor: AppColors.primaryColor,
+                inactiveColor: AppColors.greyColor,
+                activeFillColor: AppColors.greyColor,
               ),
-
               onCompleted: (v) => print("OTP Completed $v"),
               beforeTextPaste: (_) => true,
             ),
+
             SizedBox(height: Dimensions.h(16)),
 
             AppButton(
@@ -113,8 +104,8 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
               },
               height: Dimensions.h(60),
             ),
-            SizedBox(height: Dimensions.h(5)),
 
+            SizedBox(height: Dimensions.h(5)),
 
             Center(
               child: TimerWidget(

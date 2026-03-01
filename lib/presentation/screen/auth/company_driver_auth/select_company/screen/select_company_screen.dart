@@ -27,7 +27,6 @@ class SelectCompanyScreen extends StatefulWidget {
 class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
   final controller = Get.put(SelectCompanyController());
 
-
   final List<String> companyList = [
     "Google",
     "Microsoft",
@@ -36,17 +35,14 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
     "Tesla",
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
-
     );
   }
 
   Widget _buildMobile() {
-
     return Scaffold(
       appBar: CommonAppBar(title: ""),
       backgroundColor: AppColors.whiteColor,
@@ -57,52 +53,50 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Select company",style: AppTextStyles.body.copyWith(
-                fontSize: 24,
-                color: AppColors.blackColor,
-              ),),
-              Text("Enter your information",style: AppTextStyles.body.copyWith(
-                fontSize: 16,
-                color: AppColors.blackColor,
-              ),),
+              Text(
+                AppStrings.selectCompany.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 24,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
+              Text(
+                AppStrings.enterYourInformation.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 16,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
               SizedBox(height: Dimensions.h(30)),
 
               BottomSheetTextField(
                 controller: controller.selectCompanyController,
-                label: "Select Your Company",
-
+                label: AppStrings.selectYourCompany.tr,
                 items: companyList,
               ),
-              SizedBox(height: Dimensions.h(16)),
 
+              SizedBox(height: Dimensions.h(16)),
 
               AppTextField(
                 controller: controller.idController,
-                hint: "Id",
+                hint: AppStrings.id.tr,
                 keyboardType: TextInputType.name,
                 validator: AppValidators.required(),
                 onTap: () {},
               ),
+
               SizedBox(height: Dimensions.h(50)),
 
-
-
-
-              // Sign In Button
               AppButton(
                 label: AppStrings.continueButton.tr,
                 height: Dimensions.h(55),
                 borderRadius: Dimensions.r(16),
                 onPressed: () {
-                 Get.toNamed(RoutePath.vehicleType);
+                  Get.toNamed(RoutePath.vehicleType);
                 },
               ),
-
-
-
-
             ],
           ),
         ),

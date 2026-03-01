@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
 import '../controller/overview_controller.dart';
@@ -22,8 +23,8 @@ class AcknowledgementSection extends StatelessWidget {
                 controller.acknowledgePickup.value = value ?? false;
               },
             ),
-            const Expanded(
-              child: Text("I hereby acknowledge that is being picked up"),
+             Expanded(
+              child: Text(AppStrings.iHereByAcknowledgeThatIsBeingPickedUp.tr),
             ),
           ],
         )),
@@ -43,8 +44,8 @@ class AcknowledgementSection extends StatelessWidget {
                    ),
                  ),
                   SizedBox(width: 10,),
-                  const Expanded(
-                    child: Text("Corresponds with the pictures and description in the ad"),
+                   Expanded(
+                    child: Text(AppStrings.correspondsWithAd.tr),
                   ),
                 ],
               ),
@@ -60,8 +61,8 @@ class AcknowledgementSection extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10,),
-                  const Expanded(
-                    child: Text("Does not contain anything toxic or harmful"),
+                   Expanded(
+                    child: Text(AppStrings.doesNotContainToxicOrHarmful.tr),
                   ),
                 ],
               ),
@@ -77,8 +78,8 @@ class AcknowledgementSection extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10,),
-                  const Expanded(
-                    child: Text("Will be available at the time for pick-up"),
+                   Expanded(
+                    child: Text(AppStrings.willBeAvailableAtTheTimeForPickUp.tr),
                   ),
                 ],
               ),

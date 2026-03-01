@@ -4,6 +4,7 @@ import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/presentation/screen/add_card/controller/add_card_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -29,7 +30,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(
-        title: "Add Card",
+        title: AppStrings.addCard.tr,
         backgroundColor: AppColors.whiteColor,
       ),
       body: Padding(
@@ -39,9 +40,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
           children: [
             SizedBox(height: Dimensions.h(16)),
 
-            // ── Heading ────────────────────────────────────────────────
             Text(
-              'Payment Via Card',
+              AppStrings.paymentViaCard.tr,
               style: TextStyle(
                 fontSize: Dimensions.f(18),
                 fontWeight: FontWeight.w800,
@@ -51,7 +51,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
             SizedBox(height: Dimensions.h(4)),
 
-            // ── Sub heading ────────────────────────────────────────────
             Row(
               children: [
                 Icon(
@@ -61,7 +60,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 ),
                 SizedBox(width: Dimensions.w(4)),
                 Text(
-                  'Your Details Are Safe',
+                  AppStrings.yourDetailsAreSafe.tr,
                   style: TextStyle(
                     fontSize: Dimensions.f(12),
                     color: AppColors.blackColor,
@@ -72,12 +71,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
             SizedBox(height: Dimensions.h(28)),
 
-            // ── Card Number ────────────────────────────────────────────
             CardNumberField(controller: controller.cardNumberController),
 
             SizedBox(height: Dimensions.h(16)),
 
-            // ── Expiry + CVV ───────────────────────────────────────────
             ExpiryCvvRow(
               expireController: controller.expireController,
               cvvController: controller.cvvController,
@@ -85,10 +82,9 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
             SizedBox(height: Dimensions.h(28)),
 
-            // ── Add Card Button ────────────────────────────────────────
             Obx(
-              () => AppButton(
-                label: 'Add Card',
+                  () => AppButton(
+                label: AppStrings.addCard.tr,
                 height: 65,
                 onPressed: controller.isValid.value
                     ? controller.onAddCard

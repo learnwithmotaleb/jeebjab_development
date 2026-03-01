@@ -57,7 +57,7 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
 
             // ── Change Language Button ─────────────────────────────
             AppButton(
-              label: 'Change Language',
+              label: AppStrings.changeLanguage.tr,
               height: 65,
               onPressed: () async {
                 await lsc.applyLanguage(); // ← saves + updates locale

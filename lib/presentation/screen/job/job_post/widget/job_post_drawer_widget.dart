@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
+import '../../../../../utils/static_strings/static_strings.dart';
+
 class JobPostDrawer extends StatefulWidget {
   const JobPostDrawer({super.key});
 
@@ -90,9 +92,9 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Sort By ─────────────────────────────────────────
                     _SectionCard(
-                      title: 'Sort By',
+                      title: AppStrings.sortBy.tr,
                       child: Column(
-                        children: ['Nearest', 'Newest'].map((opt) {
+                        children: [AppStrings.nearest.tr, AppStrings.newest.tr].map((opt) {
                           return _RadioRow(
                             label: opt,
                             selected: _selectedSort == opt,
@@ -107,7 +109,7 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Time ───────────────────────────────────────────
                     _SectionCard(
-                      title: 'Time',
+                      title: AppStrings.time.tr,
                       child: Column(
                         children: ['Regular', 'Priority'].map((opt) {
                           return _RadioRow(
@@ -124,12 +126,12 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Pick-Up Placement ──────────────────────────────
                     _SectionCard(
-                      title: 'Pick-Up Placement',
+                      title: AppStrings.pickUpPlacement.tr,
                       child: Column(
                         children: [
                           ...[
-                            'Inside The House/Apartment',
-                            'Outside The House/Apartment'
+                            AppStrings.insideHouseApartment.tr,
+                            AppStrings.outsideHouseApartment.tr,
                           ].map((opt) => _RadioRow(
                             label: opt,
                             selected: _selectedPickup == opt,
@@ -138,13 +140,14 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                           )),
                           SizedBox(height: Dimensions.h(4)),
                           _ToggleRow(
-                            label: 'No Meet',
+                            label:   AppStrings.noMeet.tr,
+
                             value: _pickupNoMeet,
                             onToggle: (v) =>
                                 setState(() => _pickupNoMeet = v),
                           ),
                           _ToggleRow(
-                            label: 'Can Help',
+                            label: AppStrings.canHelp.tr,
                             value: _pickupCanHelp,
                             onToggle: (v) =>
                                 setState(() => _pickupCanHelp = v),
@@ -157,10 +160,10 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Drop-Off Placement ─────────────────────────────
                     _SectionCard(
-                      title: 'Drop-Off Placement',
+                      title: AppStrings.dropOffPlacement.tr,
                       child: Column(
                         children: [
-                          ...['Inside', 'Outside'].map((opt) => _RadioRow(
+                          ...[AppStrings.inside.tr, AppStrings.outside.tr].map((opt) => _RadioRow(
                             label: opt,
                             selected: _selectedDropoff == opt,
                             onTap: () => setState(
@@ -168,13 +171,13 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                           )),
                           SizedBox(height: Dimensions.h(4)),
                           _ToggleRow(
-                            label: 'No Meet',
+                            label: AppStrings.noMeet.tr,
                             value: _dropoffNoMeet,
                             onToggle: (v) =>
                                 setState(() => _dropoffNoMeet = v),
                           ),
                           _ToggleRow(
-                            label: 'Can Help',
+                            label: AppStrings.canHelp.tr,
                             value: _dropoffCanHelp,
                             onToggle: (v) =>
                                 setState(() => _dropoffCanHelp = v),
@@ -187,29 +190,29 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Ad Type ────────────────────────────────────────
                     _SectionCard(
-                      title: 'Ad Type',
+                      title: AppStrings.adType.tr,
                       child: Column(
                         children: [
                           _ToggleRow(
-                            label: 'Move',
+                            label: AppStrings.move.tr,
                             value: _delivery,
                             onToggle: (v) =>
                                 setState(() => _delivery = v),
                           ),
                           _ToggleRow(
-                            label: 'Recycling',
+                            label: AppStrings.recycling.tr,
                             value: _recycling,
                             onToggle: (v) =>
                                 setState(() => _recycling = v),
                           ),
                           _ToggleRow(
-                            label: 'Buy For Me',
+                            label: AppStrings.buyForMe.tr,
                             value: _buyForMe,
                             onToggle: (v) =>
                                 setState(() => _buyForMe = v),
                           ),
                           _ToggleRow(
-                            label: 'Give-Away',
+                            label: AppStrings.giveAway.tr,
                             value: _giveAway,
                             onToggle: (v) =>
                                 setState(() => _giveAway = v),
@@ -222,7 +225,7 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
 
                     // ── Distance ───────────────────────────────────────
                     _SectionCard(
-                      title: 'Distance',
+                      title: AppStrings.distance.tr,
                       child: Column(
                         children: [
                           Row(
@@ -308,7 +311,7 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Apply',
+                   AppStrings.apply.tr,
                     style: TextStyle(
                       fontSize: Dimensions.f(16),
                       fontWeight: FontWeight.w700,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/controller/my_post_controller.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../../../utils/app_colors/app_colors.dart';
@@ -27,13 +29,12 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "My Post"),
+      appBar: CommonAppBar(title: AppStrings.myPost.tr),
       body: Column(
         children: [
           _buildTabBar(),
           Expanded(
             child: Obx(() {
-              // ── Loading ──────────────────────────────────────────────────
               if (controller.isLoading.value) {
                 return const Center(
                   child: CircularProgressIndicator(
@@ -42,16 +43,13 @@ class _MyPostScreenState extends State<MyPostScreen> {
                 );
               }
 
-              // ── Error ────────────────────────────────────────────────────
               if (controller.errorMessage.value.isNotEmpty) {
                 return _buildErrorState();
               }
 
-              // ── Empty ────────────────────────────────────────────────────
               final posts = controller.filteredPosts;
               if (posts.isEmpty) return _buildEmptyState();
 
-              // ── List ─────────────────────────────────────────────────────
               return RefreshIndicator(
                 color: AppColors.primaryColor,
                 onRefresh: controller.refreshPosts,
@@ -74,7 +72,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     );
   }
 
-  // ── Card Tap Handler ─────────────────────────────────────────────────────
   void _handleCardTap(PostModel post) {
     Get.toNamed(
       RoutePath.notificationDetails,
@@ -82,7 +79,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     );
   }
 
-  // ── Tab Bar ──────────────────────────────────────────────────────────────
   Widget _buildTabBar() {
     return Container(
       color: AppColors.whiteColor,
@@ -132,7 +128,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     );
   }
 
-  // ── Empty State ──────────────────────────────────────────────────────────
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -157,7 +152,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     );
   }
 
-  // ── Error State ──────────────────────────────────────────────────────────
   Widget _buildErrorState() {
     return Center(
       child: Column(
@@ -188,9 +182,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
               padding: const EdgeInsets.symmetric(
                   horizontal: 32, vertical: 12),
             ),
-            child: const Text(
-              'Try Again',
-              style: TextStyle(
+            child: Text(
+              AppStrings.tryAgain.tr,
+              style: const TextStyle(
                 color: AppColors.whiteColor,
                 fontWeight: FontWeight.w700,
               ),

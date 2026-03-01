@@ -27,18 +27,14 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   SignupController controller = Get.put(SignupController());
 
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
-
     );
   }
 
   Widget _buildMobile() {
-
-
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: Column(
@@ -48,22 +44,19 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Container(
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.only( left: 20.0,right: 20.0),
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      AppImages.appLogo,
-                    ),
+                    Image.asset(AppImages.appLogo),
                     SizedBox(height: Dimensions.h(30)),
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
-                        "Sign Up",
+                        AppStrings.signup.tr,
                         style: AppTextStyles.title.copyWith(
-
-                          color: AppColors.whiteColor, fontSize: 20,
-
+                          color: AppColors.whiteColor,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -71,12 +64,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
-                        "To Get started",
+                        AppStrings.toGetStarted.tr,
                         style: AppTextStyles.body.copyWith(
-                            color: AppColors.whiteColor, fontSize: 20),
+                          color: AppColors.whiteColor,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -87,7 +81,9 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(24), vertical: Dimensions.h(24)),
+                horizontal: Dimensions.w(24),
+                vertical: Dimensions.h(24),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 borderRadius: BorderRadius.only(
@@ -104,57 +100,47 @@ class _SignupScreenState extends State<SignupScreen> {
                       AppTextField(
                         controller: controller.nameController,
                         focusNode: controller.nameFocus,
-                        hint: "Enter Your Name",
+                        hint: AppStrings.enterYourName.tr,
                         keyboardType: TextInputType.name,
                         validator: AppValidators.required(),
-                        onSubmitted: () {
-                          controller.submit(); // ✅ submit form on Don
-
-                        },
+                        onSubmitted: () => controller.submit(),
                         onTap: () {},
                       ),
                       SizedBox(height: Dimensions.h(16)),
-                      // Email Field
+
                       AppTextField(
                         controller: controller.emailController,
                         focusNode: controller.emailFocus,
-                        hint: "Enter Email Address",
+                        hint: AppStrings.enterEmailAddress.tr,
                         keyboardType: TextInputType.emailAddress,
                         validator: AppValidators.email(),
-                        onSubmitted: () {
-                          controller.submit(); // ✅ submit form on Don
-
-                        },
+                        onSubmitted: () => controller.submit(),
                         onTap: () {},
                       ),
                       SizedBox(height: Dimensions.h(16)),
 
-                      // Password Field
                       AppTextField(
                         controller: controller.passwordController,
                         focusNode: controller.passwordFocus,
-                        hint: "Enter Password",
+                        hint: AppStrings.enterPassword.tr,
                         obscure: true,
                         validator: AppValidators.required(),
                         onTap: () {},
                       ),
                       SizedBox(height: Dimensions.h(24)),
 
-
-                      // Password Field
                       AppTextField(
                         controller: controller.confirmPasswordController,
                         focusNode: controller.confirmPasswordFocus,
-                        hint: "Confirm Password",
+                        hint: AppStrings.confirmPassword.tr,
                         obscure: true,
                         validator: AppValidators.required(),
                         onTap: () {},
                       ),
                       SizedBox(height: Dimensions.h(24)),
 
-                      // Sign In Button
                       AppButton(
-                        label: "Create Account",
+                        label: AppStrings.createAccount.tr,
                         height: Dimensions.h(55),
                         borderRadius: Dimensions.r(16),
                         onPressed: () {
@@ -163,14 +149,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
 
-
-
-
                       SizedBox(height: Dimensions.h(24)),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "become a company driver ?".tr,
+                          AppStrings.becomeACompanyDriver.tr,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.blackColor,
                           ),
@@ -178,18 +161,16 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       SizedBox(height: Dimensions.h(10)),
 
-                      // Create Account Button
                       AppButton(
-                        label: "Company Driver",
+                        label: AppStrings.companyDriver.tr,
                         backgroundColor: AppColors.whiteColor,
                         textColor: AppColors.primaryColor,
                         height: Dimensions.h(55),
                         borderSideColor: AppColors.primaryColor,
                         borderRadius: Dimensions.r(16),
                         onPressed: () {
-
                           controller.selectDriver();
-                         Get.toNamed(RoutePath.driverSignup);
+                          Get.toNamed(RoutePath.driverSignup);
                         },
                       ),
                     ],

@@ -33,7 +33,7 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Drop Off Floor & Door Code"),
+      appBar: CommonAppBar(title: AppStrings.droopOffFloorAndDoorCode.tr),
       body: Column(
         children: [
           // ── Scrollable Content ────────────────────────────────────────
@@ -47,9 +47,9 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
 
                   // ── Floor Field ─────────────────────────────────
                   InlineLabelField(
-                    label: 'Floor',
+                    label: AppStrings.floor.tr,
                     controller: controller.floorController,
-                    hint: '12',
+                    hint: AppStrings.e36.tr,
                     keyboardType: TextInputType.number,
                   ),
 
@@ -57,9 +57,9 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
 
                   // ── Door Code Field ─────────────────────────────
                   InlineLabelField(
-                    label: 'Door Code',
+                    label: AppStrings.doorCode.tr,
                     controller: controller.doorCodeController,
-                    hint: 'E36',
+                    hint: AppStrings.e36,
                     keyboardType: TextInputType.text,
                   ),
 
@@ -67,7 +67,7 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
 
                   // ── Fits In Elevator toggle ─────────────────────
                   ToggleOptionRow(
-                    label: 'Fits In The Elevator',
+                    label:AppStrings.fitsInTheElevator.tr,
                     isSelected: controller.fitsInElevator.value,
                     onTap: controller.toggleElevator,
                   ),
@@ -90,7 +90,7 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
                         color: AppColors.labelColor,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Write Other Info',
+                        hintText: AppStrings.writeOtherInfo.tr,
                         hintStyle: TextStyle(
                           fontSize: Dimensions.f(14),
                           color: AppColors.hintColor,

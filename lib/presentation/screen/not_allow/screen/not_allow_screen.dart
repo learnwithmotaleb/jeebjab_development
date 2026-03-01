@@ -50,7 +50,7 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
 
                   // ── Title ───────────────────────────────────────────
                   Text(
-                    'Not Allowed Wastes',
+                  AppStrings.notAllowedWastes.tr,
                     style: TextStyle(
                       fontSize: Dimensions.f(24),
                       fontWeight: FontWeight.w800,
@@ -108,7 +108,7 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
             ),
           ),
 
-          // ── Continue button pinned bottom ───────────────────────────
+          // ──------Continue button pinned bottom ───────────────────────────
           Padding(
             padding: EdgeInsets.fromLTRB(
               Dimensions.w(16),

@@ -15,18 +15,18 @@ class ChooseVehicleTypeScreen extends StatefulWidget {
   const ChooseVehicleTypeScreen({super.key});
 
   @override
-  State<ChooseVehicleTypeScreen> createState() => _ChooseVehicleTypeScreenState();
+  State<ChooseVehicleTypeScreen> createState() =>
+      _ChooseVehicleTypeScreenState();
 }
 
 class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
-
   int selectedIndex = 0;
 
   final List<String> options = [
-    "Car",
-    "Van",
-    "Pickup",
-    "Truck"
+    AppStrings.car,
+    AppStrings.van,
+    AppStrings.pickup,
+    AppStrings.truck,
   ];
 
   @override
@@ -49,73 +49,60 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          
-          
-              Text(""
-                  "Choose Your Vehicle Type",style: AppTextStyles.body.copyWith(
+              Text(
+                AppStrings.chooseYourVehicleType.tr,
+                style: AppTextStyles.body.copyWith(
                   fontSize: 24,
                   color: AppColors.blackColor,
+                ),
+              ),
 
-              ),),
-          
-          
-              Text("Select a vehicle to continue",style: AppTextStyles.title.copyWith(
-                fontSize: 16,
-                color: AppColors.blackColor
-              ),),
-          
-              SizedBox(height:  Dimensions.h(40)),
-          
-          
-          
-          
-          
-          
-          
-              /// Selectable buttons
+              Text(
+                AppStrings.selectAVehicleToContinue.tr,
+                style: AppTextStyles.title.copyWith(
+                  fontSize: 16,
+                  color: AppColors.blackColor,
+                ),
+              ),
+
+              SizedBox(height: Dimensions.h(40)),
+
               ...List.generate(options.length, (index) {
                 final isSelected = selectedIndex == index;
-          
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: AppButton(
                     height: Dimensions.h(65),
-                    label: options[index],
+                    label: options[index].tr,
                     onPressed: () {
                       setState(() {
                         selectedIndex = index;
                       });
                     },
                     borderSideColor: isSelected
-                        ? AppColors.whiteColor.withOpacity(0.5): AppColors.whiteColor.withOpacity(0.5),
+                        ? AppColors.whiteColor.withOpacity(0.5)
+                        : AppColors.whiteColor.withOpacity(0.5),
                     borderRadius: 20,
-                    backgroundColor: isSelected
-                        ? AppColors.primaryColor
-                        : Colors.white,
-                    textColor: isSelected
-                        ? AppColors.whiteColor
-                        : AppColors.blackColor,
-          
+                    backgroundColor:
+                    isSelected ? AppColors.primaryColor : Colors.white,
+                    textColor:
+                    isSelected ? AppColors.whiteColor : AppColors.blackColor,
                   ),
                 );
               }),
-          
-          SizedBox(height:  Dimensions.h(70)),
-          
-              /// Continue Button
+
+              SizedBox(height: Dimensions.h(70)),
+
               AppButton(
                 height: Dimensions.h(70),
-          
                 label: AppStrings.continueButton.tr,
                 onPressed: selectedIndex == -1
-                    ? () {} // disabled
+                    ? () {}
                     : () {
-                  // Navigate or action
                   print("Selected: ${options[selectedIndex]}");
-
                   Get.toNamed(RoutePath.vehicleInformation);
                 },
-          
               ),
             ],
           ),
@@ -123,9 +110,6 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
       ),
     );
   }
-
-
-
 
   Widget _buildTablet() {
     return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));

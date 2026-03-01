@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/change_password/controller/change_password_controller.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
@@ -33,7 +35,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget _buildMobile() {
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
-        appBar: CommonAppBar(title: 'Change Password'),
+        appBar: CommonAppBar(title: AppStrings.changePassword.tr),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -45,20 +47,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                   AppTextField(
                     controller: controller.previousPassword,
-                    hint: "Previous Password",
+                    hint: AppStrings.previousPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
 
 
                   ),
                   SizedBox(height: Dimensions.h(12),),
                   AppTextField(controller: controller.newPassword,
-                    hint: "New Password",
+                    hint:AppStrings.newPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
                   ),
                   SizedBox(height: Dimensions.h(12),),
 
                   AppTextField(controller: controller.confirmPassword,
-                    hint: "Old Password",
+                    hint:AppStrings.oldPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
 
                   ),
@@ -66,10 +68,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   SizedBox(height: Dimensions.h(50),),
 
                   AppButton(
-                      label: "Change Password",
+                      label: AppStrings.changePassword.tr,
                       onPressed: (){
 
-                        ShowAppSnackBar.info("Password Change Successful",title: "JeebJab");
+                        ShowAppSnackBar.info(AppStrings.passwordChangeSuccessful.tr,title:AppStrings.appName.tr);
                       },
                     height: 65,
 

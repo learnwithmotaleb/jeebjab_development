@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
@@ -24,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return ResponsiveLayout(mobile: _buildMobile());
   }
 
-  /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
@@ -52,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: GestureDetector(
-                      onTap: () {
-                        Get.toNamed(RoutePath.profile);
-                      },
+                      onTap: () => Get.toNamed(RoutePath.profile),
                       child: CircleAvatar(
                         radius: 25,
                         backgroundImage: AssetImage(AppImages.profileImage),
@@ -81,10 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(1000),
                       ),
                       child: GestureDetector(
-                        onTap: () {
-                          Get.toNamed(RoutePath.notification);
-                        },
-
+                        onTap: () => Get.toNamed(RoutePath.notification),
                         child: Icon(
                           Icons.notifications_on,
                           color: AppColors.primaryColor,
@@ -103,32 +99,29 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  // Left Container - Rounded on left side
                   Expanded(
                     child: _statCard(
                       value: "30 Sec",
-                      label: "Average\nResponse",
+                      label: AppStrings.averageResponse.tr,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(30),
                         bottomLeft: Radius.circular(30),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 5), // Small gap between containers
-                  // Center Container - No rounded corners
+                  const SizedBox(width: 5),
                   Expanded(
                     child: _statCard(
                       value: "1.3M",
-                      label: "Deliveries\n& Pickups",
+                      label: AppStrings.deliveriesAndPickups.tr,
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  const SizedBox(width: 5), // Small gap between containers
-                  // Right Container - Rounded on right side
+                  const SizedBox(width: 5),
                   Expanded(
                     child: _statCard(
                       value: "720,000",
-                      label: "Reduce\nCar Rides",
+                      label: AppStrings.reduceCarRides.tr,
                       borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(30),
                         bottomRight: Radius.circular(30),
@@ -146,10 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-
                 children: [
                   Text(
-                    "Welcome to JibJab",
+                    AppStrings.welcomeToJibJab.tr,
                     style: AppTextStyles.title.copyWith(
                       fontSize: 18,
                       color: AppColors.primaryColor,
@@ -157,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: Dimensions.h(10)),
                   Text(
-                    "JibJab is the easiest way to get help with everything you need to be moved, recycled, or delivered. Through the app, you instantly connect with other ID-verified JibJab members who are ready to help you.",
+                    AppStrings.welcomeToJibJabSubTitle.tr,
                     style: AppTextStyles.body.copyWith(color: Colors.black87),
                   ),
                 ],
@@ -166,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             SizedBox(height: Dimensions.h(20)),
 
-            // Banner Image with overlay
+            // Banner Image
             Stack(
               children: [
                 Container(
@@ -185,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   left: Dimensions.w(30),
                   top: Dimensions.h(50),
                   child: Text(
-                    "Life Make Easier\nEverything You Need, All In One App.",
+                    AppStrings.lifeMakeEasier.tr,
                     style: AppTextStyles.title.copyWith(
                       fontSize: 16,
                       color: Colors.white,
@@ -205,16 +197,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "How it works:",
+                    AppStrings.howItWorks.tr,
                     style: AppTextStyles.title.copyWith(fontSize: 18),
                   ),
                   SizedBox(height: Dimensions.h(10)),
                   Text(
-                    "1. Take a photo of what you need help with.\n"
-                    "2. Set the price you are willing to pay.\n"
-                    "3. Select a Helper to do the job.\n\n"
-                    "⚡ Quick and easy: Most users get a request to be helped within minutes, and are helped within a few hours.\n"
-                    "💵 Simple and secure payments: Posting an ad is free and payments are securely made within the app after the task is completed.",
+                    AppStrings.howItWorksSteps.tr,
                     style: AppTextStyles.body.copyWith(color: Colors.black87),
                   ),
                 ],
@@ -227,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
               child: Text(
-                "What's New",
+                AppStrings.whatsNew.tr,
                 style: AppTextStyles.title.copyWith(
                   fontSize: 18,
                   color: AppColors.primaryColor,
@@ -236,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             SizedBox(height: Dimensions.h(30)),
+
             Stack(
               children: [
                 Container(
@@ -254,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   left: Dimensions.w(30),
                   top: Dimensions.h(50),
                   child: Text(
-                    "Life Make Easier\nEverything You Need, All In One App.",
+                    AppStrings.lifeMakeEasier.tr,
                     style: AppTextStyles.title.copyWith(
                       fontSize: 16,
                       color: Colors.white,
@@ -267,16 +256,11 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: Dimensions.h(10)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-
-              child: Text(
-                "Use code DELIVERY20 to get 20% off your next delivery order. Whether it's food, "
-                "groceries, or a new gadget, we’ve got you covered"
-                "Valid till: January 31, 2026 Order now and save big!",
-              ),
+              child: Text(AppStrings.promoText.tr),
             ),
 
             SizedBox(height: Dimensions.h(30)),
-            SizedBox(height: Dimensions.h(30)),
+
             Stack(
               children: [
                 Container(
@@ -295,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   left: Dimensions.w(30),
                   top: Dimensions.h(50),
                   child: Text(
-                    "Life Make Easier\nEverything You Need, All In One App.",
+                    AppStrings.lifeMakeEasier.tr,
                     style: AppTextStyles.title.copyWith(
                       fontSize: 16,
                       color: Colors.white,
@@ -308,22 +292,15 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: Dimensions.h(10)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-
-              child: Text(
-                "Use code DELIVERY20 to get 20% off your next delivery order. Whether it's food, "
-                "groceries, or a new gadget, we’ve got you covered"
-                "Valid till: January 31, 2026 Order now and save big!",
-              ),
+              child: Text(AppStrings.promoText.tr),
             ),
 
             SizedBox(height: Dimensions.h(10)),
             Center(
               child: TextButton(
-                onPressed: () {
-                  Get.toNamed(RoutePath.readMore);
-                },
+                onPressed: () => Get.toNamed(RoutePath.readMore),
                 child: Text(
-                  "Read More",
+                  AppStrings.readMore.tr,
                   style: AppTextStyles.body.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -347,13 +324,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor, // Teal color from the image
+        color: AppColors.primaryColor,
         borderRadius: borderRadius,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Value text
           Text(
             value,
             style: const TextStyle(
@@ -363,17 +339,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 5),
-
-          // Check icon and label
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Check icon
               Container(
                 width: 16,
                 height: 16,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
@@ -384,8 +357,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(width: 6),
-
-              // Label text
               Flexible(
                 child: Text(
                   label,

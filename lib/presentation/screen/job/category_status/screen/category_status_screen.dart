@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../pickup_details/widget/adviser_widget.dart';
 import '../../../pickup_details/widget/image_carousel_widget.dart';
@@ -63,12 +64,12 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
 
                             // ── 3. Size + Pickup Time ─────────────
                             _MetaRowWidget(
-                              label: 'Size',
+                              label: AppStrings.size.tr,
                               value: controller.size.value,
                             ),
                             const SizedBox(height: 8),
                             _MetaRowWidget(
-                              label: 'Preferred Pick-Up Time',
+                              label: AppStrings.preferredPickUp.tr,
                               value: controller.preferredPickupTime.value,
                             ),
 
@@ -76,7 +77,7 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
 
                             // ── 4. Pick-Up Card ───────────────────
                             LocationCardWidget(
-                              title: 'Pick-Up',
+                              title: AppStrings.pickUp.tr,
                               address: controller.pickupAddress.value,
                               features: controller.pickupFeatures,
                               onOpenMap: controller.onOpenPickupMap,
@@ -86,7 +87,7 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
                             if (controller.isMove) ...[
                               const SizedBox(height: 16),
                               LocationCardWidget(
-                                title: 'Delivery',
+                                title: AppStrings.delivered.tr,
                                 address: controller.deliveryAddress.value,
                                 features: controller.deliveryFeatures,
                                 onOpenMap: controller.onOpenDeliveryMap,
@@ -107,7 +108,7 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
 
                             // ── 7. Share ──────────────────────────
                             _ActionRowWidget(
-                              label: 'Share',
+                              label: AppStrings.share.tr,
                               onTap: controller.onShare,
                             ),
 
@@ -116,7 +117,7 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
 
                             // ── 8. Report Ad ──────────────────────
                             _ActionRowWidget(
-                              label: 'Report Ad',
+                              label: AppStrings.reportAd.tr,
                               onTap: controller.onReportAd,
                             ),
 

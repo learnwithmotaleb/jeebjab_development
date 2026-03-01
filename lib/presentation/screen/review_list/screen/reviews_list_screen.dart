@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../widget/custom_appbar.dart';
@@ -25,7 +26,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Review & Ratings"),
+      appBar: CommonAppBar(title: AppStrings.reviewAndRatings.tr),
       body: Obx(() {
         // ── Loading ──────────────────────────────────────────────────────
         if (controller.isLoading.value) {
@@ -36,7 +37,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen> {
 
         // ── Empty ────────────────────────────────────────────────────────
         if (controller.reviews.isEmpty) {
-          return const Center(
+          return  Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -44,7 +45,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen> {
                     size: 64, color: Colors.grey),
                 SizedBox(height: 12),
                 Text(
-                  'No Reviews Yet',
+                 AppStrings.noReviewsYet.tr,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,

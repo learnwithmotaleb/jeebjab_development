@@ -46,48 +46,37 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              Text("Your license number",style: AppTextStyles.body.copyWith(
-                fontSize: 24,
-                color: AppColors.blackColor,
-              ),),
-
-
-              Text("Provide your driver’s license number to continue",style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor
-              ),),
-
-              SizedBox(height:  Dimensions.h(40)),
-
-              AppTextField(controller: controller.licenseNumber,
-                hint: "Your license number",
-
+              Text(
+                AppStrings.yourLicenseNumber.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 24,
+                  color: AppColors.blackColor,
+                ),
               ),
 
+              Text(
+                AppStrings.licenseNumberSubTitle.tr,
+                style: AppTextStyles.title.copyWith(
+                  fontSize: 16,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
+              SizedBox(height: Dimensions.h(40)),
 
+              AppTextField(
+                controller: controller.licenseNumber,
+                hint: AppStrings.enterLicenseNumber.tr,
+              ),
 
+              SizedBox(height: Dimensions.h(100)),
 
-
-
-
-
-              SizedBox(height:  Dimensions.h(100)),
-
-              /// Continue Button
               AppButton(
                 height: Dimensions.h(70),
-
                 label: AppStrings.continueButton.tr,
-                onPressed: (){
-
+                onPressed: () {
                   Get.toNamed(RoutePath.uploadDocument);
                 },
-
-
-
-
               ),
             ],
           ),
@@ -95,9 +84,6 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
       ),
     );
   }
-
-
-
 
   Widget _buildTablet() {
     return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));

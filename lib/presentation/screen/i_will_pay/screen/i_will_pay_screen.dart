@@ -31,7 +31,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "I Will Pay"),
+      appBar: CommonAppBar(title: AppStrings.iWillPay.tr),
       body: Column(
         children: [
           // ── Main Content ────────────────────────────────────────────
@@ -52,7 +52,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                         color: AppColors.blackColor,
                       ),
                       children: [
-                        const TextSpan(text: 'Other User Have Paid Around '),
+                         TextSpan(text: AppStrings.otherUserHavePaidAround.tr),
                         TextSpan(
                           text:
                               '${controller.minSuggested} - ${controller.maxSuggested}',
@@ -109,7 +109,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                   GestureDetector(
                     onTap: controller.onVoucherTap,
                     child: Text(
-                      'Do You Have A Campaign Code ?',
+                     AppStrings.doYouHaveCampaignCode.tr,
                       style: TextStyle(
                         fontSize: Dimensions.f(13),
                         color: AppColors.primaryColor,

@@ -25,9 +25,6 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final controller = Get.put(ResetPasswordController());
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
@@ -41,13 +38,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       appBar: CommonAppBar(title: ""),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child:Form(
+        child: Form(
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Create New Password",
+                AppStrings.resetPassword.tr,
                 style: AppTextStyles.body.copyWith(
                   fontSize: 24,
                   color: AppColors.blackColor,
@@ -56,7 +53,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               SizedBox(height: Dimensions.h(10)),
 
               Text(
-                "Create your new password",
+                AppStrings.createYourNewPassword.tr,
                 style: AppTextStyles.body.copyWith(
                   fontSize: 16,
                   color: AppColors.blackColor,
@@ -70,7 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 focusNode: controller.newPasswordFocus,
                 obscure: true,
                 validator: AppValidators.required(),
-                hint: "Enter New Password",
+                hint: AppStrings.enterYourNewPassword.tr,
               ),
 
               SizedBox(height: Dimensions.h(16)),
@@ -83,7 +80,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   passwordSupplier: () =>
                   controller.newPasswordController.text,
                 ),
-                hint: "Enter Confirm Password",
+                hint: AppStrings.confirmYourNewPassword.tr,
               ),
 
               SizedBox(height: Dimensions.h(50)),
@@ -95,11 +92,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ),
             ],
           ),
-        )
-
+        ),
       ),
     );
   }
-
-
 }

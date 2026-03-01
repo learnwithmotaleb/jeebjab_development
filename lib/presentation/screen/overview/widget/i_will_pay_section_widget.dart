@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../controller/overview_controller.dart';
 import 'overview_info_tile.dart';
@@ -23,7 +24,7 @@ class OverviewIWillPayBottomSection extends StatelessWidget {
         children: [
 
           Obx(() => OverviewInfoTile(
-              title: "I Will Pay",
+              title:AppStrings.iWillPay.tr,
               onPressed: (){
                 Get.toNamed(RoutePath.iWillPay);
               },

@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../utils/app_colors/app_colors.dart';
@@ -34,7 +35,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Notification"),
+      appBar: CommonAppBar(title: AppStrings.notification.tr),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -46,7 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                 child: Text(
-                  'Recent',
+                  AppStrings.recent.tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -98,7 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Text(
-                  'Previous',
+                 AppStrings.previous.tr,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

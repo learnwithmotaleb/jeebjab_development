@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../../../core/responsive_layout/dimensions.dart';
@@ -27,7 +28,7 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: "Account Settings"),
+      appBar: CommonAppBar(title: AppStrings.accountSetting.tr),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(

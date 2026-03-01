@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../core/responsive_layout/responsive_layout.dart';
@@ -31,7 +33,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: const CommonAppBar(title: "Privacy And Policy"),
+      appBar:  CommonAppBar(title: AppStrings.privacyPolicy.tr),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -42,7 +44,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
 
               /// Overview Section
               _buildSection(
-                title: "Payments",
+                title: AppStrings.payments.tr,
                 description: controller.payments.value,
               ),
 
@@ -50,7 +52,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
 
               /// User Eligibility Section
               _buildSection(
-                title: "Cancellations & Refunds",
+                title: AppStrings.cancellationsAndRefunds.tr,
                 description: controller.cancellations.value,
               ),
 

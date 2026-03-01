@@ -27,7 +27,7 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: "Set Pick-Up Address"),
+      appBar: CommonAppBar(title: AppStrings.setPickUpAddress.tr),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -57,8 +57,8 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                       controller: controller.addressController,
                       style: const TextStyle(
                           fontSize: 14, color: Color(0xFF1A1A2E)),
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Pick-Up Address',
+                      decoration:  InputDecoration(
+                        hintText: AppStrings.enterPickUpAddress.tr,
                         hintStyle: TextStyle(
                             fontSize: 14, color: Color(0xFFAAAAAA)),
                         contentPadding: EdgeInsets.symmetric(
@@ -89,13 +89,13 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child:  Row(
                         children: [
                           Icon(Icons.location_on_outlined,
                               size: 20, color: Color(0xFF1A1A2E)),
                           SizedBox(width: 10),
                           Text(
-                            'Choose On Map',
+                            AppStrings.chooseOnMap.tr,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -110,8 +110,8 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                   const SizedBox(height: 24),
 
                   // ── Recent Used Address ───────────────────────────────
-                  const Text(
-                    'Recent Used Address',
+                   Text(
+                    AppStrings.recentUsedAddress.tr,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,

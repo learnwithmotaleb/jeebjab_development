@@ -49,48 +49,40 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                AppStrings.uploadDocument.tr,
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 24,
+                  color: AppColors.blackColor,
+                ),
+              ),
 
-              Text("Upload document",style: AppTextStyles.body.copyWith(
-                fontSize: 24,
-                color: AppColors.blackColor,
-              ),),
-
-
-              Text("Please upload the document for verification",style: AppTextStyles.title.copyWith(
+              Text(
+                AppStrings.uploadDocumentSubTitle.tr,
+                style: AppTextStyles.title.copyWith(
                   fontSize: 16,
-                  color: AppColors.blackColor
-              ),),
+                  color: AppColors.blackColor,
+                ),
+              ),
 
-              SizedBox(height:  Dimensions.h(40)),
+              SizedBox(height: Dimensions.h(40)),
 
               UploadImageWidget(controller: controller),
 
+              SizedBox(height: Dimensions.h(100)),
 
-
-
-
-
-
-
-
-
-              SizedBox(height:  Dimensions.h(100)),
-
-              /// Continue Button
               AppButton(
                 height: Dimensions.h(70),
-
                 label: AppStrings.continueButton.tr,
-                onPressed: (){
-                  AppAlerts.confirm(title: 'Success', message: 'Account Create Successfully Go To Login Screen', onConfirm: () {
-
-                    Get.toNamed(    RoutePath.login);
-
-                  });
-
+                onPressed: () {
+                  AppAlerts.confirm(
+                    title: AppStrings.success.tr,
+                    message: AppStrings.accountCreateSuccess.tr,
+                    onConfirm: () {
+                      Get.toNamed(RoutePath.login);
+                    },
+                  );
                 },
-
-
               ),
             ],
           ),
@@ -98,9 +90,6 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
       ),
     );
   }
-
-
-
 
   Widget _buildTablet() {
     return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));

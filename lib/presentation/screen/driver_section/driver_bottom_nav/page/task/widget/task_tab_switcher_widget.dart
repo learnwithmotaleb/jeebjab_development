@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class TaskTabSwitcher extends StatelessWidget {
   final bool isActive;
@@ -37,7 +39,7 @@ class TaskTabSwitcher extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  'Active Post',
+                 AppStrings.activePost.tr,
                   style: TextStyle(
                     fontSize: Dimensions.f(13),
                     fontWeight: FontWeight.w700,
@@ -61,7 +63,7 @@ class TaskTabSwitcher extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  'Completed Post',
+                  AppStrings.completedPost.tr,
                   style: TextStyle(
                     fontSize: Dimensions.f(13),
                     fontWeight: FontWeight.w700,
