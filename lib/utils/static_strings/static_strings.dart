@@ -473,6 +473,7 @@ class AppStrings {
   static const String startYourJourneyAsADriver =  'Start Your Journey as a\nDriver and Unlock Flexible\nIncome';
   static const String independentDriver =  'Independent Driver';
   static const String constructionWaste =   'Construction Waste';
+  static const String startDrivingStartEarning =    'Start Driving, Start Earning';
 
 
 

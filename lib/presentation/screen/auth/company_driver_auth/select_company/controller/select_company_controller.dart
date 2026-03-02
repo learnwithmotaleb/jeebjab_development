@@ -1,23 +1,30 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SelectCompanyController extends GetxController{
+class SelectCompanyController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final TextEditingController selectCompanyController = TextEditingController();
+  final TextEditingController idController = TextEditingController();
 
-  final selectCompanyController = TextEditingController();
-  final  idController = TextEditingController();
-
-
+  // ── Company list — add/remove companies here ──────────────────────────────
+  final List<String> companyList = [
+    'Google',
+    'Microsoft',
+    'Apple',
+    'Amazon',
+    'Tesla',
+    'Meta',
+    'Netflix',
+    'Uber',
+    'Airbnb',
+    'Spotify',
+  ];
 
   @override
-  void dispose() {
+  void onClose() {
     selectCompanyController.dispose();
     idController.dispose();
-    super.dispose();
+    super.onClose();
   }
-
-
-
-
 }

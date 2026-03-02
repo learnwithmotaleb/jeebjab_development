@@ -39,14 +39,12 @@ class _BecomeDriverScreenState extends State<BecomeDriverScreen> {
             child: DriverTypeCard(controller: controller),
           ),
 
-          SizedBox(height: Dimensions.h(20)),
+          SizedBox(height: Dimensions.h(50)),
 
       Padding(
-              padding: EdgeInsets.fromLTRB(
-                Dimensions.w(16),
-                0,
-                Dimensions.w(16),
-                Dimensions.h(24),
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(20),
+
               ),
 
               child: AppButton(

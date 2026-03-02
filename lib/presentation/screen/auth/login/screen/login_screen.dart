@@ -162,26 +162,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(AppStrings.or.tr, style: AppTextStyles.body),
                       SizedBox(height: Dimensions.h(16)),
 
+
                       // Social login buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: (){
-                              Get.toNamed(RoutePath.westType);
-                            },
-                            child: _socialLoginButton(AppImages.ios),
-                          ),
-
-                          SizedBox(width: Dimensions.w(16)),
-                          GestureDetector(
-                            onTap: (){
-                              Get.toNamed(RoutePath.becomeDriver);
-                            },
-                            child: _socialLoginButton(AppImages.google),
-
-                          ),
-                        ],
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Get.toNamed(RoutePath.westType),
+                              child: _socialLoginButton(AppImages.ios),
+                            ),
+                            SizedBox(width: Dimensions.w(16)),
+                            GestureDetector(
+                              onTap: () => Get.toNamed(RoutePath.becomeDriver),
+                              child: _socialLoginButton(AppImages.google),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: Dimensions.h(24)),
                       Align(
@@ -193,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: Dimensions.h(5)),
+                      SizedBox(height: Dimensions.h(10)),
 
                       // Create Account Button
                       AppButton(

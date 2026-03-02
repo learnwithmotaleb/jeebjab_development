@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
@@ -25,34 +22,27 @@ class SelectCompanyScreen extends StatefulWidget {
 }
 
 class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
-  final controller = Get.put(SelectCompanyController());
-
-  final List<String> companyList = [
-    "Google",
-    "Microsoft",
-    "Apple",
-    "Amazon",
-    "Tesla",
-  ];
+  final SelectCompanyController controller = Get.put(SelectCompanyController());
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile());
   }
 
   Widget _buildMobile() {
     return Scaffold(
-      appBar: CommonAppBar(title: ""),
+      appBar: CommonAppBar(title: ''),
       backgroundColor: AppColors.whiteColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(16),
+            vertical: Dimensions.h(8),
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ── Title ───────────────────────────────────────────────
               Text(
                 AppStrings.selectCompany.tr,
                 style: AppTextStyles.body.copyWith(
@@ -71,31 +61,32 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
 
               SizedBox(height: Dimensions.h(30)),
 
+              // ── Company selector → opens bottom sheet ────────────────
               BottomSheetTextField(
                 controller: controller.selectCompanyController,
                 label: AppStrings.selectYourCompany.tr,
-                items: companyList,
+                items: controller.companyList, // ✅ from controller
               ),
 
               SizedBox(height: Dimensions.h(16)),
 
+              // ── ID field ────────────────────────────────────────────
               AppTextField(
                 controller: controller.idController,
                 hint: AppStrings.id.tr,
-                keyboardType: TextInputType.name,
+                keyboardType: TextInputType.text,
                 validator: AppValidators.required(),
                 onTap: () {},
               ),
 
               SizedBox(height: Dimensions.h(50)),
 
+              // ── Continue button ──────────────────────────────────────
               AppButton(
                 label: AppStrings.continueButton.tr,
                 height: Dimensions.h(55),
                 borderRadius: Dimensions.r(16),
-                onPressed: () {
-                  Get.toNamed(RoutePath.vehicleType);
-                },
+                onPressed: () => Get.toNamed(RoutePath.vehicleType),
               ),
             ],
           ),

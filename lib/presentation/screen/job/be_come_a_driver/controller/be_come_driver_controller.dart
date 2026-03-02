@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 enum DriverType { none, independent, company }
 
@@ -19,9 +21,10 @@ class BecomeDriverController extends GetxController {
   void onContinue() {
     if (!isValid) return;
     if (selectedType.value == DriverType.independent) {
-      // TODO: Get.toNamed(RoutePath.independentDriverForm);
+     Get.toNamed(RoutePath.vehicleType);
     } else {
-      // TODO: Get.toNamed(RoutePath.companyDriverForm);
+      Get.toNamed(RoutePath.selectCompany);
+
     }
   }
 }

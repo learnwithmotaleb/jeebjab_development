@@ -7,10 +7,13 @@ import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
+import 'package:jeebjab/presentation/screen/job/customer_job_post/screen/customer_job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
+import '../../../../core/enums/app_role.dart';
+import '../../../../helper/local_db/local_db.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../page/home/screen/home_screen.dart';
 
@@ -24,13 +27,27 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
-  final List<dynamic> _pages = [
-    HomeScreen(),
-    JobPostScreen(),
-    CreatePostScreen(),
-    MyPostScreen(),
-    ProfileScreen(),
+  // ✅ final List সরিয়ে getter বানাও
+  List<Widget> get _pages => [
+    const HomeScreen(),
+    _getJobPage(),
+    const CreatePostScreen(),
+    const MyPostScreen(),
+    const ProfileScreen(),
   ];
+
+  Widget _getJobPage() {
+    final role = SharePrefsHelper.getRole();
+    if (role == AppRole.CUSTOMER) {
+      return CustomerJobPostScreen();
+    } else if (role == AppRole.DRIVER) {
+      return const JobPostScreen();
+    } else {
+      return const JobPostScreen();
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

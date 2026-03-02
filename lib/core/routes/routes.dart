@@ -44,6 +44,8 @@ import 'package:jeebjab/presentation/screen/job/be_come_a_driver/controller/be_c
 import 'package:jeebjab/presentation/screen/job/be_come_a_driver/screen/be_come_driver_screen.dart';
 import 'package:jeebjab/presentation/screen/job/category_status/controller/category_status_controller.dart';
 import 'package:jeebjab/presentation/screen/job/category_status/screen/category_status_screen.dart';
+import 'package:jeebjab/presentation/screen/job/customer_job_post/controller/customer_job_post_controller.dart';
+import 'package:jeebjab/presentation/screen/job/customer_job_post/screen/customer_job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/controller/job_post_controller.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/widget/job_post_drawer_widget.dart';
@@ -715,6 +717,17 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(DriverHomeController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.customerJobPost,
+      page: () =>  CustomerJobPostScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CustomerJobPostController());
       }),
     ),
 
