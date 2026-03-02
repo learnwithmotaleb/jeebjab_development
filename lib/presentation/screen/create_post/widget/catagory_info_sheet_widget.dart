@@ -82,14 +82,13 @@ class CategoryInfoSheet extends StatelessWidget {
           // ── Drag Handle ──────────────────────────────────────────────────
           Container(
             width: 40,
-            height: 4,
+            height: 2,
             decoration: BoxDecoration(
               color: const Color(0xFFDDDDDD),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
 
-          const SizedBox(height: 16),
 
           // ── Close Button ─────────────────────────────────────────────────
           Align(
@@ -108,7 +107,7 @@ class CategoryInfoSheet extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 8),
+
 
           // ── Icon Row ──────────────────────────────────────────────────────
           Row(
@@ -116,19 +115,18 @@ class CategoryInfoSheet extends StatelessWidget {
             children: data.icons.map((item) => _IconLabel(item: item)).toList(),
           ),
 
-          const SizedBox(height: 28),
-
+          const SizedBox(height: 10),
           // ── Title ─────────────────────────────────────────────────────────
           Text(
             data.title,
             style: const TextStyle(
-              fontSize: 22,
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: Color(0xFF1A1A2E),
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           // ── Bullet Points ─────────────────────────────────────────────────
           ...data.bulletPoints.map(
@@ -149,7 +147,7 @@ class CategoryInfoSheet extends StatelessWidget {
                     child: Text(
                       point,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Color(0xFF444444),
                         height: 1.4,
                       ),
@@ -201,7 +199,7 @@ class _IconLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(item.icon, size: 44, color: const Color(0xFF888888)),
+        Icon(item.icon, size: 30, color: const Color(0xFF888888)),
         const SizedBox(height: 6),
         Text(
           item.label,
