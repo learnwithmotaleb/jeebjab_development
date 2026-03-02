@@ -36,12 +36,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _buildMobile() {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.primaryColor,
       body: Column(
         children: [
           Expanded(
             flex: 1,
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),

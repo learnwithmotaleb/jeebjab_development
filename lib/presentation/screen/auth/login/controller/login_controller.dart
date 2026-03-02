@@ -17,7 +17,7 @@ class LoginController extends GetxController {
   final FocusNode passwordFocus = FocusNode();
 
 
-  final role = SharePrefsHelper.getRole();
+
 
   @override
   void dispose() {
@@ -42,6 +42,8 @@ class LoginController extends GetxController {
     //   print("Email: ${emailController.text}");
     //   print("Password: ${passwordController.text}");
     // }
+
+    final role = SharePrefsHelper.getRole();
 
 
     if (role == AppRole.CUSTOMER) {

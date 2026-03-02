@@ -59,6 +59,7 @@ class RoutePath {
 
   //=========================================Job====================
   static const String jobPost = '/JobPostScreen';
+  static const String jobPostDrawer = '/JobPostDrawer';
   static const String categoryStatus = '/CategoryStatusScreen';
   static const String westType = '/WestTypeScreen';
   static const String notAllowWest = '/NotAllowScreen';

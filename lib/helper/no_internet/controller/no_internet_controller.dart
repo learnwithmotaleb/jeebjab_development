@@ -3,14 +3,20 @@ import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class InternetController extends GetxController {
-  /// Observable for internet connection status
   final RxBool isConnected = true.obs;
-
-  /// Subscription to listen for connectivity changes
   StreamSubscription<InternetStatus>? _subscription;
-
-  /// Singleton instance for easy access
   static InternetController get to => Get.find<InternetController>();
+
+  // ✅ Custom checker — multiple addresses
+  final InternetConnection _checker = InternetConnection.createInstance(
+    customCheckOptions: [
+      InternetCheckOption(uri: Uri.parse('https://google.com')),
+      InternetCheckOption(uri: Uri.parse('https://cloudflare.com')),
+      InternetCheckOption(uri: Uri.parse('https://apple.com')),
+      InternetCheckOption(uri: Uri.parse('https://amazon.com')),
+    ],
+    useDefaultOptions: false,
+  );
 
   @override
   void onInit() {
@@ -18,27 +24,23 @@ class InternetController extends GetxController {
     _initConnection();
   }
 
-  /// ---------------- Initialize connection ----------------
   void _initConnection() {
-    // Check initial connection
     _checkInitialConnection();
 
-    // Listen for changes
-    _subscription = InternetConnection().onStatusChange.listen((status) {
-      isConnected.value = status == InternetStatus.connected;
+    _subscription = _checker.onStatusChange.listen((status) {
+      // ✅ 2 সেকেন্ড debounce — momentary drop ignore করবে
+      Future.delayed(const Duration(seconds: 2), () {
+        isConnected.value = status == InternetStatus.connected;
+      });
     });
   }
 
-  /// ---------------- Check initial connection ----------------
   Future<void> _checkInitialConnection() async {
-    final status = await InternetConnection().hasInternetAccess;
+    final status = await _checker.hasInternetAccess;
     isConnected.value = status;
   }
 
-  /// ---------------- Force set connected ----------------
   void setConnected() => isConnected.value = true;
-
-  /// ---------------- Force set disconnected ----------------
   void setDisconnected() => isConnected.value = false;
 
   @override

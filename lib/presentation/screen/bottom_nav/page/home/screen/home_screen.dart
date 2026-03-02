@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
@@ -11,6 +12,7 @@ import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
+import '../../../../../../global/language/controller/language_controller.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +23,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final lc = Get.find<LanguageController>(); // ← find, not put
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(mobile: _buildMobile());
@@ -103,9 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: _statCard(
                       value: "30 Sec",
                       label: AppStrings.averageResponse.tr,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        bottomLeft: Radius.circular(30),
+                      borderRadius: BorderRadius.only(
+                        topLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
+                        bottomLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
+                        topRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
+                        bottomRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
                       ),
                     ),
                   ),
@@ -122,9 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: _statCard(
                       value: "720,000",
                       label: AppStrings.reduceCarRides.tr,
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
+                      borderRadius: BorderRadius.only(
+                        topRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
+                        bottomRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
+                        topLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
+                        bottomLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
                       ),
                     ),
                   ),

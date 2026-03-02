@@ -4,6 +4,8 @@ import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
 
+import '../../../../global/language/controller/language_controller.dart';
+
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({Key? key}) : super(key: key);
 
@@ -86,6 +88,7 @@ class ChatInputBar extends StatelessWidget {
             const SizedBox(width: 8),
 
             // Send Button
+            // Send Button
             GestureDetector(
               onTap: controller.sendMessage,
               child: Container(
@@ -95,10 +98,13 @@ class ChatInputBar extends StatelessWidget {
                   color: AppColors.primaryColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.send_rounded,
-                  color: AppColors.whiteColor,
-                  size: 20,
+                child: Transform.flip(
+                  flipX: Get.find<LanguageController>().isEnglish ? false : false,
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: AppColors.whiteColor,
+                    size: 20,
+                  ),
                 ),
               ),
             ),

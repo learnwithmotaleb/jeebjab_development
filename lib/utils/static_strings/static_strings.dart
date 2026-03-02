@@ -466,6 +466,16 @@ class AppStrings {
   static const String activePost ='Active Post';
   static const String completedPost ='Completed Post';
 
+  //===================================================last text not translations==========================
+
+
+  static const String becomeADriver ='Become A Driver';
+  static const String startYourJourneyAsADriver =  'Start Your Journey as a\nDriver and Unlock Flexible\nIncome';
+  static const String independentDriver =  'Independent Driver';
+  static const String constructionWaste =   'Construction Waste';
+
+
+
 
 
 

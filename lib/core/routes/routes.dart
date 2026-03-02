@@ -46,6 +46,7 @@ import 'package:jeebjab/presentation/screen/job/category_status/controller/categ
 import 'package:jeebjab/presentation/screen/job/category_status/screen/category_status_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/controller/job_post_controller.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
+import 'package:jeebjab/presentation/screen/job/job_post/widget/job_post_drawer_widget.dart';
 import 'package:jeebjab/presentation/screen/not_allow/controller/not_allow_controller.dart';
 import 'package:jeebjab/presentation/screen/not_allow/screen/not_allow_screen.dart';
 
@@ -642,6 +643,8 @@ class AppRouter {
         Get.put(JobPostController());
       }),
     ),
+
+
 
 
 

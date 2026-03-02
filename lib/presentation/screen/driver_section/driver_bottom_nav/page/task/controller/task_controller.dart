@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../../../../../../../core/routes/route_path.dart';
+
 class TaskItem {
   final String title;
   final String subtitle;
@@ -78,7 +80,10 @@ class TaskController extends GetxController {
     // TODO: handle picked up
   }
 
+
+
+
   void onOpenMap(TaskItem item) {
-    // TODO: open map
+    Get.toNamed(RoutePath.pickUpDetails, arguments: {'task': item});
   }
 }

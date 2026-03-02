@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/be_come_driver_controller.dart';
 
@@ -33,7 +34,7 @@ class DriverTypeCard extends StatelessWidget {
 
           // ── Headline ──────────────────────────────────────────────────
           Text(
-            'Start Your Journey as a\nDriver and Unlock Flexible\nIncome',
+            AppStrings.startYourJourneyAsADriver.tr,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: Dimensions.f(18),
@@ -50,7 +51,7 @@ class DriverTypeCard extends StatelessWidget {
             final isSelected =
                 controller.selectedType.value == DriverType.independent;
             return _DriverButton(
-              label: 'Independent Driver',
+              label: AppStrings.independentDriver.tr,
               isSelected: isSelected,
               onTap: () => controller.selectType(DriverType.independent),
             );
@@ -63,7 +64,7 @@ class DriverTypeCard extends StatelessWidget {
             final isSelected =
                 controller.selectedType.value == DriverType.company;
             return _DriverButton(
-              label: 'Company Driver',
+              label: AppStrings.companyDriver.tr,
               isSelected: isSelected,
               onTap: () => controller.selectType(DriverType.company),
             );

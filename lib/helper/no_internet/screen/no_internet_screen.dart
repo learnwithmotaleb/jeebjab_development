@@ -11,6 +11,7 @@ class InternetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final controller = Get.find<InternetController>();
 
     return Obx(() {

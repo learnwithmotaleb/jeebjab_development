@@ -15,7 +15,7 @@ class NotificationDetailsController extends GetxController {
   RxString itemSubtype = 'Bike'.obs;
   RxString itemDate = '22 November 2025'.obs;
   RxString trackingNumber = 'EXD33264841'.obs;
-  RxString imagePath = AppImages.trackingImage.obs;
+  RxString imagePath = AppImages.homeImage1.obs;
   RxString status = 'pending'.obs; // "pending", "in_transit", "delivered"
 
   RxString driverName = 'Fawaz Georges'.obs;
@@ -23,6 +23,13 @@ class NotificationDetailsController extends GetxController {
   RxString driverImage = AppImages.profileImage.obs;
   RxDouble driverRating = 4.5.obs;
   RxBool showAcceptButton = true.obs;
+
+  // ── Carousel Images ───────────────────────────────────────────────────────
+  // RxList<String> images = <String>[
+  //   'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600',
+  //   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600',
+  //   'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600',
+  // ].obs;
 
   @override
   void onInit() {
@@ -39,7 +46,7 @@ class NotificationDetailsController extends GetxController {
       itemSubtype.value = Get.arguments['itemSubtype'] ?? 'Bike';
       itemDate.value = Get.arguments['itemDate'] ?? '22 November 2025';
       trackingNumber.value = Get.arguments['trackingNumber'] ?? 'EXD33264841';
-      imagePath.value = Get.arguments['imagePath'] ?? 'assets/bicycle.png';
+      imagePath.value = Get.arguments['imagePath'] ?? AppImages.trackingImage;
       status.value = Get.arguments['status'] ?? 'pending';
       driverName.value = Get.arguments['driverName'] ?? 'Fawaz Georges';
       driverPhone.value = Get.arguments['driverPhone'] ?? '+92120 003221';

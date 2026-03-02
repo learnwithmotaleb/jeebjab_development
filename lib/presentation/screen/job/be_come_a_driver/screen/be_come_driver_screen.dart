@@ -28,7 +28,7 @@ class _BecomeDriverScreenState extends State<BecomeDriverScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: 'Become A Driver'),
+      appBar: CommonAppBar(title: AppStrings.becomeADriver.tr),
       body: Column(
         children: [
           Padding(
@@ -41,8 +41,7 @@ class _BecomeDriverScreenState extends State<BecomeDriverScreen> {
 
           SizedBox(height: Dimensions.h(20)),
 
-          Obx(
-            () => Padding(
+      Padding(
               padding: EdgeInsets.fromLTRB(
                 Dimensions.w(16),
                 0,
@@ -56,7 +55,6 @@ class _BecomeDriverScreenState extends State<BecomeDriverScreen> {
                 height: 65,
               ),
             ),
-          ),
         ],
       ),
     );

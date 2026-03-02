@@ -40,7 +40,10 @@ class MyApp extends StatelessWidget {
         getPages: AppRouter.pages,
         initialRoute: RoutePath.splash,
         builder: (context, child) {
-          return InternetWrapper(child: child ?? const SizedBox());
+          return Directionality(
+            textDirection: lc.isEnglish ? TextDirection.ltr : TextDirection.rtl,
+            child: InternetWrapper(child: child ?? const SizedBox()),
+          );
         },
       );
     });

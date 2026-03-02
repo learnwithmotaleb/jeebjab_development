@@ -29,7 +29,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.myPost.tr),
+      appBar: CommonAppBar(title: AppStrings.myPost.tr, showBack: false,),
       body: Column(
         children: [
           _buildTabBar(),

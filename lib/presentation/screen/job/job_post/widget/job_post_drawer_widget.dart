@@ -14,7 +14,7 @@ class JobPostDrawer extends StatefulWidget {
 
 class _JobPostDrawerState extends State<JobPostDrawer> {
   // ── Sort By ───────────────────────────────────────────────────────────────
-  String _selectedSort = 'Nearest';
+  String _selectedSort = AppStrings.nearest.tr;
 
   // ── Time ──────────────────────────────────────────────────────────────────
   String _selectedTime = 'Regular';

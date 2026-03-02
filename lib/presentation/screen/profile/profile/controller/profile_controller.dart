@@ -26,62 +26,48 @@ class ProfileMenuItem {
 class ProfileController extends GetxController {
   RxString name = 'Rayyan Hassan'.obs;
   RxString email = 'rayyan6352@mail.com'.obs;
-  RxString profileImage = ''.obs; // set asset or network path
+  RxString profileImage = ''.obs;
 
-  late final List<ProfileMenuItem> menuItems;
 
-  @override
-  void onInit() {
-    super.onInit();
-    menuItems = [
-      ProfileMenuItem(
-        title: AppStrings.accountSetting.tr,
-        icon: Icons.settings_outlined,
-        onTap: () {
-          Get.toNamed(RoutePath.account);// TODO: Get.toNamed(RoutePath.accountSettings);
-        },
-      ),
-      ProfileMenuItem(
-        title: AppStrings.language.tr,
-        icon: Icons.language_outlined,
-        onTap: () {
-          Get.toNamed(RoutePath.profileLanguage);
-        },
-      ),
-      ProfileMenuItem(
-        title:  AppStrings.contactAndSupport.tr,
-        icon: Icons.help_outline_rounded,
-        onTap: () {
-          Get.toNamed(RoutePath.contactAndSupport);
-        },
-      ),
-      ProfileMenuItem(
-        title: AppStrings.termsAndCondition.tr,
-        icon: Icons.description_outlined,
-        onTap: () {
-          Get.toNamed(RoutePath.termAndCondition);
-        },
-      ),
-      ProfileMenuItem(
-        title: AppStrings.privacyPolicy.tr,
-        icon: Icons.privacy_tip_outlined,
-        onTap: () {
-          Get.toNamed(RoutePath.policyAndPrivacy);
 
-        },
-      ),
-      ProfileMenuItem(
-        title: AppStrings.logOut.tr,
-        icon: Icons.logout_rounded,
-        iconColor: Colors.red,
-        onTap: () {
-          
-      AppAlerts.confirm(title: AppStrings.areYourSureLogout.tr, message: AppStrings.areYourSureLogoutFrom.tr, onConfirm: (){
-        Get.back();
-      });
-    
-        },
-      ),
-    ];
-  }
+  // ✅ getter বানাও — প্রতিবার call হলে fresh .tr নেবে
+  List<ProfileMenuItem> get menuItems => [
+    ProfileMenuItem(
+      title: AppStrings.accountSetting.tr,
+      icon: Icons.settings_outlined,
+      onTap: () => Get.toNamed(RoutePath.account),
+    ),
+    ProfileMenuItem(
+      title: AppStrings.language.tr,
+      icon: Icons.language_outlined,
+      onTap: () => Get.toNamed(RoutePath.profileLanguage),
+    ),
+    ProfileMenuItem(
+      title: AppStrings.contactAndSupport.tr,
+      icon: Icons.help_outline_rounded,
+      onTap: () => Get.toNamed(RoutePath.contactAndSupport),
+    ),
+    ProfileMenuItem(
+      title: AppStrings.termsAndCondition.tr,
+      icon: Icons.description_outlined,
+      onTap: () => Get.toNamed(RoutePath.termAndCondition),
+    ),
+    ProfileMenuItem(
+      title: AppStrings.privacyPolicy.tr,
+      icon: Icons.privacy_tip_outlined,
+      onTap: () => Get.toNamed(RoutePath.policyAndPrivacy),
+    ),
+    ProfileMenuItem(
+      title: AppStrings.logOut.tr,
+      icon: Icons.logout_rounded,
+      iconColor: Colors.red,
+      onTap: () {
+        AppAlerts.confirm(
+          title: AppStrings.areYourSureLogout.tr,
+          message: AppStrings.areYourSureLogoutFrom.tr,
+          onConfirm: () => Get.back(),
+        );
+      },
+    ),
+  ];
 }

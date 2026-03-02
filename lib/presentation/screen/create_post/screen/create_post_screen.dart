@@ -27,7 +27,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.createPost.tr),
+      appBar: CommonAppBar(title: AppStrings.createPost.tr,showBack: false,),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

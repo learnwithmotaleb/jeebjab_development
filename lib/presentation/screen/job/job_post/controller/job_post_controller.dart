@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class JobPostCategory {
   final String label;
@@ -36,8 +37,8 @@ class JobPostController extends GetxController {
   final RxSet<String> selectedCategories = <String>{'Move'}.obs;
 
   // ── Sort options ──────────────────────────────────────────────────────────
-  final RxString selectedSort = 'Nearest'.obs;
-  final List<String> sortOptions = ['Nearest', 'Newest'];
+  final RxString selectedSort = AppStrings.nearest.tr.obs;
+  final List<String> sortOptions = [AppStrings.nearest.tr, AppStrings.newest.tr];
   final RxBool showDropdown = false.obs;
 
   // ── Posts ─────────────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/job_post_controller.dart';
 import '../widget/catagory_toggle_row_widget.dart';
@@ -36,14 +37,11 @@ class _JobPostScreenState extends State<JobPostScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () => Get.back(),
-          child: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Colors.black, size: 20),
-        ),
+
         centerTitle: true,
+
         title: Text(
-          'Job Posts',
+         AppStrings.jobPost.tr,
           style: TextStyle(
             fontSize: Dimensions.f(17),
             fontWeight: FontWeight.w700,
@@ -53,12 +51,13 @@ class _JobPostScreenState extends State<JobPostScreen> {
         // ── Hamburger menu ───────────────────────────────────────────
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: Dimensions.w(16)),
+            padding: EdgeInsets.only(right: Dimensions.w(16),left: Dimensions.w(16) ),
             child: GestureDetector(
               //onTap: () => _scaffoldKey.currentState?.openEndDrawer(),
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>JobPostDrawer()));
+
                 setState(() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>JobPostDrawer()));
 
                 });
               },
