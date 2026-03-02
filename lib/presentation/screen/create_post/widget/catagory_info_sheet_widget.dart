@@ -199,7 +199,7 @@ class _IconLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(item.icon, size: 30, color: const Color(0xFF888888)),
+        Icon(item.icon, size: 20, color: const Color(0xFF888888)),
         const SizedBox(height: 6),
         Text(
           item.label,
