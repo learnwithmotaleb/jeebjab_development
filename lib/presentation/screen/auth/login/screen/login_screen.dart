@@ -11,6 +11,7 @@ import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
 import 'package:jeebjab/widget/app_validation.dart';
+import 'package:jeebjab/widget/confirmataion_alert.dart';
 
 import '../../../../../core/responsive_layout/responsive_layout.dart';
 
@@ -170,12 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () => Get.toNamed(RoutePath.westType),
+                              onTap: () => AppAlerts.confirm(title: "Jeebjab", message: "Need Client Information", onConfirm: (){}),
                               child: _socialLoginButton(AppImages.ios),
                             ),
                             SizedBox(width: Dimensions.w(16)),
                             GestureDetector(
-                              onTap: () => Get.toNamed(RoutePath.becomeDriver),
+                              onTap: () => AppAlerts.confirm(title: "Jeebjab", message: "Need Client Information", onConfirm: (){}),
                               child: _socialLoginButton(AppImages.google),
                             ),
                           ],
