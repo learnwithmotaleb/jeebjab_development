@@ -65,7 +65,7 @@ class ProfileController extends GetxController {
         AppAlerts.confirm(
           title: AppStrings.areYourSureLogout.tr,
           message: AppStrings.areYourSureLogoutFrom.tr,
-          onConfirm: () => Get.back(),
+          onConfirm: () => Get.toNamed(RoutePath.signup),
         );
       },
     ),
