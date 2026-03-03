@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
+import '../post_category_model/post_category_model.dart';
+
 class CategoryCardWidget extends StatelessWidget {
   final PostCategoryModel category;
   final bool isSelected;

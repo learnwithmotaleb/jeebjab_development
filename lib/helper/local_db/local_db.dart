@@ -3,12 +3,33 @@ import 'package:jeebjab/helper/local_db/shareprefs_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/enums/app_role.dart';
+import '../../core/enums/post_category_type.dart';
 
 class SharePrefsHelper {
   static SharedPreferences? _prefs;
 
   static Future init() async {
     _prefs ??= await SharedPreferences.getInstance();
+  }
+
+  // ================= POST CATEGORY =================
+
+  static Future<void> savePostCategory(PostCategoryType type) async {
+    await _prefs?.setString(SharePrefsKeys.postCategory, type.name);
+  }
+
+  static PostCategoryType? getPostCategory() {
+    final value = _prefs?.getString(SharePrefsKeys.postCategory);
+    if (value == null) return null;
+
+    return PostCategoryType.values.firstWhere(
+          (e) => e.name == value,
+      orElse: () => PostCategoryType.move,
+    );
+  }
+
+  static Future<void> clearPostCategory() async {
+    await _prefs?.remove(SharePrefsKeys.postCategory);
   }
 
   // ================= GENERIC BOOL =================

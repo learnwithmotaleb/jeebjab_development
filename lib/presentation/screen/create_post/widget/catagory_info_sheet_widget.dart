@@ -24,7 +24,7 @@ class _SheetIconItem {
 
 // ── Sheet Data per Category ───────────────────────────────────────────────────
 final Map<String, CategorySheetData> categorySheetDataMap = {
-  'Move': CategorySheetData(
+  'move': CategorySheetData(
     title: 'Move And Delivery',
     bulletPoints: [
       'Move Anything From A To B',
@@ -38,7 +38,7 @@ final Map<String, CategorySheetData> categorySheetDataMap = {
       _SheetIconItem(icon: Icons.storefront_outlined, label: 'From A\nStore'),
     ],
   ),
-  'Recycling': CategorySheetData(
+  'recycling': CategorySheetData(
     title: 'Remove And Recycle',
     bulletPoints: [
       'Max 3 Cubic Meters Of Waste Per Ad',
@@ -199,7 +199,7 @@ class _IconLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(item.icon, size: 20, color: const Color(0xFF888888)),
+        Icon(item.icon, size: 34, color: const Color(0xFF888888)),
         const SizedBox(height: 6),
         Text(
           item.label,

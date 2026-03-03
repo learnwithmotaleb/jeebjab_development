@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     AppStrings.howItWorks.tr,
-                    style: AppTextStyles.title.copyWith(fontSize: 18),
+                    style: AppTextStyles.title.copyWith(fontSize: 18,color: AppColors.blackColor,),
                   ),
                   SizedBox(height: Dimensions.h(10)),
                   Text(
@@ -331,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required BorderRadius borderRadius,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: BoxDecoration(
         color: AppColors.primaryColor,
         borderRadius: borderRadius,
@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -353,19 +353,19 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 16,
-                height: 16,
+                width: 14,
+                height: 14,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.check,
-                  size: 12,
+                  size: 10,
                   color: Color(0xFF1CBCB4),
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 5),
               Flexible(
                 child: Text(
                   label,

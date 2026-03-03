@@ -5,4 +5,5 @@ class SharePrefsKeys {
   static const String profileId = "profile_id";
   static const String onboardSeen = "onboard_seen";
   static const String themeMode = "theme_mode";
+  static const String postCategory = 'post_category';
 }

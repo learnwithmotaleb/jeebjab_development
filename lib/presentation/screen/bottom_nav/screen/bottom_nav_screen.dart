@@ -31,7 +31,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   List<Widget> get _pages => [
     const HomeScreen(),
     _getJobPage(),
-    const CreatePostScreen(),
+    CreatePostScreen(),
     const MyPostScreen(),
     const ProfileScreen(),
   ];

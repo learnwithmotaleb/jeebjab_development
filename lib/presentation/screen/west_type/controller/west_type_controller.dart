@@ -87,8 +87,8 @@ class WestTypeController extends GetxController {
 
   // ── Continue button action ────────────────────────
   void onContinue() {
-    if (selectedItems.isEmpty) return;
-    // TODO: navigate to next screen
+    Get.toNamed(RoutePath.iWillPay);
+
   }
 
   // ── Add new waste item (future) ───────────────────
