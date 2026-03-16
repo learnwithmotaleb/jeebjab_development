@@ -48,7 +48,7 @@ class IWillPayController extends GetxController {
   void onContinue() {
     // if (!isValid) return;
     // // TODO: Navigate to next step with price
-    Get.toNamed(RoutePath.overview);
+    Get.toNamed(RoutePath.addCard);
   }
 
   @override

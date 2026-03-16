@@ -8,6 +8,7 @@ import 'package:jeebjab/widget/app_button.dart';
 
 import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../utils/static_strings/static_strings.dart';
+import '../../../../widget/confirmataion_alert.dart';
 import '../../../../widget/custom_alert.dart';
 
 class OverviewPublishSection extends StatelessWidget {
@@ -41,7 +42,14 @@ class OverviewPublishSection extends StatelessWidget {
           Expanded(
             child: AppButton(
               onPressed: () {
-                Get.toNamed(RoutePath.addCard);
+                // AppAlerts.success(message: AppStrings.success.tr);
+                AppAlerts.confirm(title: AppStrings.appName.tr, message: AppStrings.payments.tr, onConfirm: () {
+
+                  Get.toNamed(RoutePath.login);
+
+
+                });
+
               },
               label: AppStrings.publish.tr,
             ),

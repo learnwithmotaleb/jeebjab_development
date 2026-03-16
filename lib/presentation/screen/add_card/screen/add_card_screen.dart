@@ -88,7 +88,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 height: 65,
                 onPressed: controller.isValid.value
                     ? controller.onAddCard
-                    : null,
+                    : controller.onAddCard,
               ),
             ),
           ],
