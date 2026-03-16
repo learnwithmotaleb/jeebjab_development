@@ -166,9 +166,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
                       // Social login buttons
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: GestureDetector(
+
+                      GestureDetector(
                           onTap: () {
                             if (PlatformHelper.isIOS) {
                               // iOS action
@@ -196,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             PlatformHelper.isIOS ? AppImages.ios : AppImages.google,
                           ),
                         ),
-                      ),
+
                       SizedBox(height: Dimensions.h(24)),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -236,8 +235,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return SizedBox(
 
       child: Container(
-        width: 175,
-        height: 75,
+        width: double.infinity,
+        height: 70,
         decoration: BoxDecoration(
           color: AppColors.greyColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(Dimensions.r(16)),
