@@ -98,6 +98,8 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _logoFade,
               child: Image.asset(
                 AppImages.appLogo,
+                width: 200,
+                height: 200,
 
               ),
             ),

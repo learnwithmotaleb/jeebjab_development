@@ -49,7 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(AppImages.appLogo),
+                    Image.asset(AppImages.appLogo,width: Dimensions.w(100), height: Dimensions.h(100),),
                     SizedBox(height: Dimensions.h(30)),
                     Align(
                       alignment: AlignmentGeometry.centerLeft,

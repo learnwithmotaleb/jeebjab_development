@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Column(
                 children: [
-                  Image.asset(AppImages.appLogo, width: 80, height: 80),
+                  Image.asset(AppImages.appLogo, width: 80, height: 100),
                   SizedBox(height: Dimensions.h(15)),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -65,14 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     title: Text(
-                      "Rayyan Hassan",
+                      "Abdul Motaleb",
                       style: AppTextStyles.title.copyWith(
                         fontSize: 18,
                         color: AppColors.whiteColor,
                       ),
                     ),
                     subtitle: Text(
-                      "rayyan6352@mail.com",
+                      "example@gmail.com",
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.whiteColor.withOpacity(0.8),
                       ),

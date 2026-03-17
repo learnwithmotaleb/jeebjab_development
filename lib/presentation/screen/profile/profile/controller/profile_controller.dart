@@ -24,13 +24,12 @@ class ProfileMenuItem {
 }
 
 class ProfileController extends GetxController {
-  RxString name = 'Rayyan Hassan'.obs;
-  RxString email = 'rayyan6352@mail.com'.obs;
+  RxString name = 'Abodul Motaleb'.obs;
+  RxString email = 'example@mail.com'.obs;
   RxString profileImage = ''.obs;
 
 
 
-  // ✅ getter বানাও — প্রতিবার call হলে fresh .tr নেবে
   List<ProfileMenuItem> get menuItems => [
     ProfileMenuItem(
       title: AppStrings.accountSetting.tr,

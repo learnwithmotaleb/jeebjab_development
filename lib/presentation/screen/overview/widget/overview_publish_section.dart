@@ -34,7 +34,7 @@ class OverviewPublishSection extends StatelessWidget {
               },
               backgroundColor: AppColors.whiteColor,
               label: AppStrings.cancel.tr,
-              textColor: AppColors.blackColor,
+              textColor: AppColors.blackColor,///
               borderSideColor: AppColors.whiteColor,
             ),
           ),
