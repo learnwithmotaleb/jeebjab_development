@@ -58,17 +58,17 @@ class _SignupScreenState extends State<SignupScreen> {
                         style: AppTextStyles.title.copyWith(
                           color: AppColors.whiteColor,
                           fontSize: 20,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
-                    SizedBox(height: Dimensions.h(8)),
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
                         AppStrings.toGetStarted.tr,
                         style: AppTextStyles.body.copyWith(
                           color: AppColors.whiteColor,
-                          fontSize: 20,
+                          fontSize: 16,
                         ),
                       ),
                     ),

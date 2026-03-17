@@ -21,8 +21,7 @@ class AppTextStyles {
   static const TextStyle body = TextStyle(
     fontFamily: "poppins",
     fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.blackColor,
+    color: AppColors.greyColor,
   );
 
   static  TextStyle hint = TextStyle(

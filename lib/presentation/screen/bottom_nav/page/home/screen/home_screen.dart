@@ -159,13 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: Dimensions.h(10)),
                   Text(
                     AppStrings.welcomeToJibJabSubTitle.tr,
-                    style: AppTextStyles.body.copyWith(color: Colors.black87),
+                    style: AppTextStyles.body,
                   ),
                 ],
               ),
             ),
 
-            SizedBox(height: Dimensions.h(20)),
+            SizedBox(height: Dimensions.h(30)),
 
             // Banner Image
             Stack(
@@ -183,14 +183,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  left: Dimensions.w(30),
-                  top: Dimensions.h(50),
-                  child: Text(
-                    AppStrings.lifeMakeEasier.tr,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+
+                  child: Center(
+                    child: Text(
+                      AppStrings.lifeMakeEasier.tr,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -203,16 +208,23 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     AppStrings.howItWorks.tr,
-                    style: AppTextStyles.title.copyWith(fontSize: 18,color: AppColors.blackColor,),
+                    style: AppTextStyles.body.copyWith(
+
+                      color: AppColors.blackColor
+                    ),
+
                   ),
-                  SizedBox(height: Dimensions.h(10)),
-                  Text(
-                    AppStrings.howItWorksSteps.tr,
-                    style: AppTextStyles.body.copyWith(color: Colors.black87),
+                  SizedBox(height: Dimensions.h(12)),
+                  Center(
+                    child: Text(
+                      AppStrings.howItWorksSteps.tr,
+                      style: AppTextStyles.body.copyWith(color: Colors.black87),
+                    ),
                   ),
                 ],
               ),
@@ -249,14 +261,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  left: Dimensions.w(30),
-                  top: Dimensions.h(50),
-                  child: Text(
-                    AppStrings.lifeMakeEasier.tr,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Text(
+                      AppStrings.lifeMakeEasier.tr,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -285,14 +301,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  left: Dimensions.w(30),
-                  top: Dimensions.h(50),
-                  child: Text(
-                    AppStrings.lifeMakeEasier.tr,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Text(
+                      AppStrings.lifeMakeEasier.tr,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

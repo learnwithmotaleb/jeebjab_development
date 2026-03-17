@@ -64,17 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: AppTextStyles.title.copyWith(
 
                             color: AppColors.whiteColor, fontSize: 20,
+                          fontWeight: FontWeight.bold
 
                         ),
                       ),
                     ),
-                    SizedBox(height: Dimensions.h(8)),
                     Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
                        AppStrings.getStarted.tr,
                         style: AppTextStyles.body.copyWith(
-                            color: AppColors.whiteColor, fontSize: 20),
+                            color: AppColors.whiteColor, fontSize: 16),
                       ),
                     ),
 
