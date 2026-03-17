@@ -1,7 +1,7 @@
 name: jeebjab
 description: "A new Flutter project."
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -48,11 +48,10 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   share_plus: ^12.0.1
-  change_app_package_name: ^1.5.0
-
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
+  change_app_package_name: ^1.5.0      # ✅ dev_dependencies এ নিয়ে আসা হয়েছে
   build_runner: ^2.4.10
   flutter_gen_runner: any
   flutter_test:
@@ -61,10 +60,15 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   hive_generator: ^2.0.0
 
-flutter_icons:
+# ✅ flutter_icons → flutter_launcher_icons করা হয়েছে
+flutter_launcher_icons:
   android: true
   ios: true
+  remove_alpha_ios: true
   image_path: "assets/icons/logo.png"
+  adaptive_icon_background: "#17C5B5"      # ✅ তোমার brand color
+  adaptive_icon_foreground: "assets/icons/logo.png"
+  adaptive_icon_monochrome: "assets/icons/logo.png"
 
 flutter_gen:
   output: lib/core/custom_assets/
@@ -80,7 +84,6 @@ flutter:
     - assets/icons/
     - assets/lottie/
     - assets/fonts/poppins/
-
 
   fonts:
     - family: poppins
