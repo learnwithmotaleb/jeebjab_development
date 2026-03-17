@@ -27,7 +27,7 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
-  // ✅ final List সরিয়ে getter বানাও
+  // motaleb islla
   List<Widget> get _pages => [
     const HomeScreen(),
     _getJobPage(),
