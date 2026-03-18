@@ -39,30 +39,30 @@ class ProfileHeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // ── Title row with back button ───────────────────────────────
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.whiteColor,
-                  size: 20,
-                ),
-              ),
-               Expanded(
-                child: Text(
-                 AppStrings.profile.tr,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     GestureDetector(
+          //       onTap: () => Get.back(),
+          //       child: const Icon(
+          //         Icons.arrow_back_ios_new_rounded,
+          //         color: AppColors.whiteColor,
+          //         size: 20,
+          //       ),
+          //     ),
+          //      Expanded(
+          //       child: Text(
+          //        AppStrings.profile.tr,
+          //         textAlign: TextAlign.center,
+          //         style: TextStyle(
+          //           color: AppColors.whiteColor,
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.w700,
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 20),
+          //   ],
+          // ),
 
           SizedBox(height: Dimensions.h(20)),
 
