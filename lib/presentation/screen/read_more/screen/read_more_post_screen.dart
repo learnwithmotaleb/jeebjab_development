@@ -49,17 +49,21 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                       ),
                     ),
                     Positioned(
-                      left: Dimensions.w(30),
-                      top: Dimensions.h(50),
-                      child: Text(
-                        AppStrings.lifeMakeEasier.tr,
-                        style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Center(
+                        child: Text(
+                          AppStrings.lifeMakeEasier.tr,
+                          style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
                 ),
 
-                SizedBox(height: Dimensions.h(20)),
+                SizedBox(height: Dimensions.h(10)),
 
                 // How it Works
                 Padding(
@@ -67,10 +71,10 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(AppStrings.howItWorks.tr, style: AppTextStyles.title.copyWith(fontSize: 18)),
-                      SizedBox(height: Dimensions.h(10)),
+                      SizedBox(height: Dimensions.h(20)),
                       Text(
                         AppStrings.howItWorksSteps.tr,
+                        textAlign: TextAlign.center,
                         style: AppTextStyles.body.copyWith(color: Colors.black87),
                       ),
                     ],
@@ -95,44 +99,15 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                       ),
                     ),
                     Positioned(
-                      left: Dimensions.w(30),
-                      top: Dimensions.h(50),
-                      child: Text(
-                        AppStrings.lifeMakeEasier.tr,
-                        style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: Dimensions.h(10)),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-
-                  child: Text(AppStrings.promoText.tr),
-                ),
-
-                SizedBox(height: Dimensions.h(30)),
-                SizedBox(height: Dimensions.h(30)),
-                Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 180,
-                      margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                        image: DecorationImage(
-                          image: AssetImage(AppImages.homeImage1),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: Dimensions.w(30),
-                      top: Dimensions.h(50),
-                      child: Text(
+                    left: 0,
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Center(
+                        child: Text(
                           AppStrings.lifeMakeEasier.tr,
-                        style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
@@ -141,10 +116,47 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
 
-                  child: Text(AppStrings.promoText.tr),
+                  child: Text(AppStrings.promoText.tr,textAlign: TextAlign.center,),
                 ),
 
-                SizedBox(height: Dimensions.h(10)),
+                SizedBox(height: Dimensions.h(30)),
+                SizedBox(height: Dimensions.h(30)),
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 180,
+                      margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.w(20)),
+                        image: DecorationImage(
+                          image: AssetImage(AppImages.homeImage1),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Center(
+                        child: Text(
+                            AppStrings.lifeMakeEasier.tr,
+                          style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: Dimensions.h(16)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+
+                  child: Text(AppStrings.promoText.tr,textAlign: TextAlign.center,),
+                ),
+
+                SizedBox(height: Dimensions.h(16)),
 
                 Stack(
                   children: [
@@ -161,22 +173,26 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                       ),
                     ),
                     Positioned(
-                      left: Dimensions.w(30),
-                      top: Dimensions.h(50),
-                      child: Text(
-                        AppStrings.lifeMakeEasier.tr,
-                        style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Center(
+                        child: Text(
+                          AppStrings.lifeMakeEasier.tr,
+                          style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: Dimensions.h(10)),
+                SizedBox(height: Dimensions.h(16)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
 
-                  child: Text(AppStrings.promoText.tr),
+                  child: Text(AppStrings.promoText.tr,textAlign: TextAlign.center,),
                 ),
-                SizedBox(height: Dimensions.h(10)),
+                SizedBox(height: Dimensions.h(16)),
 
                 Stack(
                   children: [
@@ -193,20 +209,24 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
                       ),
                     ),
                     Positioned(
-                      left: Dimensions.w(30),
-                      top: Dimensions.h(50),
-                      child: Text(
-                        AppStrings.lifeMakeEasier.tr,
-                        style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Center(
+                        child: Text(
+                          AppStrings.lifeMakeEasier.tr,
+                          style: AppTextStyles.title.copyWith(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: Dimensions.h(10)),
+                SizedBox(height: Dimensions.h(16)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
 
-                  child: Text(AppStrings.promoText.tr),
+                  child: Text(AppStrings.promoText.tr,textAlign: TextAlign.center,),
                 ),
 
 

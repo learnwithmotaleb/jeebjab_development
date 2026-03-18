@@ -5,10 +5,10 @@ import '../app_colors/app_colors.dart';
 
 class AppTextStyles {
   static const TextStyle title = TextStyle(
-    fontFamily: "poppins",
+    fontFamily: "urbanist",
     fontSize: 16,
-    fontWeight: FontWeight.normal,
-    color: AppColors.whiteColor,
+    fontWeight: FontWeight.w700,
+    color: AppColors.blackColor,
   );
 
   static  TextStyle label = TextStyle(
@@ -18,10 +18,12 @@ class AppTextStyles {
     color: AppColors.labelColor,
   );
 
-  static const TextStyle body = TextStyle(
-    fontFamily: "poppins",
+  static  TextStyle body = TextStyle(
+    fontFamily: "urbanist",
+    fontWeight: FontWeight.w400,
+
     fontSize: 14,
-    color: AppColors.greyColor,
+    color: AppColors.blackColor.withOpacity(0.6),
   );
 
   static  TextStyle hint = TextStyle(

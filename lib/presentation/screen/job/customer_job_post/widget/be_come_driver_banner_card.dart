@@ -16,13 +16,13 @@ class BecomeDriverBannerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 400,
+      height: 280,
       padding: EdgeInsets.all(Dimensions.w(24)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimensions.r(20)),
         gradient: const LinearGradient(
           colors: [
-            Color(0xFFB2F0E8), // light mint
+            Color(0xFFF3F3F3), // light mint
             Color(0xFF17C5B5), // teal
           ],
           begin: Alignment.topLeft,

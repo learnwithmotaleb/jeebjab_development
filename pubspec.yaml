@@ -84,6 +84,7 @@ flutter:
     - assets/icons/
     - assets/lottie/
     - assets/fonts/poppins/
+    - assets/fonts/urbanist/
 
   fonts:
     - family: poppins
@@ -95,4 +96,15 @@ flutter:
         - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/poppins/Poppins-Bold.ttf
+          weight: 700
+
+    - family: urbanist
+      fonts:
+        - asset: assets/fonts/urbanist/Urbanist-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/urbanist/Urbanist-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/urbanist/Urbanist-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/urbanist/Urbanist-Bold.ttf
           weight: 700

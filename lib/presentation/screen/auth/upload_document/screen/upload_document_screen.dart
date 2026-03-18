@@ -51,18 +51,12 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
             children: [
               Text(
                 AppStrings.uploadDocument.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.title
               ),
 
               Text(
                 AppStrings.uploadDocumentSubTitle.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -72,7 +66,7 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
               SizedBox(height: Dimensions.h(100)),
 
               AppButton(
-                height: Dimensions.h(70),
+                height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
                 onPressed: () {
                   AppAlerts.confirm(

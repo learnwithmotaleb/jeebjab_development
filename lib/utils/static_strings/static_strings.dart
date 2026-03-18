@@ -126,6 +126,8 @@ class AppStrings {
   static const String verifyYourAccountSubTitle =
       "We've sent a verification code to your email/phone. Please check and enter it below.";
   static const String dontGetCode = "Didn’t get a code?";
+  static const String enterSixDigitCode = "Enter your 6 digit code";
+  static const String haveNotReceivedCode = "Haven’t Received the OTP?";
   static const String resendCode = "Resend Code";
   static const String verifyCode = "Verify Code";
   static const String forgetPassword = "Forgot password";

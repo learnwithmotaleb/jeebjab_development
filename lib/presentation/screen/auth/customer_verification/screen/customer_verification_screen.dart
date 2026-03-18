@@ -54,12 +54,8 @@ class _CustomerVerificationScreenState
             Align(
               alignment: AlignmentGeometry.centerLeft,
               child: Text(
-                AppStrings.verifyYourAccount.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontWeight: FontWeight.normal,
-                  color: AppColors.blackColor,
-                  fontSize: 24,
-                ),
+                AppStrings.enterSixDigitCode.tr,
+                style: AppTextStyles.title
               ),
             ),
 
@@ -104,7 +100,7 @@ class _CustomerVerificationScreenState
               onPressed: () {
                 controller.emailVerifyProcess();
               },
-              height: Dimensions.h(60),
+              height: Dimensions.h(50),
             ),
 
             SizedBox(height: Dimensions.h(5)),

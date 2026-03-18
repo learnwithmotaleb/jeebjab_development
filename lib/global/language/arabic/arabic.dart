@@ -55,6 +55,8 @@ Map<String, String> arabic = {
   AppStrings.verifyYourAccount: "تحقق من حسابك",
   AppStrings.enterTheCodeSentToMail: "أدخل الرمز الذي أرسلناه إلى بريدك",
   AppStrings.thankYouForTrustingUs: "شكرًا لثقتك بنا!",
+  AppStrings.enterSixDigitCode: "أدخل رمزك المكون من 6 أرقام",
+  AppStrings.haveNotReceivedCode: "لم تستلم رمز التحقق؟",
   AppStrings.completeVerificationSubTitle:
   "نقل موثوق، توصيل، شراء، إعادة تدوير، وهدايا — كل ذلك في تطبيق واحد موثوق.",
   AppStrings.chooseYourVehicleType: "اختر نوع مركبتك",

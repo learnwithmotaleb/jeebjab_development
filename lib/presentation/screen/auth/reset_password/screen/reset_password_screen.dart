@@ -88,7 +88,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               AppButton(
                 label: AppStrings.continueButton.tr,
                 onPressed: controller.resetPassword,
-                height: 70,
+                height: Dimensions.h(50),
               ),
             ],
           ),

@@ -20,7 +20,7 @@ class DriverTypeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimensions.r(24)),
         gradient: const LinearGradient(
           colors: [
-            Color(0xFF8EECD8),
+            Color(0xFFF3F3F3),
             Color(0xFF17C5B5),
           ],
           begin: Alignment.topLeft,

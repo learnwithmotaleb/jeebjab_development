@@ -63,9 +63,8 @@ class _CompleteVarificationScreenState
                   AppStrings.completeVerificationSubTitle.tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body.copyWith(
-                    color: AppColors.greyColor,
-                    fontSize: 14,
-                    height: 1.5,
+                    color: AppColors.blackColor
+
                   ),
                 ),
 

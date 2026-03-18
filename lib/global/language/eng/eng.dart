@@ -55,6 +55,9 @@ Map<String, String> english = {
   AppStrings.verifyYourAccount: "Verify Your Account",
   AppStrings.enterTheCodeSentToMail: "Enter the code we've sent to your email",
   AppStrings.thankYouForTrustingUs: "Thank you for trusting us!",
+
+  AppStrings.enterSixDigitCode: "Enter your 6 digit code",
+  AppStrings.haveNotReceivedCode: "Haven’t Received the OTP?",
   AppStrings.completeVerificationSubTitle:
   "Reliable moving, delivery, buying, recycling, and giveaways — all in one trusted app.",
   AppStrings.chooseYourVehicleType: "Choose Your Vehicle Type",

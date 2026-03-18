@@ -51,17 +51,13 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
             children: [
               Text(
                 AppStrings.chooseYourVehicleType.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.title,
               ),
 
               Text(
                 AppStrings.selectAVehicleToContinue.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
+                style: AppTextStyles.body.copyWith(
+
                 ),
               ),
 
@@ -73,7 +69,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: AppButton(
-                    height: Dimensions.h(65),
+                    height: Dimensions.h(50),
                     label: options[index].tr,
                     onPressed: () {
                       setState(() {
@@ -95,7 +91,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
               SizedBox(height: Dimensions.h(70)),
 
               AppButton(
-                height: Dimensions.h(70),
+                height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
                 onPressed: selectedIndex == -1
                     ? () {}

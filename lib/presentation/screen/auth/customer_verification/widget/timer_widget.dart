@@ -69,10 +69,10 @@ class _TimerWidgetState extends State<TimerWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          AppStrings.dontGetCode.tr,
+          AppStrings.haveNotReceivedCode.tr,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey.shade600,
+            color: Colors.black,
           ),
         ),
         const SizedBox(width: 6),

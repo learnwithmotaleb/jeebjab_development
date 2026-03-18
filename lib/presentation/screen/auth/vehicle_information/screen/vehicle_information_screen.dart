@@ -50,18 +50,12 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
             children: [
               Text(
                 AppStrings.yourVehicleInformation.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.title
               ),
 
               Text(
                 AppStrings.enterYourVehicleInformation.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -80,7 +74,7 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
               SizedBox(height: Dimensions.h(100)),
 
               AppButton(
-                height: Dimensions.h(70),
+                height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
                 onPressed: () {
                   Get.toNamed(RoutePath.licenseNumber);

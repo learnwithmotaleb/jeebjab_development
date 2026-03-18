@@ -223,7 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Center(
                     child: Text(
                       AppStrings.howItWorksSteps.tr,
-                      style: AppTextStyles.body.copyWith(color: Colors.black87),
+                      textAlign: TextAlign.center, // ✅ fix here
+                      style: AppTextStyles.body.copyWith(
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
                 ],
@@ -268,6 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Center(
                     child: Text(
                       AppStrings.lifeMakeEasier.tr,
+                      textAlign: TextAlign.center,
                       style: AppTextStyles.title.copyWith(
                         fontSize: 16,
                         color: Colors.white,
@@ -278,13 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            SizedBox(height: Dimensions.h(10)),
+            SizedBox(height: Dimensions.h(16)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Text(AppStrings.promoText.tr),
+              child: Text(AppStrings.promoText.tr,    textAlign: TextAlign.center,),
             ),
 
-            SizedBox(height: Dimensions.h(30)),
+            SizedBox(height: Dimensions.h(16)),
 
             Stack(
               children: [
@@ -318,13 +322,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            SizedBox(height: Dimensions.h(10)),
+            SizedBox(height: Dimensions.h(16)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Text(AppStrings.promoText.tr),
+              child: Text(AppStrings.promoText.tr,       textAlign: TextAlign.center, ),
             ),
 
-            SizedBox(height: Dimensions.h(10)),
+            SizedBox(height: Dimensions.h(16)),
             Center(
               child: TextButton(
                 onPressed: () => Get.toNamed(RoutePath.readMore),

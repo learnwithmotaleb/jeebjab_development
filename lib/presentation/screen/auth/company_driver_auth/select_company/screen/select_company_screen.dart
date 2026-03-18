@@ -45,17 +45,13 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
               // ── Title ───────────────────────────────────────────────
               Text(
                 AppStrings.selectCompany.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
+                style: AppTextStyles.title.copyWith(
                 ),
               ),
 
               Text(
                 AppStrings.enterYourInformation.tr,
                 style: AppTextStyles.body.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
                 ),
               ),
 
@@ -84,7 +80,7 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
               // ── Continue button ──────────────────────────────────────
               AppButton(
                 label: AppStrings.continueButton.tr,
-                height: Dimensions.h(55),
+                height: Dimensions.h(50),
                 borderRadius: Dimensions.r(16),
                 onPressed: () => Get.toNamed(RoutePath.vehicleType),
               ),

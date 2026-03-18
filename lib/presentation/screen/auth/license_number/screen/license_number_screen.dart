@@ -48,18 +48,12 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
             children: [
               Text(
                 AppStrings.yourLicenseNumber.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.title
               ),
 
               Text(
                 AppStrings.licenseNumberSubTitle.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
-                ),
+                style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -72,7 +66,7 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
               SizedBox(height: Dimensions.h(100)),
 
               AppButton(
-                height: Dimensions.h(70),
+                height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
                 onPressed: () {
                   Get.toNamed(RoutePath.uploadDocument);

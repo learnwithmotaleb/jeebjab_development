@@ -36,7 +36,7 @@ class CustomerVerificationController extends GetxController{
     //   Get.toNamed(RoutePath.reset);
     // }
 
-    Get.toNamed(RoutePath.completeVarification);
+    Get.toNamed(RoutePath.reset);
 
 
 

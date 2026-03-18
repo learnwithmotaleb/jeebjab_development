@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
 
 class ResetPasswordController extends GetxController{
   /// Text controllers
@@ -25,25 +26,26 @@ class ResetPasswordController extends GetxController{
 
   /// ====================== CHANGE PASSWORD ======================
   Future<void> resetPassword() async {
-    newPasswordFocus.unfocus();
-    confirmPasswordFocus.unfocus();
-
-    if (!(formKey.currentState?.validate() ?? false)) return;
-
-    final newPassword = newPasswordController.text.trim();
-
-    isLoading.value = true;
-
-    try {
-      // TODO: call API here
-      await Future.delayed(const Duration(seconds: 2));
-
-      Get.snackbar("Success", "Password reset successful");
-    } catch (e) {
-      Get.snackbar("Error", "Something went wrong");
-    } finally {
-      isLoading.value = false;
-    }
+    // newPasswordFocus.unfocus();
+    // confirmPasswordFocus.unfocus();
+    //
+    // if (!(formKey.currentState?.validate() ?? false)) return;
+    //
+    // final newPassword = newPasswordController.text.trim();
+    //
+    // isLoading.value = true;
+    //
+    // try {
+    //   // TODO: call API here
+    //   await Future.delayed(const Duration(seconds: 2));
+    //
+    //   Get.snackbar("Success", "Password reset successful");
+    // } catch (e) {
+    //   Get.snackbar("Error", "Something went wrong");
+    // } finally {
+    //   isLoading.value = false;
+    // }
+    Get.toNamed(RoutePath.completeVarification);
   }
 
 

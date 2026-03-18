@@ -39,6 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.primaryColor,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
             flex: 1,
@@ -49,21 +50,50 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(AppImages.appLogo,width: Dimensions.w(100), height: Dimensions.h(100),),
+
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
+
+                        Expanded(
+                          child: Center(
+                            child: Image.asset(
+                              AppImages.appLogo,
+                              width: Dimensions.w(100),
+                              height: Dimensions.h(100),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 48), // balance spacing
+                      ],
+                    ),
+
                     SizedBox(height: Dimensions.h(30)),
+
                     Align(
-                      alignment: AlignmentGeometry.centerLeft,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         AppStrings.signup.tr,
                         style: AppTextStyles.title.copyWith(
                           color: AppColors.whiteColor,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+
                     Align(
-                      alignment: AlignmentGeometry.centerLeft,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         AppStrings.toGetStarted.tr,
                         style: AppTextStyles.body.copyWith(
