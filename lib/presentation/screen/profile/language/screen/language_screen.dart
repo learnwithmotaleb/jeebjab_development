@@ -22,7 +22,10 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -38,8 +41,8 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
             // ── Arabic ─────────────────────────────────────────────
             _LanguageOptionRow(
               flag: AppImages.arabic,
-              title: AppStrings.arabic.tr, // still uses the key — value is "Arabic"
-              value: 'ar',               // ← fixed: was 'el'
+              title: AppStrings.arabic.tr,
+              value: 'ar',
               controller: lsc,
             ),
 
@@ -60,11 +63,115 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
               label: AppStrings.changeLanguage.tr,
               height: 65,
               onPressed: () async {
-                await lsc.applyLanguage(); // ← saves + updates locale
+                await lsc.applyLanguage();
                 Get.back();
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.language.tr),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Icon/Visual ──────────────────────────────────────
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                  ),
+                  child: Icon(
+                    Icons.language_outlined,
+                    size: 50,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.language.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Center(
+                  child: Text(
+                    "Select your preferred language",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Arabic ─────────────────────────────────────────
+                _LanguageOptionRow(
+                  flag: AppImages.arabic,
+                  title: AppStrings.arabic.tr,
+                  value: 'ar',
+                  controller: lsc,
+                ),
+
+                SizedBox(height: Dimensions.h(16)),
+
+                // ── English ────────────────────────────────────────
+                _LanguageOptionRow(
+                  flag: AppImages.english,
+                  title: AppStrings.english.tr,
+                  value: 'en',
+                  controller: lsc,
+                ),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Change Language Button ────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.changeLanguage.tr,
+                    height: Dimensions.h(100),
+                    onPressed: () async {
+                      await lsc.applyLanguage();
+                      Get.back();
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -93,6 +200,7 @@ class _LanguageOptionRow extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: double.infinity,
+          height: Dimensions.h(80),
           padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(14),
             vertical: Dimensions.h(12),
@@ -107,7 +215,7 @@ class _LanguageOptionRow extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: Dimensions.r(10),
+                radius: Dimensions.r(18),
                 backgroundImage: AssetImage(flag),
                 backgroundColor: const Color(0xFFF0F0F0),
               ),
@@ -116,7 +224,7 @@ class _LanguageOptionRow extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: Dimensions.f(15),
+                    fontSize: Dimensions.f(18),
                     fontWeight: FontWeight.w500,
                     color: AppColors.labelColor,
                   ),
@@ -126,7 +234,7 @@ class _LanguageOptionRow extends StatelessWidget {
                 isSelected
                     ? Icons.check_circle_outline_rounded
                     : Icons.radio_button_unchecked_rounded,
-                size: Dimensions.w(22),
+                size: Dimensions.w(30),
                 color: isSelected ? AppColors.primaryColor : const Color(0xFFCCCCCC),
               ),
             ],

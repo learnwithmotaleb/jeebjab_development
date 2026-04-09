@@ -57,6 +57,41 @@ class Dimensions {
     return clampSpace(scaled);
   }
 
+
+  ///Responsive Font Size
+  static double responsiveFont({
+    required double mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    if (isDesktop) return f(desktop ?? tablet ?? mobile);
+    if (isTablet) return f(tablet ?? mobile);
+    return f(mobile);
+  }
+
+
+  ///Responsive height and widget for container
+  static double responsiveHeightWidth({
+    required double mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    if (isDesktop) return f(desktop ?? tablet ?? mobile);
+    if (isTablet) return f(tablet ?? mobile);
+    return f(mobile);
+  }
+
+  //Responsive Icon Size
+  static double responsiveIcon({
+    required double mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    if (isDesktop) return w(desktop ?? tablet ?? mobile);
+    if (isTablet) return w(tablet ?? mobile);
+    return w(mobile);
+  }
+
   // Padding helpers
   static EdgeInsets pAll(double v) => EdgeInsets.all(w(v));
 

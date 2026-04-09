@@ -42,7 +42,7 @@ class DriverHeaderWidget extends StatelessWidget {
       child: Column(
         children: [
           // ── App logo ──────────────────────────────────────────────────
-          Image.asset(AppImages.appLogo, width: 80, height: 80),
+          Image.asset(AppImages.appLogo, width: 100, height: 100),
 
           SizedBox(height: Dimensions.h(10)),
 

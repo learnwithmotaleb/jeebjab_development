@@ -99,7 +99,7 @@ class AppStrings {
 
 
   static const String information = "Information";
-  static const String nameOfItemProducts = "Name of item/products";
+  static const String nameOfItemProducts = "Name of products";
   static const String descriptionWriteHere = "Description Write Here";
   static const String sizeOfProduct = "Size Of Product";
 
@@ -465,8 +465,8 @@ class AppStrings {
   static const String selectedPhotos ="Selected Photos";
   static const String myTask ='My Task';
   static const String task ='Task';
-  static const String activePost ='Active Post';
-  static const String completedPost ='Completed Post';
+  static const String activePost ='Active';
+  static const String completedPost ='Completed';
 
   //===================================================last text not translations==========================
 
@@ -494,7 +494,7 @@ class AppStrings {
   // ── Add these lines inside AppStrings class ───────────────────────────────
 
   // My Post Controller
-  static const String pendingPost = "Pending Post";
+  static const String pendingPost = "Pending";
   static const String failedToLoadPosts = "Failed to load posts. Please try again.";
 
   // Post Status Labels (used in detail arguments)

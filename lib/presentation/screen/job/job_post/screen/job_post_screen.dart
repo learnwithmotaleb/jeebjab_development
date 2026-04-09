@@ -33,7 +33,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color(0xFFF5F6FA),
-      // endDrawer: const JobPostDrawer(),
+      endDrawer: const JobPostDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -53,10 +53,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
           Padding(
             padding: EdgeInsets.only(right: Dimensions.w(16),left: Dimensions.w(16) ),
             child: GestureDetector(
-              //onTap: () => _scaffoldKey.currentState?.openEndDrawer(),
-              onTap: (){
-                Get.toNamed(RoutePath.jobPostDrawer);
-              },
+              onTap: () => Get.toNamed(RoutePath.jobPostDrawer),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -138,7 +135,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
 
   Widget _menuLine() => Container(
     width: 22,
-    height: 1,
+    height: 2,
     decoration: BoxDecoration(
       color: AppColors.labelColor,
       borderRadius: BorderRadius.circular(2),

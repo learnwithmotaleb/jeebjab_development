@@ -16,25 +16,28 @@ class ToggleOptionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         width: double.infinity,
         padding: EdgeInsets.symmetric(
-          horizontal: Dimensions.w(16),
-          vertical: Dimensions.h(14),
+          horizontal: Dimensions.w(isTablet ? 24 : 16),
+          vertical: Dimensions.h(isTablet ? 20 : 14),
         ),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(Dimensions.r(10)),
+          borderRadius: BorderRadius.circular(Dimensions.r(isTablet ? 16 : 10)),
           border: Border.all(
             color: isSelected ? AppColors.primaryColor : const Color(0xFFE8E8E8),
-            width: isSelected ? 1.5 : 1,
+            width: isSelected ? (isTablet ? 2.5 : 1.5) : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 6,
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: isTablet ? 10 : 6,
               offset: const Offset(0, 2),
             ),
           ],
@@ -46,9 +49,9 @@ class ToggleOptionRow extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: Dimensions.f(14),
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.labelColor,
+                  fontSize: Dimensions.f(isTablet ? 16 : 14),
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF1A1A2E),
                 ),
               ),
             ),
@@ -56,8 +59,8 @@ class ToggleOptionRow extends StatelessWidget {
             // ── Radio indicator ───────────────────────────────────────
             AnimatedContainer(
               duration: const Duration(milliseconds: 180),
-              width: Dimensions.w(22),
-              height: Dimensions.w(22),
+              width: Dimensions.w(isTablet ? 30 : 22),
+              height: Dimensions.w(isTablet ? 30 : 22),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -70,8 +73,8 @@ class ToggleOptionRow extends StatelessWidget {
               child: isSelected
                   ? Center(
                 child: Container(
-                  width: Dimensions.w(12),
-                  height: Dimensions.w(12),
+                  width: Dimensions.w(isTablet ? 16 : 12),
+                  height: Dimensions.w(isTablet ? 16 : 12),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primaryColor,

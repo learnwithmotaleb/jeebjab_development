@@ -48,7 +48,7 @@ class PlacementPickupController extends GetxController {
   bool get isValid => selectedPlacement.value.isNotEmpty;
 
   void onContinue() {
-    if (!isValid) return; // optional: prevent continue if no selection
+    // if (!isValid) return; // optional: prevent continue if no selection
     Get.toNamed(RoutePath.pickupFloor);
   }
 }

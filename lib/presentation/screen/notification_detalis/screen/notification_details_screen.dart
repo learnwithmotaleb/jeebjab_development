@@ -528,38 +528,41 @@ class _NotificationDetailsScreenState
             SizedBox(height: Dimensions.h(40)),
 
             // Action Buttons
+            // Action Buttons
             Row(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: controller.onMessagePressed,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(
-                          color: AppColors.primaryColor, width: 1.5),
-                      backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                // Show Message button only if status is not delivered
+                if (controller.status.value != 'delivered')
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: controller.onMessagePressed,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: BorderSide(color: AppColors.primaryColor, width: 1.5),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      AppStrings.message.tr,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.whiteColor,
+                      child: Text(
+                        AppStrings.message.tr,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.whiteColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                if (controller.showAcceptButton.value) ...[
+                // Show Accept button only if status is pending (or whatever condition you want)
+                if (controller.showAcceptButton.value && controller.status.value != 'delivered') ...[
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
                         controller.onAcceptPressed(context);
-                        controller.showAcceptButton.value = false;
+                        controller.showAcceptButton.value = false; // hide after accepting
                         controller.status.value = "in_transit";
                       },
                       style: ElevatedButton.styleFrom(

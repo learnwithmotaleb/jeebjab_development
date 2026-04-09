@@ -24,28 +24,28 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-
   final OverviewController controller = Get.put(OverviewController());
-
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
+
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: CommonAppBar(title:AppStrings.overview.tr),
+      appBar: CommonAppBar(title: AppStrings.overview.tr),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(12),
               child: Column(
-                children: [  
+                children: [
                   const OverviewPhotosSection(),
                   const SizedBox(height: 12),
                   const OverviewServiceSection(),
@@ -55,13 +55,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   const DropAddressSection(),
                   const SizedBox(height: 12),
                   const OverviewDatetimeBottomSection(),
-
                   const SizedBox(height: 12),
                   const OverviewIWillPayBottomSection(),
                   const SizedBox(height: 12),
-
                   const AcknowledgementSection(),
-
                 ],
               ),
             ),
@@ -69,6 +66,50 @@ class _OverviewScreenState extends State<OverviewScreen> {
           const OverviewPublishSection(),
           const SizedBox(height: 12)
         ],
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: CommonAppBar(title: AppStrings.overview.tr),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(48),
+                    vertical: Dimensions.h(24),
+                  ),
+                  child: Column(
+                    children: [
+                      const OverviewPhotosSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const OverviewServiceSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const OverviewAddressSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const DropAddressSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const OverviewDatetimeBottomSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const OverviewIWillPayBottomSection(),
+                      SizedBox(height: Dimensions.h(20)),
+                      const AcknowledgementSection(),
+                      SizedBox(height: Dimensions.h(32)),
+                    ],
+                  ),
+                ),
+              ),
+              const OverviewPublishSection(),
+              SizedBox(height: Dimensions.h(24)),
+            ],
+          ),
+        ),
       ),
     );
   }

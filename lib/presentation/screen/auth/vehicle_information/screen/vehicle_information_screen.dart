@@ -33,7 +33,6 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
     return ResponsiveLayout(
       mobile: _buildMobile(),
       tablet: _buildTablet(),
-      desktop: _buildDesktop(),
     );
   }
 
@@ -49,13 +48,13 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.yourVehicleInformation.tr,
-                style: AppTextStyles.title
+                  AppStrings.yourVehicleInformation.tr,
+                  style: AppTextStyles.title
               ),
 
               Text(
-                AppStrings.enterYourVehicleInformation.tr,
-                style: AppTextStyles.body
+                  AppStrings.enterYourVehicleInformation.tr,
+                  style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -88,10 +87,104 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
   }
 
   Widget _buildTablet() {
-    return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));
-  }
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: ""),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
 
-  Widget _buildDesktop() {
-    return Scaffold(body: Center(child: Text("Hello, Desktop Login")));
+                // ── Icon/Visual ──────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.directions_car_outlined,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.yourVehicleInformation.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.enterYourVehicleInformation.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Vehicle Brand Field ─────────────────────────────
+                AppTextField(
+                  controller: controller.vehicleBrand,
+                  hint: AppStrings.vehicleBrand.tr,
+                ),
+
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Vehicle Model Field ─────────────────────────────
+                AppTextField(
+                  controller: controller.vehicleModel,
+                  hint: AppStrings.vehicleModel.tr,
+                ),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Continue Button ──────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    height: Dimensions.h(100),
+                    label: AppStrings.continueButton.tr,
+                    onPressed: () {
+                      Get.toNamed(RoutePath.licenseNumber);
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

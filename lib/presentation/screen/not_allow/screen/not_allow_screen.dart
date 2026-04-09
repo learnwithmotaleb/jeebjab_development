@@ -20,7 +20,10 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet()
+    );
   }
 
   Widget _buildMobile() {
@@ -108,7 +111,7 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
             ),
           ),
 
-          // ──------Continue button pinned bottom ───────────────────────────
+          // ── Continue button pinned bottom ───────────────────────────
           Padding(
             padding: EdgeInsets.fromLTRB(
               Dimensions.w(16),
@@ -118,13 +121,125 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
             ),
             child: AppButton(
               label: AppStrings.continueButton.tr,
-              height: 65,
+              height: 60,
               onPressed: controller.onContinue,
             ),
           ),
           SizedBox(height: Dimensions.h(16)),
 
         ],
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.whiteColor,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () => Get.back(),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.black,
+              size: 24,
+            ),
+          ),
+        ),
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(48),
+                    vertical: Dimensions.h(32),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── Title ───────────────────────────────────────────
+                      Text(
+                        AppStrings.notAllowedWastes.tr,
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.labelColor,
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // ── 3 no-entry icons row ────────────────────────────
+                      Row(
+                        children: [
+                          _NoEntryIcon(icon: Icons.fastfood_outlined),
+                          const SizedBox(width: 24),
+                          _NoEntryIcon(icon: Icons.warning_amber_outlined),
+                          const SizedBox(width: 24),
+                          _NoEntryIcon(icon: Icons.construction_outlined),
+                        ],
+                      ),
+
+                      const SizedBox(height: 48),
+
+                      // ── Items list ──────────────────────────────────────
+                      ...controller.items.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 32),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.labelColor,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                item.description,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.greyColor,
+                                  height: 1.7,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Continue button pinned bottom ───────────────────────────
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  Dimensions.w(48),
+                  Dimensions.h(16),
+                  Dimensions.w(48),
+                  Dimensions.h(40),
+                ),
+                child: AppButton(
+                  label: AppStrings.continueButton.tr,
+                  height: Dimensions.h(100),
+                  onPressed: controller.onContinue,
+                ),
+              ),
+              SizedBox(height: Dimensions.h(10)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -138,26 +253,29 @@ class _NoEntryIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+    final double size = isTablet ? 80 : 60;
+
     return Stack(
       alignment: Alignment.center,
       children: [
         // ── Circle with icon ───────────────────────────────────────────
         Container(
-          width: Dimensions.w(60),
-          height: Dimensions.w(60),
+          width: size,
+          height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.red, width: 2.5),
+            border: Border.all(color: Colors.red, width: isTablet ? 3.5 : 2.5),
             color: Colors.red.withOpacity(0.05),
           ),
-          child: Icon(icon, size: Dimensions.w(28), color: Colors.red),
+          child: Icon(icon, size: isTablet ? 36 : 28, color: Colors.red),
         ),
         // ── Diagonal line (no-entry slash) ─────────────────────────────
         Transform.rotate(
           angle: -0.7,
           child: Container(
-            width: Dimensions.w(58),
-            height: 2.5,
+            width: size - 2,
+            height: isTablet ? 3.5 : 2.5,
             color: Colors.red,
           ),
         ),

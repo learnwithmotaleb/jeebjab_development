@@ -18,19 +18,22 @@ class InlineLabelField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final bool isTablet = Dimensions.isTablet;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(
-        horizontal: Dimensions.w(16),
-        vertical: Dimensions.h(4),
+        horizontal: Dimensions.w(isTablet ? 24 : 16),
+        vertical: Dimensions.h(isTablet ? 12 : 4),
       ),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(Dimensions.r(10)),
+        borderRadius: BorderRadius.circular(Dimensions.r(isTablet ? 16 : 10)),
         border: Border.all(color: const Color(0xFFE8E8E8)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
+            blurRadius: isTablet ? 8 : 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -39,12 +42,12 @@ class InlineLabelField extends StatelessWidget {
         children: [
           // ── Label ────────────────────────────────────────────────────
           SizedBox(
-            width: Dimensions.w(90),
+            width: Dimensions.w(isTablet ? 140 : 90),
             child: Text(
               label,
               style: TextStyle(
-                fontSize: Dimensions.f(14),
-                fontWeight: FontWeight.w500,
+                fontSize: Dimensions.f(isTablet ? 16 : 14),
+                fontWeight: FontWeight.w600,
                 color: AppColors.labelColor,
               ),
             ),
@@ -53,9 +56,9 @@ class InlineLabelField extends StatelessWidget {
           // ── Divider ──────────────────────────────────────────────────
           Container(
             width: 1,
-            height: Dimensions.h(28),
+            height: Dimensions.h(isTablet ? 36 : 28),
             color: const Color(0xFFE8E8E8),
-            margin: EdgeInsets.symmetric(horizontal: Dimensions.w(12)),
+            margin: EdgeInsets.symmetric(horizontal: Dimensions.w(isTablet ? 20 : 12)),
           ),
 
           // ── Input ────────────────────────────────────────────────────
@@ -65,20 +68,20 @@ class InlineLabelField extends StatelessWidget {
               keyboardType: keyboardType,
               textAlign: TextAlign.end,
               style: TextStyle(
-                fontSize: Dimensions.f(14),
-                fontWeight: FontWeight.w600,
-                color: AppColors.labelColor,
+                fontSize: Dimensions.f(isTablet ? 16 : 14),
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF1A1A2E),
               ),
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: TextStyle(
-                  fontSize: Dimensions.f(14),
+                  fontSize: Dimensions.f(isTablet ? 16 : 14),
                   color: AppColors.hintColor,
                 ),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
-                  vertical: Dimensions.h(12),
+                  vertical: Dimensions.h(isTablet ? 16 : 12),
                 ),
               ),
             ),

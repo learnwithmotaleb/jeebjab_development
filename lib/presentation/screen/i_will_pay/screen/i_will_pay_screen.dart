@@ -25,7 +25,10 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -72,8 +75,6 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                     controller: controller.priceController,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
                     style: TextStyle(
                       fontSize: 24,
                       color: AppColors.primaryColor,
@@ -144,4 +145,120 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
       ),
     );
   }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.iWillPay.tr),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              // ── Main Content ────────────────────────────────────────────
+              SizedBox(height: Dimensions.h(64)),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // ── Suggested range label ───────────────────────────
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: Dimensions.f(18),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.blackColor,
+                          ),
+                          children: [
+                            TextSpan(text: AppStrings.otherUserHavePaidAround.tr),
+                            TextSpan(
+                              text:
+                              '  ${controller.minSuggested} - ${controller.maxSuggested}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(48)),
+
+                      // ── Price Input ─────────────────────────────────────
+                      TextField(
+                        controller: controller.priceController,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(
+                            fontSize: Dimensions.f(36),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold
+                        ),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: Dimensions.h(24),
+                            horizontal: Dimensions.w(20),
+                          ),
+                          fillColor: AppColors.greyColor.withOpacity(0.1),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(48)),
+
+                      // ── Voucher link ────────────────────────────────────
+                      GestureDetector(
+                        onTap: controller.onVoucherTap,
+                        child: Text(
+                          AppStrings.doYouHaveCampaignCode.tr,
+                          style: TextStyle(
+                            fontSize: Dimensions.f(16),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ── Continue Button ─────────────────────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(48),
+                  vertical: Dimensions.h(40),
+                ),
+                child: AppButton(
+                  height: Dimensions.h(100),
+                  label: AppStrings.continueButton.tr,
+                  onPressed: controller.onContinue,
+                ),
+              ),
+              SizedBox(height: Dimensions.h(30)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 }

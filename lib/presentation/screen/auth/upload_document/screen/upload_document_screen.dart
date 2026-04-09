@@ -34,7 +34,6 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
     return ResponsiveLayout(
       mobile: _buildMobile(),
       tablet: _buildTablet(),
-      desktop: _buildDesktop(),
     );
   }
 
@@ -50,13 +49,13 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.uploadDocument.tr,
-                style: AppTextStyles.title
+                  AppStrings.uploadDocument.tr,
+                  style: AppTextStyles.title
               ),
 
               Text(
-                AppStrings.uploadDocumentSubTitle.tr,
-                style: AppTextStyles.body
+                  AppStrings.uploadDocumentSubTitle.tr,
+                  style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -86,10 +85,93 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
   }
 
   Widget _buildTablet() {
-    return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));
-  }
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: ""),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
 
-  Widget _buildDesktop() {
-    return Scaffold(body: Center(child: Text("Hello, Desktop Login")));
+                // ── Icon/Visual ──────────────────────────────────────
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                  ),
+                  child: Icon(
+                    Icons.upload_file_outlined,
+                    size: 50,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Text(
+                  AppStrings.uploadDocument.tr,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.title.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Text(
+                  AppStrings.uploadDocumentSubTitle.tr,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.body.copyWith(
+                    fontSize: 15,
+                    color: Colors.grey[600],
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Upload Image Widget ─────────────────────────────
+                UploadImageWidget(controller: controller),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Continue Button ──────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    height: Dimensions.h(100),
+                    label: AppStrings.continueButton.tr,
+                    onPressed: () {
+                      AppAlerts.confirm(
+                        title: AppStrings.success.tr,
+                        message: AppStrings.accountCreateSuccess.tr,
+                        onConfirm: () {
+                          Get.toNamed(RoutePath.login);
+                        },
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

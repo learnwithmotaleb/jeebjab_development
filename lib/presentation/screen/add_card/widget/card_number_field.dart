@@ -13,23 +13,34 @@ class CardNumberField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           AppStrings.cardNumber.tr,
           style: TextStyle(
-            fontSize: Dimensions.f(13),
+            fontSize: isTablet ? 16 : Dimensions.f(13),
             fontWeight: FontWeight.w600,
             color: AppColors.labelColor,
           ),
         ),
-        SizedBox(height: Dimensions.h(8)),
+        SizedBox(height: isTablet ? 12 : Dimensions.h(8)),
         Container(
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(Dimensions.r(10)),
+            borderRadius: BorderRadius.circular(isTablet ? 15 : Dimensions.r(10)),
             border: Border.all(color: const Color(0xFFE8E8E8)),
+            boxShadow: isTablet
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                : null,
           ),
           child: TextField(
             controller: controller,
@@ -39,22 +50,22 @@ class CardNumberField extends StatelessWidget {
               CardNumberInputFormatter(),
             ],
             style: TextStyle(
-              fontSize: Dimensions.f(18),
+              fontSize: isTablet ? 24 : Dimensions.f(18),
               fontWeight: FontWeight.w700,
-              letterSpacing: 2,
+              letterSpacing: isTablet ? 4 : 2,
               color: AppColors.labelColor,
             ),
             decoration: InputDecoration(
               hintText: '4084  4084  4084  4084',
               hintStyle: TextStyle(
-                fontSize: Dimensions.f(18),
+                fontSize: isTablet ? 24 : Dimensions.f(18),
                 fontWeight: FontWeight.w700,
-                letterSpacing: 2,
+                letterSpacing: isTablet ? 4 : 2,
                 color: const Color(0xFFCCCCCC),
               ),
               contentPadding: EdgeInsets.symmetric(
-                horizontal: Dimensions.w(16),
-                vertical: Dimensions.h(16),
+                horizontal: isTablet ? 24 : Dimensions.w(16),
+                vertical: isTablet ? 24 : Dimensions.h(16),
               ),
               border: InputBorder.none,
             ),

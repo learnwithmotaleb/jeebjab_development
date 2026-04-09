@@ -31,6 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTable(),
     );
   }
 
@@ -68,8 +69,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: Center(
                             child: Image.asset(
                               AppImages.appLogo,
-                              width: Dimensions.w(100),
-                              height: Dimensions.h(100),
+                              width: 100,
+                              height: 100,
                             ),
                           ),
                         ),
@@ -205,6 +206,209 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                       ),
                     ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildTable() {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: AppColors.primaryColor,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Header with Back Button and Logo
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
+                            size: 28,
+                          ),
+                        ),
+                        Image.asset(
+                          AppImages.appLogo,
+                          width: 120,
+                          height: 120,
+                        ),
+                        SizedBox(width: 56), // balance spacing
+                      ],
+                    ),
+                    SizedBox(height: Dimensions.h(32)),
+
+                    // Title
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.signup.tr,
+                        style: AppTextStyles.title.copyWith(
+                          color: AppColors.whiteColor,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    // Subtitle
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppStrings.toGetStarted.tr,
+                        style: AppTextStyles.body.copyWith(
+                          color: AppColors.whiteColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(48),
+                vertical: Dimensions.h(24),
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(Dimensions.r(30)),
+                  topRight: Radius.circular(Dimensions.r(30)),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 520),
+                    child: Form(
+                      key: controller.formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Name Field
+                          AppTextField(
+                            controller: controller.nameController,
+                            focusNode: controller.nameFocus,
+                            hint: AppStrings.enterYourName.tr,
+                            keyboardType: TextInputType.name,
+                            validator: AppValidators.required(),
+                            onSubmitted: () => controller.submit(),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: Dimensions.h(18)),
+
+                          // Email Field
+                          AppTextField(
+                            controller: controller.emailController,
+                            focusNode: controller.emailFocus,
+                            hint: AppStrings.enterEmailAddress.tr,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: AppValidators.email(),
+                            onSubmitted: () => controller.submit(),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: Dimensions.h(18)),
+
+                          // Password Field
+                          AppTextField(
+                            controller: controller.passwordController,
+                            focusNode: controller.passwordFocus,
+                            hint: AppStrings.enterPassword.tr,
+                            obscure: true,
+                            validator: AppValidators.required(),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: Dimensions.h(18)),
+
+                          // Confirm Password Field
+                          AppTextField(
+                            controller: controller.confirmPasswordController,
+                            focusNode: controller.confirmPasswordFocus,
+                            hint: AppStrings.confirmPassword.tr,
+                            obscure: true,
+                            validator: AppValidators.required(),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: Dimensions.h(32)),
+
+                          // Create Account Button
+                          AppButton(
+                            label: AppStrings.createAccount.tr,
+                            height: Dimensions.h(100),
+                            borderRadius: Dimensions.r(16),
+                            onPressed: () {
+                              controller.selectCustomer();
+                              Get.toNamed(RoutePath.customerVerification);
+                            },
+                          ),
+
+                          SizedBox(height: Dimensions.h(20)),
+
+                          // Divider or Text
+                          Text(
+                            AppStrings.or.tr,
+                            style: AppTextStyles.body.copyWith(
+                              fontSize: 18,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+
+                          SizedBox(height: Dimensions.h(20)),
+
+                          // Company Driver Section
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppStrings.becomeACompanyDriver.tr,
+                              style: AppTextStyles.body.copyWith(
+                                color: AppColors.blackColor,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.h(12)),
+
+                          // Company Driver Button
+                          AppButton(
+                            label: AppStrings.companyDriver.tr,
+                            backgroundColor: AppColors.whiteColor,
+                            textColor: AppColors.primaryColor,
+                            height: Dimensions.h(100),
+                            borderSideColor: AppColors.primaryColor,
+                            borderRadius: Dimensions.r(16),
+                            onPressed: () {
+                              controller.selectDriver();
+                              Get.toNamed(RoutePath.driverSignup);
+                            },
+                          ),
+                          SizedBox(height: Dimensions.h(24)),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

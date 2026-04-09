@@ -23,18 +23,149 @@ class _CustomerJobPostScreenState extends State<CustomerJobPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
+      appBar: CommonAppBar(
+        title: AppStrings.jobPost.tr,
+        showBack: false,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(40),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Icon/Visual ──────────────────────────────────────
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                  ),
+                  child: Icon(
+                    Icons.work_outline,
+                    size: 50,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+
+                // ── Title ────────────────────────────────────────────
+                Text(
+                  AppStrings.jobPost.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.blackColor,
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Text(
+                  "Start earning with our platform today",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey[600],
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(48)),
+
+                // ── Banner Card ─────────────────────────────────────
+                BecomeDriverBannerCard(
+                  onBecomeDriver: controller.onBecomeDriver,
+                ),
+
+                SizedBox(height: Dimensions.h(48)),
+
+                // ── Optional: Benefits Section ───────────────────────
+                Container(
+                  padding: EdgeInsets.all(Dimensions.w(24)),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(Dimensions.r(16)),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Why Join Us?",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blackColor,
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.h(20)),
+                      _benefitItem(
+                        icon: Icons.trending_up,
+                        title: "Flexible Hours",
+                        description: "Work when you want, set your own schedule",
+                      ),
+                      SizedBox(height: Dimensions.h(16)),
+                      _benefitItem(
+                        icon: Icons.attach_money,
+                        title: "Competitive Pay",
+                        description: "Get paid fairly for your work and delivery",
+                      ),
+                      SizedBox(height: Dimensions.h(16)),
+                      _benefitItem(
+                        icon: Icons.shield_outlined,
+                        title: "Safe & Secure",
+                        description: "Protected transactions and verified customers",
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildMobile() {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.whiteColor,
-
-      // ── AppBar ─────────────────────────────────────────────────────
-      appBar: CommonAppBar(title: AppStrings.jobPost.tr,showBack: false,),
-
-      // ── Body ────────────────────────────────────────────────────────
+      appBar: CommonAppBar(
+        title: AppStrings.jobPost.tr,
+        showBack: false,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.w(16),
@@ -47,5 +178,53 @@ class _CustomerJobPostScreenState extends State<CustomerJobPostScreen> {
     );
   }
 
-
+  // ── Helper Widget for Benefits ───────────────────────────────────────────
+  Widget _benefitItem({
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          ),
+          child: Icon(
+            icon,
+            color: AppColors.primaryColor,
+            size: 24,
+          ),
+        ),
+        SizedBox(width: Dimensions.w(16)),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.blackColor,
+                ),
+              ),
+              SizedBox(height: Dimensions.h(4)),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

@@ -38,9 +38,7 @@ class AppAlerts {
     });
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // ❌ ERROR — auto-dismisses after 2s
-  // Usage: AppAlerts.error(message: 'Something went wrong');
+
   // ─────────────────────────────────────────────────────────────────────────
   static void error({required String message}) {
     Get.dialog(

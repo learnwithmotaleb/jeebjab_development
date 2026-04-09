@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class PlacementOptionRow extends StatelessWidget {
@@ -19,24 +20,30 @@ class PlacementOptionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(
+            horizontal: 16, 
+            vertical: isTablet ? 18 : 14
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(isTablet ? 16 : 10),
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryColor
                 : const Color(0xFFE8E8E8),
-            width: isSelected ? 1.5 : 1,
+            width: isSelected ? (isTablet ? 2.5 : 1.5) : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 5,
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: isTablet ? 8 : 5,
               offset: const Offset(0, 2),
             ),
           ],
@@ -44,17 +51,21 @@ class PlacementOptionRow extends StatelessWidget {
         child: Row(
           children: [
             // ── Icon ──────────────────────────────────────────────────
-            Icon(icon, size: 22, color: const Color(0xFF888888)),
+            Icon(
+              icon, 
+              size: isTablet ? 28 : 22, 
+              color: isSelected ? AppColors.primaryColor : const Color(0xFF888888)
+            ),
             const SizedBox(width: 12),
 
             // ── Label ─────────────────────────────────────────────────
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF1A1A2E),
+                style: TextStyle(
+                  fontSize: isTablet ? 17 : 14,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF1A1A2E),
                 ),
               ),
             ),
@@ -62,8 +73,8 @@ class PlacementOptionRow extends StatelessWidget {
             // ── Radio / Checkbox indicator ────────────────────────────
             AnimatedContainer(
               duration: const Duration(milliseconds: 180),
-              width: 22,
-              height: 22,
+              width: isTablet ? 28 : 22,
+              height: isTablet ? 28 : 22,
               decoration: BoxDecoration(
                 shape: isRadio ? BoxShape.circle : BoxShape.rectangle,
                 borderRadius: isRadio ? null : BorderRadius.circular(100),
@@ -76,7 +87,11 @@ class PlacementOptionRow extends StatelessWidget {
                 color: isSelected ? AppColors.primaryColor : Colors.white,
               ),
               child: isSelected
-                  ? const Icon(Icons.check, size: 13, color: Colors.white)
+                  ? Icon(
+                      Icons.check, 
+                      size: isTablet ? 18 : 13, 
+                      color: Colors.white
+                    )
                   : null,
             ),
           ],

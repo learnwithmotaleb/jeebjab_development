@@ -31,7 +31,11 @@ class ProfileMenuItemWidget extends StatelessWidget {
                 // ── Icon ────────────────────────────────────────────────
                 Icon(
                   item.icon,
-                  size: Dimensions.w(22),
+                  size: Dimensions.responsiveIcon(
+                    mobile: 18,
+                    tablet: 20,
+                    desktop: 26,
+                  ),
                   color: item.iconColor ?? AppColors.primaryColor,
                 ),
 
@@ -42,7 +46,11 @@ class ProfileMenuItemWidget extends StatelessWidget {
                   child: Text(
                     item.title,
                     style: TextStyle(
-                      fontSize: Dimensions.f(14),
+                      fontSize: Dimensions.responsiveFont(
+                        mobile: 18,
+                        tablet: 20,
+                        desktop: 26,
+                      ),
                       fontWeight: FontWeight.w500,
                       color: item.iconColor ?? AppColors.labelColor,
                     ),

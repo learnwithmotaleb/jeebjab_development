@@ -69,6 +69,7 @@ class RoutePath {
   static const String taskScreen = '/TaskScreen';
   static const String driverHome = '/DriverHomeScreen';
   static const String customerJobPost = '/CustomerJobPostScreen';
+  static const String deliveryScreen = '/DeliveryScreen';
 
 
 

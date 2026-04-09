@@ -25,7 +25,10 @@ class _CompleteVarificationScreenState
     extends State<CompleteVarificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet()
+    );
   }
 
   Widget _buildMobile() {
@@ -80,6 +83,82 @@ class _CompleteVarificationScreenState
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(48),
+            vertical: Dimensions.h(32),
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // Verification Image - Larger for tablet
+                  Image.asset(
+                    AppImages.completeVerificationImage,
+                    width: 280,
+                    height: 280,
+                    fit: BoxFit.contain,
+                  ),
+
+                  SizedBox(height: Dimensions.h(48)),
+
+                  // Title
+                  Text(
+                    AppStrings.thankYouForTrustingUs.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      color: AppColors.blackColor,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(16)),
+
+                  // Subtitle
+                  Text(
+                    AppStrings.completeVerificationSubTitle.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      color: Colors.grey[700],
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(56)),
+
+                  // Continue Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      label: AppStrings.continueButton.tr,
+                      height: Dimensions.h(100),
+                      onPressed: () {
+                        Get.toNamed(RoutePath.bottomNav);
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
             ),
           ),
         ),

@@ -28,7 +28,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.myTask.tr),
+      appBar: CommonAppBar(title: AppStrings.myTask.tr,showBack: false,),
       body: Column(
         children: [
           // ── Tab switcher ──────────────────────────────────────────────

@@ -22,7 +22,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -156,12 +159,11 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                         padding: const EdgeInsets.only(top: 16),
                         child: SizedBox(
                           width: double.infinity,
+                          height: 60,
                           child: ElevatedButton(
                             onPressed: controller.onNext,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -185,6 +187,191 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                   ],
                 );
               }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Row(
+          children: [
+            // ── Left: Camera Preview ───────────────────────────────────
+            Expanded(
+              flex: 3,
+              child: Stack(
+                children: [
+                  Obx(() {
+                    final preview = controller.previewImage.value;
+                    return Container(
+                      width: double.infinity,
+                      color: Colors.black,
+                      child: preview != null
+                          ? Image.file(
+                        preview,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                          : const Center(
+                        child: Icon(
+                          Icons.camera_alt_outlined,
+                          color: Colors.white24,
+                          size: 80,
+                        ),
+                      ),
+                    );
+                  }),
+
+                  // ── Back Button ──────────────────────────────────────
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    child: GestureDetector(
+                      onTap: controller.onBack,
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // ── Close Button ─────────────────────────────────────
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: GestureDetector(
+                      onTap: controller.onBack,
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ── Right: Controls Panel ──────────────────────────────────
+            Expanded(
+              flex: 1,
+              child: Container(
+                color: Colors.black87,
+                padding: const EdgeInsets.all(20),
+                child: Obx(() {
+                  final images = controller.selectedImages;
+                  final preview = controller.previewImage.value;
+                  final hasImages = controller.hasImages;
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // ── Title ──────────────────────────────────────
+                      Column(
+                        children: [
+                          Text(
+                            "Add Photos",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "${images.length}/${CaptureImageController.maxImages}",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // ── Thumbnail Column (4 slots) ────────────────────
+                      Column(
+                        children: List.generate(
+                          CaptureImageController.maxImages,
+                              (index) {
+                            final File? img =
+                            index < images.length ? images[index] : null;
+                            final bool isSelected =
+                                img != null && preview?.path == img.path;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: ImageThumbnailSlot(
+                                image: img,
+                                isSelected: isSelected,
+                                onTap: () => img != null
+                                    ? controller.selectPreview(img)
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      // ── Camera Controls ───────────────────────────
+                      CameraControlsWidget(
+                        onGallery: controller.pickFromGallery,
+                        onCapture: controller.captureFromCamera,
+                        onFlip: () {},
+                      ),
+
+                      // ── Next Button ────────────────────────────────
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                        child: hasImages
+                            ? SizedBox(
+                          width: double.infinity,
+                          height: 100,
+                          child: ElevatedButton(
+                            onPressed: controller.onNext,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: Text(
+                              AppStrings.next.tr,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ),
           ],
         ),

@@ -23,7 +23,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -43,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // ── Avatar centered ──────────────────────────────────
                   Center(
                     child: Obx(
-                      () => AvatarPickerWidget(
+                          () => AvatarPickerWidget(
                         pickedImage: controller.pickedImage.value,
                         onTap: controller.pickImage,
                       ),
@@ -109,7 +112,158 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           SizedBox(height: Dimensions.h(24)),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.editProfile.tr),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(48),
+                vertical: Dimensions.h(32),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 520),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: Dimensions.h(20)),
+
+                      // ── Icon/Visual ──────────────────────────────────
+                      Center(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                          ),
+                          child: Icon(
+                            Icons.person_outline,
+                            size: 50,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(40)),
+
+                      // ── Title ────────────────────────────────────────
+                      Center(
+                        child: Text(
+                          AppStrings.editProfile.tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.blackColor,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(12)),
+
+                      // ── Subtitle ────────────────────────────────────
+                      Center(
+                        child: Text(
+                          "Update your profile information",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(40)),
+
+                      // ── Avatar centered ──────────────────────────────
+                      Center(
+                        child: Obx(
+                              () => AvatarPickerWidget(
+                            pickedImage: controller.pickedImage.value,
+                            onTap: controller.pickImage,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(40)),
+
+                      // ── Name ────────────────────────────────────────
+                      ProfileTextField(
+                        label: AppStrings.name.tr,
+                        controller: controller.nameController,
+                      ),
+
+                      SizedBox(height: Dimensions.h(20)),
+
+                      // ── Gender (tap to show bottom sheet) ────────────
+                      ProfileTextField(
+                        label: AppStrings.gender.tr,
+                        controller: controller.genderController,
+                        readOnly: true,
+                        onTap: () => _showGenderPicker(context),
+                        suffixIcon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.greyColor,
+                          size: Dimensions.w(20),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(20)),
+
+                      // ── Date of Birth ───────────────────────────────
+                      ProfileTextField(
+                        label: AppStrings.dateOfBirth.tr,
+                        controller: controller.dobController,
+                        readOnly: true,
+                        onTap: () => controller.pickDate(context),
+                        suffixIcon: Icon(
+                          Icons.calendar_today_outlined,
+                          color: AppColors.greyColor,
+                          size: Dimensions.w(18),
+                        ),
+                      ),
+
+                      SizedBox(height: Dimensions.h(40)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // ── Update Profile Button pinned bottom ──────────────────
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              Dimensions.w(48),
+              Dimensions.h(16),
+              Dimensions.w(48),
+              Dimensions.h(32),
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 520),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.updateProfile.tr,
+                    onPressed: controller.onUpdateProfile,
+                    height: Dimensions.h(100),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: Dimensions.h(20)),
         ],
       ),
     );
@@ -139,7 +293,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             SizedBox(height: Dimensions.h(16)),
             ...controller.genders.map(
-              (g) => ListTile(
+                  (g) => ListTile(
                 title: Text(
                   g,
                   style: TextStyle(
@@ -149,12 +303,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 trailing: Obx(
-                  () => controller.selectedGender.value == g
+                      () => controller.selectedGender.value == g
                       ? Icon(
-                          Icons.check_rounded,
-                          color: AppColors.primaryColor,
-                          size: Dimensions.w(20),
-                        )
+                    Icons.check_rounded,
+                    color: AppColors.primaryColor,
+                    size: Dimensions.w(20),
+                  )
                       : const SizedBox.shrink(),
                 ),
                 onTap: () {

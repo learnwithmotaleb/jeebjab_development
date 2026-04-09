@@ -101,7 +101,7 @@ Map<String, String> english = {
   AppStrings.tryAgain: "Try Again",
 
   AppStrings.information: "Information",
-  AppStrings.nameOfItemProducts: "Name of item/products",
+  AppStrings.nameOfItemProducts: "Name of products",
   AppStrings.descriptionWriteHere: "Write description here",
   AppStrings.sizeOfProduct: "Size Of Product",
   AppStrings.createPost: "Create Post",
@@ -455,8 +455,8 @@ Map<String, String> english = {
   AppStrings.selectedPhotos: "Selected Photos",
   AppStrings.myTask: "My Task",
   AppStrings.task: "Task",
-  AppStrings.activePost: "Active Post",
-  AppStrings.completedPost: "Completed Post",
+  AppStrings.activePost: "Active",
+  AppStrings.completedPost: "Complete",
 
   //====================== Become A Driver =====================
 
@@ -480,7 +480,7 @@ Map<String, String> english = {
   // ── Add these lines inside the english map ────────────────────────────────
 
   // My Post Controller
-  AppStrings.pendingPost: "Pending Post",
+  AppStrings.pendingPost: "Pending",
   AppStrings.failedToLoadPosts: "Failed to load posts. Please try again.",
 
   // Post Status Labels

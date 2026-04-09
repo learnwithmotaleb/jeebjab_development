@@ -6,6 +6,7 @@ import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
+
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
   final String email;
@@ -39,34 +40,34 @@ class ProfileHeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // ── Title row with back button ───────────────────────────────
-          // Row(
-          //   children: [
-          //     GestureDetector(
-          //       onTap: () => Get.back(),
-          //       child: const Icon(
-          //         Icons.arrow_back_ios_new_rounded,
-          //         color: AppColors.whiteColor,
-          //         size: 20,
-          //       ),
-          //     ),
-          //      Expanded(
-          //       child: Text(
-          //        AppStrings.profile.tr,
-          //         textAlign: TextAlign.center,
-          //         style: TextStyle(
-          //           color: AppColors.whiteColor,
-          //           fontSize: 18,
-          //           fontWeight: FontWeight.w700,
-          //         ),
-          //       ),
-          //     ),
-          //     const SizedBox(width: 20),
-          //   ],
-          // ),
+          SizedBox(height: Dimensions.h(10)),
+          // if(PlatformHelper.isIOS)
+          Row(
+              children: [
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: AppColors.whiteColor,
+                    size: 20,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    AppStrings.profile.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+              ],
+            ),
 
-          SizedBox(height: Dimensions.h(20)),
-
-          // ── Avatar ───────────────────────────────────────────────────
+          SizedBox(height: Dimensions.h(10)),
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -92,7 +93,6 @@ class ProfileHeaderWidget extends StatelessWidget {
               color: AppColors.whiteColor,
             ),
           ),
-
           SizedBox(height: Dimensions.h(4)),
 
           // ── Email ─────────────────────────────────────────────────────
@@ -103,6 +103,27 @@ class ProfileHeaderWidget extends StatelessWidget {
               color: AppColors.whiteColor.withOpacity(0.85),
             ),
           ),
+          SizedBox(height: Dimensions.h(4)),
+
+          // ── Rating ──────────────────────────────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ...List.generate(4, (index) => const Icon(Icons.star_rounded, size: 18, color: Color(0xFFFFA500))),
+              const Icon(Icons.star_rounded, size: 18, color: AppColors.whiteColor),
+              const SizedBox(width: 4),
+              Text(
+                "4.7",
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.whiteColor,
+                ),
+              ),
+            ],
+          ),
+
+
         ],
       ),
     );

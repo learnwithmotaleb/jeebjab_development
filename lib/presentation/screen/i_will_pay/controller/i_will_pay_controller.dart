@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 
 class IWillPayController extends GetxController {
-  final TextEditingController priceController = TextEditingController(text: '120');
+  final TextEditingController priceController = TextEditingController(text: r'$120');
   final RxInt price = 120.obs;
 
   // ── Suggested range from other users ────────────────────────────────────
@@ -13,22 +13,46 @@ class IWillPayController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    priceController.addListener(() {
-      final val = int.tryParse(priceController.text);
-      if (val != null) price.value = val;
-    });
+    priceController.addListener(_handlePriceChange);
+  }
+
+  void _handlePriceChange() {
+    String text = priceController.text;
+
+    // Extract only digits
+    String numeric = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (numeric.isEmpty) {
+      // Keep at least the dollar sign
+      if (text != r'$') {
+        priceController.value = const TextEditingValue(
+          text: r'$',
+          selection: TextSelection.collapsed(offset: 1),
+        );
+      }
+      price.value = 0;
+    } else {
+      String newText = r'$' + numeric;
+      if (text != newText) {
+        priceController.value = TextEditingValue(
+          text: newText,
+          selection: TextSelection.collapsed(offset: newText.length),
+        );
+      }
+      price.value = int.tryParse(numeric) ?? 0;
+    }
   }
 
   void increment() {
     price.value++;
-    priceController.text = price.value.toString();
+    priceController.text = r'$' + price.value.toString();
     _moveCursorToEnd();
   }
 
   void decrement() {
     if (price.value > 1) {
       price.value--;
-      priceController.text = price.value.toString();
+      priceController.text = r'$' + price.value.toString();
       _moveCursorToEnd();
     }
   }
@@ -46,8 +70,6 @@ class IWillPayController extends GetxController {
   bool get isValid => price.value > 0;
 
   void onContinue() {
-    // if (!isValid) return;
-    // // TODO: Navigate to next step with price
     Get.toNamed(RoutePath.addCard);
   }
 

@@ -26,7 +26,10 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -85,6 +88,110 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
                 onPressed: () => Get.toNamed(RoutePath.vehicleType),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      appBar: CommonAppBar(title: ''),
+      backgroundColor: AppColors.whiteColor,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Icon/Visual ──────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.business_outlined,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.selectCompany.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.enterYourInformation.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Company selector → opens bottom sheet ────────────
+                BottomSheetTextField(
+                  controller: controller.selectCompanyController,
+                  label: AppStrings.selectYourCompany.tr,
+                  items: controller.companyList, // ✅ from controller
+                ),
+
+                SizedBox(height: Dimensions.h(18)),
+
+                // ── ID field ────────────────────────────────────────
+                AppTextField(
+                  controller: controller.idController,
+                  hint: AppStrings.id.tr,
+                  keyboardType: TextInputType.text,
+                  validator: AppValidators.required(),
+                  onTap: () {},
+                ),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Continue button ──────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.continueButton.tr,
+                    height: Dimensions.h(100),
+                    borderRadius: Dimensions.r(16),
+                    onPressed: () => Get.toNamed(RoutePath.vehicleType),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
           ),
         ),
       ),

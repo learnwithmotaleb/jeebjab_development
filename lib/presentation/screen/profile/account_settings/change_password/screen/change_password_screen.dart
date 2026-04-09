@@ -25,12 +25,15 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   ChangePasswordController controller = Get.put(ChangePasswordController());
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
+
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
@@ -44,50 +47,156 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                   SizedBox(height: Dimensions.h(20),),
 
-
                   AppTextField(
                     controller: controller.previousPassword,
                     hint: AppStrings.previousPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
-
-
                   ),
                   SizedBox(height: Dimensions.h(12),),
-                  AppTextField(controller: controller.newPassword,
-                    hint:AppStrings.newPassword.tr,
+
+                  AppTextField(
+                    controller: controller.newPassword,
+                    hint: AppStrings.newPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
                   ),
                   SizedBox(height: Dimensions.h(12),),
 
-                  AppTextField(controller: controller.confirmPassword,
-                    hint:AppStrings.oldPassword.tr,
+                  AppTextField(
+                    controller: controller.confirmPassword,
+                    hint: AppStrings.oldPassword.tr,
                     hintTextStyle: AppTextStyles.hint,
-
                   ),
 
                   SizedBox(height: Dimensions.h(50),),
 
                   AppButton(
-                      label: AppStrings.changePassword.tr,
-                      onPressed: (){
-
-                        ShowAppSnackBar.info(AppStrings.passwordChangeSuccessful.tr,title:AppStrings.appName.tr);
-                      },
+                    label: AppStrings.changePassword.tr,
+                    onPressed: () {
+                      ShowAppSnackBar.info(
+                        AppStrings.passwordChangeSuccessful.tr,
+                        title: AppStrings.appName.tr,
+                      );
+                    },
                     height: 65,
-
                   )
-
-
-
-
-
-
-
-
                 ]
             ),
           ),
         )
+    );
+  }
+
+  /// Tablet Layout
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.changePassword.tr),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Icon/Visual ──────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.lock_reset_outlined,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.changePassword.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Center(
+                  child: Text(
+                    "Secure your account with a strong password",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Previous Password Field ────────────────────────
+                AppTextField(
+                  controller: controller.previousPassword,
+                  hint: AppStrings.previousPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // ── New Password Field ─────────────────────────────
+                AppTextField(
+                  controller: controller.newPassword,
+                  hint: AppStrings.newPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // ── Confirm Password Field ─────────────────────────
+                AppTextField(
+                  controller: controller.confirmPassword,
+                  hint: AppStrings.oldPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                ),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Change Password Button ─────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.changePassword.tr,
+                    height: Dimensions.h(100),
+                    onPressed: () {
+                      ShowAppSnackBar.info(
+                        AppStrings.passwordChangeSuccessful.tr,
+                        title: AppStrings.appName.tr,
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

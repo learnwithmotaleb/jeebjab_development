@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../model/my_post_model.dart';
 
@@ -14,13 +15,15 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(isTablet ? 20 : 16),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -30,31 +33,32 @@ class PostCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(isTablet ? 20 : 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // ── Left: Image ──────────────────────────────────────────────
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(isTablet ? 16 : 12),
                 child: Image.network(
                   post.imageUrl,
-                  width: 90,
-                  height: 90,
+                  width: isTablet ? 110 : 90,
+                  height: isTablet ? 110 : 90,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
-                    width: 90,
-                    height: 90,
+                    width: isTablet ? 110 : 90,
+                    height: isTablet ? 110 : 90,
                     color: const Color(0xFFF5F6FA),
-                    child: const Icon(
+                    child: Icon(
                       Icons.image_not_supported_rounded,
                       color: AppColors.greyColor,
+                      size: isTablet ? 40 : 24,
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(width: 12),
+              SizedBox(width: isTablet ? 20 : 12),
 
               // ── Middle: Info ─────────────────────────────────────────────
               Expanded(
@@ -64,33 +68,33 @@ class PostCard extends StatelessWidget {
                   children: [
                     Text(
                       post.title,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: isTablet ? 18 : 16,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1A1A2E),
+                        color: const Color(0xFF1A1A2E),
+                      ),
+                    ),
+                    SizedBox(height: isTablet ? 8 : 4),
+                    Text(
+                      post.category,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 13,
+                        color: AppColors.greyColor,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      post.category,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.greyColor,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
                       post.date,
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 13,
                         color: AppColors.greyColor,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       post.size,
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 13,
                         color: AppColors.greyColor,
                       ),
                     ),
@@ -104,9 +108,9 @@ class PostCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _StatusBadge(status: post.status),
-                  const SizedBox(height: 16),
-                  _PriceText(price: post.price),
+                  _StatusBadge(status: post.status, isTablet: isTablet),
+                  SizedBox(height: isTablet ? 24 : 16),
+                  _PriceText(price: post.price, isTablet: isTablet),
                 ],
               ),
             ],
@@ -120,8 +124,9 @@ class PostCard extends StatelessWidget {
 // ── Status Badge ──────────────────────────────────────────────────────────────
 class _StatusBadge extends StatelessWidget {
   final PostStatus status;
+  final bool isTablet;
 
-  const _StatusBadge({required this.status});
+  const _StatusBadge({required this.status, required this.isTablet});
 
   Color get _color {
     switch (status) {
@@ -148,16 +153,19 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 16 : 10,
+        vertical: isTablet ? 8 : 5,
+      ),
       decoration: BoxDecoration(
         color: _color,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         _label,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.whiteColor,
-          fontSize: 11,
+          fontSize: isTablet ? 12 : 11,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -168,28 +176,29 @@ class _StatusBadge extends StatelessWidget {
 // ── Price Text ────────────────────────────────────────────────────────────────
 class _PriceText extends StatelessWidget {
   final double price;
+  final bool isTablet;
 
-  const _PriceText({required this.price});
+  const _PriceText({required this.price, required this.isTablet});
 
   @override
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
         children: [
-          const TextSpan(
+          TextSpan(
             text: 'SAR ',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: isTablet ? 14 : 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A2E),
+              color: const Color(0xFF1A1A2E),
             ),
           ),
           TextSpan(
             text: price.toInt().toString(),
-            style: const TextStyle(
-              fontSize: 22,
+            style: TextStyle(
+              fontSize: isTablet ? 24 : 22,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF1A1A2E),
+              color: const Color(0xFF1A1A2E),
             ),
           ),
         ],

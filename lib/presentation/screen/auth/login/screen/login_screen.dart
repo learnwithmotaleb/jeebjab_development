@@ -13,8 +13,9 @@ import 'package:jeebjab/widget/app_text_field.dart';
 import 'package:jeebjab/widget/app_validation.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
 
+import '../../../../../core/platform/platform_helper.dart';
 import '../../../../../core/responsive_layout/responsive_layout.dart';
-import '../../../../../widget/app_platform_helper.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return ResponsiveLayout(
       mobile: _buildMobile(),
       tablet: _buildTablet(),
-      desktop: _buildDesktop(),
     );
   }
 
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(AppImages.appLogo,width: Dimensions.w(100), height: Dimensions.h(100),),
+                    Image.asset(AppImages.appLogo,width: 100, height:100,),
 
                     SizedBox(height: Dimensions.h(30)),
                     Align(
@@ -253,10 +253,170 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildTablet() {
-    return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 24),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20),
+
+                  // Logo
+                  Center(
+                    child: Image.asset(
+                      AppImages.appLogo,
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                  SizedBox(height: 32),
+
+                  // Title
+                  Center(
+                    child: Text(
+                      AppStrings.signIn.tr,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+
+                  // Subtitle
+                  Center(
+                    child: Text(
+                      AppStrings.getStarted.tr,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40),
+
+                  // Email Field
+                  AppTextField(
+                    controller: controller.emailController,
+                    focusNode: controller.emailFocus,
+                    hint: AppStrings.enterYourEmailAddress.tr,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: AppValidators.email(),
+                    onSubmitted: () {
+                      controller.submit();
+                    },
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 20),
+
+                  // Password Field
+                  AppTextField(
+                    controller: controller.passwordController,
+                    focusNode: controller.passwordFocus,
+                    hint: AppStrings.enterYourPassword.tr,
+                    obscure: true,
+                    prefixIcon: Icon(Icons.lock, color: AppColors.primaryColor),
+                    validator: AppValidators.password(min: 6),
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 28),
+
+                  // Sign In Button
+                  AppButton(
+                    label: AppStrings.signIn.tr,
+                    height: Dimensions.h(100),
+                    borderRadius: Dimensions.r(16),
+                    onPressed: () {
+                      controller.submit();
+                    },
+                  ),
+                  SizedBox(height: 16),
+
+                  // Forgot Password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RoutePath.forget);
+                      },
+                      child: Text(
+                        AppStrings.forgotPassword.tr,
+                        style: AppTextStyles.label.copyWith(
+                          fontSize: 18,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 28),
+
+                  // OR Text
+                  Center(child: Text(AppStrings.or.tr, style: AppTextStyles.body.copyWith(fontSize: 18))),
+                  SizedBox(height: 20),
+
+                  // Social Login Button
+                  GestureDetector(
+                    onTap: () {
+                      if (PlatformHelper.isIOS) {
+                        AppAlerts.confirm(
+                          title: "Jeebjab",
+                          message: "Apple login clicked",
+                          onConfirm: () {
+                            print("Apple Login");
+                          },
+                        );
+                      } else if (PlatformHelper.isAndroid) {
+                        AppAlerts.confirm(
+                          title: "Jeebjab",
+                          message: "Google login clicked",
+                          onConfirm: () {
+                            print("Google Login");
+                          },
+                        );
+                      }
+                    },
+                    child: _socialLoginButton(
+                      PlatformHelper.isIOS ? AppImages.ios : AppImages.google,
+                    ),
+                  ),
+                  SizedBox(height: 28),
+
+                  // Create Account Section
+                  Center(
+                    child: Text(
+                      AppStrings.dontHaveAnAccount.tr,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 18,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+
+                  // Create Account Button
+                  AppButton(
+                    label: AppStrings.createNewAccount.tr,
+                    backgroundColor: AppColors.whiteColor,
+                    textColor: AppColors.primaryColor,
+                    height: Dimensions.h(100),
+                    borderSideColor: AppColors.primaryColor,
+                    borderRadius: Dimensions.r(16),
+                    onPressed: () {
+                      Get.toNamed(RoutePath.signup);
+                    },
+                  ),
+                  SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildDesktop() {
-    return Scaffold(body: Center(child: Text("Hello, Desktop Login")));
-  }
 }

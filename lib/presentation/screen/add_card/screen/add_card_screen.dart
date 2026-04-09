@@ -23,7 +23,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -33,13 +36,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
         title: AppStrings.addCard.tr,
         backgroundColor: AppColors.whiteColor,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: Dimensions.h(16)),
-
             Text(
               AppStrings.paymentViaCard.tr,
               style: TextStyle(
@@ -48,9 +50,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 color: AppColors.labelColor,
               ),
             ),
-
             SizedBox(height: Dimensions.h(4)),
-
             Row(
               children: [
                 Icon(
@@ -68,30 +68,101 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 ),
               ],
             ),
-
             SizedBox(height: Dimensions.h(28)),
-
             CardNumberField(controller: controller.cardNumberController),
-
             SizedBox(height: Dimensions.h(16)),
-
             ExpiryCvvRow(
               expireController: controller.expireController,
               cvvController: controller.cvvController,
             ),
-
-            SizedBox(height: Dimensions.h(28)),
-
+            SizedBox(height: Dimensions.h(40)),
             Obx(
-                  () => AppButton(
+              () => AppButton(
                 label: AppStrings.addCard.tr,
-                height: 65,
+                height: 60,
                 onPressed: controller.isValid.value
                     ? controller.onAddCard
                     : controller.onAddCard,
               ),
             ),
+            SizedBox(height: Dimensions.h(30)),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(
+        title: AppStrings.addCard.tr,
+        backgroundColor: AppColors.whiteColor,
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: Dimensions.w(48),
+              vertical: Dimensions.h(40),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                const Text(
+                  "Card Details",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1A1A2E),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.lock_outline_rounded,
+                      size: 18,
+                      color: AppColors.greyColor,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      AppStrings.yourDetailsAreSafe.tr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 48),
+
+                CardNumberField(controller: controller.cardNumberController),
+
+                SizedBox(height: Dimensions.h(24)),
+
+                ExpiryCvvRow(
+                  expireController: controller.expireController,
+                  cvvController: controller.cvvController,
+                ),
+
+                const SizedBox(height: 60),
+
+                Obx(
+                  () => AppButton(
+                    label: AppStrings.addCard.tr,
+                    height: Dimensions.h(100),
+                    onPressed: controller.isValid.value
+                        ? controller.onAddCard
+                        : controller.onAddCard,
+                  ),
+                ),
+                SizedBox(height: Dimensions.h(40)),
+              ],
+            ),
+          ),
         ),
       ),
     );

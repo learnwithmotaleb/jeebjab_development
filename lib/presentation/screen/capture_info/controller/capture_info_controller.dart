@@ -57,6 +57,7 @@ class CaptureInfoController extends GetxController {
     // ── Load images passed from CaptureImageScreen ────────────────────────
     if (Get.arguments != null && Get.arguments['images'] != null) {
       capturedImages.value = List<File>.from(Get.arguments['images']);
+      print('📸 CaptureInfoController: Loaded ${capturedImages.length} images');
     }
   }
 
@@ -64,6 +65,13 @@ class CaptureInfoController extends GetxController {
 
   bool get isValid =>
       nameController.text.trim().isNotEmpty && selectedSize.value.isNotEmpty;
+
+  // ── Remove image from gallery ──────────────────────────────────────────
+  void removeImage(File image) {
+    capturedImages.remove(image);
+    capturedImages.refresh(); // Trigger UI update
+    print('🗑️ Image removed. Remaining: ${capturedImages.length}');
+  }
 
   void onContinue() {
     // if (!isValid) return;

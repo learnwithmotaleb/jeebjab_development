@@ -14,12 +14,14 @@ class BecomeDriverBannerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return Container(
       width: double.infinity,
-      height: 280,
-      padding: EdgeInsets.all(Dimensions.w(24)),
+      height: isTablet ? 350 : 280,
+      padding: EdgeInsets.all(isTablet ? 48 : Dimensions.w(24)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+        borderRadius: BorderRadius.circular(isTablet ? 30 : Dimensions.r(20)),
         gradient: const LinearGradient(
           colors: [
             Color(0xFFF3F3F3), // light mint
@@ -36,12 +38,12 @@ class BecomeDriverBannerCard extends StatelessWidget {
 
           // ── Headline ──────────────────────────────────────────────────
           Text(
-          AppStrings.startDrivingStartEarning.tr,
+            AppStrings.startDrivingStartEarning.tr,
             style: TextStyle(
-              fontSize: Dimensions.f(20),
-              fontWeight: FontWeight.w700,
+              fontSize: isTablet ? 32 : Dimensions.f(20),
+              fontWeight: FontWeight.w800,
               color: Colors.white,
-              height: 1.4,
+              height: 1.3,
             ),
           ),
 
@@ -51,17 +53,27 @@ class BecomeDriverBannerCard extends StatelessWidget {
           GestureDetector(
             onTap: onBecomeDriver,
             child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: Dimensions.h(16)),
+              width: isTablet ? 300 : double.infinity,
+              height: isTablet ? 100 : 65,
+              padding: EdgeInsets.symmetric(
+                vertical: isTablet ? 20 : Dimensions.h(16),
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(Dimensions.r(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               alignment: Alignment.center,
               child: Text(
-               AppStrings.becomeADriver.tr,
+                AppStrings.becomeADriver.tr,
                 style: TextStyle(
-                  fontSize: Dimensions.f(15),
+                  fontSize: isTablet ? 18 : Dimensions.f(15),
                   fontWeight: FontWeight.w700,
                   color: AppColors.primaryColor,
                 ),

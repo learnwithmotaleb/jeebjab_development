@@ -29,6 +29,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
 
@@ -91,6 +92,112 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 height: Dimensions.h(50),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: ""),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(24),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // Icon/Visual
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: Icon(
+                        Icons.lock_reset_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // Title
+                  Center(
+                    child: Text(
+                      AppStrings.resetPassword.tr,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.h(12)),
+
+                  // Subtitle
+                  Center(
+                    child: Text(
+                      AppStrings.createYourNewPassword.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // New Password Field
+                  AppTextField(
+                    controller: controller.newPasswordController,
+                    focusNode: controller.newPasswordFocus,
+                    obscure: true,
+                    validator: AppValidators.required(),
+                    hint: AppStrings.enterYourNewPassword.tr,
+                  ),
+
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // Confirm Password Field
+                  AppTextField(
+                    controller: controller.confirmPasswordController,
+                    focusNode: controller.confirmPasswordFocus,
+                    obscure: true,
+                    validator: AppValidators.confirmPassword(
+                      passwordSupplier: () =>
+                      controller.newPasswordController.text,
+                    ),
+                    hint: AppStrings.confirmYourNewPassword.tr,
+                  ),
+
+                  SizedBox(height: Dimensions.h(60)),
+
+                  // Continue Button
+                  AppButton(
+                    label: AppStrings.continueButton.tr,
+                    onPressed: controller.resetPassword,
+                    height: Dimensions.h(100),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
+            ),
           ),
         ),
       ),

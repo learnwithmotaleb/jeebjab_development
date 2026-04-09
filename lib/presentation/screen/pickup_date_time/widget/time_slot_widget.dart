@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class TimeSlotsWidget extends StatelessWidget {
@@ -19,21 +20,23 @@ class TimeSlotsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           dayLabel,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: isTablet ? 18 : 14,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF1A1A2E),
+            color: const Color(0xFF1A1A2E),
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: isTablet ? 16 : 10),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: isTablet ? 12 : 8,
+          runSpacing: isTablet ? 12 : 8,
           children: slots.map((slot) {
             final key = '${dayKey}_$slot';
             final isSelected = selectedSlotKey == key;
@@ -41,18 +44,23 @@ class TimeSlotsWidget extends StatelessWidget {
               onTap: () => onSlotTap(dayKey, slot),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: isTablet ? 20 : 12, 
+                    vertical: isTablet ? 12 : 8
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primaryColor
                       : const Color(0xFFF2F2F2),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(isTablet ? 30 : 20),
+                  border: isTablet && isSelected
+                      ? Border.all(color: Colors.white, width: 2)
+                      : null,
                 ),
                 child: Text(
                   slot,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: isTablet ? 15 : 12,
                     fontWeight: FontWeight.w600,
                     color: isSelected ? Colors.white : const Color(0xFF555555),
                   ),

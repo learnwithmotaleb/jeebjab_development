@@ -1,189 +1,132 @@
+// lib/core/network/api_url.dart
+
 class ApiUrl {
-  //static const mainDomain = "https://7bn5s1dw-3333.inc1.devtunnels.ms";
-  //static const mainDomain = "https://6dxv0gtk-3333.inc1.devtunnels.ms";
-  //static const mainDomain = "https://6dxv0gtk-3333.inc1.devtunnels.ms";
-  //static const mainDomain = "https://health-vault-mobile-application.vercel.app";
-  static const mainDomain = "https://8r91dfjh-3333.inc1.devtunnels.ms";
-  // static const mainDomain = "https://health-vault-mobile-application.vercel.app";
-  static final baseUrl = '$mainDomain/api/v1';
+  ApiUrl._();
 
+  // ── Domain ───────────────────────────────────────────────
+  // 🔧 Switch domain here only — everything else updates automatically
+  static const String _mainDomain = "https://your-jeebjab-api.com";
+  static final String baseUrl = '$_mainDomain/api/v1';
 
+  /// Convert relative image path → full URL
+  /// e.g. "uploads\image.png" → "https://domain.com/uploads/image.png"
   static String buildImageUrl(String relativePath) {
-    // Replace backslashes with forward slashes
     final path = relativePath.replaceAll(r'\', '/');
-    return "$mainDomain/$path";
+    return '$_mainDomain/$path';
   }
 
-
-
-  /// ============================ Auth ==============================
-  static String userLogin = "$baseUrl/auth/login";
-  static String userRegister = "$baseUrl/user/register";
-  static String changePassword = "$baseUrl/auth/change-password";
-  static String verifyEmailOtp = "$baseUrl/auth/verify-email-otp";
-  static String forgetPassword = "$baseUrl/auth/forgot-password";
-  static String verifyOtp = "$baseUrl/auth/verify-otp";
-  static String resetPassword = "$baseUrl/auth/reset-password";
-
-  static const refreshToken = "/auth/refresh-token";
-  static const getMeProvider = "/user/getMe";
-  static const getMeAdmin = "/auth/admin/me";
-
-  //===========================user profile=========================
-  static String updateMyProfile = "$baseUrl/user/updateMe";
-  static String getUserProfile = "$baseUrl/user/getMeNormalUser";
-
-
-
-  ///===============Reminder=======================
-  static String createReminder = "$baseUrl/reminder/create-reminder";
-  static String myReminder = "$baseUrl/reminder/my-reminders";
-  static String updateReminder(String id) => "$baseUrl/reminder/update-reminder/$id";
-  static String deleteReminder(String id) => "$baseUrl/reminder/delete-reminder/$id";
-
-
-
-  //=========================Provider Type==================
-  static String providerType = "$baseUrl/provider-types";
-  static String adminCreateService(String label) => "$baseUrl/service/admin-service/$label";
-
-  //===========================All Provider =================
-  static String getAllProvider = "$baseUrl/provider/all-providers";
-  static String getProviderById(String providerTypeID) => "$baseUrl/provider/all-providers?providerTypeId=$providerTypeID";
-  static String getSingleProviderById(String profileID) => "$baseUrl/provider/$profileID";
-
-
-
-
-
-
-
-
-  //=========================Appointments==================
-  static String myAppointment = "$baseUrl/appointment/my-appointments";
-  static String createAppointment = "$baseUrl/appointment/create-appointment";
-
-
-
-  //========================Insurance===================
-  static String getInsuranceSelf = "$baseUrl/insurance/SELF";
-  static String getInsuranceFamily = "$baseUrl/insurance/FAMILY";
-  static String postInsurance = "$baseUrl/insurance/create";
-  static String updateInsuranceMySelf(String id) => "$baseUrl/insurance/$id";
-  static String updateInsuranceFamily(String id) => "$baseUrl/insurance/$id";
-  static String deleteInsurance(String id) => "$baseUrl/insurance/$id";
-
-
-  //========================HealthLog===================
-  static String getHealthLogSelf = "$baseUrl/healthLog/SELF";
-  static String getHealthLogFamily = "$baseUrl/healthLog/FAMILY";
-  static String postHealthLog = "$baseUrl/healthLog/create";
-  static String updateHealthLogMySelf(String id) => "$baseUrl/healthLog/$id";
-  static String updateHealthLogFamily(String id) => "$baseUrl/healthLog/$id";
-  static String deleteHealthLog(String id) => "$baseUrl/healthLog/$id";
-
-
-
-
-
-
-  //======================== Document===================
-  static String fetchDocumentSelf= "$baseUrl/medicalDocument/update-document";
-  static String fetchDocumentFamily= "$baseUrl/medicalDocument/update-document";
-
-
-  static String addDocumentSelf= "$baseUrl/medicalDocument/create-document";
-  //form-data
-  //medical_mySelf_image
-
-  static String addDocumentFamily= "$baseUrl/medicalDocument/create-document";
-  //form-data
-  //medical_family_image
-
-  static String removeDocumentSelf= "$baseUrl/medicalDocument/update-document";
-  //body
-  // {
-  //   "deleteMedical_mySelf_image": [     "uploads\\images\\medical_mySelf_image\\1769668946501-play_store_512.png",
-  //             "uploads\\images\\medical_mySelf_image\\1769669186771-play_store_512.png",
-  //             "uploads\\images\\medical_mySelf_image\\1769669208881-play_store_512.png"],
-
-
-  static String removeDocumentFamily= "$baseUrl/medicalDocument/update-document";
-  //body
-  // "deleteMedical_family_image":[          "uploads\\images\\medical_family_image\\1770437350552-verified.png",
-  //             "uploads\\images\\medical_family_image\\1770437429045-verified.png",
-  //             "uploads\\images\\medical_family_image\\1770437446490-verified.png"]
-  // }
-
-
-
-  //===========================Notification ===============================
-  static String getAllNotification =  "$baseUrl/notification/get-notifications";
-  static String removeNotification(String id) =>  "$baseUrl/notification/delete-notification/$id";
-
-
-  //===========================Favourite  ===============================
-  static String createFavorite(String id) =>  "$baseUrl/favorite/$id";
-  static String removeFavorite(String id) =>  "$baseUrl/favorite/$id";
-  static String getAllFavorite =  "$baseUrl/favorite/my-favorites";
-
-
-  //======================Terms and condition ===========================
-  static String getTermsAndCondition =  "$baseUrl/manage-Web/get-terms-conditions";
-  static String getFag =  "$baseUrl/manage-Web/get-faq";
-  static String privacyPolicy =  "$baseUrl/manage-Web/get-privacy-policy";
-
-
-
-
-  //===========================Article===============================
-  static String getAllArticle =  "$baseUrl/article";
-
-  static String getSingeArticle(String id) =>  "$baseUrl/article/$id";
-
-
-
-  //========================================Provider profile =====================
-  static String getProviderProfile =  "$baseUrl/user/getMe";
-
-
-
-  //========================================Provider profile =====================
-  static String providerAppointment =  "$baseUrl/appointment/provider-appointments";
-
-  static String providerAppointmentDetails(String id) => "$baseUrl/appointment/provider-appointments/$id";
-
-
-
-
-
-
-
-
-  //========================================Provider profile =====================
-  static String createAvailabilityDay =  "$baseUrl/availability-day/create-availability-day";
-  static String createAvailabilitySlot =  "$baseUrl/availability-slot/create-availability-slot";
-  static String getProviderAvailability(String profileId) => "$baseUrl/availability-day/provider-availability/$profileId";
-  static String deleteProviderAvailability = "$baseUrl/availability-slot/delete-availability-slot";
-
-
-
-  //======================Service=================
-  static String createService =  "$baseUrl/service/create-service";
-  static String myCreateService =  "$baseUrl/service/my-created-service";
-  static String serviceUpdate(String id) => "$baseUrl/service/update-service/$id";
-  static String serviceDelete(String id) => "$baseUrl/service/delete-service/$id";
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // ════════════════════════════════════════════════════════
+  //  AUTH
+  // ════════════════════════════════════════════════════════
+  static final String login           = '$baseUrl/auth/login';
+  static final String register        = '$baseUrl/auth/register';
+  static final String verifyEmailOtp  = '$baseUrl/auth/verify-email-otp';
+  static final String forgotPassword  = '$baseUrl/auth/forgot-password';
+  static final String verifyOtp       = '$baseUrl/auth/verify-otp';
+  static final String resetPassword   = '$baseUrl/auth/reset-password';
+  static final String changePassword  = '$baseUrl/auth/change-password';
+  static final String refreshToken    = '$baseUrl/auth/refresh-token';
+  static final String logout          = '$baseUrl/auth/logout';
+
+  // Social login
+  static final String appleLogin      = '$baseUrl/auth/apple';
+  static final String googleLogin     = '$baseUrl/auth/google';
+
+  // ════════════════════════════════════════════════════════
+  //  USER PROFILE
+  // ════════════════════════════════════════════════════════
+  static final String getMe           = '$baseUrl/user/me';
+  static final String updateProfile   = '$baseUrl/user/update-profile';
+  static final String deleteAccount   = '$baseUrl/user/delete-account';
+  static final String uploadAvatar    = '$baseUrl/user/upload-avatar';
+
+  // Saved locations (Home / Work)
+  static final String savedLocations        = '$baseUrl/user/saved-locations';
+  static String deleteSavedLocation(String id) => '$baseUrl/user/saved-locations/$id';
+
+  // ════════════════════════════════════════════════════════
+  //  DRIVER
+  // ════════════════════════════════════════════════════════
+  static final String driverRegister       = '$baseUrl/driver/register';
+  static final String driverProfile        = '$baseUrl/driver/profile';
+  static final String updateDriverProfile  = '$baseUrl/driver/update-profile';
+  static final String driverDocuments      = '$baseUrl/driver/documents';
+  static final String driverStatus         = '$baseUrl/driver/status';    // online/offline
+  static final String driverEarnings       = '$baseUrl/driver/earnings';
+  static final String driverCurrentTask    = '$baseUrl/driver/current-task';
+  static final String driverJobHistory     = '$baseUrl/driver/job-history';
+
+  // ════════════════════════════════════════════════════════
+  //  POSTS / ADS
+  // ════════════════════════════════════════════════════════
+  static final String createPost      = '$baseUrl/posts';
+  static final String getAllPosts      = '$baseUrl/posts';
+  static final String getMyPosts      = '$baseUrl/posts/my-posts';
+  static String getPostById(String id)   => '$baseUrl/posts/$id';
+  static String updatePost(String id)    => '$baseUrl/posts/$id';
+  static String deletePost(String id)    => '$baseUrl/posts/$id';
+  static String publishPost(String id)   => '$baseUrl/posts/$id/publish';
+  static String cancelPost(String id)    => '$baseUrl/posts/$id/cancel';
+
+  // Post photos
+  static String uploadPostPhotos(String postId) => '$baseUrl/posts/$postId/photos';
+
+  // ════════════════════════════════════════════════════════
+  //  ORDERS / DELIVERY
+  // ════════════════════════════════════════════════════════
+  static final String createOrder         = '$baseUrl/orders';
+  static final String getMyOrders         = '$baseUrl/orders/my-orders';
+  static String getOrderById(String id)      => '$baseUrl/orders/$id';
+  static String acceptOrder(String id)       => '$baseUrl/orders/$id/accept';
+  static String cancelOrder(String id)       => '$baseUrl/orders/$id/cancel';
+  static String updateOrderStatus(String id) => '$baseUrl/orders/$id/status';
+  static String pickupOrder(String id)       => '$baseUrl/orders/$id/pickup';
+  static String deliverOrder(String id)      => '$baseUrl/orders/$id/deliver';
+
+  // ════════════════════════════════════════════════════════
+  //  LOCATION / MAP
+  // ════════════════════════════════════════════════════════
+  static final String reverseGeocode      = '$baseUrl/location/reverse-geocode';
+  static final String searchPlaces        = '$baseUrl/location/search';
+  static final String updateDriverLocation = '$baseUrl/location/driver-location';
+  static final String getNearbyDrivers    = '$baseUrl/location/nearby-drivers';
+
+  // ════════════════════════════════════════════════════════
+  //  PAYMENT
+  // ════════════════════════════════════════════════════════
+  static final String addCard             = '$baseUrl/payment/add-card';
+  static final String getCards            = '$baseUrl/payment/cards';
+  static String deleteCard(String id)        => '$baseUrl/payment/cards/$id';
+  static final String initiatePayment     = '$baseUrl/payment/initiate';
+  static String confirmPayment(String id)    => '$baseUrl/payment/$id/confirm';
+  static final String paymentHistory      = '$baseUrl/payment/history';
+
+  // ════════════════════════════════════════════════════════
+  //  NOTIFICATIONS
+  // ════════════════════════════════════════════════════════
+  static final String getNotifications        = '$baseUrl/notifications';
+  static final String markAllRead             = '$baseUrl/notifications/read-all';
+  static String markNotificationRead(String id) => '$baseUrl/notifications/$id/read';
+  static String deleteNotification(String id)   => '$baseUrl/notifications/$id';
+  static final String registerFcmToken        = '$baseUrl/notifications/fcm-token';
+
+  // ════════════════════════════════════════════════════════
+  //  REVIEWS & RATINGS
+  // ════════════════════════════════════════════════════════
+  static final String createReview        = '$baseUrl/reviews';
+  static String getUserReviews(String userId) => '$baseUrl/reviews/user/$userId';
+  static String getDriverReviews(String driverId) => '$baseUrl/reviews/driver/$driverId';
+
+  // ════════════════════════════════════════════════════════
+  //  SUPPORT & CONTACT
+  // ════════════════════════════════════════════════════════
+  static final String contactUs           = '$baseUrl/support/contact';
+  static final String getFaqs             = '$baseUrl/support/faqs';
+  static final String reportAd            = '$baseUrl/support/report';
+
+  // ════════════════════════════════════════════════════════
+  //  PROMO / CAMPAIGN
+  // ════════════════════════════════════════════════════════
+  static final String validateCoupon      = '$baseUrl/promo/validate';
+  static final String getActivePromos     = '$baseUrl/promo/active';
 }

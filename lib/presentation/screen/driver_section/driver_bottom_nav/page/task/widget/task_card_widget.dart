@@ -100,13 +100,13 @@ class TaskCard extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.person_outline_rounded,
-                  size: Dimensions.w(15), color: AppColors.greyColor),
+                  size: Dimensions.w(15), color: AppColors.blackColor),
               SizedBox(width: Dimensions.w(6)),
               Text(
                 item.subtitle,
                 style: TextStyle(
                   fontSize: Dimensions.f(13),
-                  color: AppColors.greyColor,
+                  color: AppColors.blackColor,
                 ),
               ),
             ],
@@ -118,14 +118,14 @@ class TaskCard extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.location_on_outlined,
-                  size: Dimensions.w(15), color: AppColors.greyColor),
+                  size: Dimensions.w(15), color: AppColors.blackColor),
               SizedBox(width: Dimensions.w(6)),
               Expanded(
                 child: Text(
                   item.address,
                   style: TextStyle(
                     fontSize: Dimensions.f(13),
-                    color: AppColors.greyColor,
+                    color: AppColors.blackColor,
                   ),
                 ),
               ),

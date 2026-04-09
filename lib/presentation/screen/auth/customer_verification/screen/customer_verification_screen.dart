@@ -38,6 +38,7 @@ class _CustomerVerificationScreenState
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
 
@@ -113,6 +114,121 @@ class _CustomerVerificationScreenState
 
             SizedBox(height: Dimensions.h(20)),
           ],
+        ),
+      ),
+    );
+  }
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // Illustration or Icon
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.mail_outline,
+                      size: 60,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+
+                  // Title
+                  Text(
+                    AppStrings.enterSixDigitCode.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(16)),
+
+                  // Subtitle
+                  Text(
+                    AppStrings.enterTheCodeSentToMail.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // PIN Code Input
+                  PinCodeTextField(
+                    appContext: context,
+                    length: 6,
+                    controller: controller.otpController,
+                    keyboardType: TextInputType.number,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                      fieldHeight: Dimensions.h(60),
+                      fieldWidth: Dimensions.w(60),
+                      borderWidth: 2,
+                      activeColor: AppColors.primaryColor,
+                      selectedColor: AppColors.primaryColor,
+                      inactiveColor: AppColors.greyColor,
+                      activeFillColor: AppColors.primaryColor.withOpacity(0.05),
+                    ),
+                    onCompleted: (v) => print("OTP Completed $v"),
+                    beforeTextPaste: (_) => true,
+                    textStyle: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(48)),
+
+                  // Continue Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      label: AppStrings.continueButton.tr,
+                      onPressed: () {
+                        controller.emailVerifyProcess();
+                      },
+                      height: Dimensions.h(100),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(24)),
+
+                  // Timer Widget with Resend
+                  Center(
+                    child: TimerWidget(
+                      onResendCode: controller.resendOtpProcess,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

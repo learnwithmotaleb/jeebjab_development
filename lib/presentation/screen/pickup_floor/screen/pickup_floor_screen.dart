@@ -23,7 +23,10 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -111,13 +114,141 @@ class _PickupFloorScreenState extends State<PickupFloorScreen> {
               Dimensions.h(24),
             ),
             child: AppButton(
-              height: 65,
+              height: 60,
               label: AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
             ),
           ),
-          SizedBox(height: Dimensions.h(24)),
+          SizedBox(height: Dimensions.h(30)),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
+      appBar: CommonAppBar(title: AppStrings.pickupFloorTitle.tr),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              // ── Scrollable Content ──────────────────────────────────────
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(48),
+                    vertical: Dimensions.h(40),
+                  ),
+                  child: Obx(() => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+
+                      Text(
+                        "Floor & Access Details",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blackColor,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+
+                      // ── Floor Field ─────────────────────────────────
+                      InlineLabelField(
+                        label: AppStrings.floorLabel.tr,
+                        controller: controller.floorController,
+                        hint: AppStrings.floorHint.tr,
+                        keyboardType: TextInputType.number,
+                      ),
+
+                      SizedBox(height: Dimensions.h(16)),
+
+                      // ── Door Code Field ─────────────────────────────
+                      InlineLabelField(
+                        label: AppStrings.doorCodeLabel.tr,
+                        controller: controller.doorCodeController,
+                        hint: AppStrings.doorCodeHint.tr,
+                        keyboardType: TextInputType.text,
+                      ),
+
+                      SizedBox(height: Dimensions.h(16)),
+
+                      // ── Fits In Elevator toggle ─────────────────────
+                      ToggleOptionRow(
+                        label: AppStrings.fitsInElevator.tr,
+                        isSelected: controller.fitsInElevator.value,
+                        onTap: controller.toggleElevator,
+                      ),
+
+                      SizedBox(height: Dimensions.h(20)),
+
+                      // ── Other Info Header ───────────────────────────
+                      Text(
+                        AppStrings.additional.tr,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1A1A2E),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // ── Other Info TextArea ─────────────────────────
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFE8E8E8)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: controller.otherInfoController,
+                          maxLines: 6,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF1A1A2E),
+                          ),
+                          decoration: InputDecoration(
+                            hintText: AppStrings.otherInfoHint.tr,
+                            hintStyle: const TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFFAAAAAA),
+                            ),
+                            contentPadding: const EdgeInsets.all(20),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
+              ),
+
+              // ── Continue Button pinned bottom ───────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(48),
+                  vertical: Dimensions.h(40),
+                ),
+                child: AppButton(
+                  label: AppStrings.continueButton.tr,
+                  height: Dimensions.h(100),
+                  onPressed: controller.onContinue,
+                ),
+              ),
+              SizedBox(height: Dimensions.h(20)),
+            ],
+          ),
+        ),
       ),
     );
   }

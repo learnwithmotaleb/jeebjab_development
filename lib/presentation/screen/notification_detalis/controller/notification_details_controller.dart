@@ -24,7 +24,7 @@ class NotificationDetailsController extends GetxController {
   RxDouble driverRating = 4.5.obs;
   RxBool showAcceptButton = true.obs;
 
-  // ── Carousel Images ───────────────────────────────────────────────────────
+  //── Carousel Images ───────────────────────────────────────────────────────
   // RxList<String> images = <String>[
   //   'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600',
   //   'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600',

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
+import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class RecentAddressCard extends StatelessWidget {
   final String address;
@@ -14,34 +16,41 @@ class RecentAddressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(
+            horizontal: 16, 
+            vertical: isTablet ? 18 : 14
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(isTablet ? 12 : 10),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF00C9A7)
+                ? AppColors.primaryColor
                 : const Color(0xFFE8E8E8),
-            width: isSelected ? 1.5 : 1,
+            width: isSelected ? (isTablet ? 2 : 1.5) : 1,
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.03),
-              blurRadius: 6,
+              blurRadius: isTablet ? 8 : 6,
               offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Text(
           address,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: isTablet ? 16 : 14,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF1A1A2E),
+            color: const Color(0xFF1A1A2E),
+            height: 1.4,
           ),
         ),
       ),

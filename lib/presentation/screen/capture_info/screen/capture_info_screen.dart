@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
@@ -9,7 +10,6 @@ import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
-import '../../capture_image/widget/capture_image_preview.dart';
 import '../controller/capture_info_controller.dart';
 import '../widget/restricted_items_widget.dart';
 import '../widget/size_card_widget.dart';
@@ -26,7 +26,10 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -43,7 +46,7 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                 children: [
                   const SizedBox(height: 8),
 
-                  // ── Name Field ───────────────────────────────────────
+                  // ── Form Fields ──────────────────────────────────────────
                   AppTextField(
                     controller: controller.nameController,
                     hint: AppStrings.nameOfItemProducts.tr,
@@ -53,7 +56,6 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
                   const SizedBox(height: 12),
 
-                  // ── Description Field ────────────────────────────────
                   AppTextField(
                     controller: controller.descriptionController,
                     hintTextStyle: AppTextStyles.hint,
@@ -61,9 +63,9 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                     maxLines: 3,
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: Dimensions.h(32)),
 
-                  // ── Size Section ─────────────────────────────────────
+                  // ── Size Section ───────────────────────────────────────
                   Center(
                     child: Text(
                       AppStrings.sizeOfProduct.tr,
@@ -77,9 +79,9 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
                   const SizedBox(height: 14),
 
-                  // ── Size Cards Grid ──────────────────────────────────
+                  // ── Size Cards Grid ────────────────────────────────────
                   Obx(
-                        () => Row(
+                    () => Row(
                       children: controller.sizes.map((size) {
                         final isSelected =
                             controller.selectedSize.value == size.label;
@@ -89,6 +91,9 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                             child: SizeCardWidget(
                               size: size,
                               isSelected: isSelected,
+                              productImage: controller.capturedImages.isNotEmpty
+                                  ? controller.capturedImages.first
+                                  : null,
                               onTap: () => controller.selectSize(size.label),
                             ),
                           ),
@@ -114,16 +119,129 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
           // ── Continue Button (pinned bottom) ──────────────────────────
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: AppButton(
               height: 60,
               label: AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
             ),
           ),
-          SizedBox(height: Dimensions.h(30)),
+          SizedBox(height: Dimensions.h(40)),
         ],
       ),
     );
   }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.information.tr),
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(24),
+                vertical: Dimensions.h(40),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Title ──────────────────────────────────────────────
+                  Text(
+                    "Product Information",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.h(32)),
+
+                  // ── Form Fields ────────────────────────────────────────
+                  AppTextField(
+                    controller: controller.nameController,
+                    hint: AppStrings.nameOfItemProducts.tr,
+                    hintTextStyle: AppTextStyles.hint,
+                    maxLines: 1,
+                  ),
+
+                  SizedBox(height: Dimensions.h(16)),
+
+                  AppTextField(
+                    controller: controller.descriptionController,
+                    hintTextStyle: AppTextStyles.hint,
+                    hint: AppStrings.descriptionWriteHere.tr,
+                    maxLines: 4,
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // ── Size Section ───────────────────────────────────────
+                  Text(
+                    AppStrings.sizeOfProduct.tr,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1A1A2E),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // ── Size Cards Grid ────────────────────────────────────
+                  Obx(
+                    () => Row(
+                      children: controller.sizes.map((size) {
+                        final isSelected =
+                            controller.selectedSize.value == size.label;
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Dimensions.w(8)),
+                            child: SizeCardWidget(
+                              size: size,
+                              isSelected: isSelected,
+                              productImage: controller.capturedImages.isNotEmpty
+                                  ? controller.capturedImages.first
+                                  : null,
+                              onTap: () => controller.selectSize(size.label),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(48)),
+
+                  // ── Restricted Items ───────────────────────────────────
+                  RestrictedItemsWidget(
+                    items: controller.restrictedItems,
+                  ),
+
+                  SizedBox(height: Dimensions.h(48)),
+
+                  // ── Continue Button ────────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      height: Dimensions.h(100),
+                      label: AppStrings.continueButton.tr,
+                      onPressed: controller.onContinue,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
 }

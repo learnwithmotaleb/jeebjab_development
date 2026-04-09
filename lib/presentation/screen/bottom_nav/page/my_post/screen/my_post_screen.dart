@@ -7,6 +7,7 @@ import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/controller/m
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../model/my_post_model.dart';
 import '../widget/my_post_card.dart';
@@ -23,7 +24,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet()
+    );
   }
 
   Widget _buildMobile() {
@@ -72,6 +76,79 @@ class _MyPostScreenState extends State<MyPostScreen> {
     );
   }
 
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
+      appBar: CommonAppBar(
+        title: AppStrings.myPost.tr,
+        showBack: false,
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1000),
+          child: Column(
+            children: [
+              // ── Centered Tab Bar ──────────────────────────────────────────
+              // ── Centered Tab Bar (Optimized for Tablet) ───────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: Dimensions.h(24)),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    child: _buildTabBar(),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              // ── Posts Grid ────────────────────────────────────────────────
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
+                      ),
+                    );
+                  }
+
+                  if (controller.errorMessage.value.isNotEmpty) {
+                    return _buildErrorState();
+                  }
+
+                  final posts = controller.filteredPosts;
+                  if (posts.isEmpty) return _buildEmptyState();
+
+                  return RefreshIndicator(
+                    color: AppColors.primaryColor,
+                    onRefresh: controller.refreshPosts,
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(24),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.6,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                      ),
+                      itemCount: posts.length,
+                      itemBuilder: (context, index) {
+                        return PostCard(
+                          post: posts[index],
+                          onTap: () => _handleCardTap(posts[index]),
+                        );
+                      },
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _handleCardTap(PostModel post) {
     Get.toNamed(
       RoutePath.notificationDetails,
@@ -80,9 +157,26 @@ class _MyPostScreenState extends State<MyPostScreen> {
   }
 
   Widget _buildTabBar() {
+    final bool isTablet = Dimensions.isTablet;
+
     return Container(
-      color: AppColors.whiteColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 12 : 10,
+        vertical: isTablet ? 10 : 8,
+      ),
+      margin: EdgeInsets.only(right: 10,left: 10),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(isTablet ? 40 : 30),
+        border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Obx(
             () => Row(
           children: PostStatus.values.map((status) {
@@ -93,29 +187,36 @@ class _MyPostScreenState extends State<MyPostScreen> {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeInOut,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: EdgeInsets.symmetric(
+                    vertical: isTablet ? 18 : 10,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.primaryColor
-                        : AppColors.whiteColor,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: isSelected
-                          ? AppColors.primaryColor
-                          : AppColors.greyColor.withOpacity(0.5),
-                      width: 1,
-                    ),
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(isTablet ? 40 : 30),
+                    boxShadow: isSelected && isTablet
+                        ? [
+                      BoxShadow(
+                        color: AppColors.primaryColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      )
+                    ]
+                        : [],
                   ),
                   child: Center(
                     child: Text(
                       controller.tabLabel(status),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: isSelected
                             ? AppColors.whiteColor
-                            : AppColors.blackColor,
+                            : AppColors.blackColor.withOpacity(0.7),
                         fontWeight: FontWeight.w700,
-                        fontSize: 12,
+                        fontSize: isTablet ? 15 : 13,
                       ),
                     ),
                   ),

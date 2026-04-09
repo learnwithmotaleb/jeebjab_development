@@ -31,6 +31,7 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
 
@@ -106,6 +107,125 @@ class _DriverSignupScreenState extends State<DriverSignupScreen> {
                 },
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      appBar: CommonAppBar(title: ""),
+      backgroundColor: AppColors.whiteColor,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // Icon/Visual
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.directions_car_outlined,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // Title
+                Center(
+                  child: Text(
+                    AppStrings.enterYourInformation.tr,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // Name Field
+                AppTextField(
+                  controller: controller.nameController,
+                  focusNode: controller.nameFocus,
+                  hint: AppStrings.enterYourName.tr,
+                  keyboardType: TextInputType.name,
+                  validator: AppValidators.required(),
+                  onSubmitted: () => controller.submit(),
+                  onTap: () {},
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // Email Field
+                AppTextField(
+                  controller: controller.emailController,
+                  focusNode: controller.emailFocus,
+                  hint: AppStrings.enterEmailAddress.tr,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: AppValidators.email(),
+                  onSubmitted: () => controller.submit(),
+                  onTap: () {},
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // Password Field
+                AppTextField(
+                  controller: controller.passwordController,
+                  focusNode: controller.passwordFocus,
+                  hint: AppStrings.enterPassword.tr,
+                  obscure: true,
+                  validator: AppValidators.required(),
+                  onTap: () {},
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // Confirm Password Field
+                AppTextField(
+                  controller: controller.confirmPasswordController,
+                  focusNode: controller.confirmPasswordFocus,
+                  hint: AppStrings.confirmPassword.tr,
+                  obscure: true,
+                  validator: AppValidators.required(),
+                  onTap: () {},
+                ),
+                SizedBox(height: Dimensions.h(48)),
+
+                // Create Account Button
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.createAccount.tr,
+                    height: Dimensions.h(100),
+                    borderRadius: Dimensions.r(16),
+                    onPressed: () {
+                      Get.toNamed(RoutePath.driverVerification);
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
           ),
         ),
       ),

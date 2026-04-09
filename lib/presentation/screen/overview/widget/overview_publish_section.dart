@@ -1,28 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:get/get.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/widget/app_button.dart';
 
-import '../../../../helper/tost_message/show_snackbar.dart';
-import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/confirmataion_alert.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_alert.dart';
+import '../controller/overview_controller.dart'; // Import the controller
 
 class OverviewPublishSection extends StatelessWidget {
   const OverviewPublishSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+    final OverviewController controller = Get.find();
+
     return Container(
-      padding: const EdgeInsets.all(30),
-      color: AppColors.forgroundColor,
+      padding: EdgeInsets.all(isTablet ? 40 : 16),
+      decoration: BoxDecoration(
+        color: AppColors.forgroundColor,
+        boxShadow: isTablet
+            ? [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          )
+        ]
+            : null,
+      ),
       child: Row(
         children: [
+          /// ❌ Cancel Button
           Expanded(
             child: AppButton(
+              height: isTablet ? 100 : 65,
               onPressed: () {
                 CustomAlertDialog.show(
                   context: context,
@@ -34,25 +49,41 @@ class OverviewPublishSection extends StatelessWidget {
               },
               backgroundColor: AppColors.whiteColor,
               label: AppStrings.cancel.tr,
-              textColor: AppColors.blackColor,///
+              textColor: AppColors.blackColor,
               borderSideColor: AppColors.whiteColor,
             ),
           ),
-          const SizedBox(width: 10),
+
+          SizedBox(width: isTablet ? 24 : 10),
+
+          /// ✅ Publish Button
           Expanded(
-            child: AppButton(
-              onPressed: () {
-                // AppAlerts.success(message: AppStrings.success.tr);
-                AppAlerts.confirm(title: AppStrings.appName.tr, message: AppStrings.payments.tr, onConfirm: () {
+            child: Obx(() => AppButton(
+              height: isTablet ? 100 : 65,
 
-                  Get.toNamed(RoutePath.login);
+              /// 🔥 Main Fix Here
+              onPressed: controller.canPublish
+                  ? () {
+                AppAlerts.confirm(
+                  title: AppStrings.appName.tr,
+                  message: AppStrings.payments.tr,
+                  onConfirm: () {
+                    Get.offAllNamed(
+                      RoutePath.bottomNav,
+                      arguments: 3,
+                    );
+                  },
+                );
+              }
+                  : null,
 
-
-                });
-
-              },
               label: AppStrings.publish.tr,
-            ),
+
+              /// 🎨 Optional UX Improvement
+              backgroundColor: controller.canPublish
+                  ? AppColors.primaryColor
+                  : AppColors.greyColor.withOpacity(0.5),
+            )),
           ),
         ],
       ),

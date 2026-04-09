@@ -30,8 +30,10 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
+      tablet: _buildTablet(),
     );
   }
+
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
@@ -44,50 +46,157 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
                 children: [
                   SizedBox(height: Dimensions.h(10),),
 
-
                   AppTextField(
-
-                      controller: controller.nameController,
+                    controller: controller.nameController,
                     hint: AppStrings.enterName.tr,
                     hintTextStyle: AppTextStyles.hint,
-
                   ),
                   SizedBox(height: Dimensions.h(16),),
 
                   AppTextField(
-                      controller: controller.emailController,
+                    controller: controller.emailController,
                     hint: AppStrings.enterEmail.tr,
                     hintTextStyle: AppTextStyles.hint,
-
                   ),
                   SizedBox(height: Dimensions.h(16),),
 
                   AppTextField(
                     controller: controller.descriptionController,
-                    hint:AppStrings.writeMessage.tr,
+                    hint: AppStrings.writeMessage.tr,
                     hintTextStyle: AppTextStyles.hint,
-                  maxLines: 4,
-
+                    maxLines: 4,
                   ),
 
-
                   SizedBox(height: Dimensions.h(30),),
-                  AppButton(label: AppStrings.contact.tr, onPressed: (){
-                    ShowAppSnackBar.success(
-                      title: AppStrings.appName.tr,
-                        AppStrings.thankYouSendMessageRequest.tr);
-
-
-                  },
-
-                  height: 65,)
-
-
-
+                  AppButton(
+                    label: AppStrings.contact.tr,
+                    onPressed: () {
+                      ShowAppSnackBar.success(
+                        title: AppStrings.appName.tr,
+                        AppStrings.thankYouSendMessageRequest.tr,
+                      );
+                    },
+                    height: 65,
+                  )
                 ]
             ),
           ),
         )
+    );
+  }
+
+  /// Tablet Layout
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.contactAndSupport.tr),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
+
+                // ── Icon/Visual ──────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.mail_outline,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Section Title ────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.contactAndSupport.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Section Subtitle ────────────────────────────────
+                Center(
+                  child: Text(
+                    "We'd love to hear from you. Send us a message!",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Name Field ──────────────────────────────────────
+                AppTextField(
+                  controller: controller.nameController,
+                  hint: AppStrings.enterName.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // ── Email Field ─────────────────────────────────────
+                AppTextField(
+                  controller: controller.emailController,
+                  hint: AppStrings.enterEmail.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                ),
+                SizedBox(height: Dimensions.h(18)),
+
+                // ── Message Field ───────────────────────────────────
+                AppTextField(
+                  controller: controller.descriptionController,
+                  hint: AppStrings.writeMessage.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  maxLines: 6,
+                ),
+
+                SizedBox(height: Dimensions.h(48)),
+
+                // ── Contact Button ──────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    label: AppStrings.contact.tr,
+                    onPressed: () {
+                      ShowAppSnackBar.success(
+                        title: AppStrings.appName.tr,
+                        AppStrings.thankYouSendMessageRequest.tr,
+                      );
+                    },
+                    height: Dimensions.h(100),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

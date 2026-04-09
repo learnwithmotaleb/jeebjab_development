@@ -19,8 +19,8 @@ class TaskTabSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Dimensions.h(44),
-      padding: EdgeInsets.all(Dimensions.w(4)),
+      height: Dimensions.h(50),
+      // padding: EdgeInsets.all(Dimensions.w(4)),
       decoration: BoxDecoration(
         color: const Color(0xFFF0F0F0),
         borderRadius: BorderRadius.circular(Dimensions.r(30)),
@@ -41,7 +41,7 @@ class TaskTabSwitcher extends StatelessWidget {
                 child: Text(
                  AppStrings.activePost.tr,
                   style: TextStyle(
-                    fontSize: Dimensions.f(13),
+                    fontSize: Dimensions.f(16),
                     fontWeight: FontWeight.w700,
                     color: isActive ? Colors.white : AppColors.blackColor,
                   ),
@@ -65,7 +65,7 @@ class TaskTabSwitcher extends StatelessWidget {
                 child: Text(
                   AppStrings.completedPost.tr,
                   style: TextStyle(
-                    fontSize: Dimensions.f(13),
+                    fontSize: Dimensions.f(16),
                     fontWeight: FontWeight.w700,
                     color: !isActive ? Colors.white : AppColors.blackColor,
                   ),

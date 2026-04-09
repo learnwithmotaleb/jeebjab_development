@@ -100,7 +100,7 @@ Map<String, String> arabic = {
   AppStrings.tryAgain: "حاول مرة أخرى",
 
   AppStrings.information: "معلومات",
-  AppStrings.nameOfItemProducts: "اسم العنصر/المنتجات",
+  AppStrings.nameOfItemProducts: "اسم المنتجات",
   AppStrings.descriptionWriteHere: "اكتب الوصف هنا",
   AppStrings.sizeOfProduct: "حجم المنتج",
   AppStrings.createPost: "إنشاء منشور",
@@ -454,8 +454,8 @@ Map<String, String> arabic = {
   AppStrings.selectedPhotos: "الصور المحددة",
   AppStrings.myTask: "مهمتي",
   AppStrings.task: "مهمة",
-  AppStrings.activePost: "إعلان نشط",
-  AppStrings.completedPost: "إعلان مكتمل",
+  AppStrings.activePost: "نشط",
+  AppStrings.completedPost: "مكتمل",
 
   //====================== Become A Driver =====================
 
@@ -479,7 +479,7 @@ Map<String, String> arabic = {
   // ── Add these lines inside the arabic map ────────────────────────────────
 
   // My Post Controller
-  AppStrings.pendingPost: "منشور معلق",
+  AppStrings.pendingPost: "معلق",
   AppStrings.failedToLoadPosts: "فشل تحميل المنشورات. يرجى المحاولة مرة أخرى.",
 
   // Post Status Labels

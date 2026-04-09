@@ -46,6 +46,8 @@ import 'package:jeebjab/presentation/screen/job/category_status/controller/categ
 import 'package:jeebjab/presentation/screen/job/category_status/screen/category_status_screen.dart';
 import 'package:jeebjab/presentation/screen/job/customer_job_post/controller/customer_job_post_controller.dart';
 import 'package:jeebjab/presentation/screen/job/customer_job_post/screen/customer_job_post_screen.dart';
+import 'package:jeebjab/presentation/screen/job/delivery/controller/delivery_controller.dart';
+import 'package:jeebjab/presentation/screen/job/delivery/screen/delivery_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/controller/job_post_controller.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/job_post/widget/job_post_drawer_widget.dart';
@@ -646,6 +648,12 @@ class AppRouter {
       }),
     ),
 
+    GetPage(
+      name: RoutePath.jobPostDrawer,
+      page: () => const JobPostDrawer(),
+      transition: Transition.rightToLeft,
+    ),
+
 
 
 
@@ -728,6 +736,16 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(CustomerJobPostController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.deliveryScreen,
+      page: () =>  DeliveryScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DeliveryController());
       }),
     ),
 

@@ -13,11 +13,13 @@ class DriverTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(Dimensions.w(24)),
+      padding: EdgeInsets.all(isTablet ? 40 : Dimensions.w(24)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Dimensions.r(24)),
+        borderRadius: BorderRadius.circular(isTablet ? 40 : Dimensions.r(24)),
         gradient: const LinearGradient(
           colors: [
             Color(0xFFF3F3F3),
@@ -30,21 +32,21 @@ class DriverTypeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: Dimensions.h(16)),
+          SizedBox(height: isTablet ? 30 : Dimensions.h(16)),
 
           // ── Headline ──────────────────────────────────────────────────
           Text(
             AppStrings.startYourJourneyAsADriver.tr,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: Dimensions.f(18),
+              fontSize: isTablet ? 24 : Dimensions.f(18),
               fontWeight: FontWeight.w700,
               color: Colors.white,
-              height: 1.5,
+              height: 1.4,
             ),
           ),
 
-          SizedBox(height: Dimensions.h(30)),
+          SizedBox(height: isTablet ? 40 : Dimensions.h(30)),
 
           // ── Independent Driver ────────────────────────────────────────
           Obx(() {
@@ -57,7 +59,7 @@ class DriverTypeCard extends StatelessWidget {
             );
           }),
 
-          SizedBox(height: Dimensions.h(12)),
+          SizedBox(height: isTablet ? 20 : Dimensions.h(12)),
 
           // ── Company Driver ────────────────────────────────────────────
           Obx(() {
@@ -91,12 +93,17 @@ class _DriverButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: Dimensions.h(15)),
+        height: isTablet ? 100 : 55,
+        padding: EdgeInsets.symmetric(
+          vertical: isTablet ? 0 : Dimensions.h(15),
+        ),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(Dimensions.r(30)),
@@ -109,7 +116,7 @@ class _DriverButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontSize: Dimensions.f(15),
+            fontSize: isTablet ? 18 : Dimensions.f(15),
             fontWeight: FontWeight.w700,
             color: isSelected ? AppColors.primaryColor : Colors.white,
           ),

@@ -24,7 +24,10 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet()
+    );
   }
 
   Widget _buildMobile() {
@@ -44,16 +47,6 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                 return Column(
                   children: [
                     const SizedBox(height: 8),
-
-                    // ── Option 1: Regular ─────────────────────────────
-                    PickupOptionCard(
-                      type: AppStrings.regular.tr,
-                      title: AppStrings.anytime.tr,
-                      isSelected: selected == PickupType.regular,
-                      onTap: () => controller.selectType(PickupType.regular),
-                    ),
-
-                    const SizedBox(height: 10),
 
                     // ── Option 2: Priority ────────────────────────────
                     PickupOptionCard(
@@ -140,6 +133,134 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
           ),
           SizedBox(height: Dimensions.h(20)),
         ],
+      ),
+    );
+  }
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6FA),
+      appBar: CommonAppBar(title: AppStrings.pickupDateTime.tr),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            children: [
+              // ── Scrollable Content ──────────────────────────────────────
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(48),
+                    vertical: Dimensions.h(40),
+                  ),
+                  child: Obx(() {
+                    final selected = controller.selectedType.value;
+                    final expanded = controller.isCustomExpanded.value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+
+                        Text(
+                          "Choose your preferred timing",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.blackColor,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // ── Option 2: Priority ────────────────────────────
+                        PickupOptionCard(
+                          type: AppStrings.priority.tr,
+                          title: AppStrings.asap.tr,
+                          isSelected: selected == PickupType.priority,
+                          onTap: () => controller.selectType(PickupType.priority),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // ── Option 3: Custom (expandable) ─────────────────
+                        PickupOptionCard(
+                          type: AppStrings.custom.tr,
+                          title: AppStrings.selectConvenientTime.tr,
+                          isSelected: selected == PickupType.custom,
+                          showArrow: true,
+                          arrowDown: !expanded,
+                          onTap: () => controller.selectType(PickupType.custom),
+                        ),
+
+                        // ── Time Slots (expanded panel) ───────────────────
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: expanded
+                              ? Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(top: 16),
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: const Color(0xFFE8E8E8)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.04),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Today slots
+                                TimeSlotsWidget(
+                                  dayLabel: AppStrings.today.tr,
+                                  dayKey: 'today',
+                                  slots: controller.timeSlots,
+                                  selectedSlotKey: controller.selectedSlot.value,
+                                  onSlotTap: controller.selectSlot,
+                                ),
+
+                                const SizedBox(height: 32),
+
+                                // Tomorrow slots
+                                TimeSlotsWidget(
+                                  dayLabel: AppStrings.tomorrow.tr,
+                                  dayKey: 'tomorrow',
+                                  slots: controller.timeSlots,
+                                  selectedSlotKey: controller.selectedSlot.value,
+                                  onSlotTap: controller.selectSlot,
+                                ),
+                              ],
+                            ),
+                          )
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+
+              // ── Continue Button pinned bottom ───────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(48),
+                  vertical: Dimensions.h(40),
+                ),
+                child: AppButton(
+                  label: AppStrings.continueButton.tr,
+                  onPressed: controller.onContinue,
+                  height: Dimensions.h(100),
+                ),
+              ),
+               SizedBox(height: Dimensions.h(30)),
+            ],
+          ),
+        ),
       ),
     );
   }

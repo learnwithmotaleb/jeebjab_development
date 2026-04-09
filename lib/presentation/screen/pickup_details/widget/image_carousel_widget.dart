@@ -24,8 +24,10 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return SizedBox(
-      height: 350,
+      height: isTablet ? 500 : 350,
       width: double.infinity,
       child: Stack(
         children: [
@@ -38,12 +40,15 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
               return Image.network(
                 widget.images[index],
                 width: double.infinity,
-                height: 250,
+                height: isTablet ? 500 : 250,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   color: const Color(0xFFF0F0F0),
-                  child: const Icon(Icons.image_not_supported_rounded,
-                      color: Colors.grey, size: 48),
+                  child: Icon(
+                      Icons.image_not_supported_rounded,
+                      color: Colors.grey, 
+                      size: isTablet ? 80 : 48
+                  ),
                 ),
               );
             },
@@ -51,7 +56,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
 
           // ── Dot Indicators ────────────────────────────────────────────────
           Positioned(
-            bottom: 12,
+            bottom: isTablet ? 24 : 12,
             left: 0,
             right: 0,
             child: Obx(
@@ -62,14 +67,14 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: isActive ? 20 : 7,
-                    height: 7,
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    width: isActive ? (isTablet ? 30 : 20) : (isTablet ? 10 : 7),
+                    height: isTablet ? 10 : 7,
                     decoration: BoxDecoration(
                       color: isActive
                           ? AppColors.primaryColor
                           : Colors.white.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   );
                 }),

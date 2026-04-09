@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -31,7 +27,6 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
     return ResponsiveLayout(
       mobile: _buildMobile(),
       tablet: _buildTablet(),
-      desktop: _buildDesktop(),
     );
   }
 
@@ -47,13 +42,13 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.yourLicenseNumber.tr,
-                style: AppTextStyles.title
+                  AppStrings.yourLicenseNumber.tr,
+                  style: AppTextStyles.title
               ),
 
               Text(
-                AppStrings.licenseNumberSubTitle.tr,
-                style: AppTextStyles.body
+                  AppStrings.licenseNumberSubTitle.tr,
+                  style: AppTextStyles.body
               ),
 
               SizedBox(height: Dimensions.h(40)),
@@ -80,10 +75,96 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
   }
 
   Widget _buildTablet() {
-    return Scaffold(body: Center(child: Text("Hello, Tablet, Login")));
-  }
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: ""),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(48),
+          vertical: Dimensions.h(32),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Dimensions.h(20)),
 
-  Widget _buildDesktop() {
-    return Scaffold(body: Center(child: Text("Hello, Desktop Login")));
+                // ── Icon/Visual ──────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                    ),
+                    child: Icon(
+                      Icons.card_membership_outlined,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── Title ────────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.yourLicenseNumber.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Subtitle ────────────────────────────────────────
+                Center(
+                  child: Text(
+                    AppStrings.licenseNumberSubTitle.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // ── License Number Field ────────────────────────────
+                AppTextField(
+                  controller: controller.licenseNumber,
+                  hint: AppStrings.enterLicenseNumber.tr,
+                ),
+
+                SizedBox(height: Dimensions.h(60)),
+
+                // ── Continue Button ──────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    height: Dimensions.h(100),
+                    label: AppStrings.continueButton.tr,
+                    onPressed: () {
+                      Get.toNamed(RoutePath.uploadDocument);
+                    },
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

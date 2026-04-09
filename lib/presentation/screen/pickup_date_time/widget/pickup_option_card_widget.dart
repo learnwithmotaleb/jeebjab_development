@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class PickupOptionCard extends StatelessWidget {
@@ -21,23 +22,29 @@ class PickupOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(
+            horizontal: 16, 
+            vertical: isTablet ? 20 : 14
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(isTablet ? 16 : 12),
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryColor
                 : const Color(0xFFE8E8E8),
-            width: isSelected ? 1.5 : 1,
+            width: isSelected ? (isTablet ? 2.5 : 1.5) : 1,
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
+              blurRadius: isTablet ? 8 : 6,
               offset: const Offset(0, 2),
             ),
           ],
@@ -47,7 +54,7 @@ class PickupOptionCard extends StatelessWidget {
             // ── Clock Icon ──────────────────────────────────────────────
             Icon(
               Icons.access_time_rounded,
-              size: 22,
+              size: isTablet ? 32 : 22,
               color: isSelected ? AppColors.primaryColor : Colors.grey,
             ),
 
@@ -61,20 +68,20 @@ class PickupOptionCard extends StatelessWidget {
                   Text(
                     type,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: isTablet ? 14 : 11,
                       fontWeight: FontWeight.w500,
                       color: isSelected
                           ? AppColors.primaryColor
                           : Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: isTablet ? 4 : 2),
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: isTablet ? 18 : 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A2E),
+                      color: const Color(0xFF1A1A2E),
                     ),
                   ),
                 ],
@@ -88,12 +95,12 @@ class PickupOptionCard extends StatelessWidget {
                     ? Icons.keyboard_arrow_down_rounded
                     : Icons.keyboard_arrow_up_rounded,
                 color: Colors.grey,
-                size: 22,
+                size: isTablet ? 32 : 22,
               )
             else
               Container(
-                width: 20,
-                height: 20,
+                width: isTablet ? 28 : 20,
+                height: isTablet ? 28 : 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -106,8 +113,8 @@ class PickupOptionCard extends StatelessWidget {
                 child: isSelected
                     ? Center(
                   child: Container(
-                    width: 10,
-                    height: 10,
+                    width: isTablet ? 14 : 10,
+                    height: isTablet ? 14 : 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.primaryColor,
