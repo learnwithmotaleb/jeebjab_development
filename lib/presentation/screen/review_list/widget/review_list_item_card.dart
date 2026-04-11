@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/review_profile/controller/review_profile_controller.dart';
 
 class ReviewListItemWidget extends StatelessWidget {
@@ -9,17 +10,17 @@ class ReviewListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
+      padding: EdgeInsets.all(Dimensions.w(20)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
+        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+        border: Border.all(color: const Color(0xFFF0F0F0)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -32,23 +33,24 @@ class ReviewListItemWidget extends StatelessWidget {
             children: [
               Text(
                 review.username,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A2E),
+                style: TextStyle(
+                  fontSize: Dimensions.f(15),
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF1A1A2E),
                 ),
               ),
               Text(
                 review.timeAgo,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+                style: TextStyle(
+                  fontSize: Dimensions.f(12),
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: Dimensions.h(8)),
 
           // ── Stars ──────────────────────────────────────────────────────
           Row(
@@ -57,32 +59,32 @@ class ReviewListItemWidget extends StatelessWidget {
                 i < review.rating.floor()
                     ? Icons.star_rounded
                     : Icons.star_outline_rounded,
-                size: 17,
+                size: Dimensions.f(17),
                 color: const Color(0xFFFFA500),
               );
             }),
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: Dimensions.h(12)),
 
           // ── Title ──────────────────────────────────────────────────────
           Text(
             review.title,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: Dimensions.f(15),
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A2E),
+              color: const Color(0xFF1A1A2E),
             ),
           ),
 
-          const SizedBox(height: 4),
+          SizedBox(height: Dimensions.h(6)),
 
           // ── Body ───────────────────────────────────────────────────────
           Text(
             review.body,
-            style: const TextStyle(
-              fontSize: 13,
-              color: Color(0xFF777777),
+            style: TextStyle(
+              fontSize: Dimensions.f(14),
+              color: Colors.grey[700],
               height: 1.5,
             ),
           ),
@@ -90,4 +92,4 @@ class ReviewListItemWidget extends StatelessWidget {
       ),
     );
   }
-}
+}

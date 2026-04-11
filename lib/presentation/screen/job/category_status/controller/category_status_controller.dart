@@ -103,22 +103,24 @@ class CategoryStatusController extends GetxController {
   }
 
   // ── Button Actions ────────────────────────────────────────────────────────
-  void onSendRequest() => requestStatus.value = RequestStatus.delivered;
+  void onSendRequest() => requestStatus.value = RequestStatus.sent;
 
-  void onCancelRequest() => requestStatus.value = RequestStatus.delivered;
+  void onCancelRequest() => requestStatus.value = RequestStatus.pickedUp;
 
   void onPickedUp() {
     if (isMove) {
       requestStatus.value = RequestStatus.delivered;
     } else {
       // Recycle — done after pickup
-      requestStatus.value = RequestStatus.delivered;
+      requestStatus.value = RequestStatus.sent;
     }
   }
 
   void onDelivery() {
     // Move only
     requestStatus.value = RequestStatus.delivered;
+    Get.toNamed(RoutePath.deliveryScreen);
+
   }
 
   void onOpenPickupMap() {

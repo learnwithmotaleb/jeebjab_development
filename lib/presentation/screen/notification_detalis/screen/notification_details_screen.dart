@@ -26,7 +26,92 @@ class _NotificationDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
+  }
+
+  /// Tablet Layout
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.details.tr),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Obx(() => Column(
+              children: [
+                SizedBox(height: Dimensions.h(24)),
+                
+                // Item Information Card
+                _buildItemCard(),
+
+                SizedBox(height: Dimensions.h(20)),
+
+                // Status and Action Buttons in a Row if possible or balanced vertical
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: Row(
+                    children: [
+                      Expanded(child: _buildStatusButton(margin: EdgeInsets.zero)),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+
+                // Content Row: Stepper and Additional Info
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Stepper Section
+                        Expanded(
+                          flex: 3,
+                          child: _buildStepperSection(margin: EdgeInsets.zero),
+                        ),
+                        
+                        SizedBox(width: Dimensions.w(32)),
+
+                        // Action Column
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              if (controller.status.value == "in_transit")
+                                _buildLiveTrackingButton(margin: EdgeInsets.zero)
+                              else if (controller.status.value == "delivered")
+                                _buildRateServiceButton(margin: EdgeInsets.zero),
+                              
+                              if (controller.status.value == "pending") ...[
+                                _buildActionButtons(margin: EdgeInsets.zero),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // Driver Card
+                _buildDriverCard(),
+
+                SizedBox(height: Dimensions.h(40)),
+              ],
+            )),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Mobile Layout
@@ -35,22 +120,24 @@ class _NotificationDetailsScreenState
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(title: AppStrings.details.tr),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Obx(() => Column(
           children: [
+            SizedBox(height: Dimensions.h(16)),
             // Item Information Card
             _buildItemCard(),
 
-            const SizedBox(height: 16),
+            SizedBox(height: Dimensions.h(16)),
 
             // Status Button
             _buildStatusButton(),
 
-            const SizedBox(height: 20),
+            SizedBox(height: Dimensions.h(24)),
 
             // Stepper Section
             _buildStepperSection(),
 
-            const SizedBox(height: 20),
+            SizedBox(height: Dimensions.h(24)),
 
             // Action Buttons (Live Tracking / Rate Service)
             if (controller.status.value == "in_transit")
@@ -58,18 +145,15 @@ class _NotificationDetailsScreenState
             else if (controller.status.value == "delivered")
               _buildRateServiceButton(),
 
-            const SizedBox(height: 16),
-
-            // Delete and Reschedule Buttons (only for pending)
             if (controller.status.value == "pending")
               _buildActionButtons(),
 
-            const SizedBox(height: 16),
+            SizedBox(height: Dimensions.h(24)),
 
             // Driver Card
             _buildDriverCard(),
 
-            const SizedBox(height: 24),
+            SizedBox(height: Dimensions.h(32)),
           ],
         )),
       ),
@@ -94,33 +178,37 @@ class _NotificationDetailsScreenState
         );
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+        padding: EdgeInsets.all(Dimensions.w(16)),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(Dimensions.r(16)),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Row(
           children: [
             // Item Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                controller.imagePath.value,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.image, color: Colors.grey),
-                  );
-                },
+            Hero(
+              tag: 'notif_image_${controller.imagePath.value}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                child: Image.asset(
+                  controller.imagePath.value,
+                  width: Dimensions.w(90),
+                  height: Dimensions.w(90),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: Dimensions.w(90),
+                      height: Dimensions.w(90),
+                      color: Colors.grey[200],
+                      child: Icon(Icons.inventory_2_outlined, color: Colors.grey, size: Dimensions.w(40)),
+                    );
+                  },
+                ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: Dimensions.w(16)),
 
             // Item Details
             Expanded(
@@ -129,33 +217,42 @@ class _NotificationDetailsScreenState
                 children: [
                   Text(
                     controller.itemType.value,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: Dimensions.f(20),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: Dimensions.h(4)),
                   Text(
                     controller.itemSubtype.value,
-                    style: TextStyle(fontSize: 13, color: AppColors.blackColor),
+                    style: TextStyle(fontSize: Dimensions.f(14), color: AppColors.blackColor.withOpacity(0.7)),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    controller.itemDate.value,
-                    style: TextStyle(fontSize: 12, color: AppColors.blackColor),
+                  SizedBox(height: Dimensions.h(8)),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today_outlined, size: Dimensions.f(14), color: AppColors.primaryColor),
+                      SizedBox(width: Dimensions.w(6)),
+                      Text(
+                        controller.itemDate.value,
+                        style: TextStyle(fontSize: Dimensions.f(13), color: AppColors.blackColor),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    AppStrings.trackingNumber.tr,
-                    style: TextStyle(fontSize: 11, color: AppColors.blackColor),
-                  ),
-                  Text(
-                    controller.trackingNumber.value,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                  SizedBox(height: Dimensions.h(8)),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(Dimensions.r(4)),
+                    ),
+                    child: Text(
+                      "${AppStrings.trackingNumber.tr}: ${controller.trackingNumber.value}",
+                      style: TextStyle(
+                        fontSize: Dimensions.f(11),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
                 ],
@@ -168,63 +265,69 @@ class _NotificationDetailsScreenState
   }
 
   // ── Status Button ─────────────────────────────────────────────────────────
-  Widget _buildStatusButton() {
+  Widget _buildStatusButton({EdgeInsetsGeometry? margin}) {
     String statusText = '';
     Color statusColor = Colors.grey;
 
     switch (controller.status.value) {
       case 'pending':
         statusText = AppStrings.pending.tr;
-        statusColor = Colors.grey[300]!;
+        statusColor = Colors.amber;
         break;
       case 'in_transit':
         statusText = AppStrings.estimatedDeliveryTime.tr;
-        statusColor = Colors.grey[300]!;
+        statusColor = Colors.blue;
         break;
       case 'delivered':
         statusText = AppStrings.delivered.tr;
-        statusColor = Colors.grey[300]!;
+        statusColor = Colors.green;
         break;
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.2),
-        border: Border.all(color: statusColor),
-        borderRadius: BorderRadius.circular(8),
+        color: statusColor.withOpacity(0.1),
+        border: Border.all(color: statusColor.withOpacity(0.5), width: 1.5),
+        borderRadius: BorderRadius.circular(Dimensions.r(12)),
       ),
       child: Center(
-        child: Text(
-          statusText,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: controller.status.value == 'pending'
-                ? AppColors.blackColor
-                : Colors.black87,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.info_outline_rounded, size: Dimensions.f(18), color: statusColor),
+            SizedBox(width: Dimensions.w(8)),
+            Text(
+              statusText,
+              style: TextStyle(
+                fontSize: Dimensions.f(15),
+                fontWeight: FontWeight.w700,
+                color: statusColor.withOpacity(0.9),
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   // ── Stepper Section ───────────────────────────────────────────────────────
-  Widget _buildStepperSection() {
+  Widget _buildStepperSection({EdgeInsetsGeometry? margin}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
       child: Column(
         children: [
           _buildStepItem(
-            icon: Icons.check_circle,
+            icon: Icons.assignment_turned_in_outlined,
             title: AppStrings.requestConfirmation.tr,
             subtitle: AppStrings.wePickUpYourProductSoon.tr,
             isCompleted: true,
             isLast: false,
           ),
           _buildStepItem(
-            icon: Icons.check_circle,
+            icon: Icons.local_shipping_outlined,
             title: AppStrings.pickup.tr,
             subtitle: AppStrings.parcelHasBeenPickedUp.tr,
             isCompleted: controller.status.value == 'in_transit' ||
@@ -232,7 +335,7 @@ class _NotificationDetailsScreenState
             isLast: false,
           ),
           _buildStepItem(
-            icon: Icons.local_shipping,
+            icon: Icons.trending_up,
             title: AppStrings.inTransit.tr,
             subtitle: AppStrings.onTheWaySoonDelivered.tr,
             isCompleted: controller.status.value == 'in_transit' ||
@@ -240,7 +343,7 @@ class _NotificationDetailsScreenState
             isLast: false,
           ),
           _buildStepItem(
-            icon: Icons.done_all,
+            icon: Icons.task_alt_rounded,
             title: AppStrings.delivered.tr,
             subtitle: AppStrings.parcelHasBeenShipped.tr,
             isCompleted: controller.status.value == 'delivered',
@@ -266,48 +369,56 @@ class _NotificationDetailsScreenState
         Column(
           children: [
             Container(
-              width: 28,
-              height: 28,
+              width: Dimensions.w(30),
+              height: Dimensions.w(30),
               decoration: BoxDecoration(
-                color:
-                isCompleted ? AppColors.primaryColor : Colors.grey[300],
+                color: isCompleted ? AppColors.primaryColor : Colors.grey[200],
                 shape: BoxShape.circle,
+                boxShadow: isCompleted ? [
+                  BoxShadow(
+                    color: AppColors.primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  )
+                ] : [],
               ),
-              child: Icon(icon, size: 16, color: Colors.white),
+              child: Icon(icon, size: Dimensions.f(16), color: isCompleted ? Colors.white : Colors.grey[500]),
             ),
             if (!isLast)
               Container(
                 width: 2,
-                height: 50,
-                color: isCompleted
-                    ? AppColors.primaryColor
-                    : Colors.grey[300],
+                height: Dimensions.h(50),
+                color: isCompleted ? AppColors.primaryColor : Colors.grey[200],
               ),
           ],
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: Dimensions.w(16)),
 
         // Text Content
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4),
+            padding: EdgeInsets.only(top: Dimensions.h(4)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontSize: Dimensions.f(16),
+                    fontWeight: FontWeight.w700,
                     color: isCompleted ? Colors.black : Colors.grey[500],
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: Dimensions.h(4)),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: Dimensions.f(13),
+                    color: isCompleted ? Colors.grey[700] : Colors.grey[400],
+                    height: 1.3,
+                  ),
                 ),
-                if (!isLast) const SizedBox(height: 16),
+                if (!isLast) SizedBox(height: Dimensions.h(20)),
               ],
             ),
           ),
@@ -317,67 +428,72 @@ class _NotificationDetailsScreenState
   }
 
   // ── Live Tracking Button ──────────────────────────────────────────────────
-  Widget _buildLiveTrackingButton() {
+  Widget _buildLiveTrackingButton({EdgeInsetsGeometry? margin}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
       width: double.infinity,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
         onPressed: controller.onLiveTrackingPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 0,
-        ),
-        child: Text(
+        icon: Icon(Icons.location_on_rounded, size: Dimensions.f(20), color: Colors.white),
+        label: Text(
           AppStrings.liveTracking.tr,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: TextStyle(
+            fontSize: Dimensions.f(16),
+            fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryColor,
+          padding: EdgeInsets.symmetric(vertical: Dimensions.h(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          ),
+          elevation: 4,
+          shadowColor: AppColors.primaryColor.withOpacity(0.4),
         ),
       ),
     );
   }
 
   // ── Rate Service Button ───────────────────────────────────────────────────
-  Widget _buildRateServiceButton() {
+  Widget _buildRateServiceButton({EdgeInsetsGeometry? margin}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
       width: double.infinity,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
         onPressed: controller.onRateServicePressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.amber,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 0,
-        ),
-        child: Text(
+        icon: Icon(Icons.star_outline_rounded, size: Dimensions.f(20), color: Colors.white),
+        label: Text(
           AppStrings.rateYourService.tr,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: TextStyle(
+            fontSize: Dimensions.f(16),
+            fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.amber[700],
+          padding: EdgeInsets.symmetric(vertical: Dimensions.h(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          ),
+          elevation: 4,
+          shadowColor: Colors.amber.withOpacity(0.4),
         ),
       ),
     );
   }
 
   // ── Action Buttons (Delete & Reschedule) ──────────────────────────────────
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons({EdgeInsetsGeometry? margin}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+      padding: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+      child: Column(
         children: [
-          Expanded(
-            child: OutlinedButton(
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
               onPressed: () {
                 CustomAlertDialog.show(
                   context: context,
@@ -390,40 +506,44 @@ class _NotificationDetailsScreenState
                   onNo: () => Get.back(),
                 );
               },
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                side: const BorderSide(color: AppColors.greyColor, width: 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              icon: Icon(Icons.delete_outline_rounded, size: Dimensions.f(20), color: Colors.redAccent),
+              label: Text(
+                AppStrings.delete.tr,
+                style: TextStyle(
+                  fontSize: Dimensions.f(15),
+                  fontWeight: FontWeight.w700,
+                  color: Colors.redAccent,
                 ),
               ),
-              child: Text(
-                AppStrings.delete.tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red,
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                side: BorderSide(color: Colors.redAccent.withOpacity(0.3), width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Dimensions.r(12)),
                 ),
+                backgroundColor: Colors.redAccent.withOpacity(0.05),
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: OutlinedButton(
+          SizedBox(height: Dimensions.h(12)),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
               onPressed: controller.onReschedulePressed,
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                side: BorderSide(color: Colors.grey[400]!, width: 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+              icon: Icon(Icons.calendar_month_outlined, size: Dimensions.f(20), color: Colors.black87),
+              label: Text(
+                AppStrings.reschedule.tr,
+                style: TextStyle(
+                  fontSize: Dimensions.f(15),
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
                 ),
               ),
-              child: Text(
-                AppStrings.reschedule.tr,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                side: BorderSide(color: Colors.grey[400]!, width: 1.5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Dimensions.r(12)),
                 ),
               ),
             ),
@@ -440,12 +560,19 @@ class _NotificationDetailsScreenState
         Get.toNamed(RoutePath.reviewProfile);
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+        padding: EdgeInsets.all(Dimensions.w(20)),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(Dimensions.r(20)),
+          border: Border.all(color: Colors.grey[200]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -454,24 +581,23 @@ class _NotificationDetailsScreenState
               children: [
                 // Driver Image
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(Dimensions.r(14)),
                   child: Image.asset(
                     controller.driverImage.value,
-                    width: 50,
-                    height: 50,
+                    width: Dimensions.w(64),
+                    height: Dimensions.w(64),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        width: 50,
-                        height: 50,
-                        color: Colors.grey[300],
-                        child:
-                        const Icon(Icons.person, color: Colors.grey),
+                        width: Dimensions.w(64),
+                        height: Dimensions.w(64),
+                        color: Colors.grey[100],
+                        child: Icon(Icons.person_outline_rounded, color: Colors.grey, size: Dimensions.w(30)),
                       );
                     },
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: Dimensions.w(16)),
 
                 // Driver Name and Phone
                 Expanded(
@@ -480,114 +606,124 @@ class _NotificationDetailsScreenState
                     children: [
                       Text(
                         controller.driverName.value,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(18),
+                          fontWeight: FontWeight.w700,
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        controller.driverPhone.value,
-                        style:
-                        TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      SizedBox(height: Dimensions.h(4)),
+                      Row(
+                        children: [
+                          Icon(Icons.phone_outlined, size: Dimensions.f(14), color: Colors.grey),
+                          SizedBox(width: Dimensions.w(6)),
+                          Text(
+                            controller.driverPhone.value,
+                            style: TextStyle(fontSize: Dimensions.f(13), color: Colors.grey[600]),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
 
                 // Rating
-                Column(
-                  children: [
-                    Text(
-                      controller.driverRating.value.toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 14, color: Colors.amber[600]),
-                        const SizedBox(width: 2),
-                        Text(
-                          AppStrings.rating.tr,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey,
-                          ),
+                Container(
+                  padding: EdgeInsets.all(Dimensions.w(10)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        controller.driverRating.value.toString(),
+                        style: TextStyle(
+                          fontSize: Dimensions.f(22),
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.star_rounded, size: Dimensions.f(14), color: Colors.amber[600]),
+                          SizedBox(width: Dimensions.w(2)),
+                          Text(
+                            AppStrings.rating.tr,
+                            style: TextStyle(
+                              fontSize: Dimensions.f(11),
+                              color: Colors.grey[500],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
 
-            SizedBox(height: Dimensions.h(40)),
+            SizedBox(height: Dimensions.h(24)),
 
-            // Action Buttons
             // Action Buttons
             Row(
               children: [
-                // Show Message button only if status is not delivered
                 if (controller.status.value != 'delivered')
                   Expanded(
-                    child: OutlinedButton(
+                    child: ElevatedButton.icon(
                       onPressed: controller.onMessagePressed,
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        side: BorderSide(color: AppColors.primaryColor, width: 1.5),
-                        backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                      icon: Icon(Icons.chat_bubble_outline_rounded, size: Dimensions.f(18), color: Colors.white),
+                      label: Text(
+                        AppStrings.message.tr,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(15),
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
                       ),
-                      child: Text(
-                        AppStrings.message.tr,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.whiteColor,
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.r(12)),
                         ),
+                        elevation: 0,
                       ),
                     ),
                   ),
 
-                // Show Accept button only if status is pending (or whatever condition you want)
                 if (controller.showAcceptButton.value && controller.status.value != 'delivered') ...[
-                  const SizedBox(width: 12),
+                  SizedBox(width: Dimensions.w(12)),
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         controller.onAcceptPressed(context);
-                        controller.showAcceptButton.value = false; // hide after accepting
+                        controller.showAcceptButton.value = false;
                         controller.status.value = "in_transit";
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
+                      icon: Icon(Icons.check_circle_outline_rounded, size: Dimensions.f(18), color: Colors.white),
+                      label: Text(
                         AppStrings.accept.tr,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(15),
+                          fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[600],
+                        padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                        ),
+                        elevation: 0,
                       ),
                     ),
                   ),
                 ],
               ],
             ),
-
-            SizedBox(height: Dimensions.h(10)),
           ],
         ),
       ),

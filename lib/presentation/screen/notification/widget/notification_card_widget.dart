@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 
 class NotificationCard extends StatelessWidget {
   final String imagePath;
@@ -22,39 +23,49 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0.2,
+      elevation: 0.4,
       color: AppColors.whiteColor,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: EdgeInsets.symmetric(
+        horizontal: Dimensions.w(16),
+        vertical: Dimensions.h(8),
+      ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimensions.r(16)),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Dimensions.r(16)),
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(Dimensions.w(16)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Image Section
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imagePath,
-                  width: 56,
-                  height: 56,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 56,
-                      height: 56,
-                      color: AppColors.greyColor.withOpacity(0.5),
-                      child: const Icon(Icons.image, color: Colors.grey),
-                    );
-                  },
+              Hero(
+                tag: 'notif_image_$imagePath${DateTime.now().millisecond}',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                  child: Image.asset(
+                    imagePath,
+                    width: Dimensions.w(64),
+                    height: Dimensions.w(64),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: Dimensions.w(64),
+                        height: Dimensions.w(64),
+                        color: AppColors.greyColor.withOpacity(0.1),
+                        child: Icon(
+                          Icons.notifications_none_rounded,
+                          color: AppColors.primaryColor.withOpacity(0.5),
+                          size: Dimensions.w(32),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: Dimensions.w(16)),
 
               // Content Section
               Expanded(
@@ -64,31 +75,32 @@ class NotificationCard extends StatelessWidget {
                     // Title
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                      style: TextStyle(
+                        fontSize: Dimensions.f(17),
+                        fontWeight: FontWeight.w700,
                         color: AppColors.blackColor,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: Dimensions.h(4)),
 
                     // Subtitle
                     Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.blackColor,
+                        fontSize: Dimensions.f(14),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor.withOpacity(0.8),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: Dimensions.h(8)),
 
                     // Message
                     Text(
                       message,
                       style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.blackColor,
+                        fontSize: Dimensions.f(14),
+                        color: AppColors.blackColor.withOpacity(0.7),
+                        height: 1.4,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -96,15 +108,21 @@ class NotificationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: Dimensions.w(12)),
 
               // Time Ago Section
-              Text(
-                timeAgo,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.blackColor,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    timeAgo,
+                    style: TextStyle(
+                      fontSize: Dimensions.f(12),
+                      color: AppColors.greyColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -27,8 +27,129 @@ class CurrentTaskCard extends StatelessWidget {
     }
   }
 
+  String _getStatusLabel(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pickUp:
+        return AppStrings.pickUp.tr;
+      case TaskStatus.inTransit:
+        return 'In Transit';
+      case TaskStatus.delivered:
+        return AppStrings.delivered.tr;
+    }
+  }
+
+  Color _getStatusColor(TaskStatus status) {
+    switch (status) {
+      case TaskStatus.pickUp:
+        return AppColors.primaryColor;
+      case TaskStatus.inTransit:
+        return const Color(0xFFFFA500); // Orange
+      case TaskStatus.delivered:
+        return const Color(0xFF4CAF50); // Green
+    }
+  }
+
+  // ── Show Confirmation Dialog ────────────────────────────────────────
+  void _showConfirmationDialog(
+      BuildContext context,
+      String title,
+      String message,
+      VoidCallback onYes,
+      ) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Title ──────────────────────────────────────────────
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF1A1A2E),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // ── Message ────────────────────────────────────────────
+              Text(
+                message,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // ── Buttons ────────────────────────────────────────────
+              Row(
+                children: [
+                  // No Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0F0F0),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1A1A2E),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Yes Button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.back();
+                        onYes();
+                      },
+                      child: Container(
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Yes',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Dimensions.isTablet; // Add this line
     return Container(
       margin: EdgeInsets.only(bottom: Dimensions.h(12)),
       padding: EdgeInsets.all(Dimensions.w(14)),
@@ -126,39 +247,80 @@ class CurrentTaskCard extends StatelessWidget {
 
           // ── Action buttons (reactive) ─────────────────────────────────
           Obx(() {
-            final isPickUp = task.status.value == TaskStatus.pickUp;
+            final status = task.status.value;
+            final isPickUp = status == TaskStatus.pickUp;
+            final isInTransit = status == TaskStatus.inTransit;
+            final isDelivered = status == TaskStatus.delivered;
+
             return Row(
               children: [
+                // ── Status Change Button ──────────────────────────────
                 Expanded(
                   child: GestureDetector(
-                    onTap: isPickUp ? onPickUp : null,
+                    onTap: isPickUp
+                        ? () {
+                      _showConfirmationDialog(
+                        context,
+                        'Are You Sure',
+                        'Are You Sure, You Are Picked-Up ?',
+                            () {
+                          task.status.value = TaskStatus.inTransit;
+                        },
+                      );
+                    }
+                        : isInTransit
+                        ? () {
+                      _showConfirmationDialog(
+                        context,
+                        'Are You Sure',
+                        'Are You Sure, You Will Mark as Delivered ?',
+                            () {
+                          task.status.value = TaskStatus.delivered;
+                        },
+                      );
+                    }
+                        : null,
                     child: Container(
-                      height: Dimensions.h(40),
+                      height: isTablet ? Dimensions.h(100) : Dimensions.h(40),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDelivered ? Colors.white : Colors.white,
                         borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                        border: Border.all(color: AppColors.primaryColor),
+                        border: Border.all(
+                          color: isPickUp
+                              ? AppColors.primaryColor
+                              : isInTransit
+                              ? AppColors.primaryColor
+                              : AppColors.primaryColor,
+                        ),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         isPickUp
                             ? AppStrings.pickUp.tr
+                            : isInTransit
+                            ? 'In Transit'
                             : AppStrings.delivered.tr,
                         style: TextStyle(
-                          fontSize: Dimensions.f(13),
+                          fontSize: isTablet ? Dimensions.f(18) : Dimensions.f(13),
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primaryColor,
+                          color: isPickUp
+                              ? AppColors.primaryColor
+                              : isInTransit
+                              ? AppColors.primaryColor
+                              : AppColors.primaryColor,
                         ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: Dimensions.w(10)),
+
+                // ── Open Map Button ────────────────────────────────────
                 Expanded(
                   child: GestureDetector(
                     onTap: onOpenMap,
                     child: Container(
-                      height: Dimensions.h(40),
+                      height: isTablet ? Dimensions.h(100) : Dimensions.h(40),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(Dimensions.r(8)),
@@ -167,7 +329,7 @@ class CurrentTaskCard extends StatelessWidget {
                       child: Text(
                         AppStrings.openMap.tr,
                         style: TextStyle(
-                          fontSize: Dimensions.f(13),
+                          fontSize: isTablet ? Dimensions.f(18) : Dimensions.f(13),
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),

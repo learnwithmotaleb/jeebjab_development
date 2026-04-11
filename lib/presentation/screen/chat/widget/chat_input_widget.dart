@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
-import 'package:jeebjab/widget/app_text_field.dart';
 
 import '../../../../global/language/controller/language_controller.dart';
 
@@ -14,14 +14,14 @@ class ChatInputBar extends StatelessWidget {
     final ChatController controller = Get.find<ChatController>();
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(12)),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 15,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -31,79 +31,80 @@ class ChatInputBar extends StatelessWidget {
             // Text Input Field
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(4)),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(Dimensions.r(30)),
+                  border: Border.all(color: Colors.grey[200]!),
                 ),
                 child: TextField(
                   controller: controller.messageController,
-                  decoration:  InputDecoration(
-                    hintText: 'Type Something . . .',
-                    fillColor:  Colors.grey[100],
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-
-                      borderSide: BorderSide.none,
-                    ),
+                  style: TextStyle(fontSize: Dimensions.f(15), color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: 'Type Something...',
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                     hintStyle: TextStyle(
-                      color: AppColors.blackColor,
-                      fontSize: 14,
+                      color: Colors.grey[400],
+                      fontSize: Dimensions.f(14),
+                      fontWeight: FontWeight.w500,
                     ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                    contentPadding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(12)),
                   ),
                   maxLines: null,
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => controller.sendMessage(),
                 ),
-
               ),
             ),
 
-            const SizedBox(width: 8),
+            SizedBox(width: Dimensions.w(12)),
 
             // Add File Button
             GestureDetector(
               onTap: controller.addFile,
               child: Container(
-                width: 44,
-                height: 44,
+                width: Dimensions.w(48),
+                height: Dimensions.w(48),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.add_circle_outline,
+                child: Icon(
+                  Icons.add_rounded,
                   color: Colors.black87,
-                  size: 24,
+                  size: Dimensions.f(24),
                 ),
               ),
             ),
 
-            const SizedBox(width: 8),
+            SizedBox(width: Dimensions.w(12)),
 
-            // Send Button
             // Send Button
             GestureDetector(
               onTap: controller.sendMessage,
               child: Container(
-                width: 44,
-                height: 44,
+                width: Dimensions.w(48),
+                height: Dimensions.w(48),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    )
+                  ],
                 ),
-                child: Transform.flip(
-                  flipX: Get.find<LanguageController>().isEnglish ? false : false,
+                child: Center(
                   child: Icon(
                     Icons.send_rounded,
                     color: AppColors.whiteColor,
-                    size: 20,
+                    size: Dimensions.f(20),
                   ),
                 ),
               ),

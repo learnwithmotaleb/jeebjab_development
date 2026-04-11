@@ -22,7 +22,10 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(mobile: _buildMobile());
+    return ResponsiveLayout(
+      mobile: _buildMobile(),
+      tablet: _buildTablet(),
+    );
   }
 
   Widget _buildMobile() {
@@ -65,6 +68,60 @@ class _TaskScreenState extends State<TaskScreen> {
             )),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FB),
+      appBar: CommonAppBar(title: AppStrings.myTask.tr, showBack: false),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1000),
+          child: Column(
+            children: [
+              // ── Tab switcher (Centered) ──────────────────────────────────
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(24),
+                  vertical: Dimensions.h(24),
+                ),
+                child: SizedBox(
+                  width: 500, // Constrain switcher width on tablet
+                  child: Obx(() => TaskTabSwitcher(
+                    isActive: controller.isActiveTab.value,
+                    onActiveTab: () => controller.switchTab(true),
+                    onCompletedTab: () => controller.switchTab(false),
+                  )),
+                ),
+              ),
+
+              // ── Task Grid ────────────────────────────────────────────────
+              Expanded(
+                child: Obx(() => GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(8)),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: Dimensions.w(20),
+                    mainAxisSpacing: Dimensions.h(16),
+                    childAspectRatio: 1.6, // Adjusted for typical tablet card height
+                  ),
+                  itemCount: controller.currentList.length,
+                  itemBuilder: (context, index) {
+                    final item = controller.currentList[index];
+                    return TaskCard(
+                      item: item,
+                      isActive: controller.isActiveTab.value,
+                      onPickedUp: () => controller.onPickedUp(item),
+                      onOpenMap: () => controller.onOpenMap(item),
+                    );
+                  },
+                )),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

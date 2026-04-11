@@ -82,28 +82,49 @@ class RecentJobCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: Dimensions.h(6)),
+          SizedBox(height: Dimensions.h(8)),
 
-          Text(
-            job.title,
-            style: TextStyle(
-              fontSize: Dimensions.f(13),
-              fontWeight: FontWeight.w600,
-              color: AppColors.labelColor,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.w(4)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  job.title,
+                  style: TextStyle(
+                    fontSize: Dimensions.f(14),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.labelColor,
+                    height: 1.2,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: Dimensions.h(4)),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined, 
+                      size: Dimensions.f(12), 
+                      color: AppColors.greyColor,
+                    ),
+                    SizedBox(width: Dimensions.w(4)),
+                    Expanded(
+                      child: Text(
+                        job.distance,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(11), 
+                          color: AppColors.greyColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-
-          SizedBox(height: Dimensions.h(3)),
-
-          Row(
-            children: [
-              Icon(Icons.map_outlined, size: Dimensions.w(12), color: AppColors.greyColor),
-              SizedBox(width: Dimensions.w(4)),
-              Text(
-                job.distance,
-                style: TextStyle(fontSize: Dimensions.f(11), color: AppColors.greyColor),
-              ),
-            ],
           ),
         ],
       ),

@@ -6,12 +6,15 @@ import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
+import '../controller/driver_home_controller.dart';
+
 class DriverHeaderWidget extends StatelessWidget {
   final String name;
   final String email;
   final int completedJobs;
   final double totalEarn;
   final VoidCallback onNotification;
+  final DriverHomeController controller;
 
   const DriverHeaderWidget({
     super.key,
@@ -20,6 +23,7 @@ class DriverHeaderWidget extends StatelessWidget {
     required this.completedJobs,
     required this.totalEarn,
     required this.onNotification,
+    required this.controller,
   });
 
   @override
@@ -46,41 +50,70 @@ class DriverHeaderWidget extends StatelessWidget {
 
           SizedBox(height: Dimensions.h(10)),
 
-          // ── Profile row ───────────────────────────────────────────────
+          // ── Profile row: Avatar + Name + Rating + Notification ────────
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // ── Avatar ────────────────────────────────────────────────
               GestureDetector(
                 onTap: () {
                   Get.toNamed(RoutePath.profile);
                 },
                 child: CircleAvatar(
-                  radius: Dimensions.w(22),
+                  radius: Dimensions.w(28),
                   backgroundImage: AssetImage(AppImages.profileImage),
                 ),
               ),
               SizedBox(width: Dimensions.w(12)),
+
+              // ── Name + Rating (Column) ────────────────────────────────
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Name
                     Text(
                       name,
                       style: TextStyle(
-                        fontSize: Dimensions.f(15),
+                        fontSize: Dimensions.f(16),
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
                     ),
-                    Text(
-                      email,
-                      style: TextStyle(
-                        fontSize: Dimensions.f(12),
-                        color: Colors.white.withOpacity(0.8),
-                      ),
+                    SizedBox(height: Dimensions.h(4)),
+                    // Star Rating
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...List.generate(
+                          4,
+                              (index) => Icon(
+                            Icons.star_rounded,
+                            size: Dimensions.w(20),
+                            color: const Color(0xFFFFA500),
+                          ),
+                        ),
+                        Icon(
+                          Icons.star_rounded,
+                          size: Dimensions.w(18),
+                          color: Colors.white.withOpacity(0.4),
+                        ),
+                        SizedBox(width: Dimensions.w(4)),
+                        Text(
+                          '4.7',
+                          style: TextStyle(
+                            fontSize: Dimensions.f(16),
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
+
               // ── Notification bell ─────────────────────────────────────
               GestureDetector(
                 onTap: onNotification,
@@ -103,34 +136,102 @@ class DriverHeaderWidget extends StatelessWidget {
 
           SizedBox(height: Dimensions.h(16)),
 
-          // ── Stats row ─────────────────────────────────────────────────
+          // ── Activity Summary with Dropdown ────────────────────────────
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.w(20),
-              vertical: Dimensions.h(12),
+              horizontal: Dimensions.w(16),
+              vertical: Dimensions.h(14),
             ),
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius: BorderRadius.circular(Dimensions.r(12)),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _StatItem(
-                    label: AppStrings.completedJobs.tr,
-                    value: completedJobs.toString(),
-                  ),
+                // ── Title + Dropdown ──────────────────────────────────
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Activity Summary',
+                      style: TextStyle(
+                        fontSize: Dimensions.f(14),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    Obx(() => PopupMenuButton<String>(
+                      onSelected: (value) =>
+                          controller.setActivityPeriod(value),
+                      itemBuilder: (BuildContext context) =>
+                          controller.periodOptions
+                              .map((String choice) =>
+                              PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              ))
+                              .toList(),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Dimensions.w(10),
+                          vertical: Dimensions.h(6),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius:
+                          BorderRadius.circular(Dimensions.r(6)),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              controller.activityPeriod.value,
+                              style: TextStyle(
+                                fontSize: Dimensions.f(12),
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.greyColor,
+                              ),
+                            ),
+                            SizedBox(width: Dimensions.w(4)),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              size: Dimensions.w(16),
+                              color: AppColors.greyColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+                  ],
                 ),
-                Container(
-                  width: 1,
-                  height: Dimensions.h(32),
-                  color: Colors.black.withOpacity(0.3),
-                ),
-                Expanded(
-                  child: _StatItem(
-                    label: AppStrings.totalEarn.tr,
-                    value: '${AppStrings.aed.tr} ${totalEarn.toInt()}',
-                  ),
+
+                SizedBox(height: Dimensions.h(12)),
+
+                // ── Stats Row ─────────────────────────────────────────
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StatItem(
+                        label: AppStrings.completedJobs.tr,
+                        value: completedJobs.toString(),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: Dimensions.h(40),
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                    Expanded(
+                      child: _StatItem(
+                        label: AppStrings.totalEarn.tr,
+                        value: '${AppStrings.aed.tr} ${totalEarn.toInt()}',
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/widget/app_button.dart';
 
 import '../../../../../utils/static_strings/static_strings.dart';
 
@@ -42,7 +43,7 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
-      width: MediaQuery.of(context).size.width * 0.88,
+      width: Dimensions.screenWidth * (Dimensions.isTablet ? 0.4 : 0.88),
       child: SafeArea(
         child: Column(
           children: [
@@ -297,30 +298,14 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                 Dimensions.w(16),
                 Dimensions.h(20),
               ),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    padding:
-                    EdgeInsets.symmetric(vertical: Dimensions.h(16)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Dimensions.r(30)),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                   AppStrings.apply.tr,
-                    style: TextStyle(
-                      fontSize: Dimensions.f(16),
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+              
+              child:AppButton(label:   AppStrings.apply.tr,
+                height: Dimensions.h(56),
+                onPressed: () => Get.back(),)
             ),
+            SizedBox(height: Dimensions.h(24)),
+
+
           ],
         ),
       ),

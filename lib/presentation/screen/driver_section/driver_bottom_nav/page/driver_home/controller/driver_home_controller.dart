@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../../../../core/routes/route_path.dart';
 
-enum TaskStatus { pickUp, delivered }
+enum TaskStatus { pickUp, inTransit, delivered }
 
 class DriverTask {
   final String id;
@@ -45,6 +45,10 @@ class DriverHomeController extends GetxController {
   // ── Stats ──────────────────────────────────────────────────────────────────
   final RxInt completedJobs = 23.obs;
   final RxDouble totalEarn = 2423.0.obs;
+
+  // ── Activity Summary Period Selection ───────────────────────────────────────
+  final RxString activityPeriod = 'Weekly'.obs;
+  final List<String> periodOptions = ['Weekly', 'Monthly'];
 
   // ── Current Tasks ──────────────────────────────────────────────────────────
   final RxList<DriverTask> currentTasks = <DriverTask>[
@@ -113,6 +117,12 @@ class DriverHomeController extends GetxController {
     ),
   ];
 
+  // ── Change Activity Period ──────────────────────────────────────────────────
+  void setActivityPeriod(String period) {
+    activityPeriod.value = period;
+    // TODO: Fetch data based on period selection
+  }
+
   // ── PickUp confirmation ────────────────────────────────────────────────────
   void onPickUpTap(DriverTask task) {
     Get.dialog(
@@ -134,7 +144,7 @@ class DriverHomeController extends GetxController {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Are You Sure, You Are Picked-Up ?',
+                'Are You Sure, You Have Picked-Up ?',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 24),
@@ -164,7 +174,7 @@ class DriverHomeController extends GetxController {
                     child: GestureDetector(
                       onTap: () {
                         Get.back();
-                        task.status.value = TaskStatus.delivered;
+                        task.status.value = TaskStatus.inTransit;
                       },
                       child: Container(
                         height: 46,
@@ -199,6 +209,5 @@ class DriverHomeController extends GetxController {
   void onRecentJobTap(RecentJob job) {
     // TODO: Get.toNamed(RoutePath.categoryStatus, arguments: {'title': job.title});
     Get.toNamed(RoutePath.pickUpDetails, arguments: {'task': job});
-
   }
 }

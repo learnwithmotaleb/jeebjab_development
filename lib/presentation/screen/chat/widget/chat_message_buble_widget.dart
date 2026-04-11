@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
@@ -12,8 +13,11 @@ class ChatMessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTablet = Dimensions.screenWidth > 600;
+    double maxBubbleWidth = isTablet ? 500 : Dimensions.screenWidth * 0.75;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: Dimensions.h(16)),
       child: Row(
         mainAxisAlignment: message.isSender
             ? MainAxisAlignment.end
@@ -26,29 +30,37 @@ class ChatMessageBubble extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.75,
+                maxWidth: maxBubbleWidth,
               ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(16),
+                vertical: Dimensions.h(12),
               ),
               decoration: BoxDecoration(
                 color: message.isSender
                     ? AppColors.primaryColor
-                    : Colors.grey[200],
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(message.isSender ? 16 : 4),
-                  bottomRight: Radius.circular(message.isSender ? 4 : 16),
+                  topLeft: Radius.circular(Dimensions.r(16)),
+                  topRight: Radius.circular(Dimensions.r(16)),
+                  bottomLeft: Radius.circular(message.isSender ? Dimensions.r(16) : Dimensions.r(4)),
+                  bottomRight: Radius.circular(message.isSender ? Dimensions.r(4) : Dimensions.r(16)),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  )
+                ],
               ),
               child: Text(
                 message.text,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: Dimensions.f(15),
                   color: message.isSender ? AppColors.whiteColor : Colors.black87,
                   height: 1.4,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -59,4 +71,4 @@ class ChatMessageBubble extends StatelessWidget {
       ),
     );
   }
-}
+}

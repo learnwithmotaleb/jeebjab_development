@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
@@ -21,65 +22,95 @@ class ProfileHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 20),
+        SizedBox(height: Dimensions.h(24)),
 
-        // ── Avatar ────────────────────────────────────────────────────────
-        CircleAvatar(
-          radius: 46,
-          backgroundColor: const Color(0xFFEEEEEE),
-          backgroundImage: NetworkImage(imageUrl),
-          onBackgroundImageError: (_, __) {},
+        // ── Avatar with Premium Gaps ──────────────────────────────────────
+        Container(
+          padding: EdgeInsets.all(Dimensions.r(4)),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.primaryColor.withOpacity(0.2), width: 2),
+          ),
+          child: CircleAvatar(
+            radius: Dimensions.r(50),
+            backgroundColor: const Color(0xFFF5F5F5),
+            backgroundImage: NetworkImage(imageUrl),
+            onBackgroundImageError: (_, __) {},
+          ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: Dimensions.h(16)),
 
         // ── Name ──────────────────────────────────────────────────────────
         Text(
           name,
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1A1A2E),
+          style: TextStyle(
+            fontSize: Dimensions.f(22),
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1A1A2E),
+            letterSpacing: 0.5,
           ),
         ),
 
-        const SizedBox(height: 4),
+        SizedBox(height: Dimensions.h(4)),
 
         // ── Phone ─────────────────────────────────────────────────────────
         Text(
           phone,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Colors.grey,
+          style: TextStyle(
+            fontSize: Dimensions.f(14),
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
           ),
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: Dimensions.h(16)),
 
         // ── Star Row + Rating Number ──────────────────────────────────────
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _StarRow(rating: rating),
-            const SizedBox(width: 8),
-            Text(
-              rating.toStringAsFixed(1),
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20), vertical: Dimensions.h(10)),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(Dimensions.r(30)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _StarRow(rating: rating),
+              SizedBox(width: Dimensions.w(12)),
+              Text(
+                rating.toStringAsFixed(1),
+                style: TextStyle(
+                  fontSize: Dimensions.f(24),
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFF1A1A2E),
+                ),
               ),
-            ),
-            const SizedBox(width: 4),
-            const Text(
-              'Ratings',
-              style: TextStyle(fontSize: 13, color: Colors.grey),
-            ),
-          ],
+              SizedBox(width: Dimensions.w(6)),
+              Text(
+                'Ratings',
+                style: TextStyle(
+                  fontSize: Dimensions.f(13), 
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
 
-        const SizedBox(height: 20),
-        const Divider(color: Color(0xFFEEEEEE), thickness: 1),
+        SizedBox(height: Dimensions.h(24)),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
+          child: const Divider(color: Color(0xFFF0F0F0), thickness: 1.5),
+        ),
       ],
     );
   }
@@ -96,16 +127,16 @@ class _StarRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (i) {
         if (i < rating.floor()) {
-          return const Icon(Icons.star_rounded,
-              color: Color(0xFFFFA500), size: 26);
+          return Icon(Icons.star_rounded,
+              color: const Color(0xFFFFA500), size: Dimensions.f(26));
         } else if (i < rating) {
-          return const Icon(Icons.star_half_rounded,
-              color: Color(0xFFFFA500), size: 26);
+          return Icon(Icons.star_half_rounded,
+              color: const Color(0xFFFFA500), size: Dimensions.f(26));
         } else {
-          return const Icon(Icons.star_outline_rounded,
-              color: Color(0xFFFFA500), size: 26);
+          return Icon(Icons.star_outline_rounded,
+              color: const Color(0xFFFFA500), size: Dimensions.f(26));
         }
       }),
     );
   }
-}
+}
