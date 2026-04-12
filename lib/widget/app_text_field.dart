@@ -13,6 +13,7 @@ class AppTextField extends StatefulWidget {
   final String? helper;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
   final int maxLines;
   final bool obscure;
   final double? radius;
@@ -37,6 +38,7 @@ class AppTextField extends StatefulWidget {
     this.prefixIcon,
     this.radius,
     this.borderColor,
+    this.onChanged,
     this.onTap,
     this.readOnly = false,
     this.onSubmitted, this.hintTextStyle,
@@ -71,6 +73,7 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: _obscureText,
       readOnly: widget.readOnly,
       onTap: widget.onTap,
+      onChanged: widget.onChanged,
       textInputAction:
       widget.nextFocus != null ? TextInputAction.next : TextInputAction.done,
       onFieldSubmitted: (_) {
