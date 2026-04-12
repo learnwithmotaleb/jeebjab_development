@@ -65,8 +65,8 @@ class OverviewPublishSection extends StatelessWidget {
               onPressed: controller.canPublish
                   ? () {
                 AppAlerts.confirm(
-                  title: AppStrings.appName.tr,
-                  message: AppStrings.payments.tr,
+                  title: AppStrings.payments.tr,
+                  message: AppStrings.yourPostHasBeenSuccessfullyPublished.tr,
                   onConfirm: () {
                     Get.offAllNamed(
                       RoutePath.bottomNav,

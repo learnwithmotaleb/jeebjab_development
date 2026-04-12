@@ -224,6 +224,7 @@ class AppStrings {
   static const String thankYouSendMessageRequest = "Thank you. Send Message Request";
   static const String changeLanguage = 'Change Language';
   static const String payments = "Payments";
+  static const String yourPostHasBeenSuccessfullyPublished = "Your post has been successfully published";
   static const String cancellationsAndRefunds = "Cancellations & Refunds";
 
   static const String termsAndConditions = "Terms And Conditions";
