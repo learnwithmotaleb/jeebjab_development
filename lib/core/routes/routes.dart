@@ -745,7 +745,7 @@ class AppRouter {
       page: () =>  DeliveryScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
-        Get.put(DeliveryController());
+        Get.put(DeliveryController(), permanent: true);
       }),
     ),
 

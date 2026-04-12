@@ -14,6 +14,8 @@ import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_scree
 
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
+import '../controller/driver_bottom_nav_controller.dart';
+import 'package:get/get.dart';
 
 
 class DriverBottomNavScreen extends StatefulWidget {
@@ -24,7 +26,7 @@ class DriverBottomNavScreen extends StatefulWidget {
 }
 
 class _DriverBottomNavScreenState extends State<DriverBottomNavScreen> {
-  int _currentIndex = 0;
+  final DriverBottomNavController controller = Get.put(DriverBottomNavController());
 
   final List<dynamic> _pages = [
     DriverHomeScreen(),
@@ -41,44 +43,40 @@ class _DriverBottomNavScreenState extends State<DriverBottomNavScreen> {
 
   Widget _buildMobile() {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: Obx(() => _pages[controller.selectedIndex.value]),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+      bottomNavigationBar: Obx(() => BottomNavigationBar(
+        currentIndex: controller.selectedIndex.value,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: AppColors.greyColor,
         showUnselectedLabels: true,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          controller.changeIndex(index);
         },
         items: [
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: AppStrings.home.tr,
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.work_outline),
             activeIcon: Icon(Icons.work),
             label: AppStrings.jobs.tr,
           ),
-
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.task_outlined),
             activeIcon: Icon(Icons.task),
             label: AppStrings.task.tr,
           ),
-
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label:AppStrings.profile.tr,
+            label: AppStrings.profile.tr,
           ),
         ],
-      ),
+      )),
     );
   }
 }

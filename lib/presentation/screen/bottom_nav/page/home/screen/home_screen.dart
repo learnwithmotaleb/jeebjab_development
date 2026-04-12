@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Stats Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
                   Expanded(
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  SizedBox(width: Dimensions.w(5)),
                   Expanded(
                     child: _statCard(
                       value: "1.3M",
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  SizedBox(width: Dimensions.w(5)),
                   Expanded(
                     child: _statCard(
                       value: "720,000",

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
@@ -6,8 +7,13 @@ import '../controller/delivery_controller.dart';
 
 class DeliveryImageCard extends StatelessWidget {
   final DeliveryProof delivery;
+  final File? capturedImage;
 
-  const DeliveryImageCard({super.key, required this.delivery});
+  const DeliveryImageCard({
+    super.key,
+    required this.delivery,
+    this.capturedImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +25,26 @@ class DeliveryImageCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.r(20)),
           child: Stack(
             children: [
-              // Product Image
+              // Product Image (captured or default)
               AspectRatio(
                 aspectRatio: 1,
-                child: Image.network(
+                child: capturedImage != null
+                    ? Image.file(
+                  capturedImage!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: const Color(0xFFE0E0E0),
+                    child: const Icon(Icons.image_outlined,
+                        color: Colors.grey),
+                  ),
+                )
+                    : Image.network(
                   delivery.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     color: const Color(0xFFE0E0E0),
-                    child: const Icon(Icons.image_outlined, color: Colors.grey),
+                    child: const Icon(Icons.image_outlined,
+                        color: Colors.grey),
                   ),
                 ),
               ),
@@ -79,6 +96,7 @@ class DeliveryImageCard extends StatelessWidget {
                   ),
                 ),
               ),
+
             ],
           ),
         ),

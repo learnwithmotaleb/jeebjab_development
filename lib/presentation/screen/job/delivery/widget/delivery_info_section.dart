@@ -19,7 +19,7 @@ class DeliveryInfoSection extends StatelessWidget {
           delivery.description,
           style: TextStyle(
             fontSize: Dimensions.f(13),
-            color: AppColors.greyColor,
+            color: AppColors.blackColor,
             height: 1.5,
           ),
         ),
@@ -31,7 +31,7 @@ class DeliveryInfoSection extends StatelessWidget {
           delivery.publishedTime,
           style: TextStyle(
             fontSize: Dimensions.f(11),
-            color: AppColors.greyColor,
+            color: AppColors.blackColor,
           ),
         ),
 
@@ -80,7 +80,7 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // ── Icon (optional) ────────────────────────────────────────────
         if (iconData != null)
@@ -94,7 +94,7 @@ class _InfoRow extends StatelessWidget {
 
         // ── Label ──────────────────────────────────────────────────────
         SizedBox(
-          width: Dimensions.w(120),
+          width: 120,
           child: Text(
             label,
             style: TextStyle(

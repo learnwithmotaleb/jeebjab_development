@@ -77,114 +77,116 @@ class CategoryInfoSheet extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── Drag Handle ──────────────────────────────────────────────────
-          Container(
-            width: 40,
-            height: 2,
-            decoration: BoxDecoration(
-              color: const Color(0xFFDDDDDD),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-
-
-          // ── Close Button ─────────────────────────────────────────────────
-          Align(
-            alignment: Alignment.topRight,
-            child: GestureDetector(
-              onTap: () => Get.back(),
-              child: Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFCCCCCC), width: 1.5),
-                ),
-                child: const Icon(Icons.close, size: 16, color: Colors.grey),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ── Drag Handle ──────────────────────────────────────────────────
+            Container(
+              width: 40,
+              height: 2,
+              decoration: BoxDecoration(
+                color: const Color(0xFFDDDDDD),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-          ),
-
-
-
-          // ── Icon Row ──────────────────────────────────────────────────────
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: data.icons.map((item) => _IconLabel(item: item)).toList(),
-          ),
-
-          const SizedBox(height: 10),
-          // ── Title ─────────────────────────────────────────────────────────
-          Text(
-            data.title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF1A1A2E),
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          // ── Bullet Points ─────────────────────────────────────────────────
-          ...data.bulletPoints.map(
-                (point) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: CircleAvatar(
-                      radius: 5,
-                      backgroundColor: Color(0xFFCCCCCC),
-                    ),
+        
+        
+            // ── Close Button ─────────────────────────────────────────────────
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () => Get.back(),
+                child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFCCCCCC), width: 1.5),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      point,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF444444),
-                        height: 1.4,
+                  child: const Icon(Icons.close, size: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+        
+        
+        
+            // ── Icon Row ──────────────────────────────────────────────────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: data.icons.map((item) => _IconLabel(item: item)).toList(),
+            ),
+        
+            const SizedBox(height: 10),
+            // ── Title ─────────────────────────────────────────────────────────
+            Text(
+              data.title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
+        
+            const SizedBox(height: 10),
+        
+            // ── Bullet Points ─────────────────────────────────────────────────
+            ...data.bulletPoints.map(
+                  (point) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Color(0xFFCCCCCC),
                       ),
                     ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        point,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF444444),
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        
+            const SizedBox(height: 10),
+        
+            // ── Continue Button ───────────────────────────────────────────────
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: onContinue,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
-          // ── Continue Button ───────────────────────────────────────────────
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onContinue,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  elevation: 0,
                 ),
-                elevation: 0,
-              ),
-              child:  Text(
-                AppStrings.continueButton.tr,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                child:  Text(
+                  AppStrings.continueButton.tr,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

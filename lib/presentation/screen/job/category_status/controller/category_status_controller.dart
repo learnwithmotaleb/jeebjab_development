@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import 'package:jeebjab/widget/app_confirmation_alert.dart';
+import 'package:jeebjab/widget/confirmataion_alert.dart';
 
 // ── Category types ─────────────────────────────────────────────────────────
 enum PostCategory { move, recycle, buyForMe, giveAway }
@@ -119,7 +121,18 @@ class CategoryStatusController extends GetxController {
   void onDelivery() {
     // Move only
     requestStatus.value = RequestStatus.delivered;
-    Get.toNamed(RoutePath.deliveryScreen);
+    // Get.toNamed(RoutePath.deliveryScreen);
+   AppAlerts.confirm(title: "Are you sure", message: "Are you sure, you are picked-up?", onConfirm: (){
+
+     AppAlerts.proof(
+       title: 'Proof',              // Default: 'Proof'
+       message: 'Upload picture as a proof!',          // Default: 'Upload Picture As A Proof!'
+       buttonLabel: 'Continue',          // Default: 'Continue'
+
+     );
+
+
+   });
 
   }
 

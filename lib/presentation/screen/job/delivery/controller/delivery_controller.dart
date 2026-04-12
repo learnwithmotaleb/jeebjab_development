@@ -1,5 +1,10 @@
+import 'dart:io';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
+
+import '../../../../../core/routes/route_path.dart';
+import '../../../driver_section/driver_bottom_nav/controller/driver_bottom_nav_controller.dart';
 
 class DeliveryProof {
   final String imageUrl;
@@ -25,13 +30,31 @@ class DeliveryProof {
     required this.deliveryTime,
     required this.publishedTime,
   });
+
+  // ── Create a copy with updated image ────────────────────────────────────
+  DeliveryProof copyWith({String? imageUrl}) {
+    return DeliveryProof(
+      imageUrl: imageUrl ?? this.imageUrl,
+      category: category,
+      title: title,
+      price: price,
+      currency: currency,
+      description: description,
+      size: size,
+      deliveryLocation: deliveryLocation,
+      deliveryTime: deliveryTime,
+      publishedTime: publishedTime,
+    );
+  }
 }
 
 class DeliveryController extends GetxController {
   // ── Delivery Proof Data ────────────────────────────────────────────────
   final RxBool isDeliveryMarked = false.obs;
+  final Rx<File?> capturedImage = Rx<File?>(null);
 
   late DeliveryProof deliveryProof;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void onInit() {
@@ -56,9 +79,77 @@ class DeliveryController extends GetxController {
     );
   }
 
+  // ── Open Camera & Capture Image ────────────────────────────────────────
+  Future<void> captureImageFromCamera() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        capturedImage.value = File(image.path);
+        // Navigate to Delivery Screen to show captured image
+        Get.toNamed(
+          RoutePath.deliveryScreen,
+          arguments: {'capturedImage': File(image.path)},
+        );
+      }
+    } catch (e) {
+      AppAlerts.error(message: 'Failed to capture image: $e');
+    }
+  }
+
+  // ── Open Gallery & Pick Image ──────────────────────────────────────────
+  Future<void> pickImageFromGallery() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        capturedImage.value = File(image.path);
+        // Navigate to Delivery Screen to show captured image
+        Get.toNamed(
+          RoutePath.deliveryScreen,
+          arguments: {'capturedImage': File(image.path)},
+        );
+      }
+    } catch (e) {
+      AppAlerts.error(message: 'Failed to pick image: $e');
+    }
+  }
+
+  // ── Update Delivery Proof with Captured Image ──────────────────────────
+  void updateDeliveryProofImage(String imagePath) {
+    deliveryProof = deliveryProof.copyWith(imageUrl: imagePath);
+  }
+
   // ── Mark as Delivered ──────────────────────────────────────────────────
   void markAsDelivered() {
     isDeliveryMarked.value = true;
     AppAlerts.success(message: "Success Delivery");
+
+    // Switch to JobPostScreen in DriverBottomNav
+    try {
+      final DriverBottomNavController navSectionController = Get.find<DriverBottomNavController>();
+      navSectionController.changeIndex(1); // Set to JobPostScreen index
+    } catch (e) {
+      // If controller doesn't exist yet, we can't switch index this way, 
+      // but Get.offAllNamed will initialize it.
+    }
+
+    // Navigate back to Driver Bottom Nav with Jobs tab active
+    Future.delayed(const Duration(seconds: 1), () {
+      Get.offAllNamed(RoutePath.driverBottomNav, arguments: 1);
+    });
+  }
+
+  // ── Reset for next delivery ────────────────────────────────────────────
+  void reset() {
+    isDeliveryMarked.value = false;
+    capturedImage.value = null;
+    _initializeDeliveryData();
   }
 }
