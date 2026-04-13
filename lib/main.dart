@@ -24,10 +24,6 @@ void main() async {
   Get.put(LanguageController(), permanent: true);
   Get.put(DeliveryController(), permanent: true);
 
-  runApp(
-    DevicePreviewWrapper( // 👈 wrap here
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 

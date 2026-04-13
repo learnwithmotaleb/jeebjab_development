@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Stats Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Row(
                 children: [
                   Expanded(
