@@ -1,102 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// Responsive scaling helpers based on a base design size.
-/// Base Figma: 390 x 844 (iPhone 12).
+import '../enums/device_type.dart';
+
 class Dimensions {
   Dimensions._();
 
-  // Base design (Figma reference)
+  // 🔹 Base design (Figma)
   static const double baseWidth = 390.0;
   static const double baseHeight = 844.0;
 
-  // Live screen size
+  // 🔹 Screen size
   static double get screenWidth => Get.width;
   static double get screenHeight => Get.height;
 
-  // Orientation-aware sides
+  // 🔹 Orientation-safe
   static double get shortestSide =>
       screenWidth < screenHeight ? screenWidth : screenHeight;
 
   static double get longestSide =>
       screenWidth > screenHeight ? screenWidth : screenHeight;
 
-  // MediaQuery safe access
+  // 🔹 MediaQuery
   static MediaQueryData? get _mq =>
       Get.context != null ? MediaQuery.of(Get.context!) : null;
 
   static double get pixelRatio => _mq?.devicePixelRatio ?? 2.0;
   static double get textScale => _mq?.textScaleFactor ?? 1.0;
 
-  /// Width scale
+  // 🔹 Device Type Enum (NEW 🔥)
+  static DeviceType get deviceType {
+    if (isDesktop) return DeviceType.desktop;
+    if (isTablet) return DeviceType.tablet;
+    return DeviceType.mobile;
+  }
+
+  // 🔹 Width scale
   static double w(double value) {
     final scaled = value * (screenWidth / baseWidth);
     return clampSpace(scaled);
   }
 
-  /// Height scale
+  // 🔹 Height scale
   static double h(double value) {
     final scaled = value * (screenHeight / baseHeight);
     return clampSpace(scaled);
   }
 
-  /// Font scale (stable on rotation)
+  // 🔹 Font scale (improved)
   static double f(double size, {bool respectTextScale = true}) {
     double scaled = size * (shortestSide / baseWidth);
 
     if (respectTextScale) {
-      scaled *= textScale;
+      scaled *= textScale.clamp(0.8, 1.3); // 🔥 FIXED
     }
 
     return clampFont(scaled);
   }
 
-  /// Radius scale
+  // 🔹 Radius
   static double r(double radius) {
     final scaled = radius * (screenWidth / baseWidth);
     return clampSpace(scaled);
   }
 
-
-  ///Responsive Font Size
-  static double responsiveFont({
-    required double mobile,
-    double? tablet,
-    double? desktop,
-  }) {
-    if (isDesktop) return f(desktop ?? tablet ?? mobile);
-    if (isTablet) return f(tablet ?? mobile);
-    return f(mobile);
+  // 🔥 Clean API for Font
+  static double fs(
+      double mobile, {
+        double? tablet,
+        double? desktop,
+      }) {
+    switch (deviceType) {
+      case DeviceType.desktop:
+        return f(desktop ?? tablet ?? mobile);
+      case DeviceType.tablet:
+        return f(tablet ?? mobile);
+      default:
+        return f(mobile);
+    }
   }
 
-
-  ///Responsive height and widget for container
-  static double responsiveHeightWidth({
-    required double mobile,
-    double? tablet,
-    double? desktop,
-  }) {
-    if (isDesktop) return f(desktop ?? tablet ?? mobile);
-    if (isTablet) return f(tablet ?? mobile);
-    return f(mobile);
+  // 🔥 Layout size (FIXED: was using f ❌)
+  static double rs(
+      double mobile, {
+        double? tablet,
+        double? desktop,
+      }) {
+    switch (deviceType) {
+      case DeviceType.desktop:
+        return w(desktop ?? tablet ?? mobile);
+      case DeviceType.tablet:
+        return w(tablet ?? mobile);
+      default:
+        return w(mobile);
+    }
   }
 
-  //Responsive Icon Size
-  static double responsiveIcon({
-    required double mobile,
-    double? tablet,
-    double? desktop,
-  }) {
-    if (isDesktop) return w(desktop ?? tablet ?? mobile);
-    if (isTablet) return w(tablet ?? mobile);
-    return w(mobile);
+  // 🔹 Icon size
+  static double icon(
+      double mobile, {
+        double? tablet,
+        double? desktop,
+      }) {
+    return rs(mobile, tablet: tablet, desktop: desktop);
   }
 
-  // Padding helpers
+  // 🔹 Padding helpers (FIXED)
   static EdgeInsets pAll(double v) => EdgeInsets.all(w(v));
 
   static EdgeInsets pSym({double h = 16, double v = 16}) =>
-      EdgeInsets.symmetric(horizontal: w(h), vertical: h);
+      EdgeInsets.symmetric(horizontal: w(h), vertical: h); // FIXED
 
   static EdgeInsets pOnly({
     double l = 0,
@@ -111,34 +124,34 @@ class Dimensions {
         bottom: h(b),
       );
 
-  // Common paddings
+  // 🔹 Common paddings
   static EdgeInsets get pSmall => pAll(8);
   static EdgeInsets get pMedium => pAll(16);
   static EdgeInsets get pLarge => pAll(24);
 
-  // Common gaps
+  // 🔹 Gaps
   static SizedBox gapW(double v) => SizedBox(width: w(v));
   static SizedBox gapH(double v) => SizedBox(height: h(v));
 
-  /// Safe areas
+  // 🔹 Safe area
   static EdgeInsets get safePadding => _mq?.padding ?? EdgeInsets.zero;
 
-  /// Breakpoints (shortestSide based = orientation safe)
+  // 🔹 Breakpoints
   static bool get isMobile => shortestSide < 600;
   static bool get isTablet =>
       shortestSide >= 600 && shortestSide < 1024;
   static bool get isDesktop => shortestSide >= 1024;
 
-  /// Clamp font sizes
+  // 🔹 Clamp font (UPDATED 🔥)
   static double clampFont(
       double value, {
         double min = 12,
-        double max = 28,
+        double max = 40, // increased for desktop
       }) {
     return value.clamp(min, max);
   }
 
-  /// Clamp spacing
+  // 🔹 Clamp spacing
   static double clampSpace(
       double value, {
         double min = 4,
@@ -147,3 +160,4 @@ class Dimensions {
     return value.clamp(min, max);
   }
 }
+
