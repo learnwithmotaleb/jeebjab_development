@@ -71,36 +71,64 @@ class _TaskScreenState extends State<TaskScreen> {
 
   Widget _buildTablet() {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
+      backgroundColor: const Color(0xFFF0F5F9),
       appBar: CommonAppBar(title: AppStrings.myTask.tr, showBack: false),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
+          constraints: const BoxConstraints(maxWidth: 1100),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Dimensions.h(24)),
+              SizedBox(height: Dimensions.h(32)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
-                child: Center(
-                  child: SizedBox(
-                    width: 450,
-                    child: Obx(() => TaskTabSwitcher(
-                      isActive: controller.isActiveTab.value,
-                      onActiveTab: () => controller.switchTab(true),
-                      onCompletedTab: () => controller.switchTab(false),
-                    )),
-                  ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        title: AppStrings.activePost.tr,
+                        count: controller.activePosts.length,
+                        icon: Icons.pending_actions_rounded,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    SizedBox(width: Dimensions.w(20)),
+                    Expanded(
+                      child: _buildStatCard(
+                        title: AppStrings.completedPost.tr,
+                        count: controller.completedPosts.length,
+                        icon: Icons.task_alt_rounded,
+                        color: AppColors.completeColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: Dimensions.h(32)),
+              Center(
+                child: SizedBox(
+                  width: 500,
+                  child: Obx(() => TaskTabSwitcher(
+                    isActive: controller.isActiveTab.value,
+                    onActiveTab: () => controller.switchTab(true),
+                    onCompletedTab: () => controller.switchTab(false),
+                  )),
+                ),
+              ),
+              SizedBox(height: Dimensions.h(24)),
               Expanded(
                 child: Obx(() => GridView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  padding: EdgeInsets.fromLTRB(
+                    Dimensions.w(24),
+                    0,
+                    Dimensions.w(24),
+                    Dimensions.h(24),
+                  ),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 550,
+                    mainAxisExtent: Dimensions.h(200),
                     crossAxisSpacing: Dimensions.w(24),
                     mainAxisSpacing: Dimensions.h(24),
-                    mainAxisExtent: Dimensions.h(220),
                   ),
                   itemCount: controller.currentList.length,
                   itemBuilder: (context, index) {
@@ -110,7 +138,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       isActive: controller.isActiveTab.value,
                       onPickedUp: () => controller.onPickedUp(item),
                       onOpenMap: () => controller.onOpenMap(item),
-                      margin: EdgeInsets.zero, // Spacing handled by GridView
+                      margin: EdgeInsets.zero,
                     );
                   },
                 )),
@@ -118,6 +146,62 @@ class _TaskScreenState extends State<TaskScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required String title,
+    required int count,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(Dimensions.w(20)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(Dimensions.r(16)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(Dimensions.w(12)),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: Dimensions.w(24)),
+          ),
+          SizedBox(width: Dimensions.w(16)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.greyColor,
+                ),
+              ),
+              Text(
+                count.toString(),
+                style: TextStyle(
+                  fontSize: Dimensions.f(24),
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.labelColor,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
