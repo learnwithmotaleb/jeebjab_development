@@ -31,10 +31,9 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.myTask.tr,showBack: false,),
+      appBar: CommonAppBar(title: AppStrings.myTask.tr, showBack: false),
       body: Column(
         children: [
-          // ── Tab switcher ──────────────────────────────────────────────
           Padding(
             padding: EdgeInsets.fromLTRB(
               Dimensions.w(16),
@@ -48,10 +47,7 @@ class _TaskScreenState extends State<TaskScreen> {
               onCompletedTab: () => controller.switchTab(false),
             )),
           ),
-
           SizedBox(height: Dimensions.h(16)),
-
-          // ── Task list ─────────────────────────────────────────────────
           Expanded(
             child: Obx(() => ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
@@ -63,6 +59,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   isActive: controller.isActiveTab.value,
                   onPickedUp: () => controller.onPickedUp(item),
                   onOpenMap: () => controller.onOpenMap(item),
+                  margin: EdgeInsets.only(bottom: Dimensions.h(16)),
                 );
               },
             )),
@@ -78,34 +75,32 @@ class _TaskScreenState extends State<TaskScreen> {
       appBar: CommonAppBar(title: AppStrings.myTask.tr, showBack: false),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1000),
+          constraints: const BoxConstraints(maxWidth: 900),
           child: Column(
             children: [
-              // ── Tab switcher (Centered) ──────────────────────────────────
+              SizedBox(height: Dimensions.h(24)),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(24),
-                  vertical: Dimensions.h(24),
-                ),
-                child: SizedBox(
-                  width: 500, // Constrain switcher width on tablet
-                  child: Obx(() => TaskTabSwitcher(
-                    isActive: controller.isActiveTab.value,
-                    onActiveTab: () => controller.switchTab(true),
-                    onCompletedTab: () => controller.switchTab(false),
-                  )),
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
+                child: Center(
+                  child: SizedBox(
+                    width: 450,
+                    child: Obx(() => TaskTabSwitcher(
+                      isActive: controller.isActiveTab.value,
+                      onActiveTab: () => controller.switchTab(true),
+                      onCompletedTab: () => controller.switchTab(false),
+                    )),
+                  ),
                 ),
               ),
-
-              // ── Task Grid ────────────────────────────────────────────────
+              SizedBox(height: Dimensions.h(32)),
               Expanded(
                 child: Obx(() => GridView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(8)),
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: Dimensions.w(20),
-                    mainAxisSpacing: Dimensions.h(16),
-                    childAspectRatio: 1.6, // Adjusted for typical tablet card height
+                    crossAxisSpacing: Dimensions.w(24),
+                    mainAxisSpacing: Dimensions.h(24),
+                    mainAxisExtent: Dimensions.h(220),
                   ),
                   itemCount: controller.currentList.length,
                   itemBuilder: (context, index) {
@@ -115,6 +110,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       isActive: controller.isActiveTab.value,
                       onPickedUp: () => controller.onPickedUp(item),
                       onOpenMap: () => controller.onOpenMap(item),
+                      margin: EdgeInsets.zero, // Spacing handled by GridView
                     );
                   },
                 )),

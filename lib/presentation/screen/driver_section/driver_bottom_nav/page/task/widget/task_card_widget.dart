@@ -11,6 +11,7 @@ class TaskCard extends StatelessWidget {
   final bool isActive;
   final VoidCallback onPickedUp;
   final VoidCallback onOpenMap;
+  final EdgeInsetsGeometry? margin;
 
   const TaskCard({
     super.key,
@@ -18,6 +19,7 @@ class TaskCard extends StatelessWidget {
     required this.isActive,
     required this.onPickedUp,
     required this.onOpenMap,
+    this.margin,
   });
 
   IconData get _categoryIcon {
@@ -34,7 +36,7 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: Dimensions.h(16)),
+      margin: margin ?? EdgeInsets.zero,
       padding: EdgeInsets.all(Dimensions.w(16)),
       decoration: BoxDecoration(
         color: Colors.white,
