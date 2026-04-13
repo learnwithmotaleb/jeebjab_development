@@ -15,7 +15,7 @@ class NotificationDetailsController extends GetxController {
   RxString itemSubtype = 'Bike'.obs;
   RxString itemDate = '22 November 2025'.obs;
   RxString trackingNumber = 'EXD33264841'.obs;
-  RxString imagePath = AppImages.homeImage1.obs;
+  RxString imagePath = AppImages.profileImage.obs;
   RxString status = 'pending'.obs; // "pending", "in_transit", "delivered"
 
   RxString driverName = 'Fawaz Georges'.obs;

@@ -118,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   Expanded(
+                    flex:1,
                     child: _statCard(
                       value: "30 Sec",
                       label: AppStrings.averageResponse.tr,
@@ -131,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: Dimensions.w(5)),
                   Expanded(
+                    flex:1,
                     child: _statCard(
                       value: "1.3M",
                       label: AppStrings.deliveriesAndPickups.tr,
@@ -144,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: Dimensions.w(5)),
                   Expanded(
+                    flex:1,
                     child: _statCard(
                       value: "720,000",
                       label: AppStrings.reduceCarRides.tr,
@@ -777,11 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: AppTextStyles.title.copyWith(color: AppColors.whiteColor),
           ),
           const SizedBox(height: 8),
           Row(
@@ -789,8 +788,8 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 16,
-                height: 16,
+                width: Dimensions.w(16),
+                height:  Dimensions.h(16),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -801,15 +800,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Color(0xFF1CBCB4),
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 2),
               Flexible(
                 child: Text(
                   label,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                    height: 1.3,
-                  ),
+                  style: AppTextStyles.body.copyWith(color: Colors.white),
                   textAlign: TextAlign.left,
                 ),
               ),

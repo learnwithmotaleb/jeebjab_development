@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_colors/app_colors.dart';
+import '../core/platform/platform_helper.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -32,16 +33,20 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: backgroundColor,
       elevation: 0,
-      centerTitle: true,
+      centerTitle: PlatformHelper.isIOS ? true : false,
 
-      // BACK BUTTON
+      // ✅ PLATFORM BASED BACK BUTTON
       leading: showBack
           ? IconButton(
         icon: Icon(
-          Icons.arrow_back_ios,
+          PlatformHelper.isIOS
+              ? Icons.arrow_back_ios
+              : Icons.arrow_back,
           color: backIconColor,
+          size: PlatformHelper.isIOS ? 20 : 24,
         ),
-        onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+        onPressed:
+        onBack ?? () => Navigator.of(context).maybePop(),
       )
           : null,
 

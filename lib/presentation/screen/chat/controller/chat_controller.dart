@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/utils/assets_image/app_images.dart';
 
 class ChatController extends GetxController {
   final TextEditingController messageController = TextEditingController();
@@ -9,9 +10,27 @@ class ChatController extends GetxController {
   RxList<ChatMessage> messages = <ChatMessage>[].obs;
   RxBool isLoading = false.obs;
 
+  // ✅ ADD DELIVERY STATUS OBSERVABLES
+  RxString deliveryStatus = 'pending'.obs; //pending,in_transit, delivered
+  RxString driverName = 'Driver'.obs;
+  RxString driverImage = AppImages.profileImage.obs;
+
   @override
   void onInit() {
     super.onInit();
+    loadChatData();
+  }
+
+  // ✅ UPDATED: Combined loadMessages + status loading
+  void loadChatData() {
+    // Get status from arguments passed from NotificationDetailsScreen
+    if (Get.arguments != null) {
+      deliveryStatus.value = Get.arguments['status'] ?? 'pending';
+      driverName.value = Get.arguments['driverName'] ?? 'Driver';
+      driverImage.value = Get.arguments['driverImage'] ?? AppImages.profileImage;
+    }
+
+    // Load messages from API or demo data
     loadMessages();
   }
 
@@ -50,9 +69,27 @@ class ChatController extends GetxController {
         timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
       ),
     ]);
+
+    // Auto-scroll to bottom
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
   }
 
   void sendMessage() {
+    // ✅ BLOCK SENDING ONLY IF DELIVERED
+    if (deliveryStatus.value == 'delivered') {
+      Get.snackbar(
+        'Not Available',
+        'You cannot send messages after delivery',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.amber[700],
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
     if (messageController.text.trim().isNotEmpty) {
       messages.add(
         ChatMessage(
@@ -63,22 +100,56 @@ class ChatController extends GetxController {
       );
       messageController.clear();
 
-      // Scroll to bottom
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (scrollController.hasClients) {
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        }
-      });
+      scrollToBottom();
 
       // TODO: Send message to API
+      // Simulate driver response
+      _simulateDriverResponse();
     }
   }
 
+  // ✅ ADD: Simulate driver response
+  void _simulateDriverResponse() {
+    Future.delayed(const Duration(seconds: 2), () {
+      if (messages.isNotEmpty) {
+        messages.add(
+          ChatMessage(
+            text: "Thank you for your message! I'll get back to you soon.",
+            isSender: false,
+            timestamp: DateTime.now(),
+          ),
+        );
+        scrollToBottom();
+      }
+    });
+  }
+
+  void scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   void addFile() {
+    // ✅ BLOCK FILE UPLOAD ONLY IF DELIVERED
+    if (deliveryStatus.value == 'delivered') {
+      Get.snackbar(
+        'Not Available',
+        'You cannot share files after delivery',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.amber[700],
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
     // TODO: Implement file picker
     Get.snackbar(
       'Add File',

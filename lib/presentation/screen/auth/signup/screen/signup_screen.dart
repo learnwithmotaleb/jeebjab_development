@@ -186,41 +186,43 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget _buildHeader({required double fontSize, required double logoSize}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => Get.back(),
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
-              Expanded(
-                child: Center(
-                  child: Image.asset(
-                    AppImages.appLogo,
-                    width: logoSize,
-                    height: logoSize,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Image.asset(
+                      AppImages.appLogo,
+                      width: logoSize,
+                      height: logoSize,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 48),
-            ],
-          ),
-          SizedBox(height: Dimensions.h(30)),
-          Text(
-            AppStrings.signup.tr,
-            style: AppTextStyles.title.copyWith(
-              color: Colors.white,
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
+                const SizedBox(width: 48),
+              ],
             ),
-          ),
-          Text(
-            AppStrings.toGetStarted.tr,
-            style: AppTextStyles.body.copyWith(color: Colors.white),
-          ),
-        ],
+            SizedBox(height: Dimensions.h(30)),
+            Text(
+              AppStrings.signup.tr,
+              style: AppTextStyles.title.copyWith(
+                color: Colors.white,
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              AppStrings.toGetStarted.tr,
+              style: AppTextStyles.body.copyWith(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

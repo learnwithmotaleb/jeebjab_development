@@ -669,6 +669,30 @@ class _NotificationDetailsScreenState
             // Action Buttons
             Row(
               children: [
+                if(controller.status == 'delivered')
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: controller.onMessagePressed,
+                      icon: Icon(Icons.chat_bubble_outline_rounded, size: Dimensions.f(18), color: Colors.white),
+                      label: Text(
+                        AppStrings.message.tr,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(15),
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                        ),
+                        elevation: 0,
+                      ),
+                    ),
+                  ),
+
                 if (controller.status.value != 'delivered')
                   Expanded(
                     child: ElevatedButton.icon(

@@ -25,10 +25,7 @@ void main() async {
   Get.put(DeliveryController(), permanent: true);
 
   runApp(
-    DevicePreviewWrapper(
-        child: MyApp()
-    )
-
+     MyApp()
   );
 }
 
