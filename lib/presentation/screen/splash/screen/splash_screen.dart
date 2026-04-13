@@ -88,6 +88,37 @@ class _SplashScreenState extends State<SplashScreen>
 
   /// Mobile Layout
   Widget _buildMobile() {
+    return _buildLayout(
+      logoSize: 200,
+      bikeWidth: 300,
+      bottomPadding: 0,
+    );
+  }
+
+  /// Tablet Layout
+  Widget _buildTablet() {
+    return _buildLayout(
+      logoSize: 400,
+      bikeWidth: 500,
+      bottomPadding: 20,
+    );
+  }
+
+  /// Desktop Layout
+  Widget _buildDesktop() {
+    return _buildLayout(
+      logoSize: 600,
+      bikeWidth: 700,
+      bottomPadding: 40,
+    );
+  }
+
+  /// Unified Layout Builder
+  Widget _buildLayout({
+    required double logoSize,
+    required double bikeWidth,
+    required double bottomPadding,
+  }) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: Stack(
@@ -98,16 +129,15 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _logoFade,
               child: Image.asset(
                 AppImages.appLogo,
-                width: 200,
-                height: 200,
-
+                width: Dimensions.w(logoSize),
+                height: Dimensions.w(logoSize),
               ),
             ),
           ),
 
           /// Shadow below the bike, moving from right to left
           Positioned(
-            bottom:0,
+            bottom: 0,
             left: 0,
             right: 0,
             child: SlideTransition(
@@ -115,19 +145,20 @@ class _SplashScreenState extends State<SplashScreen>
               child: Image.asset(
                 AppImages.shadowImage,
                 width: double.infinity,
-
+                fit: BoxFit.fitWidth,
               ),
             ),
           ),
 
           /// Bike moving from bottom-left to right
           Positioned(
-            bottom: 0,
+            bottom: Dimensions.h(bottomPadding),
             left: 0,
             child: SlideTransition(
               position: _bikeSlide,
               child: Image.asset(
                 AppImages.bike,
+                width: Dimensions.w(bikeWidth),
               ),
             ),
           ),
@@ -136,17 +167,5 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  /// Tablet Layout
-  Widget _buildTablet() {
-    return Scaffold(
-      body: Center(child: Text("Hello, Tablet")),
-    );
-  }
 
-  /// Desktop Layout
-  Widget _buildDesktop() {
-    return Scaffold(
-      body: Center(child: Text("Hello, Desktop")),
-    );
-  }
 }
