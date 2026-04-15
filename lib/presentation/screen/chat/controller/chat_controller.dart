@@ -10,7 +10,7 @@ class ChatController extends GetxController {
   RxList<ChatMessage> messages = <ChatMessage>[].obs;
   RxBool isLoading = false.obs;
 
-  // ✅ ADD DELIVERY STATUS OBSERVABLES
+  //ADD DELIVERY STATUS OBSERVABLES
   RxString deliveryStatus = 'pending'.obs; //pending,in_transit, delivered
   RxString driverName = 'Driver'.obs;
   RxString driverImage = AppImages.profileImage.obs;
@@ -77,7 +77,7 @@ class ChatController extends GetxController {
   }
 
   void sendMessage() {
-    // ✅ BLOCK SENDING ONLY IF DELIVERED
+    // BLOCK SENDING ONLY IF DELIVERED
     if (deliveryStatus.value == 'delivered') {
       Get.snackbar(
         'Not Available',
