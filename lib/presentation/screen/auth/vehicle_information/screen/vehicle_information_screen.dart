@@ -43,43 +43,59 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  AppStrings.yourVehicleInformation.tr,
-                  style: AppTextStyles.title
-              ),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    AppStrings.yourVehicleInformation.tr,
+                    style: AppTextStyles.title
+                ),
 
-              Text(
-                  AppStrings.enterYourVehicleInformation.tr,
-                  style: AppTextStyles.body
-              ),
+                Text(
+                    AppStrings.enterYourVehicleInformation.tr,
+                    style: AppTextStyles.body
+                ),
 
-              SizedBox(height: Dimensions.h(40)),
+                SizedBox(height: Dimensions.h(40)),
 
-              AppTextField(
-                controller: controller.vehicleBrand,
-                hint: AppStrings.vehicleBrand.tr,
-              ),
-              SizedBox(height: Dimensions.h(20)),
+                AppTextField(
+                  controller: controller.vehicleBrand,
+                  hint: AppStrings.vehicleBrand.tr,
+                  validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterBrand.tr : null,
+                ),
+                SizedBox(height: Dimensions.h(20)),
 
-              AppTextField(
-                controller: controller.vehicleModel,
-                hint: AppStrings.vehicleModel.tr,
-              ),
+                AppTextField(
+                  controller: controller.vehicleModel,
+                  hint: AppStrings.vehicleModel.tr,
+                  validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterModel.tr : null,
+                ),
 
-              SizedBox(height: Dimensions.h(100)),
+                SizedBox(height: Dimensions.h(20)),
 
-              AppButton(
-                height: Dimensions.h(50),
-                label: AppStrings.continueButton.tr,
-                onPressed: () {
-                  Get.toNamed(RoutePath.licenseNumber);
-                },
-              ),
-            ],
+                AppTextField(
+                  controller: controller.vehicleYear,
+                  hint: AppStrings.vehicleYear.tr,
+                  keyboardType: TextInputType.number,
+                  validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterYear.tr : null,
+                ),
+
+                SizedBox(height: Dimensions.h(100)),
+
+                AppButton(
+                  height: Dimensions.h(50),
+                  label: AppStrings.continueButton.tr,
+                  onPressed: () {
+                    if (controller.formKey.currentState!.validate()) {
+                      Get.toNamed(RoutePath.licenseNumber);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,87 +113,103 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 520),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Dimensions.h(20)),
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
 
-                // ── Icon/Visual ──────────────────────────────────────
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                    ),
-                    child: Icon(
-                      Icons.directions_car_outlined,
-                      size: 50,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: Dimensions.h(40)),
-
-                // ── Title ────────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.yourVehicleInformation.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  // ── Icon/Visual ──────────────────────────────────────
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: const Icon(
+                        Icons.directions_car_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(12)),
+                  SizedBox(height: Dimensions.h(40)),
 
-                // ── Subtitle ────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.enterYourVehicleInformation.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 15,
-                      color: Colors.grey[600],
+                  // ── Title ────────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.yourVehicleInformation.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(40)),
+                  SizedBox(height: Dimensions.h(12)),
 
-                // ── Vehicle Brand Field ─────────────────────────────
-                AppTextField(
-                  controller: controller.vehicleBrand,
-                  hint: AppStrings.vehicleBrand.tr,
-                ),
-
-                SizedBox(height: Dimensions.h(20)),
-
-                // ── Vehicle Model Field ─────────────────────────────
-                AppTextField(
-                  controller: controller.vehicleModel,
-                  hint: AppStrings.vehicleModel.tr,
-                ),
-
-                SizedBox(height: Dimensions.h(60)),
-
-                // ── Continue Button ──────────────────────────────────
-                SizedBox(
-                  width: double.infinity,
-                  child: AppButton(
-                    height: Dimensions.h(100),
-                    label: AppStrings.continueButton.tr,
-                    onPressed: () {
-                      Get.toNamed(RoutePath.licenseNumber);
-                    },
+                  // ── Subtitle ────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.enterYourVehicleInformation.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
                   ),
-                ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // ── Vehicle Brand Field ─────────────────────────────
+                  AppTextField(
+                    controller: controller.vehicleBrand,
+                    hint: AppStrings.vehicleBrand.tr,
+                    validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterBrand.tr : null,
+                  ),
+
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // ── Vehicle Model Field ─────────────────────────────
+                  AppTextField(
+                    controller: controller.vehicleModel,
+                    hint: AppStrings.vehicleModel.tr,
+                    validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterModel.tr : null,
+                  ),
+
+                  SizedBox(height: Dimensions.h(20)),
+
+                  // ── Vehicle Year Field ──────────────────────────────
+                  AppTextField(
+                    controller: controller.vehicleYear,
+                    hint: AppStrings.vehicleYear.tr,
+                    keyboardType: TextInputType.number,
+                    validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterYear.tr : null,
+                  ),
+
+                  SizedBox(height: Dimensions.h(60)),
+
+                  // ── Continue Button ──────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      height: Dimensions.h(100),
+                      label: AppStrings.continueButton.tr,
+                      onPressed: () {
+                        if (controller.formKey.currentState!.validate()) {
+                          Get.toNamed(RoutePath.licenseNumber);
+                        }
+                      },
+                    ),
+                  ),
 
                 SizedBox(height: Dimensions.h(32)),
               ],
@@ -185,6 +217,7 @@ class _VehicleInformationScreenState extends State<VehicleInformationScreen> {
           ),
         ),
       ),
+      )
     );
   }
 }

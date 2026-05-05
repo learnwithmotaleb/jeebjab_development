@@ -6,8 +6,11 @@ import 'package:jeebjab/widget/confirmataion_alert.dart';
 
 import '../../../../../helper/local_db/local_db.dart';
 import '../../../../../helper/tost_message/show_snackbar.dart';
+import '../../../../../service/api_service.dart';
+import '../../../../../service/api_url.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../widget/custom_alert.dart';
+import '../model/user_model.dart';
 
 class ProfileMenuItem {
   final String title;
@@ -24,11 +27,38 @@ class ProfileMenuItem {
 }
 
 class ProfileController extends GetxController {
-  RxString name = 'Abodul Motaleb'.obs;
-  RxString email = 'example@mail.com'.obs;
-  RxString profileImage = ''.obs;
+  final ApiClient _apiClient = ApiClient();
+  
+  var isLoading = false.obs;
+  var userData = Rxn<UserModel>();
 
+  @override
+  void onInit() {
+    super.onInit();
+    getProfile();
+  }
 
+  Future<void> getProfile() async {
+    isLoading.value = true;
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.getUserProfile,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final userModel = UserModel.fromJson(response.body);
+        userData.value = userModel;
+      } else {
+        // Handle error but don't show snackbar every time if it's a silent fetch
+        // AppSnackBar.fail(response.body['message'] ?? "Failed to fetch profile");
+      }
+    } catch (e) {
+      debugPrint("Error fetching profile: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   List<ProfileMenuItem> get menuItems => [
     ProfileMenuItem(
@@ -64,9 +94,12 @@ class ProfileController extends GetxController {
         AppAlerts.confirm(
           title: AppStrings.areYourSureLogout.tr,
           message: AppStrings.areYourSureLogoutFrom.tr,
-          onConfirm: () => Get.toNamed(RoutePath.login),
+          onConfirm: () async {
+            await SharePrefsHelper.clearAll();
+            Get.offAllNamed(RoutePath.login);
+          },
         );
       },
     ),
   ];
-}
+}

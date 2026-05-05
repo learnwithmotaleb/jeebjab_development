@@ -60,23 +60,30 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
 
               SizedBox(height: Dimensions.h(40)),
 
-              UploadImageWidget(controller: controller),
+              UploadImageWidget(
+                controller: controller,
+                docType: 'driving_license',
+                label: AppStrings.drivingLicense.tr,
+              ),
+              
+              SizedBox(height: Dimensions.h(24)),
 
-              SizedBox(height: Dimensions.h(100)),
+              UploadImageWidget(
+                controller: controller,
+                docType: 'vehicle_registration',
+                label: AppStrings.vehicleRegistration.tr,
+              ),
 
-              AppButton(
+              SizedBox(height: Dimensions.h(80)),
+
+              Obx(() => AppButton(
                 height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
+                isLoading: controller.isLoading.value,
                 onPressed: () {
-                  AppAlerts.confirm(
-                    title: AppStrings.success.tr,
-                    message: AppStrings.accountCreateSuccess.tr,
-                    onConfirm: () {
-                      Get.toNamed(RoutePath.login);
-                    },
-                  );
+                  controller.submitBecomeDriver();
                 },
-              ),
+              )),
             ],
           ),
         ),
@@ -95,7 +102,7 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 520),
+            constraints: const BoxConstraints(maxWidth: 520),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,7 +117,7 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
                     color: AppColors.primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(Dimensions.r(20)),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.upload_file_outlined,
                     size: 50,
                     color: AppColors.primaryColor,
@@ -143,27 +150,34 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
 
                 SizedBox(height: Dimensions.h(40)),
 
-                // ── Upload Image Widget ─────────────────────────────
-                UploadImageWidget(controller: controller),
+                // ── Upload Image Widgets ─────────────────────────────
+                UploadImageWidget(
+                  controller: controller,
+                  docType: 'driving_license',
+                  label: AppStrings.drivingLicense.tr,
+                ),
+                
+                SizedBox(height: Dimensions.h(24)),
+
+                UploadImageWidget(
+                  controller: controller,
+                  docType: 'vehicle_registration',
+                  label: AppStrings.vehicleRegistration.tr,
+                ),
 
                 SizedBox(height: Dimensions.h(60)),
 
                 // ── Continue Button ──────────────────────────────────
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton(
+                  child: Obx(() => AppButton(
                     height: Dimensions.h(100),
                     label: AppStrings.continueButton.tr,
+                    isLoading: controller.isLoading.value,
                     onPressed: () {
-                      AppAlerts.confirm(
-                        title: AppStrings.success.tr,
-                        message: AppStrings.accountCreateSuccess.tr,
-                        onConfirm: () {
-                          Get.toNamed(RoutePath.login);
-                        },
-                      );
+                      controller.submitBecomeDriver();
                     },
-                  ),
+                  )),
                 ),
 
                 SizedBox(height: Dimensions.h(32)),

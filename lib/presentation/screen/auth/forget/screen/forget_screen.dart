@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -42,48 +43,52 @@ class _ForgetScreenState extends State<ForgetScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppStrings.forgotPassword.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 24,
-                  color: AppColors.blackColor,
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.forgotPassword.tr,
+                  style: AppTextStyles.body.copyWith(
+                    fontSize: 24,
+                    color: AppColors.blackColor,
+                  ),
                 ),
-              ),
-              SizedBox(height: Dimensions.h(8)),
+                SizedBox(height: Dimensions.h(8)),
 
-              Text(
-                AppStrings.forgotPasswordSubTitle.tr,
-                style: AppTextStyles.body.copyWith(
-                  fontSize: 16,
-                  color: AppColors.blackColor,
+                Text(
+                  AppStrings.forgotPasswordSubTitle.tr,
+                  style: AppTextStyles.body.copyWith(
+                    fontSize: 16,
+                    color: AppColors.blackColor,
+                  ),
                 ),
-              ),
 
-              SizedBox(height: Dimensions.h(30)),
+                SizedBox(height: Dimensions.h(30)),
 
-              AppTextField(
-                controller: controller.emailController,
-                hint: AppStrings.enterYourEmail.tr,
-                keyboardType: TextInputType.name,
-                validator: AppValidators.email(),
-                onTap: () {},
-              ),
+                AppTextField(
+                  controller: controller.emailController,
+                  hint: AppStrings.enterYourEmail.tr,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: AppValidators.email(),
+                  onTap: () {},
+                ),
 
-              SizedBox(height: Dimensions.h(50)),
+                SizedBox(height: Dimensions.h(50)),
 
-              AppButton(
-                label: AppStrings.continueButton.tr,
-                height: Dimensions.h(55),
-                borderRadius: Dimensions.r(16),
-                onPressed: () {
-                  Get.toNamed(RoutePath.customerVerification);
-                },
-              ),
-            ],
+                Obx(() => AppButton(
+                  label: AppStrings.continueButton.tr,
+                  height: Dimensions.h(55),
+                  borderRadius: Dimensions.r(16),
+                  isLoading: controller.isLoading.value,
+                  onPressed: () {
+                    controller.submit();
+                  },
+                )),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,80 +107,84 @@ class _ForgetScreenState extends State<ForgetScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 520),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Dimensions.h(20)),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
 
-                // Icon/Visual
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                  // Icon/Visual
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: Icon(
+                        Icons.mail_outline,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.mail_outline,
-                      size: 50,
-                      color: AppColors.primaryColor,
+                  ),
+
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // Title
+                  Text(
+                    AppStrings.forgotPassword.tr,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blackColor,
                     ),
                   ),
-                ),
+                  SizedBox(height: Dimensions.h(12)),
 
-                SizedBox(height: Dimensions.h(40)),
-
-                // Title
-                Text(
-                  AppStrings.forgotPassword.tr,
-                  style: AppTextStyles.body.copyWith(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.blackColor,
+                  // Subtitle
+                  Text(
+                    AppStrings.forgotPasswordSubTitle.tr,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: 15,
+                      color: Colors.grey[600],
+                      height: 1.5,
+                    ),
                   ),
-                ),
-                SizedBox(height: Dimensions.h(12)),
 
-                // Subtitle
-                Text(
-                  AppStrings.forgotPasswordSubTitle.tr,
-                  style: AppTextStyles.body.copyWith(
-                    fontSize: 15,
-                    color: Colors.grey[600],
-                    height: 1.5,
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // Email Field
+                  AppTextField(
+                    controller: controller.emailController,
+                    hint: AppStrings.enterYourEmail.tr,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: AppValidators.email(),
+                    onTap: () {},
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(40)),
+                  SizedBox(height: Dimensions.h(60)),
 
-                // Email Field
-                AppTextField(
-                  controller: controller.emailController,
-                  hint: AppStrings.enterYourEmail.tr,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: AppValidators.email(),
-                  onTap: () {},
-                ),
-
-                SizedBox(height: Dimensions.h(60)),
-
-                // Continue Button
-                SizedBox(
-                  width: double.infinity,
-                  child: AppButton(
-                    label: AppStrings.continueButton.tr,
-                    height: Dimensions.h(100),
-                    borderRadius: Dimensions.r(16),
-                    onPressed: () {
-                      Get.toNamed(RoutePath.customerVerification);
-                    },
+                  // Continue Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: Obx(() => AppButton(
+                      label: AppStrings.continueButton.tr,
+                      height: Dimensions.h(100),
+                      borderRadius: Dimensions.r(16),
+                      isLoading: controller.isLoading.value,
+                      onPressed: () {
+                        controller.submit();
+                      },
+                    )),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(32)),
-              ],
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
             ),
           ),
         ),

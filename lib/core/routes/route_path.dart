@@ -72,6 +72,9 @@ class RoutePath {
   static const String deliveryScreen = '/DeliveryScreen';
 
 
+  static const String accountActiveVerification = '/AccountActiveVerificationScreen';
+
+
 
 
 

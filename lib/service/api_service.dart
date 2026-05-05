@@ -14,7 +14,7 @@ final log = Logger();
 typedef ApiResult = Response;
 
 class ApiClient {
-  static const defaultTimeout = Duration(seconds: 25);
+  static const defaultTimeout = Duration(seconds: 30);
 
   Future<Map<String, String>> _headers({
     bool isBasic = false,
@@ -35,7 +35,7 @@ class ApiClient {
     if (isToken) {
       String? token = await SharePrefsHelper.getToken();
       if (token != null && token.isNotEmpty) {
-        headers["Authorization"] = token;
+        headers["Authorization"] = "Bearer $token";
       } else {
         print("Token is missing!");
       }
@@ -283,6 +283,7 @@ class ApiClient {
     required Map<String, String> fields,
     required List<MultipartFileData> files,
     bool isBasic = false,
+    bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
     try {
@@ -292,7 +293,7 @@ class ApiClient {
 
       // Add headers
       final headers = await _headers(
-          isBasic: isBasic, customHeaders: customHeaders);
+          isBasic: isBasic, isToken: isToken, customHeaders: customHeaders);
       request.headers.addAll(headers);
       log.i("Request Headers: $headers");
 
@@ -340,6 +341,24 @@ class ApiClient {
       log.e("Multipart Error: $e");
       return _handleException("Multipart Error: $e");
     }
+  }
+
+  Future<ApiResult> postMultipart({
+    required String url,
+    required Map<String, String> fields,
+    required List<MultipartFileData> files,
+    bool isBasic = false,
+    bool isToken = false,
+    Map<String, String>? customHeaders,
+  }) async {
+    return multipart(
+      url: url,
+      fields: fields,
+      files: files,
+      isBasic: isBasic,
+      isToken: isToken,
+      customHeaders: customHeaders,
+    );
   }
 
 
@@ -409,7 +428,7 @@ class ApiClient {
           path: imageFile.path,
         ),
       ],
-      customHeaders: isToken ? {"Authorization": await SharePrefsHelper.getToken() ?? ""} : null,
+      customHeaders: isToken ? {"Authorization": "Bearer ${await SharePrefsHelper.getToken() ?? ""}"} : null,
     );
   }
 

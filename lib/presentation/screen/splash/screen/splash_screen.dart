@@ -6,6 +6,7 @@ import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import '../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../controller/splash_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -60,10 +61,8 @@ class _SplashScreenState extends State<SplashScreen>
       _shadowController.forward();
     });
 
-    // Navigate to Login Page after 5 seconds
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.offNamed(RoutePath.login); // Replace '/login' with your Login Page route
-    });
+    // Controller handles navigation
+    Get.put(SplashController());
 
   }
 

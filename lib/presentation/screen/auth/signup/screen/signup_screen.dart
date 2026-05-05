@@ -103,17 +103,15 @@ class _SignupScreenState extends State<SignupScreen> {
           SizedBox(height: Dimensions.h(24)),
 
           /// CREATE ACCOUNT
-          AppButton(
+          Obx(() => AppButton(
             label: AppStrings.createAccount.tr,
             height: Dimensions.h(55),
             borderRadius: Dimensions.r(16),
+            isLoading: controller.isLoading.value,
             onPressed: () {
-              if (controller.validateForm()) {
-                controller.selectCustomer();
-                controller.submit();
-              }
+              controller.selectCustomer().then((_) => controller.submit());
             },
-          ),
+          )),
 
           SizedBox(height: Dimensions.h(24)),
 

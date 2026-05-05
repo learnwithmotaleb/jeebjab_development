@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import '../../../utils/app_colors/app_colors.dart';
 
@@ -13,6 +14,7 @@ class AppButton extends StatelessWidget {
   final double borderRadius;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
+  final bool isLoading;
 
   const AppButton({
     super.key,
@@ -26,6 +28,7 @@ class AppButton extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.borderSideColor = AppColors.primaryColor,
+    this.isLoading = false,
   });
 
   @override
@@ -35,7 +38,7 @@ class AppButton extends StatelessWidget {
       width: width,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: onPressed == null
+          backgroundColor: (onPressed == null || isLoading)
               ? AppColors.greyColor // disabled color
               : backgroundColor,
           shape: RoundedRectangleBorder(
@@ -48,8 +51,10 @@ class AppButton extends StatelessWidget {
                 : BorderSide.none,
           ),
         ),
-        onPressed: onPressed,
-        child: Row(
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? SpinKitFadingFour(color: textColor, size: 24)
+            : Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

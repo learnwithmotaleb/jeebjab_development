@@ -42,44 +42,49 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-                children: [
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                  children: [
 
-                  SizedBox(height: Dimensions.h(20),),
+                    SizedBox(height: Dimensions.h(20),),
 
-                  AppTextField(
-                    controller: controller.previousPassword,
-                    hint: AppStrings.previousPassword.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                  ),
-                  SizedBox(height: Dimensions.h(12),),
+                    AppTextField(
+                      controller: controller.previousPassword,
+                      hint: AppStrings.previousPassword.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      obscure: true,
+                      validator: (v) => (v == null || v.isEmpty) ? "Old password is required" : null,
+                    ),
+                    SizedBox(height: Dimensions.h(12),),
 
-                  AppTextField(
-                    controller: controller.newPassword,
-                    hint: AppStrings.newPassword.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                  ),
-                  SizedBox(height: Dimensions.h(12),),
+                    AppTextField(
+                      controller: controller.newPassword,
+                      hint: AppStrings.newPassword.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      obscure: true,
+                      validator: (v) => (v == null || v.length < 6) ? "Minimum 6 characters" : null,
+                    ),
+                    SizedBox(height: Dimensions.h(12),),
 
-                  AppTextField(
-                    controller: controller.confirmPassword,
-                    hint: AppStrings.oldPassword.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                  ),
+                    AppTextField(
+                      controller: controller.confirmPassword,
+                      hint: AppStrings.confirmPassword.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      obscure: true,
+                      validator: (v) => v != controller.newPassword.text ? "Passwords do not match" : null,
+                    ),
 
-                  SizedBox(height: Dimensions.h(50),),
+                    SizedBox(height: Dimensions.h(50),),
 
-                  AppButton(
-                    label: AppStrings.changePassword.tr,
-                    onPressed: () {
-                      ShowAppSnackBar.info(
-                        AppStrings.passwordChangeSuccessful.tr,
-                        title: AppStrings.appName.tr,
-                      );
-                    },
-                    height: 65,
-                  )
-                ]
+                    Obx(() => AppButton(
+                      label: AppStrings.changePassword.tr,
+                      isLoading: controller.isLoading.value,
+                      onPressed: () => controller.submit(),
+                      height: 65,
+                    ))
+                  ]
+              ),
             ),
           ),
         )
@@ -99,10 +104,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 520),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Dimensions.h(20)),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
 
                 // ── Icon/Visual ──────────────────────────────────────
                 Center(
@@ -156,6 +163,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: controller.previousPassword,
                   hint: AppStrings.previousPassword.tr,
                   hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => (v == null || v.isEmpty) ? "Old password is required" : null,
                 ),
                 SizedBox(height: Dimensions.h(18)),
 
@@ -164,14 +173,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: controller.newPassword,
                   hint: AppStrings.newPassword.tr,
                   hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => (v == null || v.length < 6) ? "Minimum 6 characters" : null,
                 ),
                 SizedBox(height: Dimensions.h(18)),
 
                 // ── Confirm Password Field ─────────────────────────
                 AppTextField(
                   controller: controller.confirmPassword,
-                  hint: AppStrings.oldPassword.tr,
+                  hint: AppStrings.confirmPassword.tr,
                   hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => v != controller.newPassword.text ? "Passwords do not match" : null,
                 ),
 
                 SizedBox(height: Dimensions.h(60)),
@@ -179,16 +192,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 // ── Change Password Button ─────────────────────────
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton(
+                  child: Obx(() => AppButton(
                     label: AppStrings.changePassword.tr,
                     height: Dimensions.h(100),
-                    onPressed: () {
-                      ShowAppSnackBar.info(
-                        AppStrings.passwordChangeSuccessful.tr,
-                        title: AppStrings.appName.tr,
-                      );
-                    },
-                  ),
+                    isLoading: controller.isLoading.value,
+                    onPressed: () => controller.submit(),
+                  )),
                 ),
 
                 SizedBox(height: Dimensions.h(32)),
@@ -197,6 +206,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
       ),
+      )
     );
   }
 }

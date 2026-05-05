@@ -53,6 +53,7 @@ class AppStrings {
   static const String enterYourVehicleInformation = "Enter your vehicle information";
   static const String vehicleBrand = "Vehicle Brand";
   static const String vehicleModel = "Vehicle Model";
+  static const String vehicleYear = "Vehicle Year";
   static const String yourLicenseNumber = "Your License Number";
   static const String licenseNumberSubTitle = "Provide your driver's license number to continue";
   static const String enterLicenseNumber = "Your license number";
@@ -105,7 +106,6 @@ class AppStrings {
 
   static const String createPost = "Create Post";
   static const String whatDoYouNeedHelpWith = "What Do You Need Help With ?";
-
 
 
 
@@ -602,11 +602,12 @@ class AppStrings {
   // Category Status Controller
   static const String plasticAndPaper = "Plastic & Paper";
 
-
-
-
-
-
-
-
+  // Driver Onboarding
+  static const String drivingLicense = "Driving License";
+  static const String vehicleRegistration = "Vehicle Registration";
+  static const String pleaseEnterBrand = "Please enter vehicle brand";
+  static const String pleaseEnterModel = "Please enter vehicle model";
+  static const String pleaseEnterYear = "Please enter vehicle year";
+  static const String pleaseEnterLicense = "Please enter license number";
+  static const String pleaseUploadAllDocuments = "Please upload all required documents";
 }

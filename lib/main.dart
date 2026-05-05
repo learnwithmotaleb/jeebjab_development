@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/presentation/screen/job/delivery/controller/delivery_controller.dart';
@@ -6,12 +7,16 @@ import 'package:jeebjab/utils/device_preview/evice_preview_wrapper.dart';
 import 'app.dart';
 import 'core/device_utls/device_utils.dart';
 
+import 'firebase_options.dart';
 import 'global/language/controller/language_controller.dart';
 import 'helper/local_db/local_db.dart';
 import 'helper/no_internet/controller/no_internet_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Initialize SharedPreferences first
   await SharePrefsHelper.init();

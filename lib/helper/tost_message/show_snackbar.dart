@@ -11,8 +11,8 @@ class AppSnackBar {
     _show(
       message,
       title: title,
-      backgroundColor: AppColors.whiteColor,
-      textColor: AppColors.blackColor,
+      backgroundColor: AppColors.primaryColor,
+      textColor: AppColors.whiteColor,
     );
   }
 
@@ -22,6 +22,7 @@ class AppSnackBar {
       message,
       title: title,
       backgroundColor: AppColors.emergencyColor,
+      textColor: AppColors.whiteColor,
     );
   }
 
@@ -53,6 +54,8 @@ class AppSnackBar {
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
       animationDuration: const Duration(milliseconds: 300),
+      isDismissible: true,
+      forwardAnimationCurve: Curves.easeOutBack,
     );
   }
 }

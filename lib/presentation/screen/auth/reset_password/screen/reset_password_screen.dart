@@ -86,11 +86,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               SizedBox(height: Dimensions.h(50)),
 
-              AppButton(
+              Obx(() => AppButton(
                 label: AppStrings.continueButton.tr,
                 onPressed: controller.resetPassword,
                 height: Dimensions.h(50),
-              ),
+                isLoading: controller.isLoading.value,
+              )),
             ],
           ),
         ),
@@ -188,11 +189,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   SizedBox(height: Dimensions.h(60)),
 
                   // Continue Button
-                  AppButton(
+                  Obx(() => AppButton(
                     label: AppStrings.continueButton.tr,
                     onPressed: controller.resetPassword,
                     height: Dimensions.h(100),
-                  ),
+                    isLoading: controller.isLoading.value,
+                  )),
 
                   SizedBox(height: Dimensions.h(32)),
                 ],

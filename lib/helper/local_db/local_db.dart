@@ -72,6 +72,16 @@ class SharePrefsHelper {
     return _prefs?.getString(SharePrefsKeys.token);
   }
 
+  // ================= REFRESH TOKEN =================
+
+  static Future<void> saveRefreshToken(String token) async {
+    await _prefs?.setString(SharePrefsKeys.refreshToken, token);
+  }
+
+  static String? getRefreshToken() {
+    return _prefs?.getString(SharePrefsKeys.refreshToken);
+  }
+
   // ================= USER ID =================
 
   static Future<void> saveUserId(String id) async {

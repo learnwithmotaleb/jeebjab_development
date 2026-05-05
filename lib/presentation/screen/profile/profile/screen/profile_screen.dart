@@ -31,160 +31,181 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: SingleChildScrollView(
-        child: Obx(() => Column(
-          children: [
+      body: Obx(() {
+        if (controller.isLoading.value && controller.userData.value == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            // ── 1. Teal Header ────────────────────────────────────
-            ProfileHeaderWidget(
-              name: controller.name.value,
-              email: controller.email.value,
-            ),
+        final user = controller.userData.value;
 
-            SizedBox(height: Dimensions.h(16)),
+        return RefreshIndicator(
+          onRefresh: controller.getProfile,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                // ── 1. Teal Header ────────────────────────────────────
+                ProfileHeaderWidget(
+                  name: user?.name ?? "...",
+                  email: user?.email ?? "...",
+                  imageUrl: user?.avatar,
+                  rating: user?.driverProfile?.averageRating,
+                ),
 
-            // ── 2. Menu Card ──────────────────────────────────────
-            Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(10)),
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius:
-                BorderRadius.circular(Dimensions.r(5)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 0,
-                    offset: const Offset(0, 2),
+                SizedBox(height: Dimensions.h(16)),
+
+                // ── 2. Menu Card ──────────────────────────────────────
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: Dimensions.w(10)),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(Dimensions.r(5)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.02),
+                        blurRadius: 0,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius:
-                BorderRadius.circular(Dimensions.r(16)),
-                child: Column(
-                  children: List.generate(
-                    controller.menuItems.length,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(Dimensions.r(16)),
+                    child: Column(
+                      children: List.generate(
+                        controller.menuItems.length,
                         (index) => ProfileMenuItemWidget(
-                      item: controller.menuItems[index],
-                      showDivider: index <
-                          controller.menuItems.length - 1,
+                          item: controller.menuItems[index],
+                          showDivider: index < controller.menuItems.length - 1,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
 
-            SizedBox(height: Dimensions.h(30)),
-          ],
-        )),
-      ),
+                SizedBox(height: Dimensions.h(30)),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 
   Widget _buildTablet() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: SingleChildScrollView(
-        child: Obx(() => Column(
-          children: [
+      body: Obx(() {
+        if (controller.isLoading.value && controller.userData.value == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            // ── 1. Teal Header (Full Width) ────────────────────
-            ProfileHeaderWidget(
-              name: controller.name.value,
-              email: controller.email.value,
-            ),
+        final user = controller.userData.value;
 
-            SizedBox(height: Dimensions.h(32)),
+        return RefreshIndicator(
+          onRefresh: controller.getProfile,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                // ── 1. Teal Header (Full Width) ────────────────────
+                ProfileHeaderWidget(
+                  name: user?.name ?? "...",
+                  email: user?.email ?? "...",
+                  imageUrl: user?.avatar,
+                  rating: user?.driverProfile?.averageRating,
+                ),
 
-            // ── 2. Menu Card Container ────────────────────────
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.w(48),
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 600),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ── Title ────────────────────────────────
-                      Text(
-                        "Profile Options",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.blackColor,
-                        ),
-                      ),
+                SizedBox(height: Dimensions.h(32)),
 
-                      SizedBox(height: Dimensions.h(12)),
-
-                      // ── Subtitle ─────────────────────────────
-                      Text(
-                        "Manage your profile settings and preferences",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-
-                      SizedBox(height: Dimensions.h(32)),
-
-                      // ── Menu Card ────────────────────────────
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(
-                            Dimensions.r(16),
-                          ),
-                          border: Border.all(
-                            color: Colors.grey.shade200,
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                // ── 2. Menu Card Container ────────────────────────
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(48),
+                  ),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // ── Title ────────────────────────────────
+                          Text(
+                            "Profile Options",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.blackColor,
                             ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            Dimensions.r(16),
                           ),
-                          child: Column(
-                            children: List.generate(
-                              controller.menuItems.length,
+
+                          SizedBox(height: Dimensions.h(12)),
+
+                          // ── Subtitle ─────────────────────────────
+                          Text(
+                            "Manage your profile settings and preferences",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+
+                          SizedBox(height: Dimensions.h(32)),
+
+                          // ── Menu Card ────────────────────────────
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.r(16),
+                              ),
+                              border: Border.all(
+                                color: Colors.grey.shade200,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.r(16),
+                              ),
+                              child: Column(
+                                children: List.generate(
+                                  controller.menuItems.length,
                                   (index) => Column(
-                                children: [
-                                  ProfileMenuItemWidget(
-                                    item: controller.menuItems[index],
-                                    showDivider: false,
+                                    children: [
+                                      ProfileMenuItemWidget(
+                                        item: controller.menuItems[index],
+                                        showDivider: false,
+                                      ),
+                                      if (index < controller.menuItems.length - 1)
+                                        Divider(
+                                          height: 1,
+                                          color: Colors.grey.shade200,
+                                        ),
+                                    ],
                                   ),
-                                  if (index <
-                                      controller.menuItems.length - 1)
-                                    Divider(
-                                      height: 1,
-                                      color: Colors.grey.shade200,
-                                    ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      SizedBox(height: Dimensions.h(40)),
-                    ],
+                          SizedBox(height: Dimensions.h(40)),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        )),
-      ),
+          ),
+        );
+      }),
     );
   }
 }

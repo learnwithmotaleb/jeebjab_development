@@ -9,6 +9,7 @@ import 'package:jeebjab/widget/custom_appbar.dart';
 import '../../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../widget/app_button.dart';
+import '../controller/choose_vehicle_type_controller.dart';
 import '../widget/selectable_button.dart';
 
 class ChooseVehicleTypeScreen extends StatefulWidget {
@@ -20,14 +21,7 @@ class ChooseVehicleTypeScreen extends StatefulWidget {
 }
 
 class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
-  int selectedIndex = 0;
-
-  final List<String> options = [
-    AppStrings.car,
-    AppStrings.van,
-    AppStrings.pickup,
-    AppStrings.truck,
-  ];
+  final ChooseVehicleTypeController controller = Get.put(ChooseVehicleTypeController());
 
   @override
   Widget build(BuildContext context) {
@@ -55,47 +49,42 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
 
               Text(
                 AppStrings.selectAVehicleToContinue.tr,
-                style: AppTextStyles.body.copyWith(
-
-                ),
+                style: AppTextStyles.body,
               ),
 
               SizedBox(height: Dimensions.h(40)),
 
-              ...List.generate(options.length, (index) {
-                final isSelected = selectedIndex == index;
+              Obx(() => Column(
+                children: List.generate(controller.options.length, (index) {
+                  final isSelected = controller.selectedIndex.value == index;
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: AppButton(
-                    height: Dimensions.h(50),
-                    label: options[index].tr,
-                    onPressed: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    borderSideColor: isSelected
-                        ? AppColors.whiteColor.withOpacity(0.5)
-                        : AppColors.whiteColor.withOpacity(0.5),
-                    borderRadius: 20,
-                    backgroundColor:
-                    isSelected ? AppColors.primaryColor : Colors.white,
-                    textColor:
-                    isSelected ? AppColors.whiteColor : AppColors.blackColor,
-                  ),
-                );
-              }),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: AppButton(
+                      height: Dimensions.h(50),
+                      label: controller.options[index].tr,
+                      onPressed: () {
+                        controller.selectOption(index);
+                      },
+                      borderSideColor: isSelected
+                          ? AppColors.primaryColor
+                          : AppColors.whiteColor.withOpacity(0.5),
+                      borderRadius: 20,
+                      backgroundColor:
+                      isSelected ? AppColors.primaryColor : Colors.white,
+                      textColor:
+                      isSelected ? AppColors.whiteColor : AppColors.blackColor,
+                    ),
+                  );
+                }),
+              )),
 
               SizedBox(height: Dimensions.h(70)),
 
               AppButton(
                 height: Dimensions.h(50),
                 label: AppStrings.continueButton.tr,
-                onPressed: selectedIndex == -1
-                    ? () {}
-                    : () {
-                  print("Selected: ${options[selectedIndex]}");
+                onPressed: () {
                   Get.toNamed(RoutePath.vehicleInformation);
                 },
               ),
@@ -165,24 +154,22 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                 SizedBox(height: Dimensions.h(40)),
 
                 // ── Vehicle Options Grid (2 columns) ─────────────────
-                GridView.builder(
+                Obx(() => GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 2.5,
                     crossAxisSpacing: Dimensions.w(16),
                     mainAxisSpacing: Dimensions.h(16),
                   ),
-                  itemCount: options.length,
+                  itemCount: controller.options.length,
                   itemBuilder: (context, index) {
-                    final isSelected = selectedIndex == index;
+                    final isSelected = controller.selectedIndex.value == index;
 
                     return GestureDetector(
                       onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                        });
+                        controller.selectOption(index);
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -190,14 +177,14 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                               ? AppColors.primaryColor
                               : AppColors.whiteColor,
                           border: Border.all(
-                            color: AppColors.primaryColor.withOpacity(0.3),
+                            color: isSelected ? AppColors.primaryColor : AppColors.primaryColor.withOpacity(0.3),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(Dimensions.r(16)),
                         ),
                         child: Center(
                           child: Text(
-                            options[index].tr,
+                            controller.options[index].tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
@@ -211,7 +198,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                       ),
                     );
                   },
-                ),
+                )),
 
                 SizedBox(height: Dimensions.h(48)),
 
@@ -221,10 +208,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                   child: AppButton(
                     height: Dimensions.h(100),
                     label: AppStrings.continueButton.tr,
-                    onPressed: selectedIndex == -1
-                        ? () {}
-                        : () {
-                      print("Selected: ${options[selectedIndex]}");
+                    onPressed: () {
                       Get.toNamed(RoutePath.vehicleInformation);
                     },
                   ),

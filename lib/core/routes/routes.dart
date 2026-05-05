@@ -6,6 +6,8 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/add_card/controller/add_card_controller.dart';
 import 'package:jeebjab/presentation/screen/auth/Customer_Verification/controller/customer_verification_controller.dart';
+import 'package:jeebjab/presentation/screen/auth/account_active_verification/controller/account_active_verification_controller.dart';
+import 'package:jeebjab/presentation/screen/auth/account_active_verification/screen/account_active_verification_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/company_driver_auth/driver_verification/screen/driver_verification_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/company_driver_auth/select_company/screen/select_company_screen.dart';
 import 'package:jeebjab/presentation/screen/auth/company_driver_auth/signup_driver/controller/driver_signup_controller.dart';
@@ -747,6 +749,18 @@ class AppRouter {
       binding: BindingsBuilder(() {
         Get.put(DeliveryController(), permanent: true);
       }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.accountActiveVerification,
+      page: () =>  AccountActiveVerificationScreen(),
+      transition: Transition.rightToLeft,
+
+      binding: BindingsBuilder(() {
+        Get.put(AccountActiveVerificationController());
+      }),
+
     ),
 
 

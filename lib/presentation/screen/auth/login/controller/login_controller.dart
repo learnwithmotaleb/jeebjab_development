@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
-
-import '../../../../../core/enums/app_role.dart';
-import '../../../../../helper/local_db/local_db.dart';
+import 'package:jeebjab/core/enums/app_role.dart';
+import 'package:jeebjab/helper/local_db/local_db.dart';
+import 'package:jeebjab/service/api_service.dart';
+import 'package:jeebjab/service/api_url.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart' as g_auth;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -16,16 +20,16 @@ class LoginController extends GetxController {
   final FocusNode emailFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
 
-
-
+  final ApiClient apiClient = ApiClient();
+  var isLoading = false.obs;
 
   @override
-  void dispose() {
+  void onClose() {
     emailController.dispose();
     passwordController.dispose();
     emailFocus.dispose();
     passwordFocus.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   bool validateForm() {
@@ -36,23 +40,192 @@ class LoginController extends GetxController {
     return isValid;
   }
 
-  void submit() {
-    // if (validateForm()) {
-    //   // Form is valid → proceed to login
-    //   print("Email: ${emailController.text}");
-    //   print("Password: ${passwordController.text}");
-    // }
+  Future<void> submit() async {
+    if (!validateForm()) return;
 
-    final role = SharePrefsHelper.getRole();
+    isLoading.value = true;
+    
+    try {
+      final response = await apiClient.post(
+        url: ApiUrl.login,
+        body: {
+          "email": emailController.text.trim(),
+          "password": passwordController.text,
+        },
+      );
 
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final body = response.body;
+        final data = body['data'];
+        
+        if (data != null) {
+          final token = data['accessToken'];
+          if (token != null) {
+            await SharePrefsHelper.saveToken(token);
+          }
+          
+          final user = data['user'];
+          if (user != null) {
+            final userId = user['_id'];
+            if (userId != null) {
+              await SharePrefsHelper.saveUserId(userId);
+            }
 
-    if (role == AppRole.CUSTOMER) {
-      Get.offAllNamed(RoutePath.bottomNav);
-    } else if (role == AppRole.DRIVER) {
-      Get.offAllNamed(RoutePath.driverBottomNav);
-    } else {
-      Get.offAllNamed(RoutePath.signup);
+            final authId = user['authId'];
+            if (authId != null) {
+              final roleStr = authId['role'];
+              if (roleStr != null) {
+                if (roleStr.toString().toUpperCase() == 'USER' || roleStr.toString().toUpperCase() == 'CUSTOMER') {
+                  await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+                } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
+                  await SharePrefsHelper.saveRole(AppRole.DRIVER);
+                }
+              }
+            }
+          }
+        }
+
+        final role = SharePrefsHelper.getRole();
+        
+        AppSnackBar.success(body['message'] ?? "Log in successful", title: "Success");
+
+        if (role == AppRole.CUSTOMER) {
+          Get.offAllNamed(RoutePath.bottomNav);
+        } else if (role == AppRole.DRIVER) {
+          Get.offAllNamed(RoutePath.driverBottomNav);
+        } else {
+          Get.offAllNamed(RoutePath.signup);
+        }
+      } else {
+        String errorMessage = response.body['message'] ?? response.statusText ?? "Login failed. Please try again.";
+        AppSnackBar.fail(errorMessage, title: "Login Failed");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+    } finally {
+      isLoading.value = false;
     }
-    // Get.toNamed(RoutePath.bottomNav);
+  }
+
+  // ================= SOCIAL LOGIN =================
+
+  Future<void> signInWithGoogle() async {
+    isLoading.value = true;
+    try {
+      final g_auth.GoogleSignIn googleSignIn = g_auth.GoogleSignIn();
+      final g_auth.GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        isLoading.value = false;
+        return;
+      }
+
+      final g_auth.GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final String? idToken = await userCredential.user?.getIdToken();
+
+      if (idToken != null) {
+        await _processSocialLogin(idToken, "google");
+      }
+    } catch (e) {
+      debugPrint("Google Sign In Error: $e");
+      AppSnackBar.fail("Google Sign In failed. Please try again.");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    isLoading.value = true;
+    try {
+      final AuthorizationCredentialAppleID credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final AuthCredential authCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+      final String? idToken = await userCredential.user?.getIdToken();
+
+      if (idToken != null) {
+        await _processSocialLogin(idToken, "apple");
+      }
+    } catch (e) {
+      debugPrint("Apple Sign In Error: $e");
+      AppSnackBar.fail("Apple Sign In failed. Please try again.");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> _processSocialLogin(String token, String provider) async {
+    try {
+      final response = await apiClient.post(
+        url: ApiUrl.socialLogin,
+        body: {
+          "token": token,
+          "provider": provider,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final body = response.body;
+        final data = body['data'];
+
+        if (data != null) {
+          final accessToken = data['accessToken'];
+          if (accessToken != null) {
+            await SharePrefsHelper.saveToken(accessToken);
+          }
+
+          final user = data['user'];
+          if (user != null) {
+            final userId = user['_id'];
+            if (userId != null) {
+              await SharePrefsHelper.saveUserId(userId);
+            }
+
+            final authId = user['authId'];
+            if (authId != null) {
+              final roleStr = authId['role'];
+              if (roleStr != null) {
+                if (roleStr.toString().toUpperCase() == 'USER' || roleStr.toString().toUpperCase() == 'CUSTOMER') {
+                  await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+                } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
+                  await SharePrefsHelper.saveRole(AppRole.DRIVER);
+                }
+              }
+            }
+          }
+        }
+
+        final role = SharePrefsHelper.getRole();
+        AppSnackBar.success("Logged in successfully", title: "Success");
+
+        if (role == AppRole.CUSTOMER) {
+          Get.offAllNamed(RoutePath.bottomNav);
+        } else if (role == AppRole.DRIVER) {
+          Get.offAllNamed(RoutePath.driverBottomNav);
+        } else {
+          Get.offAllNamed(RoutePath.signup);
+        }
+      } else {
+        AppSnackBar.fail(response.body['message'] ?? "Social Login failed");
+      }
+    } catch (e) {
+      debugPrint("Process Social Login Error: $e");
+      AppSnackBar.fail("Something went wrong during social login.");
+    }
   }
 }

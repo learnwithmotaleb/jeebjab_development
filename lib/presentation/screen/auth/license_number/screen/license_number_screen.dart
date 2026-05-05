@@ -37,37 +37,43 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  AppStrings.yourLicenseNumber.tr,
-                  style: AppTextStyles.title
-              ),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    AppStrings.yourLicenseNumber.tr,
+                    style: AppTextStyles.title
+                ),
 
-              Text(
-                  AppStrings.licenseNumberSubTitle.tr,
-                  style: AppTextStyles.body
-              ),
+                Text(
+                    AppStrings.licenseNumberSubTitle.tr,
+                    style: AppTextStyles.body
+                ),
 
-              SizedBox(height: Dimensions.h(40)),
+                SizedBox(height: Dimensions.h(40)),
 
-              AppTextField(
-                controller: controller.licenseNumber,
-                hint: AppStrings.enterLicenseNumber.tr,
-              ),
+                AppTextField(
+                  controller: controller.licenseNumber,
+                  hint: AppStrings.enterLicenseNumber.tr,
+                  validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterLicense.tr : null,
+                ),
 
-              SizedBox(height: Dimensions.h(100)),
+                SizedBox(height: Dimensions.h(100)),
 
-              AppButton(
-                height: Dimensions.h(50),
-                label: AppStrings.continueButton.tr,
-                onPressed: () {
-                  Get.toNamed(RoutePath.uploadDocument);
-                },
-              ),
-            ],
+                AppButton(
+                  height: Dimensions.h(50),
+                  label: AppStrings.continueButton.tr,
+                  onPressed: () {
+                    if (controller.formKey.currentState!.validate()) {
+                      Get.toNamed(RoutePath.uploadDocument);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -85,82 +91,88 @@ class _LicenseNumberScreenState extends State<LicenseNumberScreen> {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 520),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Dimensions.h(20)),
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
 
-                // ── Icon/Visual ──────────────────────────────────────
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                    ),
-                    child: Icon(
-                      Icons.card_membership_outlined,
-                      size: 50,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: Dimensions.h(40)),
-
-                // ── Title ────────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.yourLicenseNumber.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  // ── Icon/Visual ──────────────────────────────────────
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: const Icon(
+                        Icons.card_membership_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(12)),
+                  SizedBox(height: Dimensions.h(40)),
 
-                // ── Subtitle ────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.licenseNumberSubTitle.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 15,
-                      color: Colors.grey[600],
+                  // ── Title ────────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.yourLicenseNumber.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(40)),
+                  SizedBox(height: Dimensions.h(12)),
 
-                // ── License Number Field ────────────────────────────
-                AppTextField(
-                  controller: controller.licenseNumber,
-                  hint: AppStrings.enterLicenseNumber.tr,
-                ),
-
-                SizedBox(height: Dimensions.h(60)),
-
-                // ── Continue Button ──────────────────────────────────
-                SizedBox(
-                  width: double.infinity,
-                  child: AppButton(
-                    height: Dimensions.h(100),
-                    label: AppStrings.continueButton.tr,
-                    onPressed: () {
-                      Get.toNamed(RoutePath.uploadDocument);
-                    },
+                  // ── Subtitle ────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.licenseNumberSubTitle.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(32)),
-              ],
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // ── License Number Field ────────────────────────────
+                  AppTextField(
+                    controller: controller.licenseNumber,
+                    hint: AppStrings.enterLicenseNumber.tr,
+                    validator: (value) => value == null || value.isEmpty ? AppStrings.pleaseEnterLicense.tr : null,
+                  ),
+
+                  SizedBox(height: Dimensions.h(60)),
+
+                  // ── Continue Button ──────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      height: Dimensions.h(100),
+                      label: AppStrings.continueButton.tr,
+                      onPressed: () {
+                        if (controller.formKey.currentState!.validate()) {
+                          Get.toNamed(RoutePath.uploadDocument);
+                        }
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
             ),
           ),
         ),

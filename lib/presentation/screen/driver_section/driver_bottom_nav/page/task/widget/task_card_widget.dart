@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
@@ -11,6 +12,8 @@ class TaskCard extends StatelessWidget {
   final bool isActive;
   final VoidCallback onPickedUp;
   final VoidCallback onOpenMap;
+  final bool isPickUpLoading;
+  final bool isOpenMapLoading;
   final EdgeInsetsGeometry? margin;
 
   const TaskCard({
@@ -19,6 +22,8 @@ class TaskCard extends StatelessWidget {
     required this.isActive,
     required this.onPickedUp,
     required this.onOpenMap,
+    this.isPickUpLoading = false,
+    this.isOpenMapLoading = false,
     this.margin,
   });
 
@@ -146,6 +151,7 @@ class TaskCard extends StatelessWidget {
                     child: _OutlineButton(
                       label: AppStrings.pickedUp.tr,
                       onTap: onPickedUp,
+                      isLoading: isPickUpLoading,
                     ),
                   ),
                   SizedBox(width: Dimensions.w(10)),
@@ -153,6 +159,7 @@ class TaskCard extends StatelessWidget {
                     child: _FilledButton(
                       label: AppStrings.openMap.tr,
                       onTap: onOpenMap,
+                      isLoading: isOpenMapLoading,
                     ),
                   ),
                 ],
@@ -171,13 +178,18 @@ class TaskCard extends StatelessWidget {
 class _OutlineButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final bool isLoading;
 
-  const _OutlineButton({required this.label, required this.onTap});
+  const _OutlineButton({
+    required this.label,
+    required this.onTap,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: Dimensions.h(42),
         decoration: BoxDecoration(
@@ -186,14 +198,19 @@ class _OutlineButton extends StatelessWidget {
           border: Border.all(color: AppColors.primaryColor),
         ),
         alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: Dimensions.f(14),
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryColor,
-          ),
-        ),
+        child: isLoading
+            ? SpinKitFadingFour(
+                color: AppColors.primaryColor,
+                size: Dimensions.h(20),
+              )
+            : Text(
+                label,
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primaryColor,
+                ),
+              ),
       ),
     );
   }
@@ -203,13 +220,18 @@ class _OutlineButton extends StatelessWidget {
 class _FilledButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
+  final bool isLoading;
 
-  const _FilledButton({required this.label, required this.onTap});
+  const _FilledButton({
+    required this.label,
+    required this.onTap,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: Dimensions.h(42),
         decoration: BoxDecoration(
@@ -217,14 +239,19 @@ class _FilledButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.r(8)),
         ),
         alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: Dimensions.f(14),
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
+        child: isLoading
+            ? SpinKitFadingFour(
+                color: Colors.white,
+                size: Dimensions.h(20),
+              )
+            : Text(
+                label,
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
       ),
     );
   }

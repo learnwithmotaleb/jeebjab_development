@@ -18,6 +18,17 @@ class BecomeDriverController extends GetxController {
 
   bool get isValid => selectedType.value != DriverType.none;
 
+  String get selectedTypeString {
+    switch (selectedType.value) {
+      case DriverType.independent:
+        return "independent";
+      case DriverType.company:
+        return "company";
+      default:
+        return "";
+    }
+  }
+
   void onContinue() {
     if (!isValid) return;
     if (selectedType.value == DriverType.independent) {

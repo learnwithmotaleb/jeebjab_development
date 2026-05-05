@@ -11,12 +11,16 @@ class ProfileHeaderWidget extends StatelessWidget {
   final String name;
   final String email;
   final String? imageAsset;
+  final String? imageUrl;
+  final num? rating;
 
   const ProfileHeaderWidget({
     super.key,
     required this.name,
     required this.email,
     this.imageAsset,
+    this.imageUrl,
+    this.rating,
   });
 
   @override
@@ -41,31 +45,30 @@ class ProfileHeaderWidget extends StatelessWidget {
         children: [
           // ── Title row with back button ───────────────────────────────
           SizedBox(height: Dimensions.h(10)),
-          // if(PlatformHelper.isIOS)
           Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: AppColors.whiteColor,
+                  size: 20,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  AppStrings.profile.tr,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: AppColors.whiteColor,
-                    size: 20,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    AppStrings.profile.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-              ],
-            ),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
 
           SizedBox(height: Dimensions.h(10)),
           Container(
@@ -76,9 +79,10 @@ class ProfileHeaderWidget extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: Dimensions.w(38),
-              backgroundImage: AssetImage(
-                imageAsset ?? AppImages.profileImage,
-              ),
+              backgroundColor: AppColors.whiteColor.withOpacity(0.1),
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!)
+                  : AssetImage(imageAsset ?? AppImages.profileImage) as ImageProvider,
             ),
           ),
 
@@ -105,27 +109,32 @@ class ProfileHeaderWidget extends StatelessWidget {
           ),
           SizedBox(height: Dimensions.h(4)),
 
-          // ── Rating ──────────────────────────────────────────────────
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ...List.generate(4, (index) => const Icon(Icons.star_rounded, size: 18, color: Color(0xFFFFA500))),
-              const Icon(Icons.star_rounded, size: 18, color: AppColors.whiteColor),
-              const SizedBox(width: 4),
-              Text(
-                "4.7",
-                style: TextStyle(
-                  fontSize: Dimensions.f(14),
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.whiteColor,
+          // ── Rating (Only show if rating exists) ───────────────────────
+          if (rating != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...List.generate(5, (index) {
+                  final isFilled = index < (rating?.round() ?? 0);
+                  return Icon(
+                    Icons.star_rounded,
+                    size: 18,
+                    color: isFilled ? const Color(0xFFFFA500) : AppColors.whiteColor.withOpacity(0.5),
+                  );
+                }),
+                const SizedBox(width: 4),
+                Text(
+                  rating.toString(),
+                  style: TextStyle(
+                    fontSize: Dimensions.f(14),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.whiteColor,
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-
+              ],
+            ),
         ],
       ),
     );
   }
-}
+}

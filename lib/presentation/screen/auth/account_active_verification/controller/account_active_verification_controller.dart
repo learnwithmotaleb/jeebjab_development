@@ -7,7 +7,7 @@ import '../../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
 
-class CustomerVerificationController extends GetxController {
+class AccountActiveVerificationController extends GetxController {
   final otpController = TextEditingController();
   RxBool isLoading = false.obs;
   RxBool isLoadingResend = false.obs;
@@ -40,22 +40,31 @@ class CustomerVerificationController extends GetxController {
 
     try {
       final response = await apiClient.post(
-        url: ApiUrl.forgetPasswordOtpVerify,
+        url: ApiUrl.accountActive,
         body: {
+          "activationCode": otpController.text,
           "email": email,
-          "code": otpController.text,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        String successMessage = response.body['message'] ?? "Code verified successfully";
-        AppSnackBar.success(successMessage, title: "Success");
+        final data = response.body['data'];
+        if (data != null) {
+          final accessToken = data['accessToken'];
+          final refreshToken = data['refreshToken'];
+          if (accessToken != null) {
+            await SharePrefsHelper.saveToken(accessToken);
+          }
+          if (refreshToken != null) {
+            await SharePrefsHelper.saveRefreshToken(refreshToken);
+          }
+        }
 
-        // Navigate to reset password, passing the email and code for future requests
-        Get.toNamed(RoutePath.reset, arguments: {
-          "email": email,
-          "code": otpController.text,
-        });
+        final message = response.body['message'] ?? "Activation code verified successfully.";
+        AppSnackBar.success(message, title: "Success");
+
+        // Navigate to login after successful activation
+        Get.offAllNamed(RoutePath.login);
       } else {
         String errorMessage = response.body['message'] ?? response.statusText ?? "Invalid code. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Verification Failed");
@@ -73,16 +82,16 @@ class CustomerVerificationController extends GetxController {
     isLoadingResend.value = true;
     try {
       final response = await apiClient.post(
-        url: ApiUrl.forgotPassword,
+        url: ApiUrl.accountActiveCodeResend,
         body: {
           "email": email,
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        AppSnackBar.success("OTP resent successfully to $email", title: "Success");
+        AppSnackBar.success("Activation code resent to $email", title: "Success");
       } else {
-        AppSnackBar.fail("Failed to resend OTP. Please try again.", title: "Error");
+        AppSnackBar.fail("Failed to resend code. Please try again.", title: "Error");
       }
     } catch (e) {
       AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");

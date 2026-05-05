@@ -5,6 +5,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
+import 'package:jeebjab/presentation/screen/auth/account_active_verification/controller/account_active_verification_controller.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -14,25 +15,25 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/assets_image/app_images.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
-import '../controller/customer_verification_controller.dart';
-import '../widget/timer_widget.dart';
+import '../../Customer_Verification/widget/timer_widget.dart';
 
-class CustomerVerificationScreen extends StatefulWidget {
-  const CustomerVerificationScreen({super.key});
+
+class AccountActiveVerificationScreen extends StatefulWidget {
+  const AccountActiveVerificationScreen({super.key});
 
   @override
-  State<CustomerVerificationScreen> createState() =>
-      _CustomerVerificationScreenState();
+  State<AccountActiveVerificationScreen> createState() =>
+      _AccountActiveVerificationScreenState();
 }
 
-class _CustomerVerificationScreenState
-    extends State<CustomerVerificationScreen> {
-  late CustomerVerificationController controller;
+class _AccountActiveVerificationScreenState
+    extends State<AccountActiveVerificationScreen> {
+  late AccountActiveVerificationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(CustomerVerificationController());
+    controller = Get.put(AccountActiveVerificationController());
   }
 
   @override
@@ -56,8 +57,8 @@ class _CustomerVerificationScreenState
             Align(
               alignment: AlignmentGeometry.centerLeft,
               child: Text(
-                AppStrings.enterSixDigitCode.tr,
-                style: AppTextStyles.title
+                  AppStrings.enterSixDigitCode.tr,
+                  style: AppTextStyles.title
               ),
             ),
 
