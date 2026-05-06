@@ -112,17 +112,20 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     isLoading.value = true;
     try {
-      final g_auth.GoogleSignIn googleSignIn = g_auth.GoogleSignIn();
-      final g_auth.GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      final g_auth.GoogleSignInAccount? googleUser = await g_auth.GoogleSignIn.instance.authenticate();
 
       if (googleUser == null) {
         isLoading.value = false;
         return;
       }
 
-      final g_auth.GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final g_auth.GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      
+      // In v7+, accessToken requires explicit authorization
+      final g_auth.GoogleSignInClientAuthorization? auth = await googleUser.authorizationClient.authorizeScopes(['email', 'profile']);
+      
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: auth?.accessToken,
         idToken: googleAuth.idToken,
       );
 

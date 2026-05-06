@@ -41,51 +41,59 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(title: ""),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  AppStrings.uploadDocument.tr,
-                  style: AppTextStyles.title
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                AppStrings.uploadDocument.tr,
+                style: AppTextStyles.title
+            ),
+            SizedBox(height: Dimensions.h(8)),
+            Text(
+                AppStrings.uploadDocumentSubTitle.tr,
+                style: AppTextStyles.body
+            ),
+
+            SizedBox(height: Dimensions.h(20)),
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  UploadImageWidget(
+                    controller: controller,
+                    docType: 'driving_license',
+                    label: AppStrings.drivingLicense.tr,
+                  ),
+                  SizedBox(width: Dimensions.w(12)),
+                  UploadImageWidget(
+                    controller: controller,
+                    docType: 'vehicle_registration',
+                    label: AppStrings.vehicleRegistration.tr,
+                  ),
+                  SizedBox(width: Dimensions.w(12)),
+                  UploadImageWidget(
+                    controller: controller,
+                    docType: 'insurance',
+                    label: AppStrings.insurance.tr,
+                  ),
+                ],
               ),
+            ),
 
-              Text(
-                  AppStrings.uploadDocumentSubTitle.tr,
-                  style: AppTextStyles.body
-              ),
+            SizedBox(height: Dimensions.h(80)),
 
-              SizedBox(height: Dimensions.h(40)),
-
-              UploadImageWidget(
-                controller: controller,
-                docType: 'driving_license',
-                label: AppStrings.drivingLicense.tr,
-              ),
-              
-              SizedBox(height: Dimensions.h(24)),
-
-              UploadImageWidget(
-                controller: controller,
-                docType: 'vehicle_registration',
-                label: AppStrings.vehicleRegistration.tr,
-              ),
-
-              SizedBox(height: Dimensions.h(80)),
-
-              Obx(() => AppButton(
-                height: Dimensions.h(50),
-                label: AppStrings.continueButton.tr,
-                isLoading: controller.isLoading.value,
-                onPressed: () {
-                  controller.submitBecomeDriver();
-                },
-              )),
-            ],
-          ),
+            Obx(() => AppButton(
+              height: Dimensions.h(50),
+              label: AppStrings.continueButton.tr,
+              isLoading: controller.isLoading.value,
+              onPressed: () {
+                controller.submitBecomeDriver();
+              },
+            )),
+          ],
         ),
       ),
     );
@@ -151,18 +159,27 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
                 SizedBox(height: Dimensions.h(40)),
 
                 // ── Upload Image Widgets ─────────────────────────────
-                UploadImageWidget(
-                  controller: controller,
-                  docType: 'driving_license',
-                  label: AppStrings.drivingLicense.tr,
-                ),
-                
-                SizedBox(height: Dimensions.h(24)),
-
-                UploadImageWidget(
-                  controller: controller,
-                  docType: 'vehicle_registration',
-                  label: AppStrings.vehicleRegistration.tr,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    UploadImageWidget(
+                      controller: controller,
+                      docType: 'driving_license',
+                      label: AppStrings.drivingLicense.tr,
+                    ),
+                    SizedBox(width: Dimensions.w(16)),
+                    UploadImageWidget(
+                      controller: controller,
+                      docType: 'vehicle_registration',
+                      label: AppStrings.vehicleRegistration.tr,
+                    ),
+                    SizedBox(width: Dimensions.w(16)),
+                    UploadImageWidget(
+                      controller: controller,
+                      docType: 'insurance',
+                      label: AppStrings.insurance.tr,
+                    ),
+                  ],
                 ),
 
                 SizedBox(height: Dimensions.h(60)),

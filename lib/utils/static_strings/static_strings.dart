@@ -604,6 +604,7 @@ class AppStrings {
 
   // Driver Onboarding
   static const String drivingLicense = "Driving License";
+  static const String insurance = "insurance";
   static const String vehicleRegistration = "Vehicle Registration";
   static const String pleaseEnterBrand = "Please enter vehicle brand";
   static const String pleaseEnterModel = "Please enter vehicle model";

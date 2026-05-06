@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/presentation/screen/job/delivery/controller/delivery_controller.dart';
 import 'package:jeebjab/utils/device_preview/evice_preview_wrapper.dart';
@@ -20,6 +21,13 @@ void main() async {
 
   // Initialize SharedPreferences first
   await SharePrefsHelper.init();
+  
+  // Initialize Google Sign-In (v7.x requirement)
+  // NOTE: On Android, you MUST provide the serverClientId (Web Client ID) from Firebase Console.
+  // Location: Firebase Console -> Project Settings -> General -> Web API Key/OAuth 2.0 Client IDs -> Web client
+  await GoogleSignIn.instance.initialize(
+    serverClientId: '222750300065-xxxxxxxxxxxxxxxx.apps.googleusercontent.com', // Replace with your Web Client ID
+  );
 
   // Lock device orientation
   DeviceUtils.lockDevicePortrait();
