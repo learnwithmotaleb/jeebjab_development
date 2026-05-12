@@ -29,11 +29,13 @@ class ApiUrl {
   static final String socialLogin     = '$baseUrl/auth/social-login';
 
 
-
   static final String getUserProfile  = '$baseUrl/user/user-profile';
-
-
   static final String becomeDriver  = '$baseUrl/user/become-driver';
+
+
+  static final String createPost  = '$baseUrl/post';
+
+
 
 
 
