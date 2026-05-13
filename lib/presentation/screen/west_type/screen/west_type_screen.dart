@@ -22,16 +22,28 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+      mobile: _buildMobile(isEditMode),
+      tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.wasteTypes.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.wasteTypes.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           // ── Top info banner ───────────────────────────────────────────
@@ -213,7 +225,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          AppStrings.continueButton.tr,
+                          isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                           style: TextStyle(
                             fontSize: Dimensions.f(16),
                             fontWeight: FontWeight.w700,
@@ -230,10 +242,21 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.wasteTypes.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.wasteTypes.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -428,7 +451,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                               elevation: 0,
                             ),
                             child: Text(
-                              AppStrings.continueButton.tr,
+                              isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,

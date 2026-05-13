@@ -21,30 +21,51 @@ class OverviewAddressSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Use AppStrings with .tr for localization
-          Text(
-            AppStrings.pickupAddressTitle.tr,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 4),
+            child: Text(
+              AppStrings.pickupAddressTitle.tr,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
           ),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.address.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.pickupAddress);
+                Get.toNamed(RoutePath.pickupAddress, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.pickupAddress.value)),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.placement.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.placementPickup);
+                Get.toNamed(RoutePath.placementPickup, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.pickupPlacement.value)),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.floorAndDoorCode.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.pickupFloor);
+                Get.toNamed(RoutePath.pickupFloor, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.pickupFloor.value)),
         ],

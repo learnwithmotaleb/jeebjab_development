@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/helper/local_db/local_db.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
 import 'package:jeebjab/presentation/screen/job/category_status/controller/category_status_controller.dart';
 
 import '../../../../core/enums/post_category_type.dart';
@@ -22,13 +23,27 @@ class PickupFloorController extends GetxController {
           doorCodeController.text.trim().isNotEmpty;
 
 
+
+
   void onContinue() {
+    if (!isValid) {
+      if (floorController.text.trim().isEmpty) {
+        AppSnackBar.fail("Please enter the floor number.", title: "Required");
+      } else if (doorCodeController.text.trim().isEmpty) {
+        AppSnackBar.fail("Please enter the door code.", title: "Required");
+      }
+      return;
+    }
+
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+
+    if (isEditMode) {
+      Get.back();
+      return;
+    }
+
     // Get the saved enum directly
     final postCategory = SharePrefsHelper.getPostCategory();
-
-    print("========================================");
-    print(postCategory);
-    print("========================================");
 
     if (postCategory == null) return;
 
@@ -48,6 +63,18 @@ class PickupFloorController extends GetxController {
       // Handle unimplemented cases
       print("Route for $postCategory is not implemented yet");
     }
+  }
+
+  void onSaveAndPublish() {
+    if (!isValid) {
+      if (floorController.text.trim().isEmpty) {
+        AppSnackBar.fail("Please enter the floor number.", title: "Required");
+      } else if (doorCodeController.text.trim().isEmpty) {
+        AppSnackBar.fail("Please enter the door code.", title: "Required");
+      }
+      return;
+    }
+    Get.back(result: true);
   }
 
 

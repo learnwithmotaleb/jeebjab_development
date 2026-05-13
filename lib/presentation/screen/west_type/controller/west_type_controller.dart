@@ -95,4 +95,8 @@ class WestTypeController extends GetxController {
   void onAddItem() {
     // TODO: Get.toNamed(RoutePath.addWasteItem);
   }
+
+  void onSaveAndPublish() {
+    Get.back(result: true);
+  }
 }

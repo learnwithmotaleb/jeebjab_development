@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import '../../../../utils/static_strings/static_strings.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 
 class PlacementOption {
   final String label;
@@ -47,8 +48,27 @@ class PlacementPickupController extends GetxController {
 
   bool get isValid => selectedPlacement.value.isNotEmpty;
 
+
   void onContinue() {
-    // if (!isValid) return; // optional: prevent continue if no selection
-    Get.toNamed(RoutePath.pickupFloor);
+    if (!isValid) {
+      AppSnackBar.fail("Please select a placement option.", title: "Required");
+      return;
+    }
+    
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+    
+    if (isEditMode) {
+      Get.back();
+    } else {
+      Get.toNamed(RoutePath.pickupFloor);
+    }
+  }
+
+  void onSaveAndPublish() {
+    if (!isValid) {
+      AppSnackBar.fail("Please select a placement option.", title: "Required");
+      return;
+    }
+    Get.back(result: true);
   }
 }

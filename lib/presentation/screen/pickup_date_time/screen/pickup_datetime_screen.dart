@@ -24,16 +24,28 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-        mobile: _buildMobile(),
-        tablet: _buildTablet()
+        mobile: _buildMobile(isEditMode),
+        tablet: _buildTablet(isEditMode)
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.pickupDateTime.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.pickupDateTime.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -58,14 +70,14 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                     const SizedBox(height: 10),
 
-                    // ── Option 3: Custom (expandable) ─────────────────
+                    // ── Option 3: Scheduled (expandable) ─────────────────
                     PickupOptionCard(
                       type: AppStrings.custom.tr,
                       title: AppStrings.selectConvenientTime.tr,
-                      isSelected: selected == PickupType.custom,
+                      isSelected: selected == PickupType.scheduled,
                       showArrow: true,
                       arrowDown: !expanded,
-                      onTap: () => controller.selectType(PickupType.custom),
+                      onTap: () => controller.selectType(PickupType.scheduled),
                     ),
 
                     // ── Time Slots (expanded panel) ───────────────────
@@ -126,7 +138,7 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             child: AppButton(
-              label: AppStrings.continueButton.tr,
+              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
               height: 60,
             ),
@@ -136,10 +148,21 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
       ),
     );
   }
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.pickupDateTime.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.pickupDateTime.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color:AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -181,14 +204,14 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
 
                         const SizedBox(height: 16),
 
-                        // ── Option 3: Custom (expandable) ─────────────────
+                        // ── Option 3: Scheduled (expandable) ─────────────────
                         PickupOptionCard(
                           type: AppStrings.custom.tr,
                           title: AppStrings.selectConvenientTime.tr,
-                          isSelected: selected == PickupType.custom,
+                          isSelected: selected == PickupType.scheduled,
                           showArrow: true,
                           arrowDown: !expanded,
-                          onTap: () => controller.selectType(PickupType.custom),
+                          onTap: () => controller.selectType(PickupType.scheduled),
                         ),
 
                         // ── Time Slots (expanded panel) ───────────────────
@@ -252,7 +275,7 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                   vertical: Dimensions.h(40),
                 ),
                 child: AppButton(
-                  label: AppStrings.continueButton.tr,
+                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                   onPressed: controller.onContinue,
                   height: Dimensions.h(100),
                 ),

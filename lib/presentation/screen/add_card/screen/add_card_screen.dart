@@ -23,18 +23,28 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+      mobile: _buildMobile(isEditMode),
+      tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(
         title: AppStrings.addCard.tr,
         backgroundColor: AppColors.whiteColor,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
@@ -78,11 +88,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
             SizedBox(height: Dimensions.h(40)),
             Obx(
               () => AppButton(
-                label: AppStrings.addCard.tr,
+                label: isEditMode ? AppStrings.update.tr : AppStrings.addCard.tr,
                 height: 60,
                 onPressed: controller.isValid.value
-                    ? controller.onAddCard
-                    : controller.onAddCard,
+                    ? (isEditMode ? controller.onSaveAndPublish : controller.onAddCard)
+                    : (isEditMode ? controller.onSaveAndPublish : controller.onAddCard),
               ),
             ),
             SizedBox(height: Dimensions.h(30)),
@@ -92,12 +102,21 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(
         title: AppStrings.addCard.tr,
         backgroundColor: AppColors.whiteColor,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
       ),
       body: Center(
         child: ConstrainedBox(
@@ -152,11 +171,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
                 Obx(
                   () => AppButton(
-                    label: AppStrings.addCard.tr,
+                    label: isEditMode ? AppStrings.update.tr : AppStrings.addCard.tr,
                     height: Dimensions.h(100),
                     onPressed: controller.isValid.value
-                        ? controller.onAddCard
-                        : controller.onAddCard,
+                        ? (isEditMode ? controller.onSaveAndPublish : controller.onAddCard)
+                        : (isEditMode ? controller.onSaveAndPublish : controller.onAddCard),
                   ),
                 ),
                 SizedBox(height: Dimensions.h(40)),

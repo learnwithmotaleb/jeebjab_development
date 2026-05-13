@@ -582,6 +582,19 @@ Map<String, String> arabic = {
 
   // Category Status Controller
   AppStrings.plasticAndPaper: "بلاستيك وورق",
+  AppStrings.photos: "الصور",
+  AppStrings.noImages: "لا توجد صور مضافة",
+  AppStrings.empty: "فارغ",
+  AppStrings.medium: "متوسط",
+  AppStrings.insideMeetCanHelp: "بالداخل، لقاء، يمكن المساعدة",
+  AppStrings.outsideNoMeet: "بالخارج، لا يوجد لقاء",
+  AppStrings.anytime: "في أي وقت",
+  AppStrings.needToMeet: "يلزم اللقاء",
+  AppStrings.canHelpCarry: "يمكن المساعدة في الحمل",
+  AppStrings.paymentMethod: "طريقة الدفع",
+  AppStrings.types: "أنواع",
+  AppStrings.wasteType: "نوع النفايات",
+  AppStrings.wasteCategories: "فئات النفايات",
 
 
 };

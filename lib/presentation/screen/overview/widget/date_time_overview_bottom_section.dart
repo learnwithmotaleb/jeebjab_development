@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../core/routes/route_path.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../controller/overview_controller.dart';
@@ -23,7 +24,19 @@ class OverviewDatetimeBottomSection extends StatelessWidget {
         children: [
           Obx(() => OverviewInfoTile(
               title: AppStrings.dateTimeSlot.tr,
-              value: controller.dateTime.value)),
+              value: controller.dateTime.value,
+              onPressed: (){
+                Get.toNamed(RoutePath.pickupDateTime, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
+              },
+          ),
+
+
+          ),
         ],
       ),
     );

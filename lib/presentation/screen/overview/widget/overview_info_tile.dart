@@ -26,39 +26,55 @@ class OverviewInfoTile extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: isTablet ? 18 : 10,
-            horizontal: isTablet ? 12 : 0
+            horizontal: isTablet ? 12 : 4
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                  color: AppColors.blackColor,
-                  fontSize: isTablet ? 17 : 14,
-                  fontWeight: isTablet ? FontWeight.w600 : FontWeight.normal
+            /// ✅ Label (Left)
+            Expanded(
+              flex: 4,
+              child: Text(
+                title,
+                style: TextStyle(
+                    color: const Color(0xFF1A1A2E), // Darker title color
+                    fontSize: isTablet ? 17 : 14,
+                    fontWeight: isTablet ? FontWeight.w600 : FontWeight.w500
+                ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  value,
-                  style: isTablet
-                      ? TextStyle(
-                          fontSize: 16,
-                          color: AppColors.hintColor,
-                          fontWeight: FontWeight.w500
-                        )
-                      : AppTextStyles.hint.copyWith(fontSize: 14),
-                ),
-                SizedBox(width: isTablet ? 10 : 5),
-                Icon(
-                    Icons.arrow_forward_ios, 
-                    size: isTablet ? 18 : 14,
-                    color: AppColors.hintColor,
-                ),
-              ],
-            )
+            const SizedBox(width: 8),
+
+            /// ✅ Value (Right)
+            Expanded(
+              flex: 6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 13,
+                        color: onPressed == null 
+                            ? const Color(0xFF1A1A2E) // Dark bold for service type
+                            : const Color(0xFF6B7280), 
+                        fontWeight: onPressed == null ? FontWeight.w800 : FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (onPressed != null) ...[
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                      color: Color(0xFF1A1A2E),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ],
         ),
       ),

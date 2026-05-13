@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 
-enum PickupType { regular, priority, custom }
+enum PickupType { regular, priority, scheduled, anytime }
 
 class TimeSlot {
   final String label; // e.g. "00:00-01:00"
@@ -37,7 +38,7 @@ class PickupDatetimeController extends GetxController {
 
   void selectType(PickupType type) {
     selectedType.value = type;
-    if (type == PickupType.custom) {
+    if (type == PickupType.scheduled) {
       isCustomExpanded.value = !isCustomExpanded.value;
     } else {
       isCustomExpanded.value = false;
@@ -56,16 +57,32 @@ class PickupDatetimeController extends GetxController {
   bool get isValid {
     if (selectedType.value == PickupType.regular) return true;
     if (selectedType.value == PickupType.priority) return true;
-    if (selectedType.value == PickupType.custom) {
+    if (selectedType.value == PickupType.scheduled) {
       return selectedSlot.value.isNotEmpty;
     }
     return false;
   }
 
   void onContinue() {
-    // if (!isValid) return;
-    // // TODO: navigate to next step
+    if (selectedType.value == PickupType.scheduled && selectedSlot.value.isEmpty) {
+      AppSnackBar.fail("Please select a time slot for scheduled pickup.", title: "Required");
+      return;
+    }
 
-    Get.toNamed(RoutePath.pickupAddress);
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+
+    if (isEditMode) {
+      Get.back();
+    } else {
+      Get.toNamed(RoutePath.pickupAddress);
+    }
+  }
+
+  void onSaveAndPublish() {
+    if (selectedType.value == PickupType.scheduled && selectedSlot.value.isEmpty) {
+      AppSnackBar.fail("Please select a time slot for scheduled pickup.", title: "Required");
+      return;
+    }
+    Get.back(result: true);
   }
 }

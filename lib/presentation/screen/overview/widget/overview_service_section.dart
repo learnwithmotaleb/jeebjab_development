@@ -5,6 +5,7 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../controller/overview_controller.dart';
 import 'overview_info_tile.dart';
+
 class OverviewServiceSection extends StatelessWidget {
   const OverviewServiceSection({super.key});
 
@@ -16,34 +17,70 @@ class OverviewServiceSection extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: _boxDecoration(),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(() => OverviewInfoTile(
+          Obx(
+            () => OverviewInfoTile(
               title: AppStrings.typeOfService.tr,
-              onPressed: () {
-                Get.toNamed(RoutePath.captureInfo);
-              },
-              value: controller.serviceType.value)),
+              onPressed: null, // No chevron, bold value
+              value: controller.serviceType.value.tr,
+            ),
+          ),
 
-          Obx(() => OverviewInfoTile(
+          Obx(
+            () => OverviewInfoTile(
               title: AppStrings.titleOfService.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.captureInfo);
+                Get.toNamed(
+                  RoutePath.captureInfo,
+                  arguments: {'isEdit': true},
+                )?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
-              value: controller.serviceTitle.value)),
+              value: controller.serviceTitle.value,
+            ),
+          ),
 
-          Obx(() => OverviewInfoTile(
+          Obx(
+            () => OverviewInfoTile(
               title: AppStrings.descriptionOfService.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.captureInfo);
+                Get.toNamed(
+                  RoutePath.captureInfo,
+                  arguments: {'isEdit': true},
+                )?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
-              value: controller.description.value)),
+              value: controller.description.value,
+            ),
+          ),
 
-          Obx(() => OverviewInfoTile(
-              title: AppStrings.sizeOfProduct.tr,
+          Obx(
+            () => OverviewInfoTile(
+              title: AppStrings.wasteCategories.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.captureInfo);
+                Get.toNamed(
+                  RoutePath.westType,
+                  arguments: {'isEdit': true},
+                )?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
-              value: controller.sizeOfProduct.value)),
+              value: controller.wasteCount.value,
+            ),
+          ),
         ],
       ),
     );

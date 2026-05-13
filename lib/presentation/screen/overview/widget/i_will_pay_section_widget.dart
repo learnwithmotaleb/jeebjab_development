@@ -26,9 +26,26 @@ class OverviewIWillPayBottomSection extends StatelessWidget {
           Obx(() => OverviewInfoTile(
               title:AppStrings.iWillPay.tr,
               onPressed: (){
-                Get.toNamed(RoutePath.iWillPay);
+                Get.toNamed(RoutePath.iWillPay, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.price.value)),
+          const SizedBox(height: 12),
+          Obx(() => OverviewInfoTile(
+              title:AppStrings.paymentMethod.tr,
+              onPressed: (){
+                Get.toNamed(RoutePath.addCard, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
+              },
+              value: controller.paymentCard.value)),
         ],
       ),
     );

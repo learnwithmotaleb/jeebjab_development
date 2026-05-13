@@ -47,10 +47,9 @@ class OverviewPublishSection extends StatelessWidget {
                   onNo: () => Get.back(),
                 );
               },
-              backgroundColor: AppColors.whiteColor,
+              backgroundColor: const Color(0xFFF3F4F6),
               label: AppStrings.cancel.tr,
-              textColor: AppColors.blackColor,
-              borderSideColor: AppColors.whiteColor,
+              textColor: const Color(0xFF1F2937),
             ),
           ),
 
@@ -60,26 +59,11 @@ class OverviewPublishSection extends StatelessWidget {
           Expanded(
             child: Obx(() => AppButton(
               height: isTablet ? 100 : 65,
-
-              /// 🔥 Main Fix Here
               onPressed: controller.canPublish
-                  ? () {
-                AppAlerts.confirm(
-                  title: AppStrings.payments.tr,
-                  message: AppStrings.yourPostHasBeenSuccessfullyPublished.tr,
-                  onConfirm: () {
-                    Get.offAllNamed(
-                      RoutePath.bottomNav,
-                      arguments: 3,
-                    );
-                  },
-                );
-              }
+                  ? () => controller.publishPost()
                   : null,
-
               label: AppStrings.publish.tr,
-
-              /// 🎨 Optional UX Improvement
+              isLoading: controller.isLoading.value,
               backgroundColor: controller.canPublish
                   ? AppColors.primaryColor
                   : AppColors.greyColor.withOpacity(0.5),

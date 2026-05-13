@@ -19,22 +19,32 @@ class SetDropOfAddressScreen extends StatefulWidget {
 }
 
 class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
-  final SetDropOfAddressController controller = Get.put(
-    SetDropOfAddressController(),
-  );
+  final SetDropOfAddressController controller = Get.put(SetDropOfAddressController());
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-        mobile: _buildMobile(),
-        tablet: _buildTablet()
+        mobile: _buildMobile(isEditMode),
+        tablet: _buildTablet(isEditMode)
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.setDropOffAddress.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.setDropOffAddress.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           // ── Scrollable Content ──────────────────────────────────────
@@ -142,22 +152,20 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                   // ── Address List ──────────────────────────────────────
                   Obx(
                     () => Column(
-                      children: controller.recentAddresses
-                          .map(
-                            (address) => Padding(
-                              padding: EdgeInsets.only(
-                                bottom: Dimensions.h(10),
-                              ),
-                              child: RecentAddressCard(
-                                address: address,
-                                isSelected:
-                                    controller.selectedAddress.value == address,
-                                onTap: () =>
-                                    controller.selectRecentAddress(address),
-                              ),
+                      children: List.generate(
+                        controller.recentAddresses.length,
+                        (index) {
+                          final address = controller.recentAddresses[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: Dimensions.h(10)),
+                            child: RecentAddressCard(
+                              address: address,
+                              isSelected: controller.selectedAddressIndex.value == index,
+                              onTap: () => controller.selectRecentAddress(index, address),
                             ),
-                          )
-                          .toList(),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -174,7 +182,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
               Dimensions.h(24),
             ),
             child: AppButton(
-              label: AppStrings.continueButton.tr,
+              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
               height: 65,
               onPressed: controller.onContinue,
             ),
@@ -185,10 +193,21 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
       ),
     );
   }
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.setDropOffAddress.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.setDropOffAddress.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -302,20 +321,20 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                       // ── Address List ──────────────────────────────────────
                       Obx(
                         () => Column(
-                          children: controller.recentAddresses
-                              .map(
-                                (address) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: RecentAddressCard(
-                                    address: address,
-                                    isSelected:
-                                        controller.selectedAddress.value == address,
-                                    onTap: () =>
-                                        controller.selectRecentAddress(address),
-                                  ),
+                          children: List.generate(
+                            controller.recentAddresses.length,
+                            (index) {
+                              final address = controller.recentAddresses[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: RecentAddressCard(
+                                  address: address,
+                                  isSelected: controller.selectedAddressIndex.value == index,
+                                  onTap: () => controller.selectRecentAddress(index, address),
                                 ),
-                              )
-                              .toList(),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -330,7 +349,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                   vertical: Dimensions.h(40),
                 ),
                 child: AppButton(
-                  label: AppStrings.continueButton.tr,
+                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                   height: Dimensions.h(100),
                   onPressed: controller.onContinue,
                 ),

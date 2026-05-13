@@ -26,16 +26,28 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+      mobile: _buildMobile(isEditMode),
+      tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.information.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.information.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -122,7 +134,7 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: AppButton(
               height: 60,
-              label: AppStrings.continueButton.tr,
+              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
             ),
           ),
@@ -132,10 +144,21 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.information.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.information.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
@@ -227,8 +250,8 @@ class _CaptureInfoScreenState extends State<CaptureInfoScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: AppButton(
-                      height: Dimensions.h(100),
-                      label: AppStrings.continueButton.tr,
+                      height: 60,
+                      label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                       onPressed: controller.onContinue,
                     ),
                   ),

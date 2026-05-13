@@ -28,27 +28,51 @@ class DropAddressSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Use localized string
-          Text(AppStrings.dropOffAddress.tr,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 4),
+            child: Text(
+              AppStrings.dropOffAddress.tr,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: Color(0xFF1A1A2E),
+              ),
+            ),
+          ),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.address.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.setDropOffAddress);
+                Get.toNamed(RoutePath.setDropOffAddress, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.dropAddress.value)),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.placement.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.placementDropOff);
+                Get.toNamed(RoutePath.placementDropOff, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.dropPlacement.value)),
 
           Obx(() => OverviewInfoTile(
               title: AppStrings.floorAndDoorCode.tr,
               onPressed: () {
-                Get.toNamed(RoutePath.dropOffFloor);
+                Get.toNamed(RoutePath.dropOffFloor, arguments: {'isEdit': true})?.then((result) {
+                  controller.loadData();
+                  if (result == true) {
+                    controller.publishPost();
+                  }
+                });
               },
               value: controller.dropFloor.value)),
         ],

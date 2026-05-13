@@ -34,6 +34,7 @@ class ApiUrl {
 
 
   static final String createPost  = '$baseUrl/post';
+  static final String updatePost  = '$baseUrl/post/:id';
 
 
 

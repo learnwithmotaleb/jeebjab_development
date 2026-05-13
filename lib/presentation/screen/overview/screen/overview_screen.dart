@@ -40,19 +40,31 @@ class _OverviewScreenState extends State<OverviewScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(title: AppStrings.overview.tr),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(12),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const OverviewPhotosSection(),
                   const SizedBox(height: 12),
                   const OverviewServiceSection(),
                   const SizedBox(height: 12),
                   const OverviewAddressSection(),
-                  const SizedBox(height: 12),
-                  const DropAddressSection(),
+                  Obx(() {
+                    final isRecycling = controller.serviceType.value.toLowerCase().contains("recycling");
+                    return isRecycling 
+                        ? const SizedBox.shrink() 
+                        : const Column(
+                            children: [
+                              SizedBox(height: 12),
+                              DropAddressSection(),
+                            ],
+                          );
+                  }),
                   const SizedBox(height: 12),
                   const OverviewDatetimeBottomSection(),
                   const SizedBox(height: 12),
@@ -86,6 +98,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     vertical: Dimensions.h(24),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const OverviewPhotosSection(),
                       SizedBox(height: Dimensions.h(20)),

@@ -25,16 +25,22 @@ class AcknowledgementSection extends StatelessWidget {
           children: [
             Checkbox(
               value: controller.acknowledgePickup.value,
+              activeColor: const Color(0xFF1ABC9C), // Primary teal color
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               onChanged: (value) {
                 controller.acknowledgePickup.value = value ?? false;
               },
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   AppStrings.iHereByAcknowledgeThatIsBeingPickedUp.tr,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1A1A2E),
+                  ),
                 ),
               ),
             ),
@@ -43,14 +49,10 @@ class AcknowledgementSection extends StatelessWidget {
 
         /// Sub Points
         Padding(
-          padding: const EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.only(left: 48, top: 0),
           child: Column(
             children: [
               _bulletItem(AppStrings.correspondsWithAd.tr),
-              const SizedBox(height: 8),
-              _bulletItem(AppStrings.doesNotContainToxicOrHarmful.tr),
-              const SizedBox(height: 8),
-              _bulletItem(AppStrings.willBeAvailableAtTheTimeForPickUp.tr),
             ],
           ),
         ),
@@ -64,19 +66,23 @@ class AcknowledgementSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 14,
-          height: 14,
+          width: 8,
+          height: 8,
           margin: const EdgeInsets.only(top: 4),
           decoration: BoxDecoration(
-            color: AppColors.greyColor.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(3),
+            color: const Color(0xFF9CA3AF),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 13),
+            style: const TextStyle(
+              fontSize: 11,
+              color: Color(0xFF6B7280),
+              height: 1.4,
+            ),
           ),
         ),
       ],

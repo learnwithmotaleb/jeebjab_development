@@ -22,13 +22,14 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+      mobile: _buildMobile(isEditMode),
+      tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -170,7 +171,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                               elevation: 0,
                             ),
                             child: Text(
-                              AppStrings.next.tr,
+                              isEditMode ? AppStrings.update.tr : AppStrings.next.tr,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -194,7 +195,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -357,7 +358,7 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                               elevation: 0,
                             ),
                             child: Text(
-                              AppStrings.next.tr,
+                              isEditMode ? AppStrings.update.tr : AppStrings.next.tr,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,

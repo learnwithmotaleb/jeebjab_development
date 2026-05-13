@@ -25,16 +25,28 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-        mobile: _buildMobile(),
-        tablet: _buildTablet(),
+        mobile: _buildMobile(isEditMode),
+        tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.iWillPay.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.iWillPay.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           // ── Main Content ────────────────────────────────────────────
@@ -134,8 +146,8 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
               Dimensions.h(24),
             ),
             child: AppButton(
-              height: 65,
-              label: AppStrings.continueButton.tr,
+              height: 60,
+              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
             ),
           ),
@@ -146,10 +158,21 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.iWillPay.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.iWillPay.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -248,8 +271,8 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                   vertical: Dimensions.h(40),
                 ),
                 child: AppButton(
-                  height: Dimensions.h(100),
-                  label: AppStrings.continueButton.tr,
+                  height: Dimensions.h(80),
+                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                   onPressed: controller.onContinue,
                 ),
               ),

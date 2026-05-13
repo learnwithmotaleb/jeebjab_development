@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 
 class CaptureImageController extends GetxController {
   final ImagePicker _picker = ImagePicker();
@@ -46,13 +47,23 @@ class CaptureImageController extends GetxController {
     }
   }
 
+
   // ── Pass images as arguments to CaptureInfoScreen ────────────────────────
   void onNext() {
-    if (!hasImages) return;
-    Get.toNamed(
-      RoutePath.captureInfo,
-      arguments: {'images': selectedImages.toList()}, // List<File>
-    );
+    if (!hasImages) {
+      AppSnackBar.fail("Please capture or select at least one image.", title: "Required");
+      return;
+    }
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+    
+    if (isEditMode) {
+      Get.back();
+    } else {
+      Get.toNamed(
+        RoutePath.captureInfo,
+        arguments: {'images': selectedImages.toList()}, // List<File>
+      );
+    }
   }
 
   void onBack() => Get.back();

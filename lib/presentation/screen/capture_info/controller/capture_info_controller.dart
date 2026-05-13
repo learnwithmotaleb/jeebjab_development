@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 
 class ProductSize {
   final String label;
@@ -51,6 +52,8 @@ class CaptureInfoController extends GetxController {
     AppStrings.bouldersGravelSoil.tr,
   ];
 
+
+
   @override
   void onInit() {
     super.onInit();
@@ -74,8 +77,33 @@ class CaptureInfoController extends GetxController {
   }
 
   void onContinue() {
-    // if (!isValid) return;
-    Get.toNamed(RoutePath.pickupDateTime);
+    if (nameController.text.trim().isEmpty) {
+      AppSnackBar.fail("Please enter the name of the product.", title: "Required");
+      return;
+    }
+    if (selectedSize.value.isEmpty) {
+      AppSnackBar.fail("Please select the size of the product.", title: "Required");
+      return;
+    }
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+    
+    if (isEditMode) {
+      Get.back();
+    } else {
+      Get.toNamed(RoutePath.pickupDateTime);
+    }
+  }
+
+  void onSaveAndPublish() {
+    if (nameController.text.trim().isEmpty) {
+      AppSnackBar.fail("Please enter the name of the product.", title: "Required");
+      return;
+    }
+    if (selectedSize.value.isEmpty) {
+      AppSnackBar.fail("Please select the size of the product.", title: "Required");
+      return;
+    }
+    Get.back(result: true);
   }
 
   @override

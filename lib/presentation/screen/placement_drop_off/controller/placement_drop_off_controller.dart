@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
 
 import '../../../../core/routes/route_path.dart';
 import '../../placement_pickup/controller/placement_pickup_controller.dart';
@@ -41,10 +42,29 @@ class PlacementDropOffController extends GetxController{
 
   bool get isValid => selectedPlacement.value.isNotEmpty;
 
+
+
   void onContinue() {
-    // if (!isValid) return;
-    // // TODO: Navigate to next step
-    Get.toNamed(RoutePath.dropOffFloor);
+    if (!isValid) {
+      AppSnackBar.fail("Please select a placement option for drop-off.", title: "Required");
+      return;
+    }
+    
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
+    
+    if (isEditMode) {
+      Get.back();
+    } else {
+      Get.toNamed(RoutePath.dropOffFloor);
+    }
+  }
+
+  void onSaveAndPublish() {
+    if (!isValid) {
+      AppSnackBar.fail("Please select a placement option for drop-off.", title: "Required");
+      return;
+    }
+    Get.back(result: true);
   }
 
 

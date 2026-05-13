@@ -23,16 +23,28 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
     return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+      mobile: _buildMobile(isEditMode),
+      tablet: _buildTablet(isEditMode),
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.droopOffFloorAndDoorCode.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.droopOffFloorAndDoorCode.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Column(
         children: [
           // ── Scrollable Content ────────────────────────────────────────
@@ -116,7 +128,7 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
             ),
             child: AppButton(
               height: 60,
-              label: AppStrings.continueButton.tr,
+              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
               onPressed: controller.onContinue,
             ),
           ),
@@ -126,10 +138,21 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
     );
   }
 
-  Widget _buildTablet() {
+  Widget _buildTablet(bool isEditMode) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      appBar: CommonAppBar(title: AppStrings.droopOffFloorAndDoorCode.tr),
+      appBar: CommonAppBar(
+        title: AppStrings.droopOffFloorAndDoorCode.tr,
+        actions: isEditMode
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  tooltip: 'Save & Publish',
+                  onPressed: controller.onSaveAndPublish,
+                ),
+              ]
+            : null,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -242,7 +265,7 @@ class _DropOffFloorScreenState extends State<DropOffFloorScreen> {
                   vertical: Dimensions.h(40),
                 ),
                 child: AppButton(
-                  label: AppStrings.continueButton.tr,
+                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
                   height: Dimensions.h(100),
                   onPressed: controller.onContinue,
                 ),

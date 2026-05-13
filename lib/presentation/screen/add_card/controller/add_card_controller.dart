@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
 
 class AddCardController extends GetxController {
   // ── Text Controllers ──────────────────────────────────────────────────────
+  final TextEditingController cardHolderNameController = TextEditingController();
   final TextEditingController cardNumberController = TextEditingController();
   final TextEditingController expireController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
@@ -29,10 +31,26 @@ class AddCardController extends GetxController {
   }
 
   void onAddCard() {
-    // if (!isValid.value) return;
-    // // TODO: Call API to add card
+    if (!isValid.value) {
+      if (cardNumberController.text.replaceAll(' ', '').length < 16) {
+        AppSnackBar.fail("Please enter a valid 16-digit card number.", title: "Required");
+      } else if (expireController.text.length < 5) {
+        AppSnackBar.fail("Please enter a valid expiry date (MM/YY).", title: "Required");
+      } else if (cvvController.text.length < 3) {
+        AppSnackBar.fail("Please enter a valid 3-digit CVV.", title: "Required");
+      }
+      return;
+    }
 
     Get.toNamed(RoutePath.overview);
+  }
+
+  void onSaveAndPublish() {
+    if (!isValid.value) {
+      AppSnackBar.fail("Please enter valid card details.", title: "Required");
+      return;
+    }
+    Get.back(result: true);
   }
 
   @override
