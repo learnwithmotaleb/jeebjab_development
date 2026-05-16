@@ -203,11 +203,11 @@ class DriverHomeController extends GetxController {
 
   void onOpenMap(DriverTask task) {
     // TODO: Get.toNamed(RoutePath.mapView, arguments: {'task': task});
-    Get.toNamed(RoutePath.pickUpDetails, arguments: {'task': task});
+    Get.toNamed(RoutePath.postDetails, arguments: {'task': task});
   }
 
   void onRecentJobTap(RecentJob job) {
     // TODO: Get.toNamed(RoutePath.categoryStatus, arguments: {'title': job.title});
-    Get.toNamed(RoutePath.pickUpDetails, arguments: {'task': job});
+    Get.toNamed(RoutePath.postDetails, arguments: {'task': job});
   }
 }

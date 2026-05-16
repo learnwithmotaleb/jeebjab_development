@@ -58,20 +58,18 @@ import 'package:jeebjab/presentation/screen/not_allow/screen/not_allow_screen.da
 
 import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/presentation/screen/notification/screen/notification_screen.dart';
-import 'package:jeebjab/presentation/screen/notification_detalis/controller/notification_details_controller.dart';
-import 'package:jeebjab/presentation/screen/notification_detalis/screen/notification_details_screen.dart';
 import 'package:jeebjab/presentation/screen/overview/controller/overview_controller.dart';
 import 'package:jeebjab/presentation/screen/overview/screen/overview_screen.dart';
 import 'package:jeebjab/presentation/screen/pickup_address/controller/pickup_address_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_date_time/controller/pickup_datetime_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_date_time/screen/pickup_datetime_screen.dart';
-import 'package:jeebjab/presentation/screen/pickup_details/controller/pickup_details_controller.dart';
-import 'package:jeebjab/presentation/screen/pickup_details/screen/pickup_details_screen.dart';
 import 'package:jeebjab/presentation/screen/pickup_floor/controller/pickup_floor_controller.dart';
 import 'package:jeebjab/presentation/screen/pickup_floor/screen/pickup_floor_screen.dart';
 import 'package:jeebjab/presentation/screen/placement_drop_off/controller/placement_drop_off_controller.dart';
 import 'package:jeebjab/presentation/screen/placement_drop_off/screen/placement_drop_off_screen.dart';
 import 'package:jeebjab/presentation/screen/placement_pickup/controller/placement_pickup_controller.dart';
+import 'package:jeebjab/presentation/screen/post_details/controller/post_details_controller.dart';
+import 'package:jeebjab/presentation/screen/post_details/screen/post_details_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/account/controller/account_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/bank_card/controller/bank_card_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/account_settings/bank_card/screen/bank_card_screen.dart';
@@ -104,6 +102,8 @@ import 'package:jeebjab/presentation/screen/set_drop_off_address/controller/set_
 import 'package:jeebjab/presentation/screen/set_drop_off_address/screen/set_drop_of_address_screen.dart';
 import 'package:jeebjab/presentation/screen/show_map/controller/show_map_controller.dart';
 import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
+import 'package:jeebjab/presentation/screen/status_details/controller/status_details_controller.dart';
+import 'package:jeebjab/presentation/screen/status_details/screen/status_details_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
 import 'package:jeebjab/presentation/screen/west_type/controller/west_type_controller.dart';
@@ -332,11 +332,11 @@ class AppRouter {
 
 
    GetPage(
-      name: RoutePath.notificationDetails,
-      page: () =>  NotificationDetailsScreen(),
+      name: RoutePath.statusDetails,
+      page: () =>  StatusDetailsScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
-        Get.put(NotificationDetailsController());
+        Get.put(StatusDetailsController());
       }),
     ),
 
@@ -381,11 +381,11 @@ class AppRouter {
     ),
 
     GetPage(
-      name: RoutePath.pickUpDetails,
-      page: () =>  PickupDetailsScreen(),
+      name: RoutePath.postDetails,
+      page: () =>  PostDetailsScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
-        Get.put(PickupDetailsController());
+        Get.put(PostDetailsController());
       }),
     ),
 

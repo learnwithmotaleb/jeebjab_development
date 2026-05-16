@@ -55,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               subtitle: 'Bike',
               message: 'Someone Sent You A Request For Move',
               timeAgo: '1 Hour Ago',
-              onTap: () => Get.toNamed(RoutePath.notificationDetails),
+              onTap: () => Get.toNamed(RoutePath.statusDetails),
             ),
 
             NotificationCard(
@@ -64,7 +64,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               subtitle: 'Bike',
               message: 'Advertiser Accepted Your Recycling Request',
               timeAgo: '1 Hour Ago',
-              onTap: () => Get.toNamed(RoutePath.notificationDetails),
+              onTap: () => Get.toNamed(RoutePath.statusDetails),
             ),
 
             NotificationCard(
@@ -73,7 +73,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               subtitle: 'Electronics',
               message: 'PickedUp Your Waste Items',
               timeAgo: '2 Hours Ago',
-              onTap: () => Get.toNamed(RoutePath.notificationDetails),
+              onTap: () => Get.toNamed(RoutePath.statusDetails),
             ),
 
             SizedBox(height: Dimensions.h(16)),
@@ -88,7 +88,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               subtitle: 'Bike',
               message: 'Recycling Completed',
               timeAgo: '2 Days Ago',
-              onTap: () => Get.toNamed(RoutePath.notificationDetails),
+              onTap: () => Get.toNamed(RoutePath.statusDetails),
             ),
             
             SizedBox(height: Dimensions.h(20)),
@@ -124,7 +124,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       subtitle: 'Bike',
                       message: 'Someone Sent You A Request For Move',
                       timeAgo: '1 Hour Ago',
-                      onTap: () => Get.toNamed(RoutePath.notificationDetails),
+                      onTap: () => Get.toNamed(RoutePath.statusDetails),
                     ),
                     NotificationCard(
                       imagePath: AppImages.homeImage2,
@@ -132,7 +132,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       subtitle: 'Bike',
                       message: 'Advertiser Accepted Your Recycling Request',
                       timeAgo: '1 Hour Ago',
-                      onTap: () => Get.toNamed(RoutePath.notificationDetails),
+                      onTap: () => Get.toNamed(RoutePath.statusDetails),
                     ),
                     NotificationCard(
                       imagePath: AppImages.profileImage,
@@ -140,7 +140,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       subtitle: 'Electronics',
                       message: 'PickedUp Your Waste Items',
                       timeAgo: '2 Hours Ago',
-                      onTap: () => Get.toNamed(RoutePath.notificationDetails),
+                      onTap: () => Get.toNamed(RoutePath.statusDetails),
                     ),
                   ]),
 
@@ -157,7 +157,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       subtitle: 'Bike',
                       message: 'Recycling Completed',
                       timeAgo: '2 Days Ago',
-                      onTap: () => Get.toNamed(RoutePath.notificationDetails),
+                      onTap: () => Get.toNamed(RoutePath.statusDetails),
                     ),
                   ]),
                   

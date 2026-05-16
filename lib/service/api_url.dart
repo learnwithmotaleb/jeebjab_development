@@ -35,6 +35,20 @@ class ApiUrl {
 
   static final String createPost  = '$baseUrl/post';
   static final String updatePost  = '$baseUrl/post/:id';
+  static String getPostDetails(String id) => '$baseUrl/post/$id';
+
+
+  static final String getPendingPosts =
+      '$baseUrl/post/my-posts?status=pending';
+
+  static final String getActivePosts =
+      '$baseUrl/post/my-posts?status=active';
+
+  static final String getCompletedPosts =
+      '$baseUrl/post/my-posts?status=completed';
+
+
+
 
 
 

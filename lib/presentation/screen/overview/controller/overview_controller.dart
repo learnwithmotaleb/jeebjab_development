@@ -181,7 +181,7 @@ class OverviewController extends GetxController {
         "title": captureInfoCtrl.nameController.text,
         "description": captureInfoCtrl.descriptionController.text,
         "size": captureInfoCtrl.selectedSize.value.toLowerCase(),
-        "wasteType": wasteTypeCtrl?.selectedItems.join(', ') ?? "",
+        "wasteType": wasteTypeCtrl?.selectedItems.toList() ?? [],
         "pickup": {
           "address": {
             "text": pickupAddrCtrl.addressController.text,

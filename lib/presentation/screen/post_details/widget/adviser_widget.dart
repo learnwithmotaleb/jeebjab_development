@@ -39,9 +39,12 @@ class AdvertiserWidget extends StatelessWidget {
               // ── Avatar ────────────────────────────────────────────────────
               CircleAvatar(
                 radius: 24,
-                backgroundColor:AppColors.whiteColor,
-                backgroundImage: NetworkImage(imageUrl),
-                onBackgroundImageError: (_, __) {},
+                backgroundColor: AppColors.whiteColor,
+                backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+                onBackgroundImageError: imageUrl.isNotEmpty ? (_, __) {} : null,
+                child: imageUrl.isEmpty
+                    ? const Icon(Icons.person, color: AppColors.greyColor)
+                    : null,
               ),
                SizedBox(width: Dimensions.w(20)),
 

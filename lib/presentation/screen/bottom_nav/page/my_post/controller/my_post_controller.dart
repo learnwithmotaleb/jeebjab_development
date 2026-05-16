@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
+import 'package:jeebjab/service/api_service.dart';
+import 'package:jeebjab/service/api_url.dart';
 
 import '../../../../../../utils/static_strings/static_strings.dart';
 import '../model/my_post_model.dart';
 
 class MyPostController extends GetxController {
+  final ApiClient _apiClient = ApiClient();
+
   // ── State ─────────────────────────────────────────────────────────────────
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
@@ -38,14 +42,23 @@ class MyPostController extends GetxController {
       isLoading.value = true;
       errorMessage.value = '';
 
-      // TODO: Replace with your real API call
-      // final response = await ApiService.get('/my-posts');
-      // final List data = response['data'];
-      // allPosts.value = data.map((e) => PostModel.fromJson(e)).toList();
+      // Parallel fetch for all three statuses
+      final responses = await Future.wait([
+        _apiClient.get(url: ApiUrl.getPendingPosts, isToken: true),
+        _apiClient.get(url: ApiUrl.getActivePosts, isToken: true),
+        _apiClient.get(url: ApiUrl.getCompletedPosts, isToken: true),
+      ]);
 
-      // ── Dummy data (remove when API is ready) ─────────────────────────
-      await Future.delayed(const Duration(seconds: 1)); // simulate network
-      allPosts.value = _dummyPosts();
+      final List<PostModel> combinedPosts = [];
+
+      for (var response in responses) {
+        if (response.statusCode == 200) {
+          final List postsJson = response.body['data']['posts'] ?? [];
+          combinedPosts.addAll(postsJson.map((e) => PostModel.fromJson(e)).toList());
+        }
+      }
+
+      allPosts.assignAll(combinedPosts);
 
     } catch (e) {
       errorMessage.value = AppStrings.failedToLoadPosts.tr;
@@ -81,6 +94,7 @@ class MyPostController extends GetxController {
     switch (post.status) {
       case PostStatus.pending:
         return {
+          'id': post.id,
           'itemType': post.title,
           'itemSubtype': post.category,
           'itemDate': post.date,
@@ -89,6 +103,7 @@ class MyPostController extends GetxController {
         };
       case PostStatus.active:
         return {
+          'id': post.id,
           'itemType': post.title,
           'itemSubtype': post.category,
           'itemDate': post.date,
@@ -97,6 +112,7 @@ class MyPostController extends GetxController {
         };
       case PostStatus.completed:
         return {
+          'id': post.id,
           'itemType': post.title,
           'itemSubtype': post.category,
           'itemDate': post.date,
@@ -105,50 +121,4 @@ class MyPostController extends GetxController {
         };
     }
   }
-
-  // ── Dummy Posts (remove when API is ready) ────────────────────────────────
-  List<PostModel> _dummyPosts() {
-    return [
-      PostModel(
-        title: AppStrings.moveDummy.tr,
-        category: AppStrings.bikeDummy.tr,
-        date: '10 January',
-        size: AppStrings.mediumSizeDummy.tr,
-        price: 120,
-        status: PostStatus.pending,
-        imageUrl:
-        'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=200',
-      ),
-      PostModel(
-        title: AppStrings.recyclingDummy.tr,
-        category: AppStrings.bikeDummy.tr,
-        date: '10 January',
-        size: AppStrings.mediumSizeDummy.tr,
-        price: 260,
-        status: PostStatus.pending,
-        imageUrl:
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200',
-      ),
-      PostModel(
-        title: AppStrings.furnitureDeliveryDummy.tr,
-        category: AppStrings.sofaDummy.tr,
-        date: '12 January',
-        size: AppStrings.largeSizeDummy.tr,
-        price: 450,
-        status: PostStatus.active,
-        imageUrl:
-        'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200',
-      ),
-      PostModel(
-        title: AppStrings.electronicsMoveDummy.tr,
-        category: AppStrings.tvDummy.tr,
-        date: '8 January',
-        size: AppStrings.smallSizeDummy.tr,
-        price: 90,
-        status: PostStatus.completed,
-        imageUrl:
-        'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=200',
-      ),
-    ];
-  }
-}
+}

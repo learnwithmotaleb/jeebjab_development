@@ -6,9 +6,9 @@ import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
-import '../../../pickup_details/widget/adviser_widget.dart';
-import '../../../pickup_details/widget/image_carousel_widget.dart';
-import '../../../pickup_details/widget/location_card_widget.dart';
+import '../../../post_details/widget/adviser_widget.dart';
+import '../../../post_details/widget/image_carousel_widget.dart';
+import '../../../post_details/widget/location_card_widget.dart';
 import '../controller/category_status_controller.dart';
 import '../widget/status_bottom_action.dart';
 

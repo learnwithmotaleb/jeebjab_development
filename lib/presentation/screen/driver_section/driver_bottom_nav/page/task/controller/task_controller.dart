@@ -84,6 +84,6 @@ class TaskController extends GetxController {
 
 
   void onOpenMap(TaskItem item) {
-    Get.toNamed(RoutePath.pickUpDetails, arguments: {'task': item});
+    Get.toNamed(RoutePath.postDetails, arguments: {'task': item});
   }
 }

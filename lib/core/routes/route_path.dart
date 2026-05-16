@@ -22,12 +22,12 @@ class RoutePath {
   static const String home = '/HomeScreen';
   static const String readMore = '/ReadMoreScreen';
   static const String notification = '/NotificationScreen';
-  static const String notificationDetails = '/NotificationDetailsScreen';
+  static const String statusDetails = '/StatusDetailsScreen';
   static const String chat = '/ChatScreen';
   static const String showMap = '/ShowMapScreen';
   static const String bottomNav = '/BottomNavScreen';
   static const String myPost = '/MyPostScreen';
-  static const String pickUpDetails = '/PickupDetailsScreen';
+  static const String postDetails = '/PostDetailsScreen';
   static const String reviewProfile = '/ReviewProfileScreen';
   static const String reviewList = '/ReviewsListScreen';
   static const String createPost = '/CreatePostScreen';

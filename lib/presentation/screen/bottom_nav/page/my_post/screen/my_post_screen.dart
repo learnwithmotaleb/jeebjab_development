@@ -151,7 +151,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   void _handleCardTap(PostModel post) {
     Get.toNamed(
-      RoutePath.notificationDetails,
+      RoutePath.statusDetails,
       arguments: controller.buildDetailArguments(post),
     );
   }

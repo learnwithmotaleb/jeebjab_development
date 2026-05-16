@@ -6,6 +6,7 @@ import '../../../../../helper/local_db/local_db.dart';
 import '../../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
+import '../../login/controller/login_controller.dart';
 
 class AccountActiveVerificationController extends GetxController {
   final otpController = TextEditingController();
@@ -63,8 +64,7 @@ class AccountActiveVerificationController extends GetxController {
         final message = response.body['message'] ?? "Activation code verified successfully.";
         AppSnackBar.success(message, title: "Success");
 
-        // Navigate to login after successful activation
-        Get.offAllNamed(RoutePath.login);
+        Get.offAllNamed(RoutePath.bottomNav);
       } else {
         String errorMessage = response.body['message'] ?? response.statusText ?? "Invalid code. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Verification Failed");
