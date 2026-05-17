@@ -388,6 +388,238 @@ class AppAlerts {
       ),
     );
   }
+  // ─────────────────────────────────────────────────────────────────────────
+  // ⭐ REVIEW — delivery review dialog
+  // ─────────────────────────────────────────────────────────────────────────
+  static void deliveryReview({
+    required Function(double rating, String feedback) onSubmit,
+  }) {
+    double currentRating = 0;
+    TextEditingController feedbackController = TextEditingController();
+
+    Get.dialog(
+      _AlertWrapper(
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'How Was Your Delivery',
+                  style: TextStyle(
+                    fontSize: Dimensions.f(16),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.labelColor,
+                  ),
+                ),
+                SizedBox(height: Dimensions.h(24)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          currentRating = index + 1.0;
+                        });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(4)),
+                        child: Icon(
+                          index < currentRating
+                              ? Icons.star_rounded
+                              : Icons.star_border_rounded,
+                          color: const Color(0xFFFFC107),
+                          size: Dimensions.w(36),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                SizedBox(height: Dimensions.h(24)),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.textFieldBackgroundColor,
+                    borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                  ),
+                  child: TextField(
+                    controller: feedbackController,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      hintText: 'Write Your Feedback',
+                      hintStyle: TextStyle(
+                        fontSize: Dimensions.f(12),
+                        color: AppColors.hintColor,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(Dimensions.w(12)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: Dimensions.h(24)),
+                _AlertButton(
+                  label: 'Submit',
+                  color: const Color(0xFFFFC107),
+                  textColor: AppColors.blackColor,
+                  borderRadius: 8,
+                  onTap: () {
+                    Get.back();
+                    onSubmit(currentRating, feedbackController.text);
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // ⚠️ REJECT — reject request dialog
+  // ─────────────────────────────────────────────────────────────────────────
+  static void rejectRequest({
+    required VoidCallback onReject,
+    VoidCallback? onCancel,
+  }) {
+    Get.dialog(
+      _AlertWrapper(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.new_releases_outlined,
+              color: const Color(0xFFEAA4A4),
+              size: Dimensions.w(64),
+            ),
+            SizedBox(height: Dimensions.h(16)),
+            Text(
+              'Are You Sure',
+              style: TextStyle(
+                fontSize: Dimensions.f(16),
+                fontWeight: FontWeight.w700,
+                color: AppColors.labelColor,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(4)),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.labelColor,
+                  fontFamily: 'Urbanist', // Or appropriate default font
+                ),
+                children: [
+                  const TextSpan(text: 'Do You Want To '),
+                  const TextSpan(
+                    text: 'Reject',
+                    style: TextStyle(color: AppColors.redColor),
+                  ),
+                  const TextSpan(text: ' This Request'),
+                ],
+              ),
+            ),
+            SizedBox(height: Dimensions.h(24)),
+            Row(
+              children: [
+                Expanded(
+                  child: _AlertButton(
+                    label: 'Cancel',
+                    color: AppColors.textFieldBackgroundColor,
+                    textColor: AppColors.labelColor,
+                    borderRadius: 8,
+                    onTap: () {
+                      Get.back();
+                      onCancel?.call();
+                    },
+                  ),
+                ),
+                SizedBox(width: Dimensions.w(12)),
+                Expanded(
+                  child: _AlertButton(
+                    label: 'Reject',
+                    color: const Color(0xFFEAA4A4),
+                    textColor: AppColors.labelColor,
+                    borderRadius: 8,
+                    onTap: () {
+                      Get.back();
+                      onReject();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 🗑️ DELETE AD — delete confirmation dialog
+  // ─────────────────────────────────────────────────────────────────────────
+  static void deleteAd({
+    required VoidCallback onYes,
+    VoidCallback? onNo,
+  }) {
+    Get.dialog(
+      _AlertWrapper(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Do You Want To Delete',
+              style: TextStyle(
+                fontSize: Dimensions.f(16),
+                fontWeight: FontWeight.w700,
+                color: AppColors.labelColor,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(12)),
+            Text(
+              'Are You Sure You Want To Delete ? Your Ad Will Be\nDeleted.',
+              style: TextStyle(
+                fontSize: Dimensions.f(13),
+                color: AppColors.hintColor,
+                height: 1.4,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(24)),
+            Row(
+              children: [
+                Expanded(
+                  child: _AlertButton(
+                    label: 'No',
+                    color: AppColors.textFieldBackgroundColor,
+                    textColor: AppColors.labelColor,
+                    borderRadius: 8,
+                    onTap: () {
+                      Get.back();
+                      onNo?.call();
+                    },
+                  ),
+                ),
+                SizedBox(width: Dimensions.w(12)),
+                Expanded(
+                  child: _AlertButton(
+                    label: 'Yes',
+                    color: AppColors.redColor,
+                    borderRadius: 8,
+                    onTap: () {
+                      Get.back();
+                      onYes();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -443,12 +675,16 @@ class _AlertButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isOutlined;
   final Color? color;
+  final Color? textColor;
+  final double? borderRadius;
 
   const _AlertButton({
     required this.label,
     required this.onTap,
     this.isOutlined = false,
     this.color,
+    this.textColor,
+    this.borderRadius,
   });
 
   @override
@@ -461,7 +697,7 @@ class _AlertButton extends StatelessWidget {
         height: Dimensions.h(44),
         decoration: BoxDecoration(
           color: isOutlined ? Colors.white : btnColor,
-          borderRadius: BorderRadius.circular(Dimensions.r(30)),
+          borderRadius: BorderRadius.circular(Dimensions.r(borderRadius ?? 30)),
           border: Border.all(
             color: isOutlined ? const Color(0xFFDDDDDD) : btnColor,
           ),
@@ -472,7 +708,7 @@ class _AlertButton extends StatelessWidget {
           style: TextStyle(
             fontSize: Dimensions.f(14),
             fontWeight: FontWeight.w700,
-            color: isOutlined ? AppColors.labelColor : Colors.white,
+            color: textColor ?? (isOutlined ? AppColors.labelColor : Colors.white),
           ),
         ),
       ),

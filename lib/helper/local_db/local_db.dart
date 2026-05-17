@@ -135,6 +135,20 @@ class SharePrefsHelper {
     await _prefs?.setString(SharePrefsKeys.themeMode, value);
   }
 
+  // ================= FCM TOKEN =================
+
+  static Future<void> saveFcmToken(String token) async {
+    await _prefs?.setString(SharePrefsKeys.fcmToken, token);
+  }
+
+  static String? getFcmToken() {
+    return _prefs?.getString(SharePrefsKeys.fcmToken);
+  }
+
+  static Future<void> clearFcmToken() async {
+    await _prefs?.remove(SharePrefsKeys.fcmToken);
+  }
+
   // ================= CLEAR ALL =================
 
   static Future<void> clearAll() async {

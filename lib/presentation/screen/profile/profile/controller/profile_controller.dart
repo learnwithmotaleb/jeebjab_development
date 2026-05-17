@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart' as g_auth;
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/widget/app_confirmation_alert.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
@@ -95,6 +97,12 @@ class ProfileController extends GetxController {
           title: AppStrings.areYourSureLogout.tr,
           message: AppStrings.areYourSureLogoutFrom.tr,
           onConfirm: () async {
+            try {
+              await FirebaseAuth.instance.signOut();
+              await g_auth.GoogleSignIn.instance.signOut();
+            } catch (e) {
+              debugPrint("Error signing out from Firebase/Google: $e");
+            }
             await SharePrefsHelper.clearAll();
             Get.offAllNamed(RoutePath.login);
           },

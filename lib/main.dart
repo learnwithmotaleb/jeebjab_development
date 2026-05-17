@@ -26,7 +26,7 @@ void main() async {
   // NOTE: On Android, you MUST provide the serverClientId (Web Client ID) from Firebase Console.
   // Location: Firebase Console -> Project Settings -> General -> Web API Key/OAuth 2.0 Client IDs -> Web client
   await GoogleSignIn.instance.initialize(
-    serverClientId: '222750300065-xxxxxxxxxxxxxxxx.apps.googleusercontent.com', // Replace with your Web Client ID
+    serverClientId: '27682003976-i01hmvr50dmefj44b4tgn4n3g5oo5ngg.apps.googleusercontent.com',
   );
 
   // Lock device orientation

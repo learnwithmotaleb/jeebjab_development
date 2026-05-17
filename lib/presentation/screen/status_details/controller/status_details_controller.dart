@@ -5,6 +5,7 @@ import 'package:jeebjab/service/api_service.dart';
 import 'package:jeebjab/service/api_url.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/widget/app_confirmation_alert.dart';
+import 'package:jeebjab/widget/confirmataion_alert.dart';
 
 import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../utils/static_strings/static_strings.dart';
@@ -128,16 +129,26 @@ class StatusDetailsController extends GetxController {
   }
 
   void onRateServicePressed() {
-    // Navigate to rating or show dialog
-    print('Rate service pressed');
+    AppAlerts.deliveryReview(
+      onSubmit: (rating, feedback) {
+        print('Rating: $rating, Feedback: $feedback');
+        // Handle rating logic here
+        AppSnackBar.success("Thank you for your feedback!");
+      },
+    );
   }
 
   void onDeletePressed() {
-    print('Delete pressed');
+    AppAlerts.deleteAd(
+      onYes: () {
+        print('Delete confirmed');
+        // Add actual delete logic here
+      },
+    );
   }
 
   void onReschedulePressed() {
-    print('Reschedule pressed');
+    Get.toNamed(RoutePath.pickupDateTime);
   }
 
   void onMessagePressed() {

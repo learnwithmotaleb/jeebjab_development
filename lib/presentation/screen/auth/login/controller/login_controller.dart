@@ -44,7 +44,7 @@ class LoginController extends GetxController {
     if (!validateForm()) return;
 
     isLoading.value = true;
-    
+
     try {
       final response = await apiClient.post(
         url: ApiUrl.login,
@@ -57,13 +57,13 @@ class LoginController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final body = response.body;
         final data = body['data'];
-        
+
         if (data != null) {
           final token = data['accessToken'];
           if (token != null) {
             await SharePrefsHelper.saveToken(token);
           }
-          
+
           final user = data['user'];
           if (user != null) {
             final userId = user['_id'];
@@ -75,7 +75,8 @@ class LoginController extends GetxController {
             if (authId != null) {
               final roleStr = authId['role'];
               if (roleStr != null) {
-                if (roleStr.toString().toUpperCase() == 'USER' || roleStr.toString().toUpperCase() == 'CUSTOMER') {
+                if (roleStr.toString().toUpperCase() == 'USER' ||
+                    roleStr.toString().toUpperCase() == 'CUSTOMER') {
                   await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
                 } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
                   await SharePrefsHelper.saveRole(AppRole.DRIVER);
@@ -86,8 +87,11 @@ class LoginController extends GetxController {
         }
 
         final role = SharePrefsHelper.getRole();
-        
-        AppSnackBar.success(body['message'] ?? "Log in successful", title: "Success");
+
+        AppSnackBar.success(
+          body['message'] ?? "Log in successful",
+          title: "Success",
+        );
 
         if (role == AppRole.CUSTOMER) {
           Get.offAllNamed(RoutePath.bottomNav);
@@ -97,11 +101,18 @@ class LoginController extends GetxController {
           Get.offAllNamed(RoutePath.signup);
         }
       } else {
-        String errorMessage = response.body['message'] ?? response.statusText ?? "Login failed. Please try again.";
+        String errorMessage =
+            response.body['message'] ??
+            response.statusText ??
+            "Login failed. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Login Failed");
       }
-    } catch (e) {
-      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+    } catch (e, stackTrace) {
+      debugPrint("Login Error: $e\n$stackTrace");
+      AppSnackBar.fail(
+        "An unexpected error occurred. Please try again.",
+        title: "Error",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -112,32 +123,48 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     isLoading.value = true;
     try {
-      final g_auth.GoogleSignInAccount? googleUser = await g_auth.GoogleSignIn.instance.authenticate();
+      final g_auth.GoogleSignInAccount googleUser = await g_auth
+          .GoogleSignIn
+          .instance
+          .authenticate();
 
-      if (googleUser == null) {
-        isLoading.value = false;
-        return;
-      }
+      final g_auth.GoogleSignInAuthentication googleAuth =
+          googleUser.authentication;
 
-      final g_auth.GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      
       // In v7+, accessToken requires explicit authorization
-      final g_auth.GoogleSignInClientAuthorization? auth = await googleUser.authorizationClient.authorizeScopes(['email', 'profile']);
-      
+      final g_auth.GoogleSignInClientAuthorization auth = await googleUser
+          .authorizationClient
+          .authorizeScopes(['email', 'profile']);
+
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: auth?.accessToken,
+        accessToken: auth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
       final String? idToken = await userCredential.user?.getIdToken();
 
       if (idToken != null) {
-        await _processSocialLogin(idToken, "google");
+        await SharePrefsHelper.saveToken(idToken);
+        await SharePrefsHelper.saveFcmToken(idToken);
+        await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+        
+        debugPrint("========= FIREBASE GOOGLE LOGIN ID TOKEN =========");
+        debugPrint(idToken);
+        debugPrint("================================================");
+
+        final userId = userCredential.user?.uid;
+        if (userId != null) {
+          await SharePrefsHelper.saveUserId(userId);
+        }
+
+        AppSnackBar.success("Logged in successfully", title: "Success");
+        Get.offAllNamed(RoutePath.bottomNav);
       }
-    } catch (e) {
-      debugPrint("Google Sign In Error: $e");
-      AppSnackBar.fail("Google Sign In failed. Please try again.");
+    } catch (e, stackTrace) {
+      debugPrint("Google Sign In Error: $e\n$stackTrace");
+      AppSnackBar.fail("Google Sign In failed: ${e.toString().split('\n')[0]}");
     } finally {
       isLoading.value = false;
     }
@@ -146,27 +173,44 @@ class LoginController extends GetxController {
   Future<void> signInWithApple() async {
     isLoading.value = true;
     try {
-      final AuthorizationCredentialAppleID credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      final AuthorizationCredentialAppleID credential =
+          await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          );
 
-      final AuthCredential authCredential = OAuthProvider("apple.com").credential(
-        idToken: credential.identityToken,
-        accessToken: credential.authorizationCode,
-      );
+      final AuthCredential authCredential = OAuthProvider("apple.com")
+          .credential(
+            idToken: credential.identityToken,
+            accessToken: credential.authorizationCode,
+          );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(authCredential);
       final String? idToken = await userCredential.user?.getIdToken();
 
       if (idToken != null) {
-        await _processSocialLogin(idToken, "apple");
+        await SharePrefsHelper.saveToken(idToken);
+        await SharePrefsHelper.saveFcmToken(idToken);
+        await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+        
+        debugPrint("========= FIREBASE APPLE LOGIN ID TOKEN =========");
+        debugPrint(idToken);
+        debugPrint("===============================================");
+
+        final userId = userCredential.user?.uid;
+        if (userId != null) {
+          await SharePrefsHelper.saveUserId(userId);
+        }
+
+        AppSnackBar.success("Logged in successfully", title: "Success");
+        Get.offAllNamed(RoutePath.bottomNav);
       }
-    } catch (e) {
-      debugPrint("Apple Sign In Error: $e");
-      AppSnackBar.fail("Apple Sign In failed. Please try again.");
+    } catch (e, stackTrace) {
+      debugPrint("Apple Sign In Error: $e\n$stackTrace");
+      AppSnackBar.fail("Apple Sign In failed: ${e.toString().split('\n')[0]}");
     } finally {
       isLoading.value = false;
     }
@@ -176,10 +220,7 @@ class LoginController extends GetxController {
     try {
       final response = await apiClient.post(
         url: ApiUrl.socialLogin,
-        body: {
-          "token": token,
-          "provider": provider,
-        },
+        body: {"token": token, "provider": provider},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -203,7 +244,8 @@ class LoginController extends GetxController {
             if (authId != null) {
               final roleStr = authId['role'];
               if (roleStr != null) {
-                if (roleStr.toString().toUpperCase() == 'USER' || roleStr.toString().toUpperCase() == 'CUSTOMER') {
+                if (roleStr.toString().toUpperCase() == 'USER' ||
+                    roleStr.toString().toUpperCase() == 'CUSTOMER') {
                   await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
                 } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
                   await SharePrefsHelper.saveRole(AppRole.DRIVER);
