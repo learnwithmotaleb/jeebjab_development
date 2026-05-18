@@ -21,7 +21,7 @@ class AppButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.backgroundColor = AppColors.primaryColor,
-    this.textColor = Colors.white,
+    this.textColor = AppColors.whiteColor,
     this.height = 50,
     this.width = double.infinity,
     this.borderRadius = 10,
@@ -39,15 +39,13 @@ class AppButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: (onPressed == null || isLoading)
-              ? AppColors.greyColor // disabled color
+              ? AppColors
+                    .greyColor // disabled color
               : backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             side: borderSideColor != null
-                ? BorderSide(
-              color: borderSideColor!,
-              width: 1.0,
-            )
+                ? BorderSide(color: borderSideColor!, width: 1.0)
                 : BorderSide.none,
           ),
         ),
@@ -55,29 +53,26 @@ class AppButton extends StatelessWidget {
         child: isLoading
             ? SpinKitFadingFour(color: textColor, size: 24)
             : Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (leadingIcon != null) ...[
-              leadingIcon!,
-              const SizedBox(width: 8),
-            ],
-            Flexible(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 20,
-                ),
-                overflow: TextOverflow.ellipsis,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (leadingIcon != null) ...[
+                    leadingIcon!,
+                    const SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: TextStyle(color: textColor, fontSize: 20),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (trailingIcon != null) ...[
+                    const SizedBox(width: 8),
+                    trailingIcon!,
+                  ],
+                ],
               ),
-            ),
-            if (trailingIcon != null) ...[
-              const SizedBox(width: 8),
-              trailingIcon!,
-            ],
-          ],
-        ),
       ),
     );
   }

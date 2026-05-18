@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
@@ -64,7 +65,7 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
               height: 65,
               onPressed: () async {
                 await lsc.applyLanguage();
-                Get.back();
+                Get.toNamed(RoutePath.signup);
               },
             ),
           ],
@@ -163,7 +164,7 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
                     height: Dimensions.h(100),
                     onPressed: () async {
                       await lsc.applyLanguage();
-                      Get.back();
+                      Get.toNamed(RoutePath.signup);
                     },
                   ),
                 ),

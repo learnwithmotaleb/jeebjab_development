@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderSideColor: AppColors.primaryColor,
                       borderRadius: Dimensions.r(16),
                       onPressed: () {
-                        Get.toNamed(RoutePath.signup);
+                        Get.toNamed(RoutePath.profileLanguage);
                       },
                     ),
                     SizedBox(height: Dimensions.h(20)),

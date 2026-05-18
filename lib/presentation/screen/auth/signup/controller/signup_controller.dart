@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/helper/local_db/role_selection_controller.dart';
+import '../../../../../global/language/controller/language_controller.dart';
 
 import '../../../../../core/enums/app_role.dart';
 import '../../../../../core/routes/route_path.dart';
@@ -16,7 +17,8 @@ class SignupController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   final emailError = RxnString();
   final passwordError = RxnString();
@@ -83,6 +85,11 @@ class SignupController extends GetxController {
     isLoading.value = true;
 
     try {
+      final languageController = Get.isRegistered<LanguageController>()
+          ? Get.find<LanguageController>()
+          : Get.put(LanguageController());
+      final String languageCode = languageController.isEnglish ? "en" : "ar";
+
       final response = await apiClient.post(
         url: ApiUrl.register,
         body: {
@@ -90,21 +97,33 @@ class SignupController extends GetxController {
           "email": emailController.text.trim(),
           "password": passwordController.text,
           "confirmPassword": confirmPasswordController.text,
+          "language": languageCode.toString(),
           "role": "USER",
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final message = response.body['message'] ?? "Account created successfully. Please check your email.";
+        final message =
+            response.body['message'] ??
+            "Account created successfully. Please check your email.";
         AppSnackBar.success(message, title: "Success");
         // Pass the email to the verification screen
-        Get.toNamed(RoutePath.accountActiveVerification, arguments: emailController.text.trim());
+        Get.toNamed(
+          RoutePath.accountActiveVerification,
+          arguments: emailController.text.trim(),
+        );
       } else {
-        final errorMessage = response.body['message'] ?? response.statusText ?? "Registration failed. Please try again.";
+        final errorMessage =
+            response.body['message'] ??
+            response.statusText ??
+            "Registration failed. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Registration Failed");
       }
     } catch (e) {
-      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+      AppSnackBar.fail(
+        "An unexpected error occurred. Please try again.",
+        title: "Error",
+      );
     } finally {
       isLoading.value = false;
     }

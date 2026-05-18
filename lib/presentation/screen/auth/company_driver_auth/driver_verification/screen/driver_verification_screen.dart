@@ -34,10 +34,7 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -75,25 +72,28 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
 
             SizedBox(height: Dimensions.h(24)),
 
-            PinCodeTextField(
-              appContext: context,
-              length: 6,
-              controller: controller.otpController,
-              keyboardType: TextInputType.number,
-              animationType: AnimationType.fade,
-              pinTheme: PinTheme(
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                fieldHeight: Dimensions.h(48),
-                fieldWidth: Dimensions.w(48),
-                borderWidth: 1,
-                activeColor: AppColors.primaryColor,
-                selectedColor: AppColors.primaryColor,
-                inactiveColor: AppColors.greyColor,
-                activeFillColor: AppColors.greyColor,
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: PinCodeTextField(
+                appContext: context,
+                length: 6,
+                controller: controller.otpController,
+                keyboardType: TextInputType.number,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                  fieldHeight: Dimensions.h(48),
+                  fieldWidth: Dimensions.w(48),
+                  borderWidth: 1,
+                  activeColor: AppColors.primaryColor,
+                  selectedColor: AppColors.primaryColor,
+                  inactiveColor: AppColors.greyColor,
+                  activeFillColor: AppColors.greyColor,
+                ),
+                onCompleted: (v) => print("OTP Completed $v"),
+                beforeTextPaste: (_) => true,
               ),
-              onCompleted: (v) => print("OTP Completed $v"),
-              beforeTextPaste: (_) => true,
             ),
 
             SizedBox(height: Dimensions.h(16)),
@@ -109,9 +109,7 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
             SizedBox(height: Dimensions.h(5)),
 
             Center(
-              child: TimerWidget(
-                onResendCode: controller.resendOtpProcess,
-              ),
+              child: TimerWidget(onResendCode: controller.resendOtpProcess),
             ),
 
             SizedBox(height: Dimensions.h(20)),
@@ -183,28 +181,33 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
                   SizedBox(height: Dimensions.h(40)),
 
                   // PIN Code TextField
-                  PinCodeTextField(
-                    appContext: context,
-                    length: 6,
-                    controller: controller.otpController,
-                    keyboardType: TextInputType.number,
-                    animationType: AnimationType.fade,
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                      fieldHeight: Dimensions.h(60),
-                      fieldWidth: Dimensions.w(60),
-                      borderWidth: 2,
-                      activeColor: AppColors.primaryColor,
-                      selectedColor: AppColors.primaryColor,
-                      inactiveColor: AppColors.greyColor,
-                      activeFillColor: AppColors.primaryColor.withOpacity(0.05),
-                    ),
-                    onCompleted: (v) => print("OTP Completed $v"),
-                    beforeTextPaste: (_) => true,
-                    textStyle: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      controller: controller.otpController,
+                      keyboardType: TextInputType.number,
+                      animationType: AnimationType.fade,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                        fieldHeight: Dimensions.h(60),
+                        fieldWidth: Dimensions.w(60),
+                        borderWidth: 2,
+                        activeColor: AppColors.primaryColor,
+                        selectedColor: AppColors.primaryColor,
+                        inactiveColor: AppColors.greyColor,
+                        activeFillColor: AppColors.primaryColor.withOpacity(
+                          0.05,
+                        ),
+                      ),
+                      onCompleted: (v) => print("OTP Completed $v"),
+                      beforeTextPaste: (_) => true,
+                      textStyle: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
 

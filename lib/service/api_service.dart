@@ -180,6 +180,9 @@ class ApiClient {
     );
 
     print("POST Headers: $headers"); // Debug: check if token is included
+    if (body != null) {
+      log.i("POST Body: ${jsonEncode(body)}"); // Print the body for the user to see
+    }
 
     return safeRequest(
           () async =>

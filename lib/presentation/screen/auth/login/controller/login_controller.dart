@@ -192,21 +192,12 @@ class LoginController extends GetxController {
       final String? idToken = await userCredential.user?.getIdToken();
 
       if (idToken != null) {
-        await SharePrefsHelper.saveToken(idToken);
-        await SharePrefsHelper.saveFcmToken(idToken);
-        await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
-        
         debugPrint("========= FIREBASE APPLE LOGIN ID TOKEN =========");
         debugPrint(idToken);
         debugPrint("===============================================");
 
-        final userId = userCredential.user?.uid;
-        if (userId != null) {
-          await SharePrefsHelper.saveUserId(userId);
-        }
-
-        AppSnackBar.success("Logged in successfully", title: "Success");
-        Get.offAllNamed(RoutePath.bottomNav);
+        // Send token to backend API for social login
+        await _processSocialLogin(idToken, "apple");
       }
     } catch (e, stackTrace) {
       debugPrint("Apple Sign In Error: $e\n$stackTrace");

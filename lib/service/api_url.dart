@@ -5,7 +5,9 @@ class ApiUrl {
 
   // ── Domain ───────────────────────────────────────────────
   // 🔧 Switch domain here only — everything else updates automatically
+  // static const String _mainDomain = "http://10.10.20.52:5001";
   static const String _mainDomain = "http://10.10.20.52:5001";
+
   static final String baseUrl = _mainDomain;
 
   /// Convert relative image path → full URL
@@ -28,7 +30,7 @@ class ApiUrl {
   static final String changePassword  = '$baseUrl/auth/change-password';
   static final String socialLogin     = '$baseUrl/auth/social-login';
 
-
+  // http://10.10.20.52:5001/auth/register
   static final String getUserProfile  = '$baseUrl/user/user-profile';
   static final String becomeDriver  = '$baseUrl/user/become-driver';
 
