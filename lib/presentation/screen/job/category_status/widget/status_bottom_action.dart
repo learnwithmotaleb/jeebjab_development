@@ -11,6 +11,7 @@ class StatusBottomActions extends StatelessWidget {
   final RequestStatus status;
   final VoidCallback onSendRequest;
   final VoidCallback onCancelRequest;
+  final VoidCallback? onAcceptPending;
   final VoidCallback onPickedUp;
   final VoidCallback onDelivery;
   final VoidCallback onOpenMap;
@@ -24,6 +25,7 @@ class StatusBottomActions extends StatelessWidget {
     required this.onPickedUp,
     required this.onDelivery,
     required this.onOpenMap,
+    this.onAcceptPending,
   });
 
   @override
@@ -48,16 +50,25 @@ class StatusBottomActions extends StatelessWidget {
     if (category == PostCategory.move) {
       switch (status) {
         case RequestStatus.none:
-        // "Send Request" — full teal
+          // "Send Request" — full teal
           return _TealButton(
-              label: AppStrings.sendRequest.tr, onTap: onSendRequest);
+            label: AppStrings.sendRequest.tr,
+            onTap: onSendRequest,
+          );
+
+        case RequestStatus.pending:
+          // "Accept" button for pending status
+          return _TealButton(
+            label: AppStrings.accept.tr,
+            onTap: onAcceptPending ?? () {},
+          );
 
         case RequestStatus.sent:
-        // "Cancel Request" — red text centered
+          // "Cancel Request" — red text centered
           return _CancelButton(onTap: onCancelRequest);
 
         case RequestStatus.pickedUp:
-        // "Picked Up" + "Open Map"
+          // "Picked Up" + "Open Map"
           return _TwoButtons(
             leftLabel: AppStrings.pickedUpLabel.tr,
             leftOutlined: true,
@@ -67,7 +78,7 @@ class StatusBottomActions extends StatelessWidget {
           );
 
         case RequestStatus.delivered:
-        // "Delivery" + "Open Map"
+          // "Delivery" + "Open Map"
           return _TwoButtons(
             leftLabel: AppStrings.delivery.tr,
             leftOutlined: true,
@@ -83,7 +94,9 @@ class StatusBottomActions extends StatelessWidget {
       switch (status) {
         case RequestStatus.none:
           return _TealButton(
-              label: AppStrings.sendRequest.tr, onTap: onSendRequest);
+            label: AppStrings.sendRequest.tr,
+            onTap: onSendRequest,
+          );
 
         case RequestStatus.sent:
           return _CancelButton(onTap: onCancelRequest);
@@ -97,12 +110,14 @@ class StatusBottomActions extends StatelessWidget {
             rightLabel: AppStrings.openMap.tr,
             onRightTap: onOpenMap,
           );
+        case RequestStatus.pending:
+          // TODO: Handle this case.
+          throw UnimplementedError();
       }
     }
 
     // ── Default (Buy For Me / Give Away) ──────────────────────────────────
-    return _TealButton(
-        label: AppStrings.sendRequest.tr, onTap: onSendRequest);
+    return _TealButton(label: AppStrings.sendRequest.tr, onTap: onSendRequest);
   }
 }
 
@@ -156,7 +171,7 @@ class _CancelButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Dimensions.r(30)),
-            side: BorderSide(color: AppColors.redColor.withOpacity(0.3)),
+            side: BorderSide(color: AppColors.redColor.withValues(alpha: 0.3)),
           ),
         ),
         child: Text(

@@ -8,6 +8,7 @@ class NotificationCard extends StatelessWidget {
   final String subtitle;
   final String message;
   final String timeAgo;
+  final bool isRead;
   final VoidCallback? onTap;
 
   const NotificationCard({
@@ -17,20 +18,24 @@ class NotificationCard extends StatelessWidget {
     required this.subtitle,
     required this.message,
     required this.timeAgo,
+    this.isRead = true,
     this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0.4,
-      color: AppColors.whiteColor,
+      elevation: isRead ? 0.2 : 0.8,
+      color: isRead ? AppColors.whiteColor : Colors.blue.withOpacity(0.02),
       margin: EdgeInsets.symmetric(
         horizontal: Dimensions.w(16),
         vertical: Dimensions.h(8),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimensions.r(16)),
+        side: isRead 
+            ? BorderSide.none 
+            : BorderSide(color: Colors.blue.withOpacity(0.2), width: 1),
       ),
       child: InkWell(
         onTap: onTap,
@@ -45,24 +50,23 @@ class NotificationCard extends StatelessWidget {
                 tag: 'notif_image_$imagePath${DateTime.now().millisecond}',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                  child: Image.asset(
-                    imagePath,
-                    width: Dimensions.w(64),
-                    height: Dimensions.w(64),
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: Dimensions.w(64),
-                        height: Dimensions.w(64),
-                        color: AppColors.greyColor.withOpacity(0.1),
-                        child: Icon(
-                          Icons.notifications_none_rounded,
-                          color: AppColors.primaryColor.withOpacity(0.5),
-                          size: Dimensions.w(32),
-                        ),
-                      );
-                    },
-                  ),
+                  child: imagePath.startsWith('http')
+                      ? Image.network(
+                          imagePath,
+                          width: Dimensions.w(64),
+                          height: Dimensions.w(64),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => _buildPlaceholderIcon(),
+                        )
+                      : imagePath.isNotEmpty
+                          ? Image.asset(
+                              imagePath,
+                              width: Dimensions.w(64),
+                              height: Dimensions.w(64),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => _buildPlaceholderIcon(),
+                            )
+                          : _buildPlaceholderIcon(),
                 ),
               ),
               SizedBox(width: Dimensions.w(16)),
@@ -77,7 +81,7 @@ class NotificationCard extends StatelessWidget {
                       title,
                       style: TextStyle(
                         fontSize: Dimensions.f(17),
-                        fontWeight: FontWeight.w700,
+                        fontWeight: isRead ? FontWeight.w600 : FontWeight.w700,
                         color: AppColors.blackColor,
                       ),
                     ),
@@ -110,18 +114,30 @@ class NotificationCard extends StatelessWidget {
               ),
               SizedBox(width: Dimensions.w(12)),
 
-              // Time Ago Section
+              // Time Ago & Unread Dot Section
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     timeAgo,
                     style: TextStyle(
-                      fontSize: Dimensions.f(12),
+                      fontSize: Dimensions.f(11),
                       color: AppColors.greyColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (!isRead) ...[
+                    SizedBox(height: Dimensions.h(12)),
+                    Container(
+                      width: Dimensions.w(8),
+                      height: Dimensions.w(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -130,5 +146,17 @@ class NotificationCard extends StatelessWidget {
       ),
     );
   }
-}
 
+  Widget _buildPlaceholderIcon() {
+    return Container(
+      width: Dimensions.w(64),
+      height: Dimensions.w(64),
+      color: AppColors.greyColor.withOpacity(0.1),
+      child: Icon(
+        Icons.notifications_none_rounded,
+        color: AppColors.primaryColor.withOpacity(0.5),
+        size: Dimensions.w(32),
+      ),
+    );
+  }
+}

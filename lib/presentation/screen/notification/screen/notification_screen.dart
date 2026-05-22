@@ -1,15 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
-import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
-
+import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../core/responsive_layout/responsive_layout.dart';
-import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../widget/custom_appbar.dart';
 import '../controller/notification_controller.dart';
 import '../widget/notification_card_widget.dart';
@@ -22,151 +17,198 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-
-  NotificationController controller = Get.put(NotificationController());
+  final NotificationController controller = Get.put(NotificationController());
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       mobile: _buildMobile(),
       tablet: _buildTablet(),
-
     );
   }
 
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.notification.tr),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: Dimensions.h(10)),
-            _buildSectionHeader(AppStrings.recent.tr),
-            SizedBox(height: Dimensions.h(5)),
-
-            // Notification Cards
-            NotificationCard(
-              imagePath: AppImages.homeImage1,
-              title: 'Move',
-              subtitle: 'Bike',
-              message: 'Someone Sent You A Request For Move',
-              timeAgo: '1 Hour Ago',
-              onTap: () => Get.toNamed(RoutePath.statusDetails),
-            ),
-
-            NotificationCard(
-              imagePath: AppImages.homeImage2,
-              title: 'Move',
-              subtitle: 'Bike',
-              message: 'Advertiser Accepted Your Recycling Request',
-              timeAgo: '1 Hour Ago',
-              onTap: () => Get.toNamed(RoutePath.statusDetails),
-            ),
-
-            NotificationCard(
-              imagePath: AppImages.profileImage,
-              title: 'Recycling',
-              subtitle: 'Electronics',
-              message: 'PickedUp Your Waste Items',
-              timeAgo: '2 Hours Ago',
-              onTap: () => Get.toNamed(RoutePath.statusDetails),
-            ),
-
-            SizedBox(height: Dimensions.h(16)),
-
-            // Previous Section
-            _buildSectionHeader(AppStrings.previous.tr),
-            SizedBox(height: Dimensions.h(5)),
-
-            NotificationCard(
-              imagePath: AppImages.profileImage,
-              title: 'Move',
-              subtitle: 'Bike',
-              message: 'Recycling Completed',
-              timeAgo: '2 Days Ago',
-              onTap: () => Get.toNamed(RoutePath.statusDetails),
-            ),
-            
-            SizedBox(height: Dimensions.h(20)),
-          ],
-        ),
+      appBar: CommonAppBar(
+        title: AppStrings.notification.tr,
+        actions: _buildAppBarActions(),
       ),
+      body: Obx(() {
+        if (controller.localNotificationList.isEmpty) {
+          return _buildEmptyState();
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            controller.loadLocalNotifications();
+          },
+          color: AppColors.primaryColor,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: _buildNotificationContent(),
+          ),
+        );
+      }),
     );
   }
-  
+
   Widget _buildTablet() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.notification.tr),
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(20)),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   _buildSectionHeader(AppStrings.recent.tr),
-                   SizedBox(height: Dimensions.h(12)),
-
-                  // Notification Cards
-                  _buildNotificationList([
-                    NotificationCard(
-                      imagePath: AppImages.homeImage1,
-                      title: 'Move',
-                      subtitle: 'Bike',
-                      message: 'Someone Sent You A Request For Move',
-                      timeAgo: '1 Hour Ago',
-                      onTap: () => Get.toNamed(RoutePath.statusDetails),
-                    ),
-                    NotificationCard(
-                      imagePath: AppImages.homeImage2,
-                      title: 'Move',
-                      subtitle: 'Bike',
-                      message: 'Advertiser Accepted Your Recycling Request',
-                      timeAgo: '1 Hour Ago',
-                      onTap: () => Get.toNamed(RoutePath.statusDetails),
-                    ),
-                    NotificationCard(
-                      imagePath: AppImages.profileImage,
-                      title: 'Recycling',
-                      subtitle: 'Electronics',
-                      message: 'PickedUp Your Waste Items',
-                      timeAgo: '2 Hours Ago',
-                      onTap: () => Get.toNamed(RoutePath.statusDetails),
-                    ),
-                  ]),
-
-                  SizedBox(height: Dimensions.h(32)),
-
-                  // Previous Section
-                  _buildSectionHeader(AppStrings.previous.tr),
-                  SizedBox(height: Dimensions.h(12)),
-
-                  _buildNotificationList([
-                    NotificationCard(
-                      imagePath: AppImages.profileImage,
-                      title: 'Move',
-                      subtitle: 'Bike',
-                      message: 'Recycling Completed',
-                      timeAgo: '2 Days Ago',
-                      onTap: () => Get.toNamed(RoutePath.statusDetails),
-                    ),
-                  ]),
-                  
-                  SizedBox(height: Dimensions.h(40)),
-                ],
+      appBar: CommonAppBar(
+        title: AppStrings.notification.tr,
+        actions: _buildAppBarActions(),
+      ),
+      body: Obx(() {
+        if (controller.localNotificationList.isEmpty) {
+          return _buildEmptyState();
+        }
+        return Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                controller.loadLocalNotifications();
+              },
+              color: AppColors.primaryColor,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(24),
+                  vertical: Dimensions.h(20),
+                ),
+                child: _buildNotificationContent(),
               ),
             ),
           ),
+        );
+      }),
+    );
+  }
+
+  List<Widget> _buildAppBarActions() {
+    return [
+      IconButton(
+        icon: const Icon(
+          Icons.delete_sweep_outlined,
+          color: Colors.redAccent,
         ),
+        tooltip: 'Clear All',
+        onPressed: () {
+          if (controller.localNotificationList.isEmpty) return;
+          Get.defaultDialog(
+            title: 'Clear All'.tr,
+            middleText: 'Are you sure you want to delete all notifications?'.tr,
+            textConfirm: 'Yes'.tr,
+            textCancel: 'Cancel'.tr,
+            confirmTextColor: Colors.white,
+            buttonColor: AppColors.primaryColor,
+            onConfirm: () {
+              controller.clearAllLocalNotifications();
+              Get.back();
+            },
+          );
+        },
+      ),
+    ];
+  }
+
+  Widget _buildNotificationContent() {
+    final now = DateTime.now();
+    final recent = <Map<String, dynamic>>[];
+    final previous = <Map<String, dynamic>>[];
+
+    for (var item in controller.localNotificationList) {
+      final dateStr = item['createdAt'];
+      if (dateStr != null) {
+        try {
+          final date = DateTime.parse(dateStr);
+          if (now.difference(date).inHours < 24) {
+            recent.add(item);
+          } else {
+            previous.add(item);
+          }
+        } catch (_) {
+          recent.add(item);
+        }
+      } else {
+        recent.add(item);
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (recent.isNotEmpty) ...[
+          SizedBox(height: Dimensions.h(10)),
+          _buildSectionHeader(AppStrings.recent.tr),
+          SizedBox(height: Dimensions.h(5)),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: recent.length,
+            itemBuilder: (context, index) {
+              final item = recent[index];
+              return _buildDismissibleCard(item);
+            },
+          ),
+        ],
+        if (previous.isNotEmpty) ...[
+          SizedBox(height: Dimensions.h(16)),
+          _buildSectionHeader(AppStrings.previous.tr),
+          SizedBox(height: Dimensions.h(5)),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: previous.length,
+            itemBuilder: (context, index) {
+              final item = previous[index];
+              return _buildDismissibleCard(item);
+            },
+          ),
+        ],
+        SizedBox(height: Dimensions.h(20)),
+      ],
+    );
+  }
+
+  Widget _buildDismissibleCard(Map<String, dynamic> item) {
+    final id = item['_id'] ?? '';
+    return Dismissible(
+      key: Key(id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(16),
+          vertical: Dimensions.h(8),
+        ),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(Dimensions.r(16)),
+        ),
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+        child: const Icon(
+          Icons.delete_outline,
+          color: Colors.white,
+        ),
+      ),
+      onDismissed: (direction) {
+        controller.deleteNotification(id);
+      },
+      child: NotificationCard(
+        imagePath: item['imagePath'] ?? '',
+        title: item['title'] ?? 'Notification',
+        subtitle: item['subtitle'] ?? 'General',
+        message: item['message'] ?? '',
+        timeAgo: _formatTimeAgo(item['createdAt']),
+        isRead: item['isRead'] ?? true,
+        onTap: () {
+          controller.markAsRead(id);
+          // Standard action: route to statusDetails page
+          Get.toNamed(RoutePath.statusDetails);
+        },
       ),
     );
   }
@@ -186,19 +228,71 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget _buildNotificationList(List<Widget> cards) {
-    if (Dimensions.isTablet && Dimensions.screenWidth > 800) {
-      // On very wide tablets, we could use a grid, but for notifications, 
-      // a clean list within a constrained box is often more readable.
-      // However, let's make it slightly more dynamic.
-      return Column(
-        children: cards,
-      );
-    }
-    return Column(
-      children: cards,
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(32)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: Dimensions.h(100)),
+            Container(
+              padding: EdgeInsets.all(Dimensions.w(24)),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.05),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: Dimensions.w(64),
+                color: AppColors.primaryColor,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(24)),
+            Text(
+              'No Notifications yet'.tr,
+              style: TextStyle(
+                fontSize: Dimensions.f(20),
+                fontWeight: FontWeight.w700,
+                color: AppColors.blackColor,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(8)),
+            Text(
+              'When you receive updates and alerts, they will appear here.'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: Dimensions.f(14),
+                color: AppColors.greyColor,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
+  String _formatTimeAgo(String? isoString) {
+    if (isoString == null || isoString.isEmpty) return '';
+    try {
+      final dateTime = DateTime.parse(isoString);
+      final difference = DateTime.now().difference(dateTime);
 
+      if (difference.inSeconds < 60) {
+        return 'Just now'.tr;
+      } else if (difference.inMinutes < 60) {
+        return '${difference.inMinutes}m ago'.tr;
+      } else if (difference.inHours < 24) {
+        return '${difference.inHours}h ago'.tr;
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays}d ago'.tr;
+      } else {
+        return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+      }
+    } catch (_) {
+      return '';
+    }
+  }
 }

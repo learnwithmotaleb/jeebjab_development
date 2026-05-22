@@ -10,7 +10,6 @@ import '../controller/job_post_controller.dart';
 import '../widget/catagory_toggle_row_widget.dart';
 import '../widget/job_post_card_widget.dart';
 import '../widget/job_post_drawer_widget.dart';
-
 import '../widget/sort_dropdown_widget.dart';
 
 class JobPostScreen extends StatefulWidget {
@@ -37,21 +36,22 @@ class _JobPostScreenState extends State<JobPostScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-
         centerTitle: true,
-
         title: Text(
-         AppStrings.jobPost.tr,
+          AppStrings.jobPost.tr,
           style: TextStyle(
             fontSize: Dimensions.f(17),
             fontWeight: FontWeight.w700,
             color: AppColors.labelColor,
           ),
         ),
-        // ── Hamburger menu ───────────────────────────────────────────
+        // ── Hamburger / filter menu ───────────────────────────────────────
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: Dimensions.w(16),left: Dimensions.w(16) ),
+            padding: EdgeInsets.only(
+              right: Dimensions.w(16),
+              left: Dimensions.w(16),
+            ),
             child: GestureDetector(
               onTap: () => Get.toNamed(RoutePath.jobPostDrawer),
               child: Column(
@@ -76,56 +76,211 @@ class _JobPostScreenState extends State<JobPostScreen> {
         },
         child: Column(
           children: [
-            // ── Filter Row ──────────────────────────────────────────────
+            // ── Filter Row ────────────────────────────────────────────────
             Container(
               color: Colors.white,
               padding: EdgeInsets.symmetric(
                 horizontal: Dimensions.w(16),
                 vertical: Dimensions.h(12),
               ),
-              child: Obx(() => Row(
-                children: [
-                  // ── Category toggles ───────────────────────────
-                  Expanded(
-                    child: CategoryToggleRow(
-                      categories: controller.categories,
-                      selectedCategories: controller.selectedCategories.toSet(),
-                      onSelect: controller.selectCategory,
+              child: Obx(
+                () => Row(
+                  children: [
+                    // ── Category toggles ─────────────────────────────────
+                    Expanded(
+                      child: CategoryToggleRow(
+                        categories: controller.categories,
+                        selectedCategories: controller.selectedCategories
+                            .toSet(),
+                        onSelect: controller.selectCategory,
+                      ),
                     ),
-                  ),
 
-                  // ── Sort dropdown ──────────────────────────────
-                  SortDropdown(
-                    selected: controller.selectedSort.value,
-                    options: controller.sortOptions,
-                    onSelect: controller.selectSort,
-                  ),
-                ],
-              )),
+                    // ── Sort dropdown ─────────────────────────────────────
+                    SortDropdown(
+                      selected: controller.selectedSort.value,
+                      options: controller.sortOptions,
+                      onSelect: controller.selectSort,
+                    ),
+                  ],
+                ),
+              ),
             ),
 
-            // ── Posts Grid ──────────────────────────────────────────────
+            // ── Posts Grid with pagination ────────────────────────────────
             Expanded(
-              child: Obx(() => GridView.builder(
-                padding: EdgeInsets.all(Dimensions.w(16)),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: Dimensions.w(12),
-                  mainAxisSpacing: Dimensions.h(12),
-                  childAspectRatio: 0.78,
-                ),
-                itemCount: controller.posts.length,
-                itemBuilder: (context, index) {
-                  return JobPostCard(
-                    post: controller.posts[index],
-                    onTap: () {
-
-                      Get.toNamed(RoutePath.categoryStatus);
-
-                    },
+              child: Obx(() {
+                // ── Initial loading ──────────────────────────────────────
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
                   );
-                },
-              )),
+                }
+
+                // ── Error with no data ────────────────────────────────────
+                if (controller.errorMessage.value.isNotEmpty &&
+                    controller.posts.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.cloud_off_outlined,
+                          size: Dimensions.w(48),
+                          color: AppColors.greyColor,
+                        ),
+                        SizedBox(height: Dimensions.h(12)),
+                        Text(
+                          controller.errorMessage.value,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: Dimensions.f(14),
+                            color: AppColors.hintColor,
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(16)),
+                        TextButton(
+                          onPressed: controller.refresh,
+                          child: Text(
+                            AppStrings.tryAgain,
+                            style: TextStyle(color: AppColors.primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // ── Empty state ───────────────────────────────────────────
+                if (controller.posts.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.work_off_outlined,
+                          size: Dimensions.w(48),
+                          color: AppColors.greyColor,
+                        ),
+                        SizedBox(height: Dimensions.h(12)),
+                        Text(
+                          'No posts found',
+                          style: TextStyle(
+                            fontSize: Dimensions.f(14),
+                            color: AppColors.hintColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                // ── Grid with scroll-based load-more ─────────────────────
+                return RefreshIndicator(
+                  color: AppColors.primaryColor,
+                  onRefresh: controller.refresh,
+                  child: CustomScrollView(
+                    slivers: [
+                      // ── Posts grid ───────────────────────────────────
+                      SliverPadding(
+                        padding: EdgeInsets.all(Dimensions.w(16)),
+                        sliver: SliverGrid(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            // Trigger load-more when nearing the end
+                            if (index >= controller.posts.length - 4) {
+                              controller.loadMore();
+                            }
+
+                            final post = controller.posts[index];
+                            return JobPostCard(
+                              post: post,
+                              onTap: () {
+                                // Console-log full post details
+                                controller.fetchPostDetails(post.sId ?? '');
+                                Get.toNamed(
+                                  RoutePath.categoryStatus,
+                                  arguments: {'id': post.sId ?? ''},
+                                );
+                              },
+                            );
+                          }, childCount: controller.posts.length),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: Dimensions.w(12),
+                                mainAxisSpacing: Dimensions.h(12),
+                                childAspectRatio: 0.78,
+                              ),
+                        ),
+                      ),
+
+                      // ── Load-more spinner ────────────────────────────
+                      if (controller.isLoadingMore.value)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Dimensions.h(20),
+                            ),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primaryColor,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      // ── End-of-list indicator ────────────────────────
+                      if (!controller.hasMore.value &&
+                          controller.posts.isNotEmpty)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Dimensions.h(20),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: Dimensions.w(40),
+                                  height: 1,
+                                  color: const Color(0xFFDDDDDD),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: Dimensions.w(8),
+                                  ),
+                                  child: Text(
+                                    'No more posts',
+                                    style: TextStyle(
+                                      fontSize: Dimensions.f(12),
+                                      color: AppColors.greyColor,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: Dimensions.w(40),
+                                  height: 1,
+                                  color: const Color(0xFFDDDDDD),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                      // Bottom padding
+                      SliverToBoxAdapter(
+                        child: SizedBox(height: Dimensions.h(20)),
+                      ),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),

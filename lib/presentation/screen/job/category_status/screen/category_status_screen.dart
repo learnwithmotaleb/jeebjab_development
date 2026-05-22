@@ -37,102 +37,153 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
           Expanded(
             child: Stack(
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ── 1. Image Carousel ─────────────────────────
-                      ImageCarouselWidget(images: controller.images),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ── 2. Item Info ──────────────────────
-                            _ItemInfoWidget(
-                              title: controller.itemType.value,
-                              subtitle: controller.itemSubtype.value,
-                              publishedTime:
-                              controller.publishedTime.value,
-                              price: controller.itemPrice.value,
+                if (controller.isLoading.value)
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  )
+                else if (controller.errorMessage.value.isNotEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            controller.errorMessage.value,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w600,
                             ),
-
-                            const SizedBox(height: 8),
-                            const Divider(color: Color(0xFFEEEEEE)),
-                            const SizedBox(height: 8),
-
-                            // ── 3. Size + Pickup Time ─────────────
-                            _MetaRowWidget(
-                              label: AppStrings.size.tr,
-                              value: controller.size.value,
-                            ),
-                            const SizedBox(height: 8),
-                            _MetaRowWidget(
-                              label: AppStrings.preferredPickUp.tr,
-                              value: controller.preferredPickupTime.value,
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            // ── 4. Pick-Up Card ───────────────────
-
-                            LocationCardWidget(
-                              title: AppStrings.pickUp.tr,
-                              address: controller.pickupAddress.value,
-                              features: controller.pickupFeatures,
-                              onOpenMap: controller.onOpenPickupMap,
-                            ),
-
-                            // ── 5. Delivery Card (Move only) ──────
-                            if (controller.isMove) ...[
-                              const SizedBox(height: 16),
-                              LocationCardWidget(
-                                title: AppStrings.delivered.tr,
-                                address: controller.deliveryAddress.value,
-                                features: controller.deliveryFeatures,
-                                onOpenMap: controller.onOpenDeliveryMap,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (Get.arguments != null) {
+                                final args = Get.arguments as Map<String, dynamic>;
+                                final String? id = args['id'];
+                                if (id != null && id.isNotEmpty) {
+                                  controller.fetchPostDetails(id);
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ],
-
-                            const SizedBox(height: 20),
-
-                            // ── 6. Advertiser ─────────────────────
-                            AdvertiserWidget(
-                              name: controller.advertiserName.value,
-                              rating: controller.advertiserRating.value,
-                              imageUrl: controller.advertiserImage.value,
-                              onTap: (){
-                                Get.toNamed(RoutePath.reviewProfile);
-                              },
                             ),
-
-                            const SizedBox(height: 8),
-                            const Divider(color: Color(0xFFEEEEEE)),
-
-                            // ── 7. Share ──────────────────────────
-                            _ActionRowWidget(
-                              label: AppStrings.share.tr,
-                              onTap: controller.onShare,
+                            child: Text(
+                              AppStrings.tryAgain.tr,
+                              style: const TextStyle(color: Colors.white),
                             ),
-
-                            const Divider(
-                                color: Color(0xFFEEEEEE), height: 0),
-
-                            // ── 8. Report Ad ──────────────────────
-                            _ActionRowWidget(
-                              label: AppStrings.reportAd.tr,
-                              onTap: controller.onReportAd,
-                            ),
-
-                            const SizedBox(height: 40),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  )
+                else
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ── 1. Image Carousel ─────────────────────────
+                        ImageCarouselWidget(images: controller.images),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ── 2. Item Info ──────────────────────
+                              _ItemInfoWidget(
+                                title: controller.itemType.value,
+                                subtitle: controller.itemSubtype.value,
+                                publishedTime:
+                                controller.publishedTime.value,
+                                price: controller.itemPrice.value,
+                              ),
+
+                              const SizedBox(height: 8),
+                              const Divider(color: Color(0xFFEEEEEE)),
+                              const SizedBox(height: 8),
+
+                              // ── 3. Size + Pickup Time ─────────────
+                              _MetaRowWidget(
+                                label: AppStrings.size.tr,
+                                value: controller.size.value,
+                              ),
+                              const SizedBox(height: 8),
+                              _MetaRowWidget(
+                                label: AppStrings.preferredPickUp.tr,
+                                value: controller.preferredPickupTime.value,
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // ── 4. Pick-Up Card ───────────────────
+
+                              LocationCardWidget(
+                                title: AppStrings.pickUp.tr,
+                                address: controller.pickupAddress.value,
+                                features: controller.pickupFeatures,
+                                onOpenMap: controller.onOpenPickupMap,
+                              ),
+
+                              // ── 5. Delivery Card (Move only) ──────
+                              if (controller.isMove) ...[
+                                const SizedBox(height: 16),
+                                LocationCardWidget(
+                                  title: AppStrings.delivered.tr,
+                                  address: controller.deliveryAddress.value,
+                                  features: controller.deliveryFeatures,
+                                  onOpenMap: controller.onOpenDeliveryMap,
+                                ),
+                              ],
+
+                              const SizedBox(height: 20),
+
+                              // ── 6. Advertiser ─────────────────────
+                              AdvertiserWidget(
+                                name: controller.advertiserName.value,
+                                rating: controller.advertiserRating.value,
+                                imageUrl: controller.advertiserImage.value,
+                                onTap: (){
+                                  Get.toNamed(RoutePath.reviewProfile);
+                                },
+                              ),
+
+                              const SizedBox(height: 8),
+                              const Divider(color: Color(0xFFEEEEEE)),
+
+                              // ── 7. Share ──────────────────────────
+                              _ActionRowWidget(
+                                label: AppStrings.share.tr,
+                                onTap: controller.onShare,
+                                color: const Color(0xFF1A1A2E),
+                              ),
+
+                              const Divider(
+                                  color: Color(0xFFEEEEEE), height: 0),
+
+                              // ── 8. Report Ad ──────────────────────
+                              _ActionRowWidget(
+                                label: AppStrings.reportAd.tr,
+                                onTap: controller.onReportAd,
+                                color: const Color(0xFF1A1A2E),
+                              ),
+
+                              const SizedBox(height: 40),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
                 // ── Back button overlay ─────────────────────────────
                 Positioned(
@@ -144,11 +195,11 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
+                            color: Colors.black.withValues(alpha: 0.12),
                             blurRadius: 8,
                           ),
                         ],
@@ -166,17 +217,18 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
           ),
 
           // ── Dynamic Bottom Buttons ────────────────────────────────
-          StatusBottomActions(
-            category: controller.category.value,
-            status: controller.requestStatus.value,
-            onSendRequest: controller.onSendRequest,
-            onCancelRequest: controller.onCancelRequest,
-            onPickedUp: controller.onPickedUp,
-            onDelivery: controller.onDelivery,
-            onOpenMap: controller.isMove
-                ? controller.onOpenDeliveryMap
-                : controller.onOpenPickupMap,
-          ),
+          if (!controller.isLoading.value && controller.errorMessage.value.isEmpty)
+            StatusBottomActions(
+              category: controller.category.value,
+              status: controller.requestStatus.value,
+              onSendRequest: controller.onSendRequest,
+              onCancelRequest: controller.onCancelRequest,
+              onPickedUp: controller.onPickedUp,
+              onDelivery: controller.onDelivery,
+              onOpenMap: controller.isMove
+                  ? controller.onOpenDeliveryMap
+                  : controller.onOpenPickupMap,
+            ),
         ],
       )),
     );

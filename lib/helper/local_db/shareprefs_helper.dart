@@ -8,4 +8,5 @@ class SharePrefsKeys {
   static const String themeMode = "theme_mode";
   static const String postCategory = 'post_category';
   static const String fcmToken = 'fcm_token';
+  static const String localNotifications = 'local_notifications';
 }

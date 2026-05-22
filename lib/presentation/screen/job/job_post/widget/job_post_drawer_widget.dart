@@ -6,6 +6,7 @@ import 'package:jeebjab/widget/app_button.dart';
 
 import '../../../../../utils/static_strings/static_strings.dart';
 
+import '../controller/job_post_controller.dart';
 class JobPostDrawer extends StatefulWidget {
   const JobPostDrawer({super.key});
 
@@ -298,10 +299,29 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                 Dimensions.w(16),
                 Dimensions.h(20),
               ),
-              
-              child:AppButton(label:   AppStrings.apply.tr,
-                height: Dimensions.h(56),
-                onPressed: () => Get.back(),)
+              child: AppButton(
+                  label: AppStrings.apply.tr,
+                  height: Dimensions.h(56),
+                  onPressed: () {
+                    // Apply selected filters via controller
+                    Get.find<JobPostController>().applyFilters(
+                      sort: _selectedSort,
+                      time: _selectedTime,
+                      pickupPlacement: _selectedPickup,
+                      pickupNoMeet: _pickupNoMeet,
+                      pickupCanHelp: _pickupCanHelp,
+                      dropoffPlacement: _selectedDropoff,
+                      dropoffNoMeet: _dropoffNoMeet,
+                      dropoffCanHelp: _dropoffCanHelp,
+                      delivery: _delivery,
+                      recycling: _recycling,
+                      buyForMe: _buyForMe,
+                      giveAway: _giveAway,
+                      distance: _distance,
+                    );
+                    Get.back();
+                  },
+                )
             ),
             SizedBox(height: Dimensions.h(24)),
 

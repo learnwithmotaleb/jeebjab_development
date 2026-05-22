@@ -30,12 +30,14 @@ class BecomeDriverController extends GetxController {
   }
 
   void onContinue() {
-    if (!isValid) return;
-    if (selectedType.value == DriverType.independent) {
-     Get.toNamed(RoutePath.vehicleType);
-    } else {
-      Get.toNamed(RoutePath.selectCompany);
+    // if (!isValid) return;
+    // if (selectedType.value == DriverType.independent) {
+    //  Get.toNamed(RoutePath.vehicleType);
+    // } else {
+    //   Get.toNamed(RoutePath.selectCompany);
+    //
+    // }
 
-    }
+    Get.toNamed(RoutePath.driverBottomNav);
   }
 }

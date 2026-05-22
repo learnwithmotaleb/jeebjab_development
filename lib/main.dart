@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/presentation/screen/job/delivery/controller/delivery_controller.dart';
+import 'package:jeebjab/service/firebase_notification_service.dart';
 import 'package:jeebjab/utils/device_preview/evice_preview_wrapper.dart';
 
 import 'app.dart';
@@ -21,6 +22,13 @@ void main() async {
 
   // Initialize SharedPreferences first
   await SharePrefsHelper.init();
+  // Initialize Push Notifications
+  await FirebaseNotificationService().initialize();
+  await FirebaseNotificationService().subscribeToDefaultTopics();
+
+  // Print FCM Token explicitly
+  final fcmToken = await FirebaseNotificationService().getFCMToken();
+  debugPrint('📱 [FCM TOKEN] Current FCM Token: $fcmToken');
   
   // Initialize Google Sign-In (v7.x requirement)
   // NOTE: On Android, you MUST provide the serverClientId (Web Client ID) from Firebase Console.
@@ -32,10 +40,14 @@ void main() async {
   // Lock device orientation
   DeviceUtils.lockDevicePortrait();
 
+
+
   // Controllers
   Get.put(InternetController(), permanent: true);
   Get.put(LanguageController(), permanent: true);
   Get.put(DeliveryController(), permanent: true);
+
+
 
   runApp(
      MyApp()

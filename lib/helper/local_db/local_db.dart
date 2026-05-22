@@ -149,6 +149,20 @@ class SharePrefsHelper {
     await _prefs?.remove(SharePrefsKeys.fcmToken);
   }
 
+  // ================= LOCAL NOTIFICATIONS =================
+
+  static Future<void> saveLocalNotifications(List<String> jsonList) async {
+    await _prefs?.setStringList(SharePrefsKeys.localNotifications, jsonList);
+  }
+
+  static List<String> getLocalNotifications() {
+    return _prefs?.getStringList(SharePrefsKeys.localNotifications) ?? [];
+  }
+
+  static Future<void> clearLocalNotifications() async {
+    await _prefs?.remove(SharePrefsKeys.localNotifications);
+  }
+
   // ================= CLEAR ALL =================
 
   static Future<void> clearAll() async {
