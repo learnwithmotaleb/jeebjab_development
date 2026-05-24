@@ -178,11 +178,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: Dimensions.h(12)),
 
                     // Social login buttons (Full Width)
-                    GestureDetector(
-                      onTap: () => controller.signInWithGoogle(),
-                      child: _socialLoginButton(AppImages.google),
-                    ),
-                    
+
+                    if (PlatformHelper.isAndroid) ...[
+                      SizedBox(height: Dimensions.h(12)),
+                      GestureDetector(
+                        onTap: () => controller.signInWithGoogle(),
+                        child: _socialLoginButton(AppImages.google),
+                      ),
+
+                    ],
+
                     if (PlatformHelper.isIOS) ...[
                       SizedBox(height: Dimensions.h(12)),
                       GestureDetector(

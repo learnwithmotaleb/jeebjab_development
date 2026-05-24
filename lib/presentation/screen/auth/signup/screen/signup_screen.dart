@@ -154,7 +154,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: _buildHeader(fontSize: 20, logoSize: 100),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: _buildBody(padding: 24, maxWidth: double.infinity),
           ),
         ],
@@ -186,7 +186,8 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
