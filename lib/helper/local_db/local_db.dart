@@ -10,6 +10,12 @@ class SharePrefsHelper {
   static Future<void> setString(String key, String value) async {
     await _prefs?.setString(key, value);
   }
+
+  // Generic string getter for custom keys (async)
+  static Future<String?> getString(String key) async {
+    return _prefs?.getString(key);
+  }
+
   static SharedPreferences? _prefs;
 
   static Future init() async {

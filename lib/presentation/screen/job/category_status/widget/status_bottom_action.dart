@@ -48,7 +48,7 @@ class StatusBottomActions extends StatelessWidget {
   Widget _buildButtons() {
     // Helper to render send or cancel button based on request status
     Widget _sendCancelButton() {
-      if (status == RequestStatus.sent) {
+      if (status == RequestStatus.sent || status == RequestStatus.pending) {
         // Cancel request – red text button
         return _CancelButton(onTap: onCancelRequest);
       } else {

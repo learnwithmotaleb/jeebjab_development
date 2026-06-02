@@ -71,6 +71,7 @@ class CategoryStatusController extends GetxController {
   void onInit() {
     super.onInit();
     _initFeatures();
+    loadSavedRequest();
     _loadArguments();
   }
 
@@ -92,6 +93,7 @@ class CategoryStatusController extends GetxController {
     final String? id = args['id'];
 
     if (id != null && id.isNotEmpty) {
+      // Prefer server data but ensure we have jobId set
       jobId.value = id; // store job ID for later API calls
       fetchPostDetails(id);
       return;
@@ -300,43 +302,44 @@ class CategoryStatusController extends GetxController {
   // Private async implementation
   Future<void> _sendJobRequest() async {
     if (jobId.value.isEmpty) {
-      // No job ID available
-      log.w('Job ID is empty, cannot send request');
+      log.w('Job ID is empty');
       return;
     }
-    isLoading.value = true;
-    log.i('Sending job request for ID: ${jobId.value}');
-    final response = await _apiClient.post(
-      url: ApiUrl.postSendJobRequest(jobId.value),
-      isToken: true,
-    );
-    isLoading.value = false;
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      requestStatus.value = RequestStatus.sent;
-      errorMessage.value = '';
-      // Save post ID from response data
-      final postId = response.body['data']?['post'];
-      if (postId != null && postId is String) {
-        SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, postId);
-        log.i('Saved post ID $postId to SharedPreferences');
+
+    try {
+      isLoading.value = true;
+
+      final response = await _apiClient.post(
+        url: ApiUrl.postSendJobRequest(jobId.value),
+        isToken: true,
+      );
+
+      final body = response.body;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        requestStatus.value = RequestStatus.pending;
+        // Persist request status
+        _saveRequest(jobId.value, RequestStatus.pending);
+
+        Get.snackbar('Success', body['message'] ?? 'Request sent successfully');
+
+        log.i('Request sent successfully');
       }
-      _saveRequest(jobId.value, RequestStatus.sent);
-      log.i('Job request sent successfully');
-    } else if (response.statusCode == 400 &&
-        (response.body?.contains('already have a pending request') ?? false)) {
-      // Treat as already pending – update UI accordingly
-      requestStatus.value = RequestStatus.sent;
-      errorMessage.value = '';
-      // Save any post ID if present
-      final postId = response.body['data']?['post'];
-      if (postId != null && postId is String) {
-        SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, postId);
+      // Already requested
+      else if ((body['message'] ?? '').toString().contains('pending request')) {
+        requestStatus.value = RequestStatus.pending;
+
+        Get.snackbar('Info', 'Request already sent');
+
+        log.i('Already requested');
+      } else {
+        errorMessage.value = body['message'] ?? 'Failed to send request';
       }
-      _saveRequest(jobId.value, RequestStatus.sent);
-      log.w('Already have a pending request, treating as sent');
-    } else {
-      errorMessage.value = response.statusText ?? 'Failed to send job request';
-      log.e('Failed to send job request: ${errorMessage.value}');
+    } catch (e) {
+      errorMessage.value = e.toString();
+      log.e(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -348,23 +351,47 @@ class CategoryStatusController extends GetxController {
   // Private async implementation
   Future<void> _cancelJobRequest() async {
     if (jobId.value.isEmpty) {
-      log.w('Job ID is empty, cannot cancel request');
+      log.w('Job ID is empty');
       return;
     }
-    isLoading.value = true;
-    log.i('Cancelling job request for ID: ${jobId.value}');
-    final response = await _apiClient.delete(
-      url: ApiUrl.deleteCancelJobRequest(jobId.value),
-      isToken: true,
-    );
-    isLoading.value = false;
-    if (response.statusCode == 200) {
-      requestStatus.value = RequestStatus.pickedUp; // or appropriate status
-      log.i('Job request cancelled successfully');
-    } else {
-      errorMessage.value =
-          response.statusText ?? 'Failed to cancel job request';
-      log.e('Failed to cancel job request: ${errorMessage.value}');
+
+    try {
+      isLoading.value = true;
+
+      final response = await _apiClient.delete(
+        url: ApiUrl.deleteCancelJobRequest(jobId.value),
+        isToken: true,
+      );
+
+      final body = response.body;
+
+      if (response.statusCode == 200) {
+        requestStatus.value = RequestStatus.none;
+        // Clear persisted request status
+        _saveRequest(jobId.value, RequestStatus.none);
+
+        Get.snackbar(
+          'Success',
+          body['message'] ?? 'Request cancelled successfully',
+        );
+
+        log.i('Request cancelled');
+      }
+      // Already cancelled
+      else if ((body['message'] ?? '').toString().contains(
+        'Only pending requests can be cancelled',
+      )) {
+        requestStatus.value = RequestStatus.none;
+
+        Get.snackbar('Info', 'Request already cancelled');
+      } else {
+        errorMessage.value = body['message'] ?? 'Failed to cancel request';
+      }
+    } catch (e) {
+      errorMessage.value = e.toString();
+      log.e(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -376,6 +403,28 @@ class CategoryStatusController extends GetxController {
       status.name,
     );
     log.i('Saved request jobId $jobId with status ${status.name}');
+  }
+
+  // Load persisted request status on controller init
+  void loadSavedRequest() async {
+    final savedJobId = await SharePrefsHelper.getString(
+      SharePrefsKeys.jobRequestPostId,
+    );
+    final savedStatusStr = await SharePrefsHelper.getString(
+      SharePrefsKeys.jobRequestStatus,
+    );
+    if (savedJobId != null && savedJobId.isNotEmpty) {
+      jobId.value = savedJobId;
+      if (savedStatusStr != null) {
+        try {
+          requestStatus.value = RequestStatus.values.firstWhere(
+            (e) => e.name == savedStatusStr,
+          );
+        } catch (_) {
+          requestStatus.value = RequestStatus.none;
+        }
+      }
+    }
   }
 
   void onPickedUp() {

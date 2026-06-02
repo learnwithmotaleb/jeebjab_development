@@ -1,11 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
-
 
 import '../presentation/screen/job/delivery/controller/delivery_controller.dart';
 
@@ -54,10 +51,7 @@ class AppAlerts {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _CircleIcon(
-              icon: Icons.close_rounded,
-              color: AppColors.redColor,
-            ),
+            _CircleIcon(icon: Icons.close_rounded, color: AppColors.redColor),
             SizedBox(height: Dimensions.h(16)),
             Text(
               message,
@@ -236,10 +230,7 @@ class AppAlerts {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _CircleIcon(
-              icon: Icons.logout_rounded,
-              color: AppColors.redColor,
-            ),
+            _CircleIcon(icon: Icons.logout_rounded, color: AppColors.redColor),
             SizedBox(height: Dimensions.h(14)),
             Text(
               'Logout',
@@ -379,7 +370,7 @@ class AppAlerts {
                 Get.back();
                 // Open camera and navigate to delivery screen
                 final DeliveryController controller =
-                Get.find<DeliveryController>();
+                    Get.find<DeliveryController>();
                 controller.captureImageFromCamera();
               },
             ),
@@ -388,6 +379,7 @@ class AppAlerts {
       ),
     );
   }
+
   // ─────────────────────────────────────────────────────────────────────────
   // ⭐ REVIEW — delivery review dialog
   // ─────────────────────────────────────────────────────────────────────────
@@ -423,7 +415,9 @@ class AppAlerts {
                         });
                       },
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(4)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Dimensions.w(4),
+                        ),
                         child: Icon(
                           index < currentRating
                               ? Icons.star_rounded
@@ -488,7 +482,7 @@ class AppAlerts {
           children: [
             Icon(
               Icons.new_releases_outlined,
-              color: const Color(0xFFEAA4A4),
+              color: AppColors.redColor,
               size: Dimensions.w(64),
             ),
             SizedBox(height: Dimensions.h(16)),
@@ -539,7 +533,7 @@ class AppAlerts {
                 Expanded(
                   child: _AlertButton(
                     label: 'Reject',
-                    color: const Color(0xFFEAA4A4),
+                    color: AppColors.redColor,
                     textColor: AppColors.labelColor,
                     borderRadius: 8,
                     onTap: () {
@@ -559,10 +553,7 @@ class AppAlerts {
   // ─────────────────────────────────────────────────────────────────────────
   // 🗑️ DELETE AD — delete confirmation dialog
   // ─────────────────────────────────────────────────────────────────────────
-  static void deleteAd({
-    required VoidCallback onYes,
-    VoidCallback? onNo,
-  }) {
+  static void deleteAd({required VoidCallback onYes, VoidCallback? onNo}) {
     Get.dialog(
       _AlertWrapper(
         child: Column(
@@ -634,7 +625,7 @@ class _AlertWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.whiteColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimensions.r(20)),
       ),
@@ -696,7 +687,7 @@ class _AlertButton extends StatelessWidget {
       child: Container(
         height: Dimensions.h(44),
         decoration: BoxDecoration(
-          color: isOutlined ? Colors.white : btnColor,
+          color: isOutlined ? AppColors.whiteColor : btnColor,
           borderRadius: BorderRadius.circular(Dimensions.r(borderRadius ?? 30)),
           border: Border.all(
             color: isOutlined ? const Color(0xFFDDDDDD) : btnColor,
@@ -708,7 +699,9 @@ class _AlertButton extends StatelessWidget {
           style: TextStyle(
             fontSize: Dimensions.f(14),
             fontWeight: FontWeight.w700,
-            color: textColor ?? (isOutlined ? AppColors.labelColor : Colors.white),
+            color:
+                textColor ??
+                (isOutlined ? AppColors.labelColor : AppColors.whiteColor),
           ),
         ),
       ),
