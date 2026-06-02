@@ -8,5 +8,9 @@ class SharePrefsKeys {
   static const String themeMode = "theme_mode";
   static const String postCategory = 'post_category';
   static const String fcmToken = 'fcm_token';
+  static const String jobRequestPostId = 'job_request_post_id';
+  static const String jobRequestStatus = 'job_request_status';
   static const String localNotifications = 'local_notifications';
+
+
 }

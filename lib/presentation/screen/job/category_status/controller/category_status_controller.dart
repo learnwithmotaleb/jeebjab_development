@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/helper/local_db/shareprefs_helper.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
 import 'package:jeebjab/service/api_service.dart';
 import 'package:jeebjab/service/api_url.dart';
+import 'package:jeebjab/helper/local_db/local_db.dart';
 
 // ── Category types ─────────────────────────────────────────────────────────
 enum PostCategory { move, recycle, buyForMe, giveAway }
@@ -13,6 +15,11 @@ enum PostCategory { move, recycle, buyForMe, giveAway }
 // Move:    none → sent → pickedUp → delivered
 // Recycle: none → sent → pickedUp
 enum RequestStatus { none, pending, sent, pickedUp, delivered }
+
+// SharedPrefs additional keys for request handling
+extension SharePrefsKeysExtension on SharePrefsKeys {
+  static const String jobRequestPostId = 'job_request_post_id';
+}
 
 class CategoryStatusController extends GetxController {
   final ApiClient _apiClient = ApiClient();
@@ -304,19 +311,33 @@ class CategoryStatusController extends GetxController {
       isToken: true,
     );
     isLoading.value = false;
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          requestStatus.value = RequestStatus.sent;
-          errorMessage.value = '';
-          log.i('Job request sent successfully');
-        } else if (response.statusCode == 400 && (response.body?.contains('already have a pending request') ?? false)) {
-          // Treat as already pending – update UI accordingly
-          requestStatus.value = RequestStatus.sent;
-          errorMessage.value = '';
-          log.w('Already have a pending request, treating as sent');
-        } else {
-          errorMessage.value = response.statusText ?? 'Failed to send job request';
-          log.e('Failed to send job request: ${errorMessage.value}');
-        }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      requestStatus.value = RequestStatus.sent;
+      errorMessage.value = '';
+      // Save post ID from response data
+      final postId = response.body['data']?['post'];
+      if (postId != null && postId is String) {
+        SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, postId);
+        log.i('Saved post ID $postId to SharedPreferences');
+      }
+      _saveRequest(jobId.value, RequestStatus.sent);
+      log.i('Job request sent successfully');
+    } else if (response.statusCode == 400 &&
+        (response.body?.contains('already have a pending request') ?? false)) {
+      // Treat as already pending – update UI accordingly
+      requestStatus.value = RequestStatus.sent;
+      errorMessage.value = '';
+      // Save any post ID if present
+      final postId = response.body['data']?['post'];
+      if (postId != null && postId is String) {
+        SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, postId);
+      }
+      _saveRequest(jobId.value, RequestStatus.sent);
+      log.w('Already have a pending request, treating as sent');
+    } else {
+      errorMessage.value = response.statusText ?? 'Failed to send job request';
+      log.e('Failed to send job request: ${errorMessage.value}');
+    }
   }
 
   // Public wrapper for cancel request (VoidCallback compatible)
@@ -345,6 +366,16 @@ class CategoryStatusController extends GetxController {
           response.statusText ?? 'Failed to cancel job request';
       log.e('Failed to cancel job request: ${errorMessage.value}');
     }
+  }
+
+  // Save request details to SharedPreferences
+  Future<void> _saveRequest(String jobId, RequestStatus status) async {
+    await SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, jobId);
+    await SharePrefsHelper.setString(
+      SharePrefsKeys.jobRequestStatus,
+      status.name,
+    );
+    log.i('Saved request jobId $jobId with status ${status.name}');
   }
 
   void onPickedUp() {

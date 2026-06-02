@@ -6,6 +6,10 @@ import '../../core/enums/app_role.dart';
 import '../../core/enums/post_category_type.dart';
 
 class SharePrefsHelper {
+  // Generic string setter for custom keys
+  static Future<void> setString(String key, String value) async {
+    await _prefs?.setString(key, value);
+  }
   static SharedPreferences? _prefs;
 
   static Future init() async {

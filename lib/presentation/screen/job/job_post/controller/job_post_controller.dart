@@ -129,13 +129,14 @@ class JobPostController extends GetxController {
 
         final meta = model.data?.meta;
         if (meta != null) {
+          // Advance to the next page before checking if more pages exist
+          _currentPage++;
           final totalPages = meta.totalPage ?? 1;
-          hasMore.value = _currentPage < totalPages;
+          hasMore.value = _currentPage <= totalPages;
           debugPrint(
             '📄 Pagination → page $_currentPage/$totalPages | '
             'total: ${meta.total} posts | hasMore: ${hasMore.value}',
           );
-          _currentPage++;
         } else {
           hasMore.value = false;
         }
@@ -211,36 +212,16 @@ class JobPostController extends GetxController {
       'limit': '$_pageSize',
     };
 
-    // Type filter — only applied when at least one category is selected
-    if (selectedCategories.isNotEmpty) {
-      params['type'] =
-          selectedCategories.map((t) => t.apiValue).join(',');
-    }
-
     // Sort
     params['sortBy'] =
         selectedSort.value == AppStrings.newest ? 'newest' : 'nearest';
 
-    // Additional filters
-    params['time'] = selectedTime.value.toLowerCase();
-    params['pickupPlacement'] = _mapPlacement(selectedPickup.value);
-    params['pickupNoMeet'] = pickupNoMeet.value.toString();
-    params['pickupCanHelp'] = pickupCanHelp.value.toString();
-    params['dropoffPlacement'] = _mapPlacement(selectedDropoff.value);
-    params['dropoffNoMeet'] = dropoffNoMeet.value.toString();
-    params['dropoffCanHelp'] = dropoffCanHelp.value.toString();
-    if (delivery.value) params['delivery'] = 'true';
-    if (recycling.value) params['recycling'] = 'true';
-    if (buyForMe.value) params['buyForMe'] = 'true';
-    if (giveAway.value) params['giveAway'] = 'true';
-    if (distance.value != 90.0) {
-      params['distance'] = distance.value.toInt().toString();
-    }
-
-    return Uri.parse(ApiUrl.getJobPost)
-        .replace(queryParameters: params)
-        .toString();
+    // No additional filters are sent by default – they are added only when the user
+    // explicitly changes them via the drawer UI.
+    return Uri.parse(ApiUrl.getJobPost).replace(queryParameters: params).toString();
   }
+
+
 
   // Helper to map UI placement text to API value
   String _mapPlacement(String label) {

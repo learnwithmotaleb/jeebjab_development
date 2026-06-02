@@ -22,6 +22,30 @@ class JobPostScreen extends StatefulWidget {
 class _JobPostScreenState extends State<JobPostScreen> {
   final JobPostController controller = Get.put(JobPostController());
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // Scroll controller for infinite scrolling
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to scroll events for pagination
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        bool isBottom = _scrollController.position.pixels != 0;
+        if (isBottom &&
+            controller.hasMore.value &&
+            !controller.isLoadingMore.value) {
+          controller.loadMore();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +206,7 @@ class _JobPostScreenState extends State<JobPostScreen> {
                   color: AppColors.primaryColor,
                   onRefresh: controller.refresh,
                   child: CustomScrollView(
+                    controller: _scrollController,
                     slivers: [
                       // ── Posts grid ───────────────────────────────────
                       SliverPadding(
@@ -191,11 +216,6 @@ class _JobPostScreenState extends State<JobPostScreen> {
                             context,
                             index,
                           ) {
-                            // Trigger load-more when nearing the end
-                            if (index >= controller.posts.length - 4) {
-                              controller.loadMore();
-                            }
-
                             final post = controller.posts[index];
                             return JobPostCard(
                               post: post,
