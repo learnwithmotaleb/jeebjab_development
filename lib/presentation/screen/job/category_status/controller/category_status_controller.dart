@@ -25,7 +25,7 @@ class CategoryStatusController extends GetxController {
 
   // ── Item Info ─────────────────────────────────────────────────────────────
   RxString itemType = AppStrings.move.obs;
-  RxString itemSubtype = 'Ducati Bike'.obs;           // dynamic/user data
+  RxString itemSubtype = 'Ducati Bike'.obs; // dynamic/user data
   RxString publishedTime = AppStrings.publishedHoursAgo.obs;
   RxDouble itemPrice = 85.0.obs;
 
@@ -45,14 +45,16 @@ class CategoryStatusController extends GetxController {
   RxList<String> pickupFeatures = <String>[].obs;
 
   // ── Delivery Info (Move only) ─────────────────────────────────────────────
-  RxString deliveryAddress = 'Abu Dhabi - 23052'.obs;                // dynamic
+  RxString deliveryAddress = 'Abu Dhabi - 23052'.obs; // dynamic
   RxList<String> deliveryFeatures = <String>[].obs;
 
   // ── Advertiser Info ───────────────────────────────────────────────────────
-  RxString advertiserName = 'Faris Shafi'.obs;                       // dynamic
+  RxString advertiserName = 'Faris Shafi'.obs; // dynamic
   RxDouble advertiserRating = 4.7.obs;
   RxString advertiserImage =
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200'.obs;
+  // Store the job ID for send/cancel requests
+  final RxString jobId = ''.obs;
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   bool get isMove => category.value == PostCategory.move;
@@ -83,6 +85,7 @@ class CategoryStatusController extends GetxController {
     final String? id = args['id'];
 
     if (id != null && id.isNotEmpty) {
+      jobId.value = id; // store job ID for later API calls
       fetchPostDetails(id);
       return;
     }
@@ -106,8 +109,7 @@ class CategoryStatusController extends GetxController {
     }
 
     size.value = args['size'] ?? AppStrings.medium.tr;
-    preferredPickupTime.value =
-        args['pickupTime'] ?? preferredPickupTime.value;
+    preferredPickupTime.value = args['pickupTime'] ?? preferredPickupTime.value;
     pickupAddress.value =
         args['pickupAddress'] ?? 'Abu Dhabi - 23052, Level 2, Door 6';
     deliveryAddress.value = args['deliveryAddress'] ?? 'Abu Dhabi - 23052';
@@ -120,33 +122,37 @@ class CategoryStatusController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      
-      final response = await _apiClient.get(url: ApiUrl.getPostDetails(id), isToken: true);
-      
+
+      final response = await _apiClient.get(
+        url: ApiUrl.getPostDetails(id),
+        isToken: true,
+      );
+
       if (response.statusCode == 200) {
-          final data = response.body['data'];
-          // Map status
-          final statusStr = data['status'] ?? '';
-          switch (statusStr) {
-            case 'pending':
-              requestStatus.value = RequestStatus.pending;
-              break;
-            case 'sent':
-              requestStatus.value = RequestStatus.sent;
-              break;
-            case 'pickedUp':
-              requestStatus.value = RequestStatus.pickedUp;
-              break;
-            case 'delivered':
-              requestStatus.value = RequestStatus.delivered;
-              break;
-            default:
-              requestStatus.value = RequestStatus.none;
-          }
-          _mapPostData(data);
-        } else {
-          errorMessage.value = response.statusText ?? "Failed to load post details";
+        final data = response.body['data'];
+        // Map status
+        final statusStr = data['status'] ?? '';
+        switch (statusStr) {
+          case 'pending':
+            requestStatus.value = RequestStatus.pending;
+            break;
+          case 'sent':
+            requestStatus.value = RequestStatus.sent;
+            break;
+          case 'pickedUp':
+            requestStatus.value = RequestStatus.pickedUp;
+            break;
+          case 'delivered':
+            requestStatus.value = RequestStatus.delivered;
+            break;
+          default:
+            requestStatus.value = RequestStatus.none;
         }
+        _mapPostData(data);
+      } else {
+        errorMessage.value =
+            response.statusText ?? "Failed to load post details";
+      }
     } catch (e) {
       errorMessage.value = "An error occurred: $e";
       debugPrint('❌ fetchPostDetails exception: $e');
@@ -161,7 +167,7 @@ class CategoryStatusController extends GetxController {
     if (typeStr == 'recycling') {
       category.value = PostCategory.recycle;
       itemType.value = AppStrings.recycling.tr;
-      
+
       // For recycle, subtype is wasteType
       if (data['wasteType'] != null) {
         if (data['wasteType'] is List) {
@@ -189,21 +195,28 @@ class CategoryStatusController extends GetxController {
     }
 
     itemPrice.value = (data['price'] ?? 0).toDouble();
-    size.value = data['size']?.toString().capitalizeFirst ?? AppStrings.medium.tr;
+    size.value =
+        data['size']?.toString().capitalizeFirst ?? AppStrings.medium.tr;
 
     // Date/Time
     final dt = data['dateTimeSlot'];
     if (dt != null) {
       final scheduledDate = dt['scheduledDate'] ?? "";
       final scheduledTime = dt['scheduledTime'] ?? "";
-      preferredPickupTime.value = scheduledDate != "" ? "$scheduledDate, $scheduledTime" : dt['slotType'] ?? AppStrings.anytime.tr;
+      preferredPickupTime.value = scheduledDate != ""
+          ? "$scheduledDate, $scheduledTime"
+          : dt['slotType'] ?? AppStrings.anytime.tr;
     } else {
       preferredPickupTime.value = AppStrings.anytime.tr;
     }
 
     // Carousel Images
-    if (data['photos'] != null && (data['photos'] is List) && (data['photos'] as List).isNotEmpty) {
-      images.value = (data['photos'] as List).map((path) => ApiUrl.buildImageUrl(path.toString())).toList();
+    if (data['photos'] != null &&
+        (data['photos'] is List) &&
+        (data['photos'] as List).isNotEmpty) {
+      images.value = (data['photos'] as List)
+          .map((path) => ApiUrl.buildImageUrl(path.toString()))
+          .toList();
     } else if (data['photo'] != null && data['photo'].toString().isNotEmpty) {
       images.value = [ApiUrl.buildImageUrl(data['photo'].toString())];
     } else {
@@ -238,12 +251,14 @@ class CategoryStatusController extends GetxController {
       if (user['avatar'] != null) {
         advertiserImage.value = ApiUrl.buildImageUrl(user['avatar'].toString());
       } else {
-        advertiserImage.value = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
+        advertiserImage.value =
+            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
       }
     } else {
       advertiserName.value = "";
       advertiserRating.value = 0.0;
-      advertiserImage.value = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
+      advertiserImage.value =
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
     }
 
     // Published time (relative)
@@ -257,32 +272,80 @@ class CategoryStatusController extends GetxController {
   List<String> _buildFeatures(Map<String, dynamic>? placement) {
     if (placement == null) return [];
     List<String> list = [];
-    if (placement['placement'] == 'inside') list.add(AppStrings.insideTheHouse.tr);
+    if (placement['placement'] == 'inside')
+      list.add(AppStrings.insideTheHouse.tr);
     if (placement['needToMeet'] == true) list.add(AppStrings.needToMeet.tr);
-    if (placement['canHelpCarry'] == true) list.add(AppStrings.canHelpCarryAtDropOff.tr);
-    if (placement['fitsInElevator'] == true) list.add(AppStrings.fitsInTheElevator.tr);
+    if (placement['canHelpCarry'] == true)
+      list.add(AppStrings.canHelpCarryAtDropOff.tr);
+    if (placement['fitsInElevator'] == true)
+      list.add(AppStrings.fitsInTheElevator.tr);
     return list;
   }
 
   // ── Button Actions ────────────────────────────────────────────────────────
-  void acceptPending() {
-    AppAlerts.confirm(
-      title: 'Accept Request',
-      message: 'Do you want to accept this pending request?',
-      onConfirm: () {
-        requestStatus.value = RequestStatus.sent;
-      },
-      onCancel: () {
-        AppAlerts.info(
-          title: 'Still Pending',
-          message: 'The request remains pending.',
-        );
-      },
-    );
-  }
-  void onSendRequest() => requestStatus.value = RequestStatus.sent;
 
-  void onCancelRequest() => requestStatus.value = RequestStatus.pickedUp;
+  // Public wrapper for send request (VoidCallback compatible)
+  void onSendRequest() {
+    log.i('Send Request button pressed');
+    _sendJobRequest();
+  }
+
+  // Private async implementation
+  Future<void> _sendJobRequest() async {
+    if (jobId.value.isEmpty) {
+      // No job ID available
+      log.w('Job ID is empty, cannot send request');
+      return;
+    }
+    isLoading.value = true;
+    log.i('Sending job request for ID: ${jobId.value}');
+    final response = await _apiClient.post(
+      url: ApiUrl.postSendJobRequest(jobId.value),
+      isToken: true,
+    );
+    isLoading.value = false;
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          requestStatus.value = RequestStatus.sent;
+          errorMessage.value = '';
+          log.i('Job request sent successfully');
+        } else if (response.statusCode == 400 && (response.body?.contains('already have a pending request') ?? false)) {
+          // Treat as already pending – update UI accordingly
+          requestStatus.value = RequestStatus.sent;
+          errorMessage.value = '';
+          log.w('Already have a pending request, treating as sent');
+        } else {
+          errorMessage.value = response.statusText ?? 'Failed to send job request';
+          log.e('Failed to send job request: ${errorMessage.value}');
+        }
+  }
+
+  // Public wrapper for cancel request (VoidCallback compatible)
+  void onCancelRequest() {
+    _cancelJobRequest();
+  }
+
+  // Private async implementation
+  Future<void> _cancelJobRequest() async {
+    if (jobId.value.isEmpty) {
+      log.w('Job ID is empty, cannot cancel request');
+      return;
+    }
+    isLoading.value = true;
+    log.i('Cancelling job request for ID: ${jobId.value}');
+    final response = await _apiClient.delete(
+      url: ApiUrl.deleteCancelJobRequest(jobId.value),
+      isToken: true,
+    );
+    isLoading.value = false;
+    if (response.statusCode == 200) {
+      requestStatus.value = RequestStatus.pickedUp; // or appropriate status
+      log.i('Job request cancelled successfully');
+    } else {
+      errorMessage.value =
+          response.statusText ?? 'Failed to cancel job request';
+      log.e('Failed to cancel job request: ${errorMessage.value}');
+    }
+  }
 
   void onPickedUp() {
     if (isMove) {
@@ -297,28 +360,28 @@ class CategoryStatusController extends GetxController {
     // Move only
     requestStatus.value = RequestStatus.delivered;
     // Get.toNamed(RoutePath.deliveryScreen);
-   AppAlerts.confirm(title: "Are you sure", message: "Are you sure, you are picked-up?", onConfirm: (){
-
-     AppAlerts.proof(
-       title: 'Proof',              // Default: 'Proof'
-       message: 'Upload picture as a proof!',          // Default: 'Upload Picture As A Proof!'
-       buttonLabel: 'Continue',          // Default: 'Continue'
-
-     );
-
-
-   });
-
+    AppAlerts.confirm(
+      title: "Are you sure",
+      message: "Are you sure, you are picked-up?",
+      onConfirm: () {
+        AppAlerts.proof(
+          title: 'Proof', // Default: 'Proof'
+          message:
+              'Upload picture as a proof!', // Default: 'Upload Picture As A Proof!'
+          buttonLabel: 'Continue', // Default: 'Continue'
+        );
+      },
+    );
   }
 
   void onOpenPickupMap() {
     Get.toNamed(RoutePath.showMap);
-
-
   }
+
   void onOpenDeliveryMap() {
     Get.toNamed(RoutePath.showMap);
   }
+
   void onShare() {}
   void onReportAd() {}
 }

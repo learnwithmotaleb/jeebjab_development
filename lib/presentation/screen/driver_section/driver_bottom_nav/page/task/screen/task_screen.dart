@@ -22,10 +22,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -41,28 +38,32 @@ class _TaskScreenState extends State<TaskScreen> {
               Dimensions.w(16),
               0,
             ),
-            child: Obx(() => TaskTabSwitcher(
-              isActive: controller.isActiveTab.value,
-              onActiveTab: () => controller.switchTab(true),
-              onCompletedTab: () => controller.switchTab(false),
-            )),
+            child: Obx(
+              () => TaskTabSwitcher(
+                isActive: controller.isActiveTab.value,
+                onActiveTab: () => controller.switchTab(true),
+                onCompletedTab: () => controller.switchTab(false),
+              ),
+            ),
           ),
           SizedBox(height: Dimensions.h(16)),
           Expanded(
-            child: Obx(() => ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              itemCount: controller.currentList.length,
-              itemBuilder: (context, index) {
-                final item = controller.currentList[index];
-                return TaskCard(
-                  item: item,
-                  isActive: controller.isActiveTab.value,
-                  onPickedUp: () => controller.onPickedUp(item),
-                  onOpenMap: () => controller.onOpenMap(item),
-                  margin: EdgeInsets.only(bottom: Dimensions.h(16)),
-                );
-              },
-            )),
+            child: Obx(
+              () => ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                itemCount: controller.currentList.length,
+                itemBuilder: (context, index) {
+                  final item = controller.currentList[index];
+                  return TaskCard(
+                    item: item,
+                    isActive: controller.isActiveTab.value,
+                    onPickedUp: () => controller.onPickedUp(item),
+                    onOpenMap: () => controller.onOpenMap(item),
+                    margin: EdgeInsets.only(bottom: Dimensions.h(16)),
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -108,40 +109,44 @@ class _TaskScreenState extends State<TaskScreen> {
               Center(
                 child: SizedBox(
                   width: 500,
-                  child: Obx(() => TaskTabSwitcher(
-                    isActive: controller.isActiveTab.value,
-                    onActiveTab: () => controller.switchTab(true),
-                    onCompletedTab: () => controller.switchTab(false),
-                  )),
+                  child: Obx(
+                    () => TaskTabSwitcher(
+                      isActive: controller.isActiveTab.value,
+                      onActiveTab: () => controller.switchTab(true),
+                      onCompletedTab: () => controller.switchTab(false),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: Dimensions.h(24)),
               Expanded(
-                child: Obx(() => GridView.builder(
-                  padding: EdgeInsets.fromLTRB(
-                    Dimensions.w(24),
-                    0,
-                    Dimensions.w(24),
-                    Dimensions.h(24),
+                child: Obx(
+                  () => GridView.builder(
+                    padding: EdgeInsets.fromLTRB(
+                      Dimensions.w(24),
+                      0,
+                      Dimensions.w(24),
+                      Dimensions.h(24),
+                    ),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 550,
+                      mainAxisExtent: Dimensions.h(200),
+                      crossAxisSpacing: Dimensions.w(24),
+                      mainAxisSpacing: Dimensions.h(24),
+                    ),
+                    itemCount: controller.currentList.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.currentList[index];
+                      return TaskCard(
+                        item: item,
+                        isActive: controller.isActiveTab.value,
+                        onPickedUp: () => controller.onPickedUp(item),
+                        onOpenMap: () => controller.onOpenMap(item),
+                        margin: EdgeInsets.zero,
+                      );
+                    },
                   ),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 550,
-                    mainAxisExtent: Dimensions.h(200),
-                    crossAxisSpacing: Dimensions.w(24),
-                    mainAxisSpacing: Dimensions.h(24),
-                  ),
-                  itemCount: controller.currentList.length,
-                  itemBuilder: (context, index) {
-                    final item = controller.currentList[index];
-                    return TaskCard(
-                      item: item,
-                      isActive: controller.isActiveTab.value,
-                      onPickedUp: () => controller.onPickedUp(item),
-                      onOpenMap: () => controller.onOpenMap(item),
-                      margin: EdgeInsets.zero,
-                    );
-                  },
-                )),
+                ),
               ),
             ],
           ),

@@ -215,7 +215,7 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
               ],
             ),
           ),
-
+          //
           // ── Dynamic Bottom Buttons ────────────────────────────────
           if (!controller.isLoading.value && controller.errorMessage.value.isEmpty)
             StatusBottomActions(

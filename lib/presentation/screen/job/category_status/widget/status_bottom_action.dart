@@ -57,10 +57,10 @@ class StatusBottomActions extends StatelessWidget {
           );
 
         case RequestStatus.pending:
-          // "Accept" button for pending status
+          // Send request button for pending status
           return _TealButton(
-            label: AppStrings.accept.tr,
-            onTap: onAcceptPending ?? () {},
+            label: AppStrings.sendRequest.tr,
+            onTap: onSendRequest,
           );
 
         case RequestStatus.sent:
