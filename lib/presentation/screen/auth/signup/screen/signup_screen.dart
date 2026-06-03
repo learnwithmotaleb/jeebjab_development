@@ -109,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
             borderRadius: Dimensions.r(16),
             isLoading: controller.isLoading.value,
             onPressed: () {
-              controller.selectCustomer().then((_) => controller.submit());
+              controller.selectUser().then((_) => controller.submit());
             },
           )),
 

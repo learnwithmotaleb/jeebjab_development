@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jeebjab/helper/local_db/local_db.dart';
 import 'package:jeebjab/helper/local_db/role_selection_controller.dart';
 import '../../../../../global/language/controller/language_controller.dart';
 
@@ -71,8 +72,8 @@ class SignupController extends GetxController {
     return isValid;
   }
 
-  Future<void> selectCustomer() async {
-    await role.selectRole(AppRole.CUSTOMER);
+  Future<void> selectUser() async {
+    await role.selectRole(AppRole.USER);
   }
 
   void selectDriver() async {

@@ -15,7 +15,7 @@ class AppNavigator {
 
     if (role == AppRole.DRIVER) {
       Get.offAllNamed(RoutePath.driverBottomNav);
-    } else if (role == AppRole.CUSTOMER) {
+    } else if (role == AppRole.USER) {
       Get.offAllNamed(RoutePath.bottomNav);
     } else {
       Get.offAllNamed(RoutePath.login);
@@ -31,7 +31,7 @@ class AppNavigator {
 
       if (role == AppRole.DRIVER) {
         Get.offAllNamed(RoutePath.driverBottomNav);
-      } else if (role == AppRole.CUSTOMER) {
+      } else if (role == AppRole.USER) {
         Get.offAllNamed(RoutePath.bottomNav);
       } else {
         Get.offAllNamed(RoutePath.selectRole);

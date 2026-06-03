@@ -1,4 +1,4 @@
 enum AppRole {
-  CUSTOMER,
+  USER,
   DRIVER,
 }

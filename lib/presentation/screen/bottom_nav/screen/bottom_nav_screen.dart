@@ -42,7 +42,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   Widget _getJobPage() {
     final role = SharePrefsHelper.getRole();
-    if (role == AppRole.CUSTOMER) {
+    if (role == AppRole.USER) {
       return CustomerJobPostScreen();
     } else if (role == AppRole.DRIVER) {
       return const JobPostScreen();

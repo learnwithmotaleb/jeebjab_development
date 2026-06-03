@@ -66,19 +66,19 @@ class _SelectRoleScreenState extends State<SelectRoleScreen> {
 
 
                   Obx(() => AppButton(
-                    label: "Customer",
+                    label: "user",
                     backgroundColor:
-                    controller.selectedRole.value == AppRole.CUSTOMER
+                    controller.selectedRole.value == AppRole.USER
                         ? AppColors.secondaryColor
                         : AppColors.primaryColor,
                     textColor:
-                    controller.selectedRole.value == AppRole.CUSTOMER
+                    controller.selectedRole.value == AppRole.USER
                         ? AppColors.primaryColor
                         : AppColors.whiteColor,
                     height: Dimensions.h(55),
                     borderSideColor: AppColors.whiteColor,
                     borderRadius: Dimensions.r(16),
-                    onPressed: () => controller.selectRole(AppRole.CUSTOMER),
+                    onPressed: () => controller.selectRole(AppRole.USER),
                   )),
 
                   SizedBox(height: Dimensions.h(20)),

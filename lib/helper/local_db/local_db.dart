@@ -64,7 +64,7 @@ class SharePrefsHelper {
 
     return AppRole.values.firstWhere(
           (e) => e.name == value,
-      orElse: () => AppRole.CUSTOMER,
+      orElse: () => AppRole.USER,
     );
   }
 

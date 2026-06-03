@@ -22,7 +22,13 @@ class LoginController extends GetxController {
 
   final ApiClient apiClient = ApiClient();
   var isLoading = false.obs;
+  @override
+  void onInit() {
+    super.onInit();
 
+    emailController.text = "soniaai@yopmail.com";
+    passwordController.text = "123456MMmm..";
+  }
   @override
   void onClose() {
     emailController.dispose();
@@ -76,8 +82,8 @@ class LoginController extends GetxController {
               final roleStr = authId['role'];
               if (roleStr != null) {
                 if (roleStr.toString().toUpperCase() == 'USER' ||
-                    roleStr.toString().toUpperCase() == 'CUSTOMER') {
-                  await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+                    roleStr.toString().toUpperCase() == 'USER') {
+                  await SharePrefsHelper.saveRole(AppRole.USER);
                 } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
                   await SharePrefsHelper.saveRole(AppRole.DRIVER);
                 }
@@ -93,10 +99,10 @@ class LoginController extends GetxController {
           title: "Success",
         );
 
-        if (role == AppRole.CUSTOMER) {
+        if (role == AppRole.USER) {
           Get.offAllNamed(RoutePath.bottomNav);
         } else if (role == AppRole.DRIVER) {
-          Get.offAllNamed(RoutePath.bottomNav);
+          Get.offAllNamed(RoutePath.driverBottomNav);
         } else {
           Get.offAllNamed(RoutePath.signup);
         }
@@ -148,7 +154,7 @@ class LoginController extends GetxController {
       if (idToken != null) {
         await SharePrefsHelper.saveToken(idToken);
         await SharePrefsHelper.saveFcmToken(idToken);
-        await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+        await SharePrefsHelper.saveRole(AppRole.USER);
         
         debugPrint("========= FIREBASE GOOGLE LOGIN ID TOKEN =========");
         debugPrint(idToken);
@@ -235,9 +241,8 @@ class LoginController extends GetxController {
             if (authId != null) {
               final roleStr = authId['role'];
               if (roleStr != null) {
-                if (roleStr.toString().toUpperCase() == 'USER' ||
-                    roleStr.toString().toUpperCase() == 'CUSTOMER') {
-                  await SharePrefsHelper.saveRole(AppRole.CUSTOMER);
+                if (roleStr.toString().toUpperCase() == 'USER') {
+                  await SharePrefsHelper.saveRole(AppRole.USER);
                 } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
                   await SharePrefsHelper.saveRole(AppRole.DRIVER);
                 }
@@ -249,10 +254,10 @@ class LoginController extends GetxController {
         final role = SharePrefsHelper.getRole();
         AppSnackBar.success("Logged in successfully", title: "Success");
 
-        if (role == AppRole.CUSTOMER) {
+        if (role == AppRole.USER) {
           Get.offAllNamed(RoutePath.bottomNav);
         } else if (role == AppRole.DRIVER) {
-          Get.offAllNamed(RoutePath.bottomNav);
+          Get.offAllNamed(RoutePath.driverBottomNav);
         } else {
           Get.offAllNamed(RoutePath.signup);
         }
