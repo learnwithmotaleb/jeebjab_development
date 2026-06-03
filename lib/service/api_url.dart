@@ -57,7 +57,9 @@ class ApiUrl {
   static String postSendJobRequest(String id) => '$baseUrl/driver/jobs/$id/request';
   static String deleteCancelJobRequest(String id) => '$baseUrl/driver/jobs/$id/request';
 
-  static final getTask ="$baseUrl/driver/tasks";
+  static final getActiveTasks = "$baseUrl/driver/tasks?status=active";
+  static final getCompletedTasks = "$baseUrl/driver/tasks?status=completed";
+  static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
 
   //

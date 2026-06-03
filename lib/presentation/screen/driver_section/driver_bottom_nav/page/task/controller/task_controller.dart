@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
-
 import '../../../../../../../core/routes/route_path.dart';
+import '../../../../../../../service/api_service.dart';
+import '../../../../../../../service/api_url.dart';
+import '../model/DriverTaskModel.dart';
 
 class TaskItem {
   final String title;
   final String subtitle;
   final String address;
   final double price;
-  final String categoryIcon; // 'move', 'recycle', 'gift'
+  final String categoryIcon; // e.g., 'move', 'recycle', 'gift'
 
   TaskItem({
     required this.title,
@@ -19,69 +21,90 @@ class TaskItem {
 }
 
 class TaskController extends GetxController {
+  // Tab state
   final RxBool isActiveTab = true.obs;
+  // Loading indicator
+  final RxBool isLoading = true.obs;
 
-  // ── Active Posts ──────────────────────────────────────────────────────────
-  final List<TaskItem> activePosts = [
-    TaskItem(
-      title: 'Dior Red Coat',
-      subtitle: 'Cristian Dior',
-      address: 'Level Shoes District, Dubai Mall',
-      price: 148,
-      categoryIcon: 'move',
-    ),
-    TaskItem(
-      title: 'Ducati Bike',
-      subtitle: 'Cristian Dior',
-      address: 'Abu Dhabi - 2612, Level 2 - Door 6',
-      price: 148,
-      categoryIcon: 'move',
-    ),
-    TaskItem(
-      title: 'Plastic & Papers',
-      subtitle: 'Cristian Dior',
-      address: 'Level Shoes District, Dubai Mall',
-      price: 148,
-      categoryIcon: 'recycle',
-    ),
-  ];
+  // Reactive task lists
+  final RxList<TaskItem> activePosts = <TaskItem>[].obs;
+  final RxList<TaskItem> completedPosts = <TaskItem>[].obs;
 
-  // ── Completed Posts ───────────────────────────────────────────────────────
-  final List<TaskItem> completedPosts = [
-    TaskItem(
-      title: 'Dior Red Coat',
-      subtitle: 'Aqua Tower',
-      address: 'Abu Dhabi - 2612, Level 2 - Door 6',
-      price: 148,
-      categoryIcon: 'move',
-    ),
-    TaskItem(
-      title: 'Ducati Bike',
-      subtitle: 'Cristian Dior',
-      address: 'Abu Dhabi - 2612, Level 2 - Door 6',
-      price: 148,
-      categoryIcon: 'move',
-    ),
-    TaskItem(
-      title: 'Plastic & Papers',
-      subtitle: 'Cristian Dior',
-      address: 'Level Shoes District, Dubai Mall',
-      price: 148,
-      categoryIcon: 'recycle',
-    ),
-  ];
-
-  List<TaskItem> get currentList =>
+  // Current list getter used by UI
+  RxList<TaskItem> get currentList =>
       isActiveTab.value ? activePosts : completedPosts;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Load tasks from API when controller is created
+    fetchActiveTasks();
+    fetchCompletedTasks();
+  }
 
   void switchTab(bool active) => isActiveTab.value = active;
 
-  void onPickedUp(TaskItem item) {
-    // TODO: handle picked up
+  // ---------------------------------------------------------------------
+  // API fetching helpers
+  // ---------------------------------------------------------------------
+  Future<void> fetchActiveTasks() async {
+    isLoading.value = true;
+    final response = await ApiClient().get(
+      url: ApiUrl.getActiveTasks,
+      isToken: true,
+    );
+    if (response.statusCode == 200) {
+      final model = DriverTaskModel.fromJson(response.body);
+      final tasks = model.data?.tasks ?? [];
+      activePosts.assignAll(
+        tasks.map(
+          (t) => TaskItem(
+            title: t.title ?? '',
+            subtitle: t.description ?? '',
+            address: t.pickup?.address?.text ?? '',
+            price: (t.price ?? 0).toDouble(),
+            categoryIcon: t.type ?? '',
+          ),
+        ),
+      );
+    } else {
+      // Handle error – keep list empty or show a toast as needed
+    }
+    isLoading.value = false;
   }
 
+  Future<void> fetchCompletedTasks() async {
+    isLoading.value = true;
+    final response = await ApiClient().get(
+      url: ApiUrl.getCompletedTasks,
+      isToken: true,
+    );
+    if (response.statusCode == 200) {
+      final model = DriverTaskModel.fromJson(response.body);
+      final tasks = model.data?.tasks ?? [];
+      completedPosts.assignAll(
+        tasks.map(
+          (t) => TaskItem(
+            title: t.title ?? '',
+            subtitle: t.description ?? '',
+            address: t.pickup?.address?.text ?? '',
+            price: (t.price ?? 0).toDouble(),
+            categoryIcon: t.type ?? '',
+          ),
+        ),
+      );
+    } else {
+      // Handle error – keep list empty or show a toast as needed
+    }
+    isLoading.value = false;
+  }
 
-
+  // ---------------------------------------------------------------------
+  // UI callbacks
+  // ---------------------------------------------------------------------
+  void onPickedUp(TaskItem item) {
+    // TODO: implement pick‑up logic (e.g., send status update to server)
+  }
 
   void onOpenMap(TaskItem item) {
     Get.toNamed(RoutePath.postDetails, arguments: {'task': item});

@@ -96,7 +96,7 @@ class LoginController extends GetxController {
         if (role == AppRole.CUSTOMER) {
           Get.offAllNamed(RoutePath.bottomNav);
         } else if (role == AppRole.DRIVER) {
-          Get.offAllNamed(RoutePath.driverBottomNav);
+          Get.offAllNamed(RoutePath.bottomNav);
         } else {
           Get.offAllNamed(RoutePath.signup);
         }
@@ -252,7 +252,7 @@ class LoginController extends GetxController {
         if (role == AppRole.CUSTOMER) {
           Get.offAllNamed(RoutePath.bottomNav);
         } else if (role == AppRole.DRIVER) {
-          Get.offAllNamed(RoutePath.driverBottomNav);
+          Get.offAllNamed(RoutePath.bottomNav);
         } else {
           Get.offAllNamed(RoutePath.signup);
         }

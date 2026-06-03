@@ -6,6 +6,7 @@ import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
+import '../../../../../../../widget/app_loading.dart';
 import '../controller/task_controller.dart';
 import '../widget/task_card_widget.dart';
 import '../widget/task_tab_switcher_widget.dart';
@@ -48,21 +49,36 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           SizedBox(height: Dimensions.h(16)),
           Expanded(
-            child: Obx(
-              () => ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-                itemCount: controller.currentList.length,
-                itemBuilder: (context, index) {
-                  final item = controller.currentList[index];
-                  return TaskCard(
-                    item: item,
-                    isActive: controller.isActiveTab.value,
-                    onPickedUp: () => controller.onPickedUp(item),
-                    onOpenMap: () => controller.onOpenMap(item),
-                    margin: EdgeInsets.only(bottom: Dimensions.h(16)),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                if (controller.isActiveTab.value) {
+                  await controller.fetchActiveTasks();
+                } else {
+                  await controller.fetchCompletedTasks();
+                }
+              },
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const AppLoading(message: 'Loading tasks...');
+                } else if (controller.currentList.isEmpty) {
+                  return const Center(child: Text('No tasks available'));
+                } else {
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                    itemCount: controller.currentList.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.currentList[index];
+                      return TaskCard(
+                        item: item,
+                        isActive: controller.isActiveTab.value,
+                        onPickedUp: () => controller.onPickedUp(item),
+                        onOpenMap: () => controller.onOpenMap(item),
+                        margin: EdgeInsets.only(bottom: Dimensions.h(16)),
+                      );
+                    },
                   );
-                },
-              ),
+                }
+              }),
             ),
           ),
         ],
@@ -120,32 +136,47 @@ class _TaskScreenState extends State<TaskScreen> {
               ),
               SizedBox(height: Dimensions.h(24)),
               Expanded(
-                child: Obx(
-                  () => GridView.builder(
-                    padding: EdgeInsets.fromLTRB(
-                      Dimensions.w(24),
-                      0,
-                      Dimensions.w(24),
-                      Dimensions.h(24),
-                    ),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 550,
-                      mainAxisExtent: Dimensions.h(200),
-                      crossAxisSpacing: Dimensions.w(24),
-                      mainAxisSpacing: Dimensions.h(24),
-                    ),
-                    itemCount: controller.currentList.length,
-                    itemBuilder: (context, index) {
-                      final item = controller.currentList[index];
-                      return TaskCard(
-                        item: item,
-                        isActive: controller.isActiveTab.value,
-                        onPickedUp: () => controller.onPickedUp(item),
-                        onOpenMap: () => controller.onOpenMap(item),
-                        margin: EdgeInsets.zero,
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    if (controller.isActiveTab.value) {
+                      await controller.fetchActiveTasks();
+                    } else {
+                      await controller.fetchCompletedTasks();
+                    }
+                  },
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const AppLoading(message: 'Loading tasks...');
+                    } else if (controller.currentList.isEmpty) {
+                      return const Center(child: Text('No tasks available'));
+                    } else {
+                      return GridView.builder(
+                        padding: EdgeInsets.fromLTRB(
+                          Dimensions.w(24),
+                          0,
+                          Dimensions.w(24),
+                          Dimensions.h(24),
+                        ),
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 550,
+                          mainAxisExtent: Dimensions.h(200),
+                          crossAxisSpacing: Dimensions.w(24),
+                          mainAxisSpacing: Dimensions.h(24),
+                        ),
+                        itemCount: controller.currentList.length,
+                        itemBuilder: (context, index) {
+                          final item = controller.currentList[index];
+                          return TaskCard(
+                            item: item,
+                            isActive: controller.isActiveTab.value,
+                            onPickedUp: () => controller.onPickedUp(item),
+                            onOpenMap: () => controller.onOpenMap(item),
+                            margin: EdgeInsets.zero,
+                          );
+                        },
                       );
-                    },
-                  ),
+                    }
+                  }),
                 ),
               ),
             ],
