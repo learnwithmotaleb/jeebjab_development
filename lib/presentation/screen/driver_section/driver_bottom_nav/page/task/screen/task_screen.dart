@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
+import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task/widget/task_card_widget.dart';
+import 'package:jeebjab/presentation/screen/post_details/screen/post_details_screen.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../../../../../../../widget/app_loading.dart';
 import '../controller/task_controller.dart';
-import '../widget/task_card_widget.dart';
+import 'package:get/get.dart';
+
 import '../widget/task_tab_switcher_widget.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -73,6 +77,12 @@ class _TaskScreenState extends State<TaskScreen> {
                         isActive: controller.isActiveTab.value,
                         onPickedUp: () => controller.onPickedUp(item),
                         onOpenMap: () => controller.onOpenMap(item),
+                        onTap: () => Get.toNamed(RoutePath.taskDetailsScreen, arguments: {
+          'id': item.id,
+          'itemType': item.title,
+          'itemSubtype': item.subtitle,
+          'price': item.price,
+        }),
                         margin: EdgeInsets.only(bottom: Dimensions.h(16)),
                       );
                     },

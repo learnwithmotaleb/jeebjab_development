@@ -5,18 +5,23 @@ import '../../../../../../../service/api_url.dart';
 import '../model/DriverTaskModel.dart';
 
 class TaskItem {
+  final String id;
   final String title;
   final String subtitle;
   final String address;
   final double price;
   final String categoryIcon; // e.g., 'move', 'recycle', 'gift'
+  bool isPickedUp = false;
+
 
   TaskItem({
+    required this.id,
     required this.title,
     required this.subtitle,
     required this.address,
     required this.price,
     required this.categoryIcon,
+    this.isPickedUp = false,
   });
 }
 
@@ -59,6 +64,7 @@ class TaskController extends GetxController {
       activePosts.assignAll(
         tasks.map(
           (t) => TaskItem(
+            id: t.id ?? '',
             title: t.title ?? '',
             subtitle: t.description ?? '',
             address: t.pickup?.address?.text ?? '',
@@ -85,6 +91,7 @@ class TaskController extends GetxController {
       completedPosts.assignAll(
         tasks.map(
           (t) => TaskItem(
+            id: t.id ?? '',
             title: t.title ?? '',
             subtitle: t.description ?? '',
             address: t.pickup?.address?.text ?? '',
@@ -103,10 +110,14 @@ class TaskController extends GetxController {
   // UI callbacks
   // ---------------------------------------------------------------------
   void onPickedUp(TaskItem item) {
-    // TODO: implement pick‑up logic (e.g., send status update to server)
+    // Mark the task as picked up and refresh UI
+    item.isPickedUp = true;
+    // Trigger GetX to update observers
+    activePosts.refresh();
   }
 
   void onOpenMap(TaskItem item) {
-    Get.toNamed(RoutePath.postDetails, arguments: {'task': item});
+    // Navigate to task details screen with the task ID
+    Get.toNamed(RoutePath.taskDetailsScreen, arguments: {'id': item.id});
   }
 }

@@ -38,6 +38,8 @@ import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/con
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/driver_home/controller/driver_home_controller.dart';
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/driver_home/home/driver_home_screen.dart';
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task/controller/task_controller.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task_details/controller/task_details_controller.dart';
+import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task_details/screen/task_details_screen.dart';
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/screen/driver_bottom_nav_screen.dart';
 import 'package:jeebjab/presentation/screen/drop_off_floor/screen/drop_off_floor_screen.dart';
 import 'package:jeebjab/presentation/screen/i_will_pay/controller/i_will_pay_controller.dart';
@@ -760,6 +762,19 @@ class AppRouter {
       binding: BindingsBuilder(() {
         Get.put(AccountActiveVerificationController());
       }),
+
+
+    ),
+
+    GetPage(
+      name: RoutePath.taskDetailsScreen,
+      page: () =>  TaskDetailsScreen(),
+      transition: Transition.rightToLeft,
+
+      binding: BindingsBuilder(() {
+        Get.put(TaskDetailsController());
+      }),
+
 
     ),
 
