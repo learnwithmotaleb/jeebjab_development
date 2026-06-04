@@ -8,6 +8,7 @@ import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../controller/task_controller.dart';
 
 class TaskCard extends StatelessWidget {
+  final VoidCallback? onTap;
   final TaskItem item;
   final bool isActive;
   final VoidCallback onPickedUp;
@@ -22,6 +23,7 @@ class TaskCard extends StatelessWidget {
     required this.isActive,
     required this.onPickedUp,
     required this.onOpenMap,
+    this.onTap,
     this.isPickUpLoading = false,
     this.isOpenMapLoading = false,
     this.margin,
@@ -40,134 +42,146 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin ?? EdgeInsets.zero,
-      padding: EdgeInsets.all(Dimensions.w(16)),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(Dimensions.r(12)),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Title row ─────────────────────────────────────────────────
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(_categoryIcon,
-                    size: Dimensions.w(22), color: AppColors.labelColor),
-                SizedBox(width: Dimensions.w(10)),
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      fontSize: Dimensions.f(16),
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.labelColor,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: margin ?? EdgeInsets.zero,
+        padding: EdgeInsets.all(Dimensions.w(16)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          border: Border.all(color: const Color(0xFFEEEEEE)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Title row ─────────────────────────────────────────────────
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    _categoryIcon,
+                    size: Dimensions.w(22),
+                    color: AppColors.labelColor,
+                  ),
+                  SizedBox(width: Dimensions.w(10)),
+                  Expanded(
+                    child: Text(
+                      item.title,
+                      style: TextStyle(
+                        fontSize: Dimensions.f(16),
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.labelColor,
+                      ),
                     ),
                   ),
-                ),
-                // ── Price ─────────────────────────────────────────────────
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${AppStrings.aed.tr} ',
-                        style: TextStyle(
-                          fontSize: Dimensions.f(11),
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.labelColor,
+                  // ── Price ─────────────────────────────────────────────────
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${AppStrings.aed.tr} ',
+                          style: TextStyle(
+                            fontSize: Dimensions.f(11),
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.labelColor,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: item.price.toInt().toString(),
-                        style: TextStyle(
-                          fontSize: Dimensions.f(26),
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.labelColor,
+                        TextSpan(
+                          text: item.price.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: Dimensions.f(26),
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.labelColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-        
-            SizedBox(height: Dimensions.h(8)),
-        
-            // ── Subtitle (person name) ────────────────────────────────────
-            Row(
-              children: [
-                Icon(Icons.person_outline_rounded,
-                    size: Dimensions.w(15), color: AppColors.blackColor),
-                SizedBox(width: Dimensions.w(6)),
-                Text(
-                  item.subtitle,
-                  style: TextStyle(
-                    fontSize: Dimensions.f(13),
+                ],
+              ),
+
+              SizedBox(height: Dimensions.h(8)),
+
+              // ── Subtitle (person name) ────────────────────────────────────
+              Row(
+                children: [
+                  Icon(
+                    Icons.person_outline_rounded,
+                    size: Dimensions.w(15),
                     color: AppColors.blackColor,
                   ),
-                ),
-              ],
-            ),
-        
-            SizedBox(height: Dimensions.h(4)),
-        
-            // ── Address ───────────────────────────────────────────────────
-            Row(
-              children: [
-                Icon(Icons.location_on_outlined,
-                    size: Dimensions.w(15), color: AppColors.blackColor),
-                SizedBox(width: Dimensions.w(6)),
-                Expanded(
-                  child: Text(
-                    item.address,
+                  SizedBox(width: Dimensions.w(6)),
+                  Text(
+                    item.subtitle,
                     style: TextStyle(
                       fontSize: Dimensions.f(13),
                       color: AppColors.blackColor,
                     ),
                   ),
-                ),
-              ],
-            ),
-        
-            SizedBox(height: Dimensions.h(14)),
-        
-            // ── Action buttons ────────────────────────────────────────────
-            if (isActive)
-            // Active: Picked-Up (outlined) + Open Map (filled)
+                ],
+              ),
+
+              SizedBox(height: Dimensions.h(4)),
+
+              // ── Address ───────────────────────────────────────────────────
               Row(
                 children: [
-                  Expanded(
-                    child: _OutlineButton(
-                      label: AppStrings.pickedUp.tr,
-                      onTap: onPickedUp,
-                      isLoading: isPickUpLoading,
-                    ),
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: Dimensions.w(15),
+                    color: AppColors.blackColor,
                   ),
-                  SizedBox(width: Dimensions.w(10)),
+                  SizedBox(width: Dimensions.w(6)),
                   Expanded(
-                    child: _FilledButton(
-                      label: AppStrings.openMap.tr,
-                      onTap: onOpenMap,
-                      isLoading: isOpenMapLoading,
+                    child: Text(
+                      item.address,
+                      style: TextStyle(
+                        fontSize: Dimensions.f(13),
+                        color: AppColors.blackColor,
+                      ),
                     ),
                   ),
                 ],
-              )
-            else
-            // Completed: Delivered (full width outlined teal)
-              _DeliveredButton(),
-          ],
+              ),
+
+              SizedBox(height: Dimensions.h(14)),
+
+              // ── Action buttons ────────────────────────────────────────────
+              if (isActive)
+                // Active: Picked-Up (outlined) + Open Map (filled)
+                Row(
+                  children: [
+                    Expanded(
+                      child: _OutlineButton(
+                        label: item.isPickedUp ? AppStrings.delivery.tr : AppStrings.pickedUp.tr,
+                        onTap: onPickedUp,
+                        isLoading: isPickUpLoading,
+                      ),
+                    ),
+                    SizedBox(width: Dimensions.w(10)),
+                    Expanded(
+                      child: _FilledButton(
+                        label: AppStrings.openMap.tr,
+                        onTap: onOpenMap,
+                        isLoading: isOpenMapLoading,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                // Completed: Delivered (full width outlined teal)
+                _DeliveredButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -240,10 +254,7 @@ class _FilledButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: isLoading
-            ? SpinKitFadingFour(
-                color: Colors.white,
-                size: Dimensions.h(20),
-              )
+            ? SpinKitFadingFour(color: Colors.white, size: Dimensions.h(20))
             : Text(
                 label,
                 style: TextStyle(
