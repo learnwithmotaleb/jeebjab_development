@@ -162,80 +162,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomActions(),
     );
-  }
-
-  Widget _buildBottomActions() {
-    return Obx(() {
-      if (controller.isLoading.value || controller.errorMessage.value.isNotEmpty) {
-        return const SizedBox.shrink();
-      }
-
-      final status = controller.requestStatus.value;
-      if (status == 'none' || status == '') {
-        return Container(
-          padding: EdgeInsets.fromLTRB(16, 10, 16, 24),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: controller.onSendRequest,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00CBA9),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                AppStrings.sendRequest.tr,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        );
-      } else if (status == 'pending' || status == 'sent') {
-        return Container(
-          padding: EdgeInsets.fromLTRB(16, 10, 16, 24),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: TextButton(
-              onPressed: controller.onCancelRequest,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(color: AppColors.redColor.withOpacity(0.3)),
-                ),
-                backgroundColor: const Color(0xFFF5F5F5), // Light background to match the second screenshot roughly, or white
-              ),
-              child: Text(
-                AppStrings.cancelRequest.tr,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.redColor,
-                ),
-              ),
-            ),
-          ),
-        );
-      }
-      return const SizedBox.shrink();
-    });
   }
 
   Widget _buildTablet() {
@@ -379,7 +306,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomActions(),
     );
   }
 }

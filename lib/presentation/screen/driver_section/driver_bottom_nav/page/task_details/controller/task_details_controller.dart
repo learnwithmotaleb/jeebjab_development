@@ -40,11 +40,6 @@ class TaskDetailsController extends GetxController{
   RxDouble advertiserRating = 0.0.obs;
   RxString advertiserImage = "".obs;
 
-  // ── Request Info ──────────────────────────────────────────────────────────
-  RxString jobId = "".obs;
-  RxString requestStatus = "none".obs; // none, pending, sent, pickedUp, delivered
-
-
   @override
   void onInit() {
     super.onInit();
@@ -62,7 +57,6 @@ class TaskDetailsController extends GetxController{
       itemPrice.value = (args['price'] ?? 0).toDouble();
 
       if (id != null) {
-        jobId.value = id;
         fetchPostDetails(id);
       }
     }
@@ -145,25 +139,6 @@ class TaskDetailsController extends GetxController{
     if (data['createdAt'] != null) {
       publishedTime.value = data['createdAt'].toString().substring(0, 10);
     }
-    
-    // Request Status map
-    final statusStr = data['status'] ?? '';
-    switch (statusStr) {
-      case 'pending':
-        requestStatus.value = 'pending';
-        break;
-      case 'sent':
-        requestStatus.value = 'sent';
-        break;
-      case 'pickedUp':
-        requestStatus.value = 'pickedUp';
-        break;
-      case 'delivered':
-        requestStatus.value = 'delivered';
-        break;
-      default:
-        requestStatus.value = 'none';
-    }
   }
 
   List<String> _buildFeatures(Map<String, dynamic>? placement) {
@@ -192,62 +167,6 @@ class TaskDetailsController extends GetxController{
     // TODO: Report ad
   }
 
-  // ── Send and Cancel Request ─────────────────────────────────────────────
 
-  Future<void> onSendRequest() async {
-    if (jobId.value.isEmpty) return;
-
-    try {
-      isLoading.value = true;
-      final response = await _apiClient.post(
-        url: ApiUrl.postSendJobRequest(jobId.value),
-        isToken: true,
-      );
-
-      final body = response.body;
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        requestStatus.value = 'pending';
-        Get.snackbar('Success', body['message'] ?? 'Job request sent successfully');
-      } else if ((body['message'] ?? '').toString().contains('pending request')) {
-        requestStatus.value = 'pending';
-        Get.snackbar('Info', 'Request already sent');
-      } else {
-        errorMessage.value = body['message'] ?? 'Failed to send request';
-      }
-    } catch (e) {
-      errorMessage.value = "An error occurred: $e";
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> onCancelRequest() async {
-    if (jobId.value.isEmpty) return;
-
-    try {
-      isLoading.value = true;
-      final response = await _apiClient.delete(
-        url: ApiUrl.deleteCancelJobRequest(jobId.value),
-        isToken: true,
-      );
-
-      final body = response.body;
-
-      if (response.statusCode == 200) {
-        requestStatus.value = 'none';
-        Get.snackbar('Success', body['message'] ?? 'Request cancelled successfully');
-      } else if ((body['message'] ?? '').toString().contains('Only pending requests can be cancelled')) {
-        requestStatus.value = 'none';
-        Get.snackbar('Info', 'Request already cancelled');
-      } else {
-        errorMessage.value = body['message'] ?? 'Failed to cancel request';
-      }
-    } catch (e) {
-      errorMessage.value = "An error occurred: $e";
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
 }
