@@ -1,0 +1,72 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter --quiet assemble --no-version-check --depfile C:\Users\Tanjim\StudioProjects\jeebjab\build\app\intermediates\flutter\debug/flutter_build.d --output C:\Users\Tanjim\StudioProjects\jeebjab\build\app\intermediates\flutter\debug -dTargetFile=C:\Users\Tanjim\StudioProjects\jeebjab\lib\main.dart -dTargetPlatform=android -dBuildMode=debug -dTrackWidgetCreation=true --DartDefines=Zmx1dHRlci5pbnNwZWN0b3Iuc3RydWN0dXJlZEVycm9ycz10cnVl,RkxVVFRFUl9WRVJTSU9OPTMuMzguNg==,RkxVVFRFUl9DSEFOTkVMPXN0YWJsZQ==,RkxVVFRFUl9HSVRfVVJMPWh0dHBzOi8vZ2l0aHViLmNvbS9mbHV0dGVyL2ZsdXR0ZXIuZ2l0,RkxVVFRFUl9GUkFNRVdPUktfUkVWSVNJT049OGI4NzI4Njg0OQ==,RkxVVFRFUl9FTkdJTkVfUkVWSVNJT049NzhmYzMwMTJlNA==,RkxVVFRFUl9EQVJUX1ZFUlNJT049My4xMC43 -dFlavor= -dAndroidArchs=android-arm64 -dMinSdkVersion=24 debug_android_application
+
+## exception
+
+PathAccessException: PathAccessException: Cannot open file, path = 'C:\Users\Tanjim\StudioProjects\jeebjab\.dart_tool\hooks_runner\objective_c\00016be8116c7d0aa5d06178a25285a5\stdout.txt' (OS Error: The process cannot access the file because it is being used by another process, errno = 32)
+
+```
+#0      _checkForErrorResponse (dart:io/common.dart:58:9)
+#1      _File.open.<anonymous closure> (dart:io/file_impl.dart:442:7)
+#2      _rootRunUnary (dart:async/zone.dart:1538:47)
+#3      _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+<asynchronous suspension>
+#4      _File.writeAsBytes.<anonymous closure> (dart:io/file_impl.dart:732:34)
+<asynchronous suspension>
+#5      ForwardingFile.writeAsString (package:file/src/forwarding/forwarding_file.dart:136:12)
+<asynchronous suspension>
+#6      ErrorHandlingFile.writeAsString.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:238:9)
+<asynchronous suspension>
+#7      _run (package:flutter_tools/src/base/error_handling_io.dart:514:12)
+<asynchronous suspension>
+#8      NativeAssetsBuildRunner._createFileStreamingLogger.<anonymous closure> (package:hooks_runner/src/build_runner/build_runner.dart:686:11)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 3.38.6, on Microsoft Windows [Version 10.0.26200.8246], locale en-US) [465ms]
+    • Flutter version 3.38.6 on channel stable at C:\flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 8b87286849 (4 months ago), 2026-01-08 10:49:17 -0800
+    • Engine revision 78fc3012e4
+    • Dart version 3.10.7
+    • DevTools version 2.51.1
+    • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, omit-legacy-version-file, enable-lldb-debugging
+
+[✓] Windows Version (11 Pro 64-bit, 25H2, 2009) [8.1s]
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 36.1.0) [4.9s]
+    • Android SDK at C:\Users\Tanjim\AppData\Local\Android\sdk
+    • Emulator version 36.5.10.0 (build_id 15081367) (CL:N/A)
+    • Platform android-36, build-tools 36.1.0
+    • Java binary at: C:\Program Files\Java\jdk-21\bin\java
+      This JDK is specified in your Flutter configuration.
+      To change the current JDK, run: `flutter config --jdk-dir="path/to/jdk"`.
+    • Java version Java(TM) SE Runtime Environment (build 21.0.9+7-LTS-338)
+    • All Android licenses accepted.
+
+[✓] Chrome - develop for the web [13ms]
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[✗] Visual Studio - develop Windows apps [11ms]
+    ✗ Visual Studio not installed; this is necessary to develop Windows apps.
+      Download at https://visualstudio.microsoft.com/downloads/.
+      Please install the "Desktop development with C++" workload, including all of its default components
+
+[✓] Connected device (4 available) [1,407ms]
+    • RMX3930 (mobile)  • 0B04810X20000934 • android-arm64  • Android 15 (API 35)
+    • Windows (desktop) • windows          • windows-x64    • Microsoft Windows [Version 10.0.26200.8246]
+    • Chrome (web)      • chrome           • web-javascript • Google Chrome 147.0.7727.138
+    • Edge (web)        • edge             • web-javascript • Microsoft Edge 147.0.3912.98
+
+[✓] Network resources [2.5s]
+    • All expected network resources are available.
+
+! Doctor found issues in 1 category.
+```
