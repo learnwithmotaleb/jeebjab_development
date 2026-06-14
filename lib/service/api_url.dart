@@ -7,7 +7,8 @@ class ApiUrl {
   // 🔧 Switch domain here only — everything else updates automatically
   // static const String _mainDomain = "http://10.10.20.52:5001";
   // static const String _mainDomain = "http://10.10.20.52:5001";
-  static const String _mainDomain = "http://51.21.196.205";
+  // static const String _mainDomain = "http://51.21.196.205";
+  static const String _mainDomain = "http://10.10.20.52:5002";
 
   static final String baseUrl = _mainDomain;
 
