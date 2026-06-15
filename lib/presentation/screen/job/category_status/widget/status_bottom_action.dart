@@ -25,7 +25,7 @@ class StatusBottomActions extends StatelessWidget {
         border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
       ),
       child: Obx(() {
-        // ── Loading state ──────────────────────────────────────────────────
+        // Loading → spinner দেখাও, button disable
         if (controller.isLoading.value) {
           return SizedBox(
             height: Dimensions.h(52),
@@ -35,28 +35,20 @@ class StatusBottomActions extends StatelessWidget {
           );
         }
 
-        // ── API-driven toggle ──────────────────────────────────────────────
-        // hasActiveRequest == true  → driver already sent request → show Cancel
-        // hasActiveRequest == false → no active request           → show Send
-        if (controller.hasActiveRequest.value) {
-          return _CancelButton(onTap: controller.onCancelRequest);
-        } else {
-          return _TealButton(
-            label: AppStrings.sendRequest.tr,
-            onTap: controller.onSendRequest,
-          );
-        }
+        // hasActiveRequest true  → Cancel Request (outlined red)
+        // hasActiveRequest false → Send Request (filled teal)
+        return controller.hasActiveRequest.value
+            ? _CancelButton(onTap: controller.onCancelRequest)
+            : _SendButton(onTap: controller.onSendRequest);
       }),
     );
   }
 }
 
-// ── Full teal button ──────────────────────────────────────────────────────────
-class _TealButton extends StatelessWidget {
-  final String label;
+// ── Send Request — filled teal ────────────────────────────────────────────────
+class _SendButton extends StatelessWidget {
   final VoidCallback onTap;
-
-  const _TealButton({required this.label, required this.onTap});
+  const _SendButton({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +65,7 @@ class _TealButton extends StatelessWidget {
           elevation: 0,
         ),
         child: Text(
-          label,
+          AppStrings.sendRequest.tr,
           style: TextStyle(
             fontSize: Dimensions.f(15),
             fontWeight: FontWeight.w700,
@@ -85,23 +77,22 @@ class _TealButton extends StatelessWidget {
   }
 }
 
-// ── Red cancel text button ────────────────────────────────────────────────────
+// ── Cancel Request — outlined red ─────────────────────────────────────────────
 class _CancelButton extends StatelessWidget {
   final VoidCallback onTap;
-
   const _CancelButton({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: TextButton(
+      child: OutlinedButton(
         onPressed: onTap,
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: Dimensions.h(16)),
+          side: BorderSide(color: AppColors.redColor, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Dimensions.r(30)),
-            side: BorderSide(color: AppColors.redColor.withValues(alpha: 0.3)),
           ),
         ),
         child: Text(
