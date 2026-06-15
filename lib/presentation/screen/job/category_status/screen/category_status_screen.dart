@@ -225,15 +225,9 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
             if (!controller.isLoading.value &&
                 controller.errorMessage.value.isEmpty)
               StatusBottomActions(
-                category: controller.category.value,
                 status: controller.requestStatus.value,
                 onSendRequest: controller.onSendRequest,
                 onCancelRequest: controller.onCancelRequest,
-                onPickedUp: controller.onPickedUp,
-                onDelivery: controller.onDelivery,
-                onOpenMap: controller.isMove
-                    ? controller.onOpenDeliveryMap
-                    : controller.onOpenPickupMap,
               ),
           ],
         ),
