@@ -189,7 +189,10 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
     return GestureDetector(
       onTap: () {
         if (controller.postId.value.isNotEmpty) {
-          Get.toNamed(RoutePath.postDetails, arguments: {'id': controller.postId.value});
+          Get.toNamed(
+            RoutePath.postDetails,
+            arguments: {'id': controller.postId.value},
+          );
         }
       },
       child: Container(

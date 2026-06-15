@@ -7,26 +7,7 @@ import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../controller/category_status_controller.dart';
 
 class StatusBottomActions extends StatelessWidget {
-  final PostCategory category;
-  final RequestStatus status;
-  final VoidCallback onSendRequest;
-  final VoidCallback onCancelRequest;
-  final VoidCallback? onAcceptPending;
-  final VoidCallback onPickedUp;
-  final VoidCallback onDelivery;
-  final VoidCallback onOpenMap;
-
-  const StatusBottomActions({
-    super.key,
-    required this.category,
-    required this.status,
-    required this.onSendRequest,
-    required this.onCancelRequest,
-    required this.onPickedUp,
-    required this.onDelivery,
-    required this.onOpenMap,
-    this.onAcceptPending,
-  });
+  const StatusBottomActions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +27,21 @@ class StatusBottomActions extends StatelessWidget {
   }
 
   Widget _buildButtons() {
-    if (status == RequestStatus.sent || status == RequestStatus.pending) {
-      // Cancel request – red text button
-      return _CancelButton(onTap: onCancelRequest);
-    } else {
-      // Send request – teal filled button
-      return _TealButton(label: AppStrings.sendRequest.tr, onTap: onSendRequest);
-    }
+    final controller = Get.find<CategoryStatusController>();
+
+    return Obx(() {
+      final status = controller.requestStatus.value;
+      if (status == RequestStatus.sent || status == RequestStatus.pending) {
+        // Cancel request – red text button
+        return _CancelButton(onTap: controller.onCancelRequest);
+      } else {
+        // Send request – teal filled button
+        return _TealButton(
+          label: AppStrings.sendRequest.tr,
+          onTap: controller.onSendRequest,
+        );
+      }
+    });
   }
 }
 
