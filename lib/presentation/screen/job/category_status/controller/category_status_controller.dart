@@ -17,9 +17,8 @@ enum PostCategory { move, recycle, buyForMe, giveAway }
 enum RequestStatus { none, pending, sent, pickedUp, delivered }
 
 // SharedPrefs additional keys for request handling
-extension SharePrefsKeysExtension on SharePrefsKeys {
-  static const String jobRequestPostId = 'job_request_post_id';
-}
+// Extension removed since we no longer save job request status locally
+
 
 class CategoryStatusController extends GetxController {
   final ApiClient _apiClient = ApiClient();
@@ -71,7 +70,6 @@ class CategoryStatusController extends GetxController {
   void onInit() {
     super.onInit();
     _initFeatures();
-    loadSavedRequest();
     _loadArguments();
   }
 
@@ -318,8 +316,6 @@ class CategoryStatusController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         requestStatus.value = RequestStatus.pending;
-        // Persist request status
-        _saveRequest(jobId.value, RequestStatus.pending);
 
         Get.snackbar('Success', body['message'] ?? 'Request sent successfully');
 
@@ -367,8 +363,6 @@ class CategoryStatusController extends GetxController {
 
       if (response.statusCode == 200) {
         requestStatus.value = RequestStatus.none;
-        // Clear persisted request status
-        _saveRequest(jobId.value, RequestStatus.none);
 
         Get.snackbar(
           'Success',
@@ -395,37 +389,7 @@ class CategoryStatusController extends GetxController {
     }
   }
 
-  // Save request details to SharedPreferences
-  Future<void> _saveRequest(String jobId, RequestStatus status) async {
-    await SharePrefsHelper.setString(SharePrefsKeys.jobRequestPostId, jobId);
-    await SharePrefsHelper.setString(
-      SharePrefsKeys.jobRequestStatus,
-      status.name,
-    );
-    log.i('Saved request jobId $jobId with status ${status.name}');
-  }
 
-  // Load persisted request status on controller init
-  void loadSavedRequest() async {
-    final savedJobId = await SharePrefsHelper.getString(
-      SharePrefsKeys.jobRequestPostId,
-    );
-    final savedStatusStr = await SharePrefsHelper.getString(
-      SharePrefsKeys.jobRequestStatus,
-    );
-    if (savedJobId != null && savedJobId.isNotEmpty) {
-      jobId.value = savedJobId;
-      if (savedStatusStr != null) {
-        try {
-          requestStatus.value = RequestStatus.values.firstWhere(
-            (e) => e.name == savedStatusStr,
-          );
-        } catch (_) {
-          requestStatus.value = RequestStatus.none;
-        }
-      }
-    }
-  }
 
   void onPickedUp() {
     if (isMove) {
