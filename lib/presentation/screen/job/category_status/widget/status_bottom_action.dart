@@ -46,68 +46,13 @@ class StatusBottomActions extends StatelessWidget {
   }
 
   Widget _buildButtons() {
-    // Helper to render send or cancel button based on request status
-    Widget _sendCancelButton() {
-      if (status == RequestStatus.sent || status == RequestStatus.pending) {
-        // Cancel request – red text button
-        return _CancelButton(onTap: onCancelRequest);
-      } else {
-        // Send request – teal filled button
-        return _TealButton(label: AppStrings.sendRequest.tr, onTap: onSendRequest);
-      }
+    if (status == RequestStatus.sent || status == RequestStatus.pending) {
+      // Cancel request – red text button
+      return _CancelButton(onTap: onCancelRequest);
+    } else {
+      // Send request – teal filled button
+      return _TealButton(label: AppStrings.sendRequest.tr, onTap: onSendRequest);
     }
-
-    // ── MOVE ──────────────────────────────────────────────────────────────
-    if (category == PostCategory.move) {
-      switch (status) {
-        case RequestStatus.none:
-        case RequestStatus.pending:
-        case RequestStatus.sent:
-          return _sendCancelButton();
-        case RequestStatus.pickedUp:
-          return _TwoButtons(
-            leftLabel: AppStrings.pickedUpLabel.tr,
-            leftOutlined: true,
-            onLeftTap: onPickedUp,
-            rightLabel: AppStrings.openMap.tr,
-            onRightTap: onOpenMap,
-          );
-        case RequestStatus.delivered:
-          return _TwoButtons(
-            leftLabel: AppStrings.delivery.tr,
-            leftOutlined: true,
-            onLeftTap: onDelivery,
-            rightLabel: AppStrings.openMap.tr,
-            onRightTap: onOpenMap,
-          );
-      }
-    }
-
-    // ── RECYCLE ───────────────────────────────────────────────────────────
-    if (category == PostCategory.recycle) {
-      switch (status) {
-        case RequestStatus.none:
-        case RequestStatus.sent:
-          return _sendCancelButton();
-        case RequestStatus.pickedUp:
-        case RequestStatus.delivered:
-          return _TwoButtons(
-            leftLabel: AppStrings.pickedUp.tr,
-            leftOutlined: true,
-            onLeftTap: onPickedUp,
-            rightLabel: AppStrings.openMap.tr,
-            onRightTap: onOpenMap,
-          );
-        case RequestStatus.pending:
-          // treat pending same as none for now
-          return _sendCancelButton();
-      }
-    }
-
-
-    // ── Default (Buy For Me / Give Away) ──────────────────────────────────
-    // Default fallback – send request button
-    return _TealButton(label: AppStrings.sendRequest.tr, onTap: onSendRequest);
   }
 }
 
