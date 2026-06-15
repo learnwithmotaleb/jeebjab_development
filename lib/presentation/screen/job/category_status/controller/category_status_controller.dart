@@ -1,36 +1,31 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
-import 'package:jeebjab/helper/local_db/shareprefs_helper.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
 import 'package:jeebjab/service/api_service.dart';
 import 'package:jeebjab/service/api_url.dart';
-import 'package:jeebjab/helper/local_db/local_db.dart';
 
 // ── Category types ─────────────────────────────────────────────────────────
 enum PostCategory { move, recycle, buyForMe, giveAway }
 
-// ── Request status flow ────────────────────────────────────────────────────
-// Move:    none → sent → pickedUp → delivered
-// Recycle: none → sent → pickedUp
-enum RequestStatus { none, pending, sent, pickedUp, delivered }
-
-// SharedPrefs additional keys for request handling
-// Extension removed since we no longer save job request status locally
-
 class CategoryStatusController extends GetxController {
   final ApiClient _apiClient = ApiClient();
+
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // ── Category & Status ─────────────────────────────────────────────────────
+  // ── API-driven button state ───────────────────────────────────────────────
+  // true  → user already sent a request  → show "Cancel Request"
+  // false → no active request            → show "Send Request"
+  final RxBool hasActiveRequest = false.obs;
+
+  // ── Category ──────────────────────────────────────────────────────────────
   final Rx<PostCategory> category = PostCategory.move.obs;
-  final Rx<RequestStatus> requestStatus = RequestStatus.none.obs;
 
   // ── Item Info ─────────────────────────────────────────────────────────────
   RxString itemType = AppStrings.move.obs;
-  RxString itemSubtype = 'Ducati Bike'.obs; // dynamic/user data
+  RxString itemSubtype = 'Ducati Bike'.obs;
   RxString publishedTime = AppStrings.publishedHoursAgo.obs;
   RxDouble itemPrice = 85.0.obs;
 
@@ -46,19 +41,20 @@ class CategoryStatusController extends GetxController {
   ].obs;
 
   // ── Pick-Up Info ──────────────────────────────────────────────────────────
-  RxString pickupAddress = 'Abu Dhabi - 23052, Level 2, Door 6'.obs; // dynamic
+  RxString pickupAddress = 'Abu Dhabi - 23052, Level 2, Door 6'.obs;
   RxList<String> pickupFeatures = <String>[].obs;
 
   // ── Delivery Info (Move only) ─────────────────────────────────────────────
-  RxString deliveryAddress = 'Abu Dhabi - 23052'.obs; // dynamic
+  RxString deliveryAddress = 'Abu Dhabi - 23052'.obs;
   RxList<String> deliveryFeatures = <String>[].obs;
 
   // ── Advertiser Info ───────────────────────────────────────────────────────
-  RxString advertiserName = 'Faris Shafi'.obs; // dynamic
+  RxString advertiserName = 'Faris Shafi'.obs;
   RxDouble advertiserRating = 4.7.obs;
   RxString advertiserImage =
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200'.obs;
-  // Store the job ID for send/cancel requests
+
+  // ── Job ID ────────────────────────────────────────────────────────────────
   final RxString jobId = ''.obs;
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -90,13 +86,11 @@ class CategoryStatusController extends GetxController {
     final String? id = args['id'];
 
     if (id != null && id.isNotEmpty) {
-      // Prefer server data but ensure we have jobId set
-      jobId.value = id; // store job ID for later API calls
+      jobId.value = id;
       fetchPostDetails(id);
       return;
     }
 
-    // Category
     final cat = args['category'] ?? 'move';
     if (cat == 'recycle') {
       category.value = PostCategory.recycle;
@@ -124,6 +118,7 @@ class CategoryStatusController extends GetxController {
     }
   }
 
+  // ── Fetch post details + check driver's request status ───────────────────
   Future<void> fetchPostDetails(String id) async {
     try {
       isLoading.value = true;
@@ -135,111 +130,96 @@ class CategoryStatusController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        final data = response.body['data'];
-
-        // Default to none — _fetchDriverJobStatus() will correct it
-        requestStatus.value = RequestStatus.none;
-
-        _mapPostData(data);
-
-        // Check if this driver already has a pending request for this job
+        _mapPostData(response.body['data']);
+        // After loading the post, check if driver has a pending request
         await _fetchDriverJobStatus(id);
       } else {
         errorMessage.value =
-            response.statusText ?? "Failed to load post details";
+            response.statusText ?? 'Failed to load post details';
       }
     } catch (e) {
-      errorMessage.value = "An error occurred: $e";
+      errorMessage.value = 'An error occurred: $e';
       debugPrint('❌ fetchPostDetails exception: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // ── Check driver-specific request status for this job ───────────────────
+  // ── Check driver-specific request status via API ─────────────────────────
+  // We call the send endpoint; if the server says "already have pending request"
+  // it means the driver already sent one → show Cancel button.
+  // Any other non-200 response means no active request → show Send button.
   Future<void> _fetchDriverJobStatus(String id) async {
     try {
       final response = await _apiClient.post(
         url: ApiUrl.postSendJobRequest(id),
         isToken: true,
       );
-      final body = response.body;
-      final msg = (body['message'] ?? '').toString();
+
+      final msg = (response.body['message'] ?? '').toString().toLowerCase();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Request just sent successfully (edge case — shouldn't normally happen here)
-        requestStatus.value = RequestStatus.pending;
-        log.i('Request sent on status check (unexpected)');
-      } else if (msg.contains('pending request') || msg.contains('already have')) {
-        // Driver already has a pending request
-        requestStatus.value = RequestStatus.pending;
-        log.i('Driver already has a pending request for this job');
+        // Server accepted → request just sent (rare edge case on status check)
+        hasActiveRequest.value = true;
+      } else if (msg.contains('pending') || msg.contains('already')) {
+        // Driver already has a pending request for this job
+        hasActiveRequest.value = true;
       } else {
-        // No pending request — keep as none
-        requestStatus.value = RequestStatus.none;
-        log.i('No pending request for this job');
+        // No active request
+        hasActiveRequest.value = false;
       }
     } catch (e) {
-      // Don’t override status on error
-      log.e('_fetchDriverJobStatus error: $e');
+      // On error keep false (show Send Request)
+      hasActiveRequest.value = false;
+      debugPrint('❌ _fetchDriverJobStatus error: $e');
     }
   }
 
+  // ── Map API response to observables ──────────────────────────────────────
   void _mapPostData(Map<String, dynamic> data) {
-    // Category mapping
     final typeStr = data['type'] ?? '';
     if (typeStr == 'recycling') {
       category.value = PostCategory.recycle;
       itemType.value = AppStrings.recycling.tr;
-
-      // For recycle, subtype is wasteType
       if (data['wasteType'] != null) {
-        if (data['wasteType'] is List) {
-          itemSubtype.value = (data['wasteType'] as List).join(', ');
-        } else if (data['wasteType'] is String) {
-          itemSubtype.value = data['wasteType'];
-        } else {
-          itemSubtype.value = AppStrings.plasticAndPaper.tr;
-        }
+        itemSubtype.value = data['wasteType'] is List
+            ? (data['wasteType'] as List).join(', ')
+            : data['wasteType'].toString();
       } else {
         itemSubtype.value = AppStrings.plasticAndPaper.tr;
       }
     } else if (typeStr == 'buy_for_me') {
       category.value = PostCategory.buyForMe;
       itemType.value = AppStrings.buyForMe.tr;
-      itemSubtype.value = data['title'] ?? "";
+      itemSubtype.value = data['title'] ?? '';
     } else if (typeStr == 'give_away') {
       category.value = PostCategory.giveAway;
       itemType.value = AppStrings.giveAway.tr;
-      itemSubtype.value = data['title'] ?? "";
+      itemSubtype.value = data['title'] ?? '';
     } else {
       category.value = PostCategory.move;
       itemType.value = AppStrings.move.tr;
-      itemSubtype.value = data['title'] ?? "";
+      itemSubtype.value = data['title'] ?? '';
     }
 
     itemPrice.value = (data['price'] ?? 0).toDouble();
     size.value =
         data['size']?.toString().capitalizeFirst ?? AppStrings.medium.tr;
 
-    // Date/Time
     final dt = data['dateTimeSlot'];
     if (dt != null) {
-      final scheduledDate = dt['scheduledDate'] ?? "";
-      final scheduledTime = dt['scheduledTime'] ?? "";
-      preferredPickupTime.value = scheduledDate != ""
-          ? "$scheduledDate, $scheduledTime"
+      final scheduledDate = dt['scheduledDate'] ?? '';
+      final scheduledTime = dt['scheduledTime'] ?? '';
+      preferredPickupTime.value = scheduledDate.isNotEmpty
+          ? '$scheduledDate, $scheduledTime'
           : dt['slotType'] ?? AppStrings.anytime.tr;
     } else {
       preferredPickupTime.value = AppStrings.anytime.tr;
     }
 
-    // Carousel Images
-    if (data['photos'] != null &&
-        (data['photos'] is List) &&
-        (data['photos'] as List).isNotEmpty) {
+    if (data['photos'] is List && (data['photos'] as List).isNotEmpty) {
       images.value = (data['photos'] as List)
-          .map((path) => ApiUrl.buildImageUrl(path.toString()))
+          .map((p) => ApiUrl.buildImageUrl(p.toString()))
           .toList();
     } else if (data['photo'] != null && data['photo'].toString().isNotEmpty) {
       images.value = [ApiUrl.buildImageUrl(data['photo'].toString())];
@@ -247,79 +227,59 @@ class CategoryStatusController extends GetxController {
       images.value = [];
     }
 
-    // Pick-Up Info
     final pickup = data['pickup'];
     if (pickup != null) {
-      pickupAddress.value = pickup['address']?['text'] ?? "";
+      pickupAddress.value = pickup['address']?['text'] ?? '';
       pickupFeatures.value = _buildFeatures(pickup['placement']);
     } else {
-      pickupAddress.value = "";
+      pickupAddress.value = '';
       pickupFeatures.value = [];
     }
 
-    // Delivery Info (Move only)
     final dropoff = data['dropoff'];
     if (dropoff != null) {
-      deliveryAddress.value = dropoff['address']?['text'] ?? "";
+      deliveryAddress.value = dropoff['address']?['text'] ?? '';
       deliveryFeatures.value = _buildFeatures(dropoff['placement']);
     } else {
-      deliveryAddress.value = "";
+      deliveryAddress.value = '';
       deliveryFeatures.value = [];
     }
 
-    // Advertiser Info
     final user = data['user'];
     if (user != null) {
-      advertiserName.value = user['name'] ?? "";
+      advertiserName.value = user['name'] ?? '';
       advertiserRating.value = (user['ratingAsAdvertiser'] ?? 0).toDouble();
-      if (user['avatar'] != null) {
-        advertiserImage.value = ApiUrl.buildImageUrl(user['avatar'].toString());
-      } else {
-        advertiserImage.value =
-            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
-      }
+      advertiserImage.value = user['avatar'] != null
+          ? ApiUrl.buildImageUrl(user['avatar'].toString())
+          : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
     } else {
-      advertiserName.value = "";
+      advertiserName.value = '';
       advertiserRating.value = 0.0;
       advertiserImage.value =
-          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200';
     }
 
-    // Published time (relative)
-    if (data['createdAt'] != null) {
-      publishedTime.value = data['createdAt'].toString().substring(0, 10);
-    } else {
-      publishedTime.value = AppStrings.publishedHoursAgo.tr;
-    }
+    publishedTime.value = data['createdAt'] != null
+        ? data['createdAt'].toString().substring(0, 10)
+        : AppStrings.publishedHoursAgo.tr;
   }
 
   List<String> _buildFeatures(Map<String, dynamic>? placement) {
     if (placement == null) return [];
-    List<String> list = [];
-    if (placement['placement'] == 'inside')
-      list.add(AppStrings.insideTheHouse.tr);
+    final list = <String>[];
+    if (placement['placement'] == 'inside') list.add(AppStrings.insideTheHouse.tr);
     if (placement['needToMeet'] == true) list.add(AppStrings.needToMeet.tr);
-    if (placement['canHelpCarry'] == true)
-      list.add(AppStrings.canHelpCarryAtDropOff.tr);
-    if (placement['fitsInElevator'] == true)
-      list.add(AppStrings.fitsInTheElevator.tr);
+    if (placement['canHelpCarry'] == true) list.add(AppStrings.canHelpCarryAtDropOff.tr);
+    if (placement['fitsInElevator'] == true) list.add(AppStrings.fitsInTheElevator.tr);
     return list;
   }
 
   // ── Button Actions ────────────────────────────────────────────────────────
 
-  // Public wrapper for send request (VoidCallback compatible)
-  void onSendRequest() {
-    log.i('Send Request button pressed');
-    _sendJobRequest();
-  }
+  void onSendRequest() => _sendJobRequest();
 
-  // Private async implementation
   Future<void> _sendJobRequest() async {
-    if (jobId.value.isEmpty) {
-      log.w('Job ID is empty');
-      return;
-    }
+    if (jobId.value.isEmpty) return;
 
     try {
       isLoading.value = true;
@@ -330,43 +290,30 @@ class CategoryStatusController extends GetxController {
       );
 
       final body = response.body;
+      final msg = (body['message'] ?? '').toString().toLowerCase();
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        requestStatus.value = RequestStatus.pending;
-
+        // ✅ Request sent → switch button to "Cancel Request"
+        hasActiveRequest.value = true;
         Get.snackbar('Success', body['message'] ?? 'Request sent successfully');
-
-        log.i('Request sent successfully');
-      }
-      // Already requested
-      else if ((body['message'] ?? '').toString().contains('pending request')) {
-        requestStatus.value = RequestStatus.pending;
-
+      } else if (msg.contains('pending') || msg.contains('already')) {
+        // Already sent → still show Cancel
+        hasActiveRequest.value = true;
         Get.snackbar('Info', 'Request already sent');
-
-        log.i('Already requested');
       } else {
         errorMessage.value = body['message'] ?? 'Failed to send request';
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      log.e(e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Public wrapper for cancel request (VoidCallback compatible)
-  void onCancelRequest() {
-    _cancelJobRequest();
-  }
+  void onCancelRequest() => _cancelJobRequest();
 
-  // Private async implementation
   Future<void> _cancelJobRequest() async {
-    if (jobId.value.isEmpty) {
-      log.w('Job ID is empty');
-      return;
-    }
+    if (jobId.value.isEmpty) return;
 
     try {
       isLoading.value = true;
@@ -377,68 +324,41 @@ class CategoryStatusController extends GetxController {
       );
 
       final body = response.body;
+      final msg = (body['message'] ?? '').toString().toLowerCase();
 
       if (response.statusCode == 200) {
-        requestStatus.value = RequestStatus.none;
-
-        Get.snackbar(
-          'Success',
-          body['message'] ?? 'Request cancelled successfully',
-        );
-
-        log.i('Request cancelled');
-      }
-      // Already cancelled
-      else if ((body['message'] ?? '').toString().contains(
-        'Only pending requests can be cancelled',
-      )) {
-        requestStatus.value = RequestStatus.none;
-
+        // ✅ Cancelled → switch button back to "Send Request"
+        hasActiveRequest.value = false;
+        Get.snackbar('Success', body['message'] ?? 'Request cancelled');
+      } else if (msg.contains('only pending')) {
+        // Already cancelled
+        hasActiveRequest.value = false;
         Get.snackbar('Info', 'Request already cancelled');
       } else {
         errorMessage.value = body['message'] ?? 'Failed to cancel request';
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      log.e(e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  void onPickedUp() {
-    if (isMove) {
-      requestStatus.value = RequestStatus.delivered;
-    } else {
-      // Recycle — done after pickup
-      requestStatus.value = RequestStatus.sent;
-    }
-  }
+  void onOpenPickupMap() => Get.toNamed(RoutePath.showMap);
+  void onOpenDeliveryMap() => Get.toNamed(RoutePath.showMap);
 
   void onDelivery() {
-    // Move only
-    requestStatus.value = RequestStatus.delivered;
-    // Get.toNamed(RoutePath.deliveryScreen);
     AppAlerts.confirm(
-      title: "Are you sure",
-      message: "Are you sure, you are picked-up?",
+      title: 'Are you sure',
+      message: 'Are you sure, you are picked-up?',
       onConfirm: () {
         AppAlerts.proof(
-          title: 'Proof', // Default: 'Proof'
-          message:
-              'Upload picture as a proof!', // Default: 'Upload Picture As A Proof!'
-          buttonLabel: 'Continue', // Default: 'Continue'
+          title: 'Proof',
+          message: 'Upload picture as a proof!',
+          buttonLabel: 'Continue',
         );
       },
     );
-  }
-
-  void onOpenPickupMap() {
-    Get.toNamed(RoutePath.showMap);
-  }
-
-  void onOpenDeliveryMap() {
-    Get.toNamed(RoutePath.showMap);
   }
 
   void onShare() {}

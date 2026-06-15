@@ -11,6 +11,8 @@ class StatusBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<CategoryStatusController>();
+
     return Container(
       padding: EdgeInsets.fromLTRB(
         Dimensions.w(16),
@@ -22,26 +24,30 @@ class StatusBottomActions extends StatelessWidget {
         color: Colors.white,
         border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
       ),
-      child: _buildButtons(),
+      child: Obx(() {
+        // ── Loading state ──────────────────────────────────────────────────
+        if (controller.isLoading.value) {
+          return SizedBox(
+            height: Dimensions.h(52),
+            child: const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
+            ),
+          );
+        }
+
+        // ── API-driven toggle ──────────────────────────────────────────────
+        // hasActiveRequest == true  → driver already sent request → show Cancel
+        // hasActiveRequest == false → no active request           → show Send
+        if (controller.hasActiveRequest.value) {
+          return _CancelButton(onTap: controller.onCancelRequest);
+        } else {
+          return _TealButton(
+            label: AppStrings.sendRequest.tr,
+            onTap: controller.onSendRequest,
+          );
+        }
+      }),
     );
-  }
-
-  Widget _buildButtons() {
-    final controller = Get.find<CategoryStatusController>();
-
-    return Obx(() {
-      final status = controller.requestStatus.value;
-      if (status == RequestStatus.sent || status == RequestStatus.pending) {
-        // Cancel request – red text button
-        return _CancelButton(onTap: controller.onCancelRequest);
-      } else {
-        // Send request – teal filled button
-        return _TealButton(
-          label: AppStrings.sendRequest.tr,
-          onTap: controller.onSendRequest,
-        );
-      }
-    });
   }
 }
 
@@ -107,77 +113,6 @@ class _CancelButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-// ── Two buttons side by side ──────────────────────────────────────────────────
-class _TwoButtons extends StatelessWidget {
-  final String leftLabel;
-  final bool leftOutlined;
-  final VoidCallback onLeftTap;
-  final String rightLabel;
-  final VoidCallback onRightTap;
-
-  const _TwoButtons({
-    required this.leftLabel,
-    required this.onLeftTap,
-    required this.rightLabel,
-    required this.onRightTap,
-    this.leftOutlined = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // Left button (outlined)
-        Expanded(
-          child: OutlinedButton(
-            onPressed: onLeftTap,
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
-              side: BorderSide(color: AppColors.primaryColor),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Dimensions.r(30)),
-              ),
-            ),
-            child: Text(
-              leftLabel,
-              style: TextStyle(
-                fontSize: Dimensions.f(14),
-                fontWeight: FontWeight.w700,
-                color: AppColors.primaryColor,
-              ),
-            ),
-          ),
-        ),
-
-        SizedBox(width: Dimensions.w(12)),
-
-        // Right button (filled teal)
-        Expanded(
-          child: ElevatedButton(
-            onPressed: onRightTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Dimensions.r(30)),
-              ),
-              elevation: 0,
-            ),
-            child: Text(
-              rightLabel,
-              style: TextStyle(
-                fontSize: Dimensions.f(14),
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
