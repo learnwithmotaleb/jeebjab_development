@@ -19,7 +19,6 @@ enum RequestStatus { none, pending, sent, pickedUp, delivered }
 // SharedPrefs additional keys for request handling
 // Extension removed since we no longer save job request status locally
 
-
 class CategoryStatusController extends GetxController {
   final ApiClient _apiClient = ApiClient();
   final RxBool isLoading = false.obs;
@@ -136,42 +135,15 @@ class CategoryStatusController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        // ── Driver's request status for THIS job ──────────────
-        // The post's own 'status' (active/completed) is NOT the driver's
-        // request status. Check dedicated fields from the API response.
         final data = response.body['data'];
-        final isRequested = data['isRequested'] ?? false;
-        final driverRequestStatus =
-            (data['driverRequest']?['status'] ??
-             data['driverRequestStatus'] ??
-             data['requestStatus'] ??
-             '')
-            .toString();
 
-        if (driverRequestStatus == 'pending' || driverRequestStatus == 'sent' || driverRequestStatus == 'pickedUp' || driverRequestStatus == 'delivered') {
-          switch (driverRequestStatus) {
-            case 'pending':
-              requestStatus.value = RequestStatus.pending;
-              break;
-            case 'sent':
-              requestStatus.value = RequestStatus.sent;
-              break;
-            case 'pickedUp':
-              requestStatus.value = RequestStatus.pickedUp;
-              break;
-            case 'delivered':
-              requestStatus.value = RequestStatus.delivered;
-              break;
-          }
-        } else if (isRequested == true) {
-          // fallback: isRequested field is true but no status string
-          requestStatus.value = RequestStatus.pending;
-        } else {
-          requestStatus.value = RequestStatus.none;
-        }
+        // Default to none — _fetchDriverJobStatus() will correct it
+        requestStatus.value = RequestStatus.none;
 
-        log.i('Driver request status: ${requestStatus.value} | isRequested: $isRequested | driverRequestStatus: $driverRequestStatus');
         _mapPostData(data);
+
+        // Check if this driver already has a pending request for this job
+        await _fetchDriverJobStatus(id);
       } else {
         errorMessage.value =
             response.statusText ?? "Failed to load post details";
@@ -181,6 +153,35 @@ class CategoryStatusController extends GetxController {
       debugPrint('❌ fetchPostDetails exception: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // ── Check driver-specific request status for this job ───────────────────
+  Future<void> _fetchDriverJobStatus(String id) async {
+    try {
+      final response = await _apiClient.post(
+        url: ApiUrl.postSendJobRequest(id),
+        isToken: true,
+      );
+      final body = response.body;
+      final msg = (body['message'] ?? '').toString();
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Request just sent successfully (edge case — shouldn't normally happen here)
+        requestStatus.value = RequestStatus.pending;
+        log.i('Request sent on status check (unexpected)');
+      } else if (msg.contains('pending request') || msg.contains('already have')) {
+        // Driver already has a pending request
+        requestStatus.value = RequestStatus.pending;
+        log.i('Driver already has a pending request for this job');
+      } else {
+        // No pending request — keep as none
+        requestStatus.value = RequestStatus.none;
+        log.i('No pending request for this job');
+      }
+    } catch (e) {
+      // Don’t override status on error
+      log.e('_fetchDriverJobStatus error: $e');
     }
   }
 
@@ -404,8 +405,6 @@ class CategoryStatusController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
 
   void onPickedUp() {
     if (isMove) {
