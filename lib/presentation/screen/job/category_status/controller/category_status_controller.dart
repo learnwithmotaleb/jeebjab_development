@@ -136,25 +136,41 @@ class CategoryStatusController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        // ── Driver's request status for THIS job ──────────────
+        // The post's own 'status' (active/completed) is NOT the driver's
+        // request status. Check dedicated fields from the API response.
         final data = response.body['data'];
-        // Map status
-        final statusStr = data['status'] ?? '';
-        switch (statusStr) {
-          case 'pending':
-            requestStatus.value = RequestStatus.pending;
-            break;
-          case 'sent':
-            requestStatus.value = RequestStatus.sent;
-            break;
-          case 'pickedUp':
-            requestStatus.value = RequestStatus.pickedUp;
-            break;
-          case 'delivered':
-            requestStatus.value = RequestStatus.delivered;
-            break;
-          default:
-            requestStatus.value = RequestStatus.none;
+        final isRequested = data['isRequested'] ?? false;
+        final driverRequestStatus =
+            (data['driverRequest']?['status'] ??
+             data['driverRequestStatus'] ??
+             data['requestStatus'] ??
+             '')
+            .toString();
+
+        if (driverRequestStatus == 'pending' || driverRequestStatus == 'sent' || driverRequestStatus == 'pickedUp' || driverRequestStatus == 'delivered') {
+          switch (driverRequestStatus) {
+            case 'pending':
+              requestStatus.value = RequestStatus.pending;
+              break;
+            case 'sent':
+              requestStatus.value = RequestStatus.sent;
+              break;
+            case 'pickedUp':
+              requestStatus.value = RequestStatus.pickedUp;
+              break;
+            case 'delivered':
+              requestStatus.value = RequestStatus.delivered;
+              break;
+          }
+        } else if (isRequested == true) {
+          // fallback: isRequested field is true but no status string
+          requestStatus.value = RequestStatus.pending;
+        } else {
+          requestStatus.value = RequestStatus.none;
         }
+
+        log.i('Driver request status: ${requestStatus.value} | isRequested: $isRequested | driverRequestStatus: $driverRequestStatus');
         _mapPostData(data);
       } else {
         errorMessage.value =
