@@ -8,7 +8,9 @@ class ApiUrl {
   // static const String _mainDomain = "http://10.10.20.52:5001";
   // static const String _mainDomain = "http://10.10.20.52:5001";
   // static const String _mainDomain = "http://51.21.196.205";
+  // static const String _mainDomain = "http://10.10.20.52:5002";
   static const String _mainDomain = "http://10.10.20.52:5002";
+  // static const String _mainDomain = "http://10.10.20.52:5002";
 
   static final String baseUrl = _mainDomain;
 
@@ -64,6 +66,8 @@ class ApiUrl {
   static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
 
-  //
-  // static final getTask ="$baseUrl/driver/tasks";
+  
+  //==========================
+  static String acceptRequest(String id, String requestId) => '$baseUrl/post/$id/requests/$requestId/accept';
+
 }

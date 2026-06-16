@@ -10,6 +10,7 @@ import 'package:jeebjab/widget/confirmataion_alert.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_alert.dart';
+import '../model/UserPostDetailsModel.dart';
 
 class StatusDetailsController extends GetxController {
   final ApiClient _apiClient = ApiClient();
@@ -35,7 +36,7 @@ class StatusDetailsController extends GetxController {
   RxBool showAcceptButton = false.obs;
 
   // Optional: List of offers/bids for pending status
-  RxList<Map<String, dynamic>> offers = <Map<String, dynamic>>[].obs;
+  RxList<JobRequests> jobRequests = <JobRequests>[].obs;
 
   @override
   void onInit() {
@@ -117,10 +118,14 @@ class StatusDetailsController extends GetxController {
       driverRating.value = (assignedDriver['rating'] ?? 0.0).toDouble();
       showAcceptButton.value = false;
     } else {
-      // If pending, we might have offers (bids)
-      // This depends on whether the API returns offers in the post details
-      // For now, let's assume we might get them or leave them empty
       showAcceptButton.value = status.value == 'pending';
+    }
+
+    // Job Requests
+    if (data['jobRequests'] != null) {
+      jobRequests.value = (data['jobRequests'] as List).map((e) => JobRequests.fromJson(e)).toList();
+    } else {
+      jobRequests.clear();
     }
   }
 
@@ -159,13 +164,30 @@ class StatusDetailsController extends GetxController {
     Get.toNamed(RoutePath.chat);
   }
 
-  void onAcceptPressed(BuildContext context) {
-    AppSuccessAlert.show(
-      context: context,
-      message: "Request Successfully Accepted",
-    );
-    // After acceptance, status might change to active
-    status.value = "active"; 
-    showAcceptButton.value = false;
+  Future<void> onAcceptPressed(BuildContext context, String requestId) async {
+    try {
+      isLoading.value = true;
+      final response = await _apiClient.patch(
+        url: ApiUrl.acceptRequest(postId.value, requestId),
+        isToken: true,
+      );
+      if (response.statusCode == 200) {
+        AppSuccessAlert.show(
+          context: context,
+          message: response.body['message'] ?? "Request Successfully Accepted",
+        );
+        // After acceptance, status might change to active
+        status.value = "active"; 
+        showAcceptButton.value = false;
+        // Refresh details to get the assigned driver info
+        fetchStatusDetails(postId.value);
+      } else {
+        AppSnackBar.fail(response.body['message'] ?? "Failed to accept request");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

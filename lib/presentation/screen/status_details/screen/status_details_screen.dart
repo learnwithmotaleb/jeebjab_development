@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
+import 'package:jeebjab/service/api_url.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -582,29 +583,32 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
               ),
             ),
             SizedBox(height: Dimensions.h(12)),
-            // If we had real offers in controller.offers, we would map them here
-            // For now, let's show a placeholder card if no specific driver is assigned
-            if (controller.driverName.value.isEmpty) ...[
-              StatusDetailsCard(
-                name: "Fawaz Georges",
-                phone: "+92120 003221",
-                imageUrl: "",
-                rating: 4.5,
-                showAcceptButton: true,
-                onMessage: controller.onMessagePressed,
-                onAccept: () => controller.onAcceptPressed(context),
-              ),
-              SizedBox(height: Dimensions.h(12)),
-              StatusDetailsCard(
-                name: "Zayn Ahmed",
-                phone: "+92120 003222",
-                imageUrl: "",
-                rating: 4.8,
-                showAcceptButton: true,
-                onMessage: controller.onMessagePressed,
-                onAccept: () => controller.onAcceptPressed(context),
-              ),
-            ],
+            if (controller.jobRequests.isEmpty)
+              const Center(child: Text("No offers yet"))
+            else
+              ...controller.jobRequests.map((request) {
+                final driver = request.driver;
+                if (driver == null) return const SizedBox();
+                return Column(
+                  children: [
+                    StatusDetailsCard(
+                      name: driver.name ?? "Unknown",
+                      phone: driver.phoneNumber ?? "N/A",
+                      imageUrl: driver.avatar != null
+                          ? ApiUrl.buildImageUrl(driver.avatar.toString())
+                          : "",
+                      rating: (driver.rating ?? 0.0).toDouble(),
+                      showAcceptButton: request.status == 'pending',
+                      onMessage: controller.onMessagePressed,
+                      onAccept: () => controller.onAcceptPressed(
+                        context,
+                        request.requestId ?? "",
+                      ),
+                    ),
+                    SizedBox(height: Dimensions.h(12)),
+                  ],
+                );
+              }),
           ],
 
           if (controller.status.value != 'pending' &&
@@ -617,7 +621,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
               showAcceptButton: controller.showAcceptButton.value,
               isMessageEnabled: controller.status.value != 'completed',
               onMessage: controller.onMessagePressed,
-              onAccept: () => controller.onAcceptPressed(context),
+              onAccept: () {},
             ),
         ],
       ),
