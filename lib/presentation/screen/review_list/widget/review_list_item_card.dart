@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
-import 'package:jeebjab/presentation/screen/review_profile/controller/review_profile_controller.dart';
+import 'package:jeebjab/presentation/screen/review_list/model/ReviewModel.dart';
 
 class ReviewListItemWidget extends StatelessWidget {
-  final ReviewModel review;
+  final Reviews review;
 
   const ReviewListItemWidget({super.key, required this.review});
 
@@ -32,7 +32,7 @@ class ReviewListItemWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                review.username,
+                review.reviewer?.name ?? "Unknown",
                 style: TextStyle(
                   fontSize: Dimensions.f(15),
                   fontWeight: FontWeight.w800,
@@ -40,7 +40,9 @@ class ReviewListItemWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                review.timeAgo,
+                review.createdAt != null && review.createdAt!.length >= 10 
+                    ? review.createdAt!.substring(0, 10) 
+                    : "",
                 style: TextStyle(
                   fontSize: Dimensions.f(12),
                   color: Colors.grey[500],
@@ -56,7 +58,7 @@ class ReviewListItemWidget extends StatelessWidget {
           Row(
             children: List.generate(5, (i) {
               return Icon(
-                i < review.rating.floor()
+                i < (review.rating ?? 0).floor()
                     ? Icons.star_rounded
                     : Icons.star_outline_rounded,
                 size: Dimensions.f(17),
@@ -69,7 +71,7 @@ class ReviewListItemWidget extends StatelessWidget {
 
           // ── Title ──────────────────────────────────────────────────────
           Text(
-            review.title,
+            review.post?.title ?? "",
             style: TextStyle(
               fontSize: Dimensions.f(15),
               fontWeight: FontWeight.w700,
@@ -81,7 +83,7 @@ class ReviewListItemWidget extends StatelessWidget {
 
           // ── Body ───────────────────────────────────────────────────────
           Text(
-            review.body,
+            review.comment ?? "",
             style: TextStyle(
               fontSize: Dimensions.f(14),
               color: Colors.grey[700],

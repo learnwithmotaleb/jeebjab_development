@@ -135,10 +135,29 @@ class StatusDetailsController extends GetxController {
 
   void onRateServicePressed() {
     AppAlerts.deliveryReview(
-      onSubmit: (rating, feedback) {
-        print('Rating: $rating, Feedback: $feedback');
-        // Handle rating logic here
-        AppSnackBar.success("Thank you for your feedback!");
+      onSubmit: (rating, feedback) async {
+        try {
+          isLoading.value = true;
+          final response = await _apiClient.post(
+            url: ApiUrl.userPostReview,
+            body: {
+              "postId": postId.value,
+              "rating": rating.toInt().toString(),
+              "comment": feedback,
+            },
+            isToken: true,
+          );
+
+          if (response.statusCode == 201 || response.statusCode == 200) {
+            AppSnackBar.success(response.body['message'] ?? "Thank you for your feedback!");
+          } else {
+            AppSnackBar.fail(response.body['message'] ?? "Failed to submit review");
+          }
+        } catch (e) {
+          AppSnackBar.fail("An error occurred: $e");
+        } finally {
+          isLoading.value = false;
+        }
       },
     );
   }

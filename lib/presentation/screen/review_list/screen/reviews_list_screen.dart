@@ -21,10 +21,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildTablet() {
@@ -63,8 +60,11 @@ class _ReviewsListScreenState extends State<ReviewsListScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.rate_review_outlined,
-                  size: Dimensions.f(64), color: Colors.grey[400]),
+              Icon(
+                Icons.rate_review_outlined,
+                size: Dimensions.f(64),
+                color: Colors.grey[400],
+              ),
               SizedBox(height: Dimensions.h(16)),
               Text(
                 AppStrings.noReviewsYet.tr,

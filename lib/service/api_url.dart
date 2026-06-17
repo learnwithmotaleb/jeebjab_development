@@ -45,7 +45,6 @@ class ApiUrl {
   static String getPostDetails(String id) => '$baseUrl/post/$id';
 
   static final String getPendingPosts = '$baseUrl/post/my-posts?status=pending';
-
   static final String getActivePosts = '$baseUrl/post/my-posts?status=active';
 
   static final String getCompletedPosts =
@@ -66,8 +65,11 @@ class ApiUrl {
   static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
 
-  
   //==========================
-  static String acceptRequest(String id, String requestId) => '$baseUrl/post/$id/requests/$requestId/accept';
+  static String acceptRequest(String id, String requestId) =>
+      '$baseUrl/post/$id/requests/$requestId/accept';
 
+  static final String userPostReview = '$baseUrl/review';
+  static String userGetReview(String userId) =>
+      '$baseUrl/review/user/$userId?type=userToDriver';
 }

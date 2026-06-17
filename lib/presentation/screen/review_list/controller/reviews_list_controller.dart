@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
-import 'package:jeebjab/presentation/screen/review_profile/controller/review_profile_controller.dart';
+import 'package:jeebjab/helper/local_db/local_db.dart';
+import 'package:jeebjab/presentation/screen/review_list/model/ReviewModel.dart';
+import 'package:jeebjab/service/api_service.dart';
+import 'package:jeebjab/service/api_url.dart';
 
 class ReviewsListController extends GetxController {
   RxBool isLoading = false.obs;
-  RxList<ReviewModel> reviews = <ReviewModel>[].obs;
+  RxList<Reviews> reviews = <Reviews>[].obs;
+  final ApiClient _apiClient = ApiClient();
 
   @override
   void onInit() {
@@ -11,25 +15,31 @@ class ReviewsListController extends GetxController {
     _loadReviews();
   }
 
-  void _loadReviews() {
-    // TODO: Replace with real API call
-    reviews.value = List.generate(
-      8,
-          (_) => ReviewModel(
-        username: 'Tiago_Felipe',
-        timeAgo: '1 Day ago',
-        rating: 5,
-        title: 'There are many variations of passage',
-        body:
-        'The majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.',
-      ),
-    );
+  Future<void> _loadReviews() async {
+    try {
+      isLoading.value = true;
+      String? userId = SharePrefsHelper.getUserId();
+      if (userId == null) {
+        isLoading.value = false;
+        return;
+      }
+      
+      final response = await _apiClient.get(url: ApiUrl.userGetReview(userId), isToken: true);
+      
+      if (response.statusCode == 200) {
+        final reviewModel = ReviewModel.fromJson(response.body);
+        if (reviewModel.data?.reviews != null) {
+          reviews.value = reviewModel.data!.reviews!;
+        }
+      }
+    } catch (e) {
+      print("Error loading reviews: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> refreshReviews() async {
-    isLoading.value = true;
-    await Future.delayed(const Duration(seconds: 1));
-    _loadReviews();
-    isLoading.value = false;
+    await _loadReviews();
   }
 }
