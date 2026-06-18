@@ -54,6 +54,7 @@ dependencies:
   sign_in_with_apple: ^7.0.1
   flutter_local_notifications: ^21.0.0
   firebase_messaging: ^16.2.0
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

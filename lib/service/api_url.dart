@@ -14,10 +14,11 @@ class ApiUrl {
 
   static final String baseUrl = _mainDomain;
 
-  /// Convert relative image path → full URL
-  /// e.g. "uploads\image.png" → "https://domain.com/uploads/image.png"
   static String buildImageUrl(String relativePath) {
-    final path = relativePath.replaceAll(r'\', '/');
+    String path = relativePath.replaceAll(r'\', '/');
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
     return '$_mainDomain/$path';
   }
 
@@ -70,6 +71,20 @@ class ApiUrl {
       '$baseUrl/post/$id/requests/$requestId/accept';
 
   static final String userPostReview = '$baseUrl/review';
+
   static String userGetReview(String userId) =>
       '$baseUrl/review/user/$userId?type=userToDriver';
+
+  //======================Chat All Endpoint====================
+  static final String chatPost = '$baseUrl/chat/post-chat';
+
+  static final String getAllChatList = '$baseUrl/chat/get-all-chats';
+  static String getChatMessage(String chatId) =>
+      '$baseUrl/chat/get-chat-messages?chatId=$chatId';
+
+  static final String uploadMedia = '$baseUrl/chat/upload-media';
+
+  //======================Socket====================
+  static String socketUrl({required String userID}) =>
+      '$baseUrl?userId=$userID';
 }

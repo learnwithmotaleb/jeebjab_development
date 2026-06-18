@@ -30,6 +30,8 @@ import 'package:jeebjab/presentation/screen/capture_image/controller/capture_ima
 import 'package:jeebjab/presentation/screen/capture_image/screen/capture_image_screen.dart';
 import 'package:jeebjab/presentation/screen/capture_info/controller/capture_info_controller.dart';
 import 'package:jeebjab/presentation/screen/capture_info/screen/capture_info_screen.dart';
+import 'package:jeebjab/presentation/screen/chat/chat_list/controller/chat_list_controller.dart';
+import 'package:jeebjab/presentation/screen/chat/chat_list/screen/chat_list_screen.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/presentation/screen/chat/screen/chat_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
@@ -773,6 +775,16 @@ class AppRouter {
 
       binding: BindingsBuilder(() {
         Get.put(TaskDetailsController());
+      }),
+
+
+    ), GetPage(
+      name: RoutePath.chatList,
+      page: () =>  ChatListScreen(),
+      transition: Transition.rightToLeft,
+
+      binding: BindingsBuilder(() {
+        Get.put(ChatListController());
       }),
 
 

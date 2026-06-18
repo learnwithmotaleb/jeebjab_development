@@ -21,10 +21,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   /// Tablet Layout
@@ -55,34 +52,61 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: AppColors.whiteColor,
       leadingWidth: Dimensions.w(80),
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: Dimensions.f(20)),
+        icon: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: Colors.black87,
+          size: Dimensions.f(20),
+        ),
         onPressed: () => Navigator.pop(context),
       ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.all(Dimensions.r(2)),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryColor.withOpacity(0.2), width: 1.5),
+      title: Obx(() {
+        final imageUrl = controller.driverImage.value;
+        final hasImage = imageUrl.isNotEmpty && !imageUrl.contains('assets/');
+        final name = controller.driverName.value;
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(Dimensions.r(2)),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.primaryColor.withOpacity(0.2),
+                  width: 1.5,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: Dimensions.r(18),
+                backgroundColor: Colors.grey[200],
+                child: !hasImage && name.isNotEmpty
+                    ? Text(
+                        name[0].toUpperCase(),
+                        style: TextStyle(
+                          fontSize: Dimensions.f(18),
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor,
+                        ),
+                      )
+                    : null,
+              ),
             ),
-            child: CircleAvatar(
-              radius: Dimensions.r(18),
-              backgroundImage: AssetImage(AppImages.profileImage),
+            SizedBox(width: Dimensions.w(12)),
+            Flexible(
+              child: Text(
+                name.isNotEmpty ? name : "Unknown",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: Dimensions.f(18),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-          SizedBox(width: Dimensions.w(12)),
-          Text(
-            "Abdul Motaleb",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: Dimensions.f(18),
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
       centerTitle: true,
       elevation: 0,
       bottom: PreferredSize(
@@ -97,16 +121,25 @@ class _ChatScreenState extends State<ChatScreen> {
       children: [
         // Chat Messages List
         Expanded(
-          child: Obx(() => ListView.builder(
-            controller: controller.scrollController,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(20)),
-            itemCount: controller.messages.length,
-            itemBuilder: (context, index) {
-              final message = controller.messages[index];
-              return ChatMessageBubble(message: message);
-            },
-          )),
+          child: Obx(
+            () => RefreshIndicator(
+              onRefresh: () => controller.loadMessages(),
+              child: ListView.builder(
+                controller: controller.scrollController,
+                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                reverse: true, // Show newest messages at the bottom natively
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(16),
+                  vertical: Dimensions.h(20),
+                ),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  final message = controller.messages[index];
+                  return ChatMessageBubble(message: message);
+                },
+              ),
+            ),
+          ),
         ),
 
         // Bottom Input Bar

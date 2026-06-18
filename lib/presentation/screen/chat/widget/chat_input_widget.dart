@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/presentation/screen/chat/controller/chat_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import 'package:jeebjab/widget/app_bottom_sheet.dart';
 
 class ChatInputBar extends StatefulWidget {
   const ChatInputBar({super.key});
@@ -42,23 +44,23 @@ class _ChatInputBarState extends State<ChatInputBar> {
     return Row(
       children: [
         // File/Image Upload Button
-        // GestureDetector(
-        //   onTap: controller.addFile,
-        //   child: Container(
-        //     decoration: BoxDecoration(
-        //       color: Colors.grey[50],
-        //       shape: BoxShape.circle,
-        //       border: Border.all(color: Colors.grey[200]!, width: 1),
-        //     ),
-        //     padding: EdgeInsets.all(Dimensions.w(12)),
-        //     child: Icon(
-        //       Icons.attach_file_rounded,
-        //       color: AppColors.primaryColor,
-        //       size: Dimensions.f(20),
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(width: Dimensions.w(12)),
+        GestureDetector(
+          onTap: () => _showAttachmentBottomSheet(context),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey[200]!, width: 1),
+            ),
+            padding: EdgeInsets.all(Dimensions.w(12)),
+            child: Icon(
+              Icons.attach_file_rounded,
+              color: AppColors.primaryColor,
+              size: Dimensions.f(20),
+            ),
+          ),
+        ),
+        SizedBox(width: Dimensions.w(12)),
 
         // Message Input Field
         Expanded(
@@ -152,6 +154,58 @@ class _ChatInputBarState extends State<ChatInputBar> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showAttachmentBottomSheet(BuildContext context) {
+    AppBottomSheet(
+      child: Padding(
+        padding: EdgeInsets.all(Dimensions.w(16)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Select Source",
+              style: TextStyle(
+                fontSize: Dimensions.f(18),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(16)),
+            ListTile(
+              leading: Container(
+                padding: EdgeInsets.all(Dimensions.w(8)),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.camera_alt_rounded, color: AppColors.primaryColor),
+              ),
+              title: Text("Camera"),
+              onTap: () {
+                Get.back();
+                controller.pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Container(
+                padding: EdgeInsets.all(Dimensions.w(8)),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.photo_library_rounded, color: AppColors.primaryColor),
+              ),
+              title: Text("Gallery"),
+              onTap: () {
+                Get.back();
+                controller.pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

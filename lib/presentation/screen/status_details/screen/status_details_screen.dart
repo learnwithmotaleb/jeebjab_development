@@ -593,13 +593,15 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
                   children: [
                     StatusDetailsCard(
                       name: driver.name ?? "Unknown",
-                      phone: driver.phoneNumber ?? "N/A",
+                      phone: driver.phoneNumber?.toString() ?? "N/A",
                       imageUrl: driver.avatar != null
                           ? ApiUrl.buildImageUrl(driver.avatar.toString())
                           : "",
                       rating: (driver.rating ?? 0.0).toDouble(),
                       showAcceptButton: request.status == 'pending',
-                      onMessage: controller.onMessagePressed,
+                      onMessage: () => controller.onMessagePressed(
+                        receiverId: driver.id ?? '',
+                      ),
                       onAccept: () => controller.onAcceptPressed(
                         context,
                         request.requestId ?? "",
@@ -620,7 +622,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
               rating: controller.driverRating.value,
               showAcceptButton: controller.showAcceptButton.value,
               isMessageEnabled: controller.status.value != 'completed',
-              onMessage: controller.onMessagePressed,
+              onMessage: () => controller.onMessagePressed(),
               onAccept: () {},
             ),
         ],

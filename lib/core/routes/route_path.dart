@@ -74,6 +74,7 @@ class RoutePath {
 
   static const String accountActiveVerification = '/AccountActiveVerificationScreen';
   static const String taskDetailsScreen = '/TaskDetailsScreen';
+  static const String chatList = '/ChatListScreen';
 
 
 

@@ -34,6 +34,7 @@ class StatusDetailsController extends GetxController {
   RxString driverImage = "".obs;
   RxDouble driverRating = 0.0.obs;
   RxBool showAcceptButton = false.obs;
+  RxString driverId = "".obs; // driver's _id used as receiverId for chat
 
   // Optional: List of offers/bids for pending status
   RxList<JobRequests> jobRequests = <JobRequests>[].obs;
@@ -48,7 +49,7 @@ class StatusDetailsController extends GetxController {
     if (Get.arguments != null) {
       final args = Get.arguments as Map<String, dynamic>;
       final String? id = args['id'];
-      
+
       // Temporary mapping from arguments to show something while loading
       postId.value = id ?? "";
       itemType.value = args['itemType'] ?? "";
@@ -65,14 +66,18 @@ class StatusDetailsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      
-      final response = await _apiClient.get(url: ApiUrl.getPostDetails(id), isToken: true);
-      
+
+      final response = await _apiClient.get(
+        url: ApiUrl.getPostDetails(id),
+        isToken: true,
+      );
+
       if (response.statusCode == 200) {
         final data = response.body['data'];
         _mapPostData(data);
       } else {
-        errorMessage.value = response.statusText ?? "Failed to load status details";
+        errorMessage.value =
+            response.statusText ?? "Failed to load status details";
       }
     } catch (e) {
       errorMessage.value = "An error occurred: $e";
@@ -84,20 +89,26 @@ class StatusDetailsController extends GetxController {
   void _mapPostData(Map<String, dynamic> data) {
     postId.value = data['_id'] ?? "";
     itemType.value = data['title'] ?? "";
-    
-    if (data['type'] == 'recycling' && data['wasteType'] != null && (data['wasteType'] as List).isNotEmpty) {
+
+    if (data['type'] == 'recycling' &&
+        data['wasteType'] != null &&
+        (data['wasteType'] as List).isNotEmpty) {
       itemSubtype.value = (data['wasteType'] as List).join(', ');
     } else {
       itemSubtype.value = data['type']?.toString().capitalizeFirst ?? "";
     }
-    
-    trackingNumber.value = data['_id']?.toString().substring(0, 10).toUpperCase() ?? "";
+
+    trackingNumber.value =
+        data['_id']?.toString().substring(0, 10).toUpperCase() ?? "";
     status.value = data['status'] ?? "pending";
-    
+
     // Date
     final dt = data['dateTimeSlot'];
     if (dt != null) {
-      itemDate.value = dt['scheduledDate'] ?? data['createdAt']?.toString().substring(0, 10) ?? "";
+      itemDate.value =
+          dt['scheduledDate'] ??
+          data['createdAt']?.toString().substring(0, 10) ??
+          "";
     } else {
       itemDate.value = data['createdAt']?.toString().substring(0, 10) ?? "";
     }
@@ -110,20 +121,40 @@ class StatusDetailsController extends GetxController {
     // Driver
     final assignedDriver = data['assignedDriver'];
     if (assignedDriver != null) {
+      driverId.value = assignedDriver['_id'] ?? "";
       driverName.value = assignedDriver['name'] ?? "";
-      driverPhone.value = assignedDriver['phoneNumber'] ?? "";
+      // phoneNumber can be null from API
+      driverPhone.value = assignedDriver['phoneNumber']?.toString() ?? "";
+
+      // Avatar
       if (assignedDriver['avatar'] != null) {
-        driverImage.value = ApiUrl.buildImageUrl(assignedDriver['avatar'].toString());
+        driverImage.value = ApiUrl.buildImageUrl(
+          assignedDriver['avatar'].toString(),
+        );
+      } else {
+        driverImage.value = "";
       }
-      driverRating.value = (assignedDriver['rating'] ?? 0.0).toDouble();
+
+      // Rating: active status has it under driverProfile.averageRating
+      // pending jobRequest driver has it directly as rating
+      final driverProfile = assignedDriver['driverProfile'];
+      if (driverProfile != null && driverProfile['averageRating'] != null) {
+        driverRating.value = (driverProfile['averageRating'] as num).toDouble();
+      } else {
+        driverRating.value = (assignedDriver['rating'] ?? 0.0).toDouble();
+      }
+
       showAcceptButton.value = false;
     } else {
+      driverId.value = "";
       showAcceptButton.value = status.value == 'pending';
     }
 
     // Job Requests
     if (data['jobRequests'] != null) {
-      jobRequests.value = (data['jobRequests'] as List).map((e) => JobRequests.fromJson(e)).toList();
+      jobRequests.value = (data['jobRequests'] as List)
+          .map((e) => JobRequests.fromJson(e))
+          .toList();
     } else {
       jobRequests.clear();
     }
@@ -149,9 +180,13 @@ class StatusDetailsController extends GetxController {
           );
 
           if (response.statusCode == 201 || response.statusCode == 200) {
-            AppSnackBar.success(response.body['message'] ?? "Thank you for your feedback!");
+            AppSnackBar.success(
+              response.body['message'] ?? "Thank you for your feedback!",
+            );
           } else {
-            AppSnackBar.fail(response.body['message'] ?? "Failed to submit review");
+            AppSnackBar.fail(
+              response.body['message'] ?? "Failed to submit review",
+            );
           }
         } catch (e) {
           AppSnackBar.fail("An error occurred: $e");
@@ -175,12 +210,51 @@ class StatusDetailsController extends GetxController {
     Get.toNamed(RoutePath.pickupDateTime);
   }
 
-  void onMessagePressed() {
+  /// Call POST /chat/post-chat with the given [receiverId].
+  /// If [receiverId] is omitted, falls back to [driverId].
+  Future<void> onMessagePressed({String? receiverId}) async {
     if (status.value == 'completed') {
       AppSnackBar.info("Chat is disabled for completed orders.");
       return;
     }
-    Get.toNamed(RoutePath.chat);
+
+    final targetReceiverId = receiverId ?? driverId.value;
+    if (targetReceiverId.isEmpty) {
+      AppSnackBar.fail("Driver information not found.");
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+      final response = await _apiClient.post(
+        url: ApiUrl.chatPost,
+        body: {"receiverId": targetReceiverId},
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final chatData = response.body['data'];
+        final chatId = chatData['_id'] ?? '';
+        Get.toNamed(
+          RoutePath.chatList,
+          arguments: {
+            'chatId': chatId,
+            'receiverId': targetReceiverId,
+            'driverName': driverName.value,
+            'driverImage': driverImage.value,
+            'status': status.value,
+          },
+        );
+      } else {
+        AppSnackBar.fail(
+          response.body['message'] ?? "Failed to initiate chat.",
+        );
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> onAcceptPressed(BuildContext context, String requestId) async {
@@ -196,12 +270,14 @@ class StatusDetailsController extends GetxController {
           message: response.body['message'] ?? "Request Successfully Accepted",
         );
         // After acceptance, status might change to active
-        status.value = "active"; 
+        status.value = "active";
         showAcceptButton.value = false;
         // Refresh details to get the assigned driver info
         fetchStatusDetails(postId.value);
       } else {
-        AppSnackBar.fail(response.body['message'] ?? "Failed to accept request");
+        AppSnackBar.fail(
+          response.body['message'] ?? "Failed to accept request",
+        );
       }
     } catch (e) {
       AppSnackBar.fail("An error occurred: $e");
