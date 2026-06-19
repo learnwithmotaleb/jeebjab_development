@@ -84,6 +84,13 @@ class ApiUrl {
 
   static final String uploadMedia = '$baseUrl/chat/upload-media';
 
+  static final String getPrivacyAndPolicy =
+      '$baseUrl/manage/get-privacy-policy';
+  static final String getFaq = '$baseUrl/manage/get-faq';
+  static final String getTermAndConditions =
+      '$baseUrl/manage/get-terms-conditions';
+  static final String postContactSupport = '$baseUrl/manage/contact-support';
+
   //======================Socket====================
   static String socketUrl({required String userID}) =>
       '$baseUrl?userId=$userID';

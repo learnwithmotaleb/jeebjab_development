@@ -9,8 +9,8 @@ import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/app_text_field.dart';
+import 'package:jeebjab/widget/app_validation.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
-import 'package:jeebjab/widget/show_snackbar.dart';
 
 import '../../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
@@ -42,43 +42,50 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-                children: [
-                  SizedBox(height: Dimensions.h(10),),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                  children: [
+                    SizedBox(height: Dimensions.h(10),),
 
-                  AppTextField(
-                    controller: controller.nameController,
-                    hint: AppStrings.enterName.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                  ),
-                  SizedBox(height: Dimensions.h(16),),
+                    AppTextField(
+                      controller: controller.nameController,
+                      hint: AppStrings.enterName.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      validator: AppValidators.required(message: 'Name is required'),
+                    ),
+                    SizedBox(height: Dimensions.h(16),),
 
-                  AppTextField(
-                    controller: controller.emailController,
-                    hint: AppStrings.enterEmail.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                  ),
-                  SizedBox(height: Dimensions.h(16),),
+                    AppTextField(
+                      controller: controller.emailController,
+                      hint: AppStrings.enterEmail.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      validator: AppValidators.combine([
+                        AppValidators.required(message: 'Email is required'),
+                        AppValidators.email(),
+                      ]),
+                    ),
+                    SizedBox(height: Dimensions.h(16),),
 
-                  AppTextField(
-                    controller: controller.descriptionController,
-                    hint: AppStrings.writeMessage.tr,
-                    hintTextStyle: AppTextStyles.hint,
-                    maxLines: 4,
-                  ),
+                    AppTextField(
+                      controller: controller.descriptionController,
+                      hint: AppStrings.writeMessage.tr,
+                      hintTextStyle: AppTextStyles.hint,
+                      maxLines: 4,
+                      validator: AppValidators.required(message: 'Message is required'),
+                    ),
 
-                  SizedBox(height: Dimensions.h(30),),
-                  AppButton(
-                    label: AppStrings.contact.tr,
-                    onPressed: () {
-                      ShowAppSnackBar.success(
-                        title: AppStrings.appName.tr,
-                        AppStrings.thankYouSendMessageRequest.tr,
-                      );
-                    },
-                    height: 65,
-                  )
-                ]
+                    SizedBox(height: Dimensions.h(30),),
+                    Obx(() => AppButton(
+                      label: AppStrings.contact.tr,
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.submitContactSupport(),
+                      height: 65,
+                      isLoading: controller.isLoading.value,
+                    ))
+                  ]
+              ),
             ),
           ),
         )
@@ -177,19 +184,15 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
                 SizedBox(height: Dimensions.h(48)),
 
                 // ── Contact Button ──────────────────────────────────
-                SizedBox(
+                Obx(() => AppButton(
+                  label: AppStrings.contact.tr,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () => controller.submitContactSupport(),
+                  height: Dimensions.h(100),
+                  isLoading: controller.isLoading.value,
                   width: double.infinity,
-                  child: AppButton(
-                    label: AppStrings.contact.tr,
-                    onPressed: () {
-                      ShowAppSnackBar.success(
-                        title: AppStrings.appName.tr,
-                        AppStrings.thankYouSendMessageRequest.tr,
-                      );
-                    },
-                    height: Dimensions.h(100),
-                  ),
-                ),
+                )),
 
                 SizedBox(height: Dimensions.h(32)),
               ],

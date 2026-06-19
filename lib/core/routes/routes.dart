@@ -87,6 +87,8 @@ import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profil
 import 'package:jeebjab/presentation/screen/profile/account_settings/edit_profile/screen/edit_profile_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/contact_&_support/controller/contact_and_support_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/contact_&_support/screen/contact_and_support_screen.dart';
+import 'package:jeebjab/presentation/screen/profile/faqs/controller/fags_controller.dart';
+import 'package:jeebjab/presentation/screen/profile/faqs/screen/faqs_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/language/controller/language_controller.dart';
 import 'package:jeebjab/presentation/screen/profile/language/screen/language_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/privacy_&_policy/controller/privacy_and_policy_controller.dart';
@@ -778,7 +780,9 @@ class AppRouter {
       }),
 
 
-    ), GetPage(
+    ),
+
+    GetPage(
       name: RoutePath.chatList,
       page: () =>  ChatListScreen(),
       transition: Transition.rightToLeft,
@@ -789,6 +793,20 @@ class AppRouter {
 
 
     ),
+
+    GetPage(
+      name: RoutePath.faqs,
+      page: () =>  FaqsScreen(),
+      transition: Transition.rightToLeft,
+
+      binding: BindingsBuilder(() {
+        Get.put(FaqsController());
+      }),
+
+
+    ),
+
+
 
 
 

@@ -88,6 +88,12 @@ class ProfileController extends GetxController {
       icon: Icons.privacy_tip_outlined,
       onTap: () => Get.toNamed(RoutePath.policyAndPrivacy),
     ),
+
+    ProfileMenuItem(
+      title: AppStrings.faqs.tr,
+      icon: Icons.help_outline_rounded,
+      onTap: () => Get.toNamed(RoutePath.faqs),
+    ),
     ProfileMenuItem(
       title: AppStrings.logOut.tr,
       icon: Icons.logout_rounded,
@@ -110,4 +116,4 @@ class ProfileController extends GetxController {
       },
     ),
   ];
-}
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -30,11 +31,76 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
     );
   }
 
+  /// ── Shared body content (reactive) ─────────────────────────────────────
+  Widget _buildContent({double? titleFontSize, double lineHeight = 1.6}) {
+    return Obx(() {
+      // Loading state
+      if (controller.isLoading.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 60),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      // Error state
+      if (controller.errorMessage.value.isNotEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: Column(
+              children: [
+                Icon(Icons.error_outline, color: AppColors.emergencyColor, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  controller.errorMessage.value,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.body.copyWith(color: AppColors.emergencyColor),
+                ),
+                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: controller.fetchPrivacyPolicy,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      // Empty state
+      if (controller.privacyContent.value.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: Text(
+              'No content available.',
+              style: AppTextStyles.body.copyWith(color: Colors.grey),
+            ),
+          ),
+        );
+      }
+
+      // Content state
+      return Text(
+        controller.privacyContent.value,
+        style: AppTextStyles.body.copyWith(
+          color: AppColors.blackColor.withOpacity(0.75),
+          height: lineHeight,
+          letterSpacing: 0.3,
+          fontSize: titleFontSize != null ? 15 : null,
+        ),
+      );
+    });
+  }
+
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar:  CommonAppBar(title: AppStrings.privacyPolicy.tr),
+      appBar: CommonAppBar(title: AppStrings.privacyPolicy.tr),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -42,21 +108,15 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              /// Overview Section
-              _buildSection(
-                title: AppStrings.payments.tr,
-                description: controller.payments.value,
+              Text(
+                AppStrings.privacyPolicy.tr,
+                style: AppTextStyles.title.copyWith(
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-
-              SizedBox(height: Dimensions.h(32)),
-
-              /// User Eligibility Section
-              _buildSection(
-                title: AppStrings.cancellationsAndRefunds.tr,
-                description: controller.cancellations.value,
-              ),
-
+              SizedBox(height: Dimensions.h(12)),
+              _buildContent(lineHeight: 1.6),
               SizedBox(height: Dimensions.h(24)),
             ],
           ),
@@ -79,7 +139,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 700),
+              constraints: const BoxConstraints(maxWidth: 700),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -121,7 +181,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
                   // ── Section Subtitle ────────────────────────────────
                   Center(
                     child: Text(
-                      "Your privacy is important to us",
+                      'Your privacy is important to us',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.body.copyWith(
                         fontSize: 15,
@@ -132,19 +192,8 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
 
                   SizedBox(height: Dimensions.h(48)),
 
-                  /// Payments Section
-                  _buildTabletSection(
-                    title: AppStrings.payments.tr,
-                    description: controller.payments.value,
-                  ),
-
-                  SizedBox(height: Dimensions.h(48)),
-
-                  /// Cancellations & Refunds Section
-                  _buildTabletSection(
-                    title: AppStrings.cancellationsAndRefunds.tr,
-                    description: controller.cancellations.value,
-                  ),
+                  // ── Content ─────────────────────────────────────────
+                  _buildContent(titleFontSize: 22, lineHeight: 1.8),
 
                   SizedBox(height: Dimensions.h(40)),
                 ],
@@ -153,63 +202,6 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  /// Reusable Section Widget for Mobile
-  Widget _buildSection({
-    required String title,
-    required String description,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.title.copyWith(
-            color: AppColors.blackColor,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: Dimensions.h(12)),
-        Text(
-          description,
-          style: AppTextStyles.body.copyWith(
-            color: AppColors.blackColor.withOpacity(0.7),
-            height: 1.6, // Perfect readable line height
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Reusable Section Widget for Tablet
-  Widget _buildTabletSection({
-    required String title,
-    required String description,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.title.copyWith(
-            fontSize: 22,
-            color: AppColors.blackColor,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(height: Dimensions.h(16)),
-        Text(
-          description,
-          style: AppTextStyles.body.copyWith(
-            fontSize: 15,
-            color: AppColors.blackColor.withOpacity(0.75),
-            height: 1.8, // Better line height for tablet
-            letterSpacing: 0.3,
-          ),
-        ),
-      ],
     );
   }
 }
