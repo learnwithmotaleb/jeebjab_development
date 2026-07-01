@@ -25,23 +25,21 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: isRead ? 0.2 : 0.8,
-      color: isRead ? AppColors.whiteColor : Colors.blue.withOpacity(0.02),
+      elevation: 0.1,
+      color: AppColors.whiteColor,
       margin: EdgeInsets.symmetric(
         horizontal: Dimensions.w(16),
-        vertical: Dimensions.h(8),
+        vertical: Dimensions.h(6),
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimensions.r(16)),
-        side: isRead 
-            ? BorderSide.none 
-            : BorderSide(color: Colors.blue.withOpacity(0.2), width: 1),
+        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+        side: BorderSide(color: AppColors.greyColor.withOpacity(0.1), width: 1),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(Dimensions.r(16)),
+        borderRadius: BorderRadius.circular(Dimensions.r(12)),
         child: Container(
-          padding: EdgeInsets.all(Dimensions.w(16)),
+          padding: EdgeInsets.all(Dimensions.w(12)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,96 +47,105 @@ class NotificationCard extends StatelessWidget {
               Hero(
                 tag: 'notif_image_$imagePath${DateTime.now().millisecond}',
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                  borderRadius: BorderRadius.circular(Dimensions.r(10)),
                   child: imagePath.startsWith('http')
                       ? Image.network(
                           imagePath,
                           width: Dimensions.w(64),
                           height: Dimensions.w(64),
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => _buildPlaceholderIcon(),
+                          errorBuilder: (context, error, stackTrace) =>
+                              _buildPlaceholderIcon(),
                         )
                       : imagePath.isNotEmpty
-                          ? Image.asset(
-                              imagePath,
-                              width: Dimensions.w(64),
-                              height: Dimensions.w(64),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => _buildPlaceholderIcon(),
-                            )
-                          : _buildPlaceholderIcon(),
+                      ? Image.asset(
+                          imagePath,
+                          width: Dimensions.w(64),
+                          height: Dimensions.w(64),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              _buildPlaceholderIcon(),
+                        )
+                      : _buildPlaceholderIcon(),
                 ),
               ),
-              SizedBox(width: Dimensions.w(16)),
+              SizedBox(width: Dimensions.w(14)),
 
               // Content Section
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: Dimensions.f(17),
-                        fontWeight: isRead ? FontWeight.w600 : FontWeight.w700,
-                        color: AppColors.blackColor,
-                      ),
+                    // Title and Time Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: Dimensions.f(16),
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.blackColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: Dimensions.w(8)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              timeAgo,
+                              style: TextStyle(
+                                fontSize: Dimensions.f(12),
+                                color: AppColors.blackColor.withOpacity(0.6),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            if (!isRead) ...[
+                              SizedBox(height: Dimensions.h(4)),
+                              Container(
+                                width: Dimensions.w(8),
+                                height: Dimensions.w(8),
+                                decoration: const BoxDecoration(
+                                  color: Colors.blue,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(height: Dimensions.h(4)),
 
-                    // Subtitle
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: Dimensions.f(14),
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor.withOpacity(0.8),
+                    // Subtitle (Optional)
+                    if (subtitle.isNotEmpty) ...[
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: Dimensions.f(13),
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.blackColor.withOpacity(0.8),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: Dimensions.h(8)),
+                      SizedBox(height: Dimensions.h(4)),
+                    ],
 
                     // Message
                     Text(
                       message,
                       style: TextStyle(
-                        fontSize: Dimensions.f(14),
-                        color: AppColors.blackColor.withOpacity(0.7),
-                        height: 1.4,
+                        fontSize: Dimensions.f(13),
+                        color: AppColors.blackColor.withOpacity(0.8),
+                        fontWeight: FontWeight.w700,
+                        height: 1.3,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
-              ),
-              SizedBox(width: Dimensions.w(12)),
-
-              // Time Ago & Unread Dot Section
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    timeAgo,
-                    style: TextStyle(
-                      fontSize: Dimensions.f(11),
-                      color: AppColors.greyColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  if (!isRead) ...[
-                    SizedBox(height: Dimensions.h(12)),
-                    Container(
-                      width: Dimensions.w(8),
-                      height: Dimensions.w(8),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ],
-                ],
               ),
             ],
           ),

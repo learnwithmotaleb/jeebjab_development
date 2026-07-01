@@ -1,70 +1,35 @@
 import 'package:get/get.dart';
 
 import '../../../../core/routes/route_path.dart';
-
-class ReviewModel {
-  final String username;
-  final String timeAgo;
-  final double rating;
-  final String title;
-  final String body;
-
-  ReviewModel({
-    required this.username,
-    required this.timeAgo,
-    required this.rating,
-    required this.title,
-    required this.body,
-  });
-
-  factory ReviewModel.fromJson(Map<String, dynamic> json) => ReviewModel(
-    username: json['username'] ?? '',
-    timeAgo: json['time_ago'] ?? '',
-    rating: (json['rating'] ?? 0).toDouble(),
-    title: json['title'] ?? '',
-    body: json['body'] ?? '',
-  );
-}
+import '../../../../helper/local_db/local_db.dart';
+import '../../../../service/api_service.dart';
+import '../../../../service/api_url.dart';
+import '../model/ReviewProfileModel.dart';
 
 class ReviewProfileController extends GetxController {
+  // ── API Client ─────────────────────────────────────────────────────────────
+  final ApiClient _apiClient = ApiClient();
+
   // ── Profile Info ──────────────────────────────────────────────────────────
-  RxString name = 'Rayyan Hassan'.obs;
-  RxString phone = '+1564165654564'.obs;
-  RxString profileImage =
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200'.obs;
+  RxString name = ''.obs;
+  RxString phone = ''.obs;
+  RxString profileImage = ''.obs;
 
   // ── Rating Summary ────────────────────────────────────────────────────────
-  RxDouble overallRating = 4.5.obs;
-  RxInt totalReviews = 120.obs;
+  RxDouble overallRating = 0.0.obs;
+  RxInt totalReviews = 0.obs;
 
   // ── Rating Breakdown (5→1 star counts) ───────────────────────────────────
   RxMap<int, int> ratingBreakdown = <int, int>{
-    5: 80,
-    4: 20,
-    3: 12,
-    2: 6,
-    1: 2,
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
   }.obs;
 
   // ── Reviews List ──────────────────────────────────────────────────────────
-  RxList<ReviewModel> reviews = <ReviewModel>[
-    ReviewModel(
-      username: 'Tiago_Felipe',
-      timeAgo: '1 Day ago',
-      rating: 5,
-      title: 'There are many variations of passage',
-      body:
-      'The majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable.',
-    ),
-    ReviewModel(
-      username: 'Sarah_K',
-      timeAgo: '3 Days ago',
-      rating: 4,
-      title: 'Great experience overall',
-      body:
-      'Very professional and punctual. Would definitely recommend to others looking for reliable service.',
-    ),
-  ].obs;
+  RxList<Reviews> reviews = <Reviews>[].obs;
 
   RxBool isLoading = false.obs;
 
@@ -72,24 +37,103 @@ class ReviewProfileController extends GetxController {
   void onInit() {
     super.onInit();
     _loadArguments();
+    _fetchReviewProfile();
   }
 
   void _loadArguments() {
     if (Get.arguments != null) {
       final args = Get.arguments as Map<String, dynamic>;
-      name.value = args['name'] ?? 'Rayyan Hassan';
+      name.value = args['name'] ?? '';
       phone.value = args['phone'] ?? '';
-      profileImage.value = args['profileImage'] ?? profileImage.value;
-      overallRating.value = (args['rating'] ?? 4.5).toDouble();
-      totalReviews.value = args['totalReviews'] ?? 120;
+      profileImage.value = args['profileImage'] ?? '';
+      overallRating.value = (args['rating'] ?? 0.0).toDouble();
+      totalReviews.value = args['totalReviews'] ?? 0;
+    }
+  }
+
+  // ── Fetch Review Profile from API ──────────────────────────────────────────
+  Future<void> _fetchReviewProfile() async {
+    try {
+      isLoading.value = true;
+
+      String? userId = SharePrefsHelper.getUserId();
+      if (userId == null || userId.isEmpty) {
+        isLoading.value = false;
+        return;
+      }
+
+      final response = await _apiClient.get(
+        url: ApiUrl.reviewProfile(userId),
+        isToken: true,
+      );
+
+      if (response.statusCode == 200) {
+        final model = ReviewProfileModel.fromJson(response.body);
+
+        if (model.data != null) {
+          // ── Update Stats ─────────────────────────────────────────────
+          if (model.data!.stats != null) {
+            overallRating.value =
+                (model.data!.stats!.averageRating ?? 0).toDouble();
+            totalReviews.value =
+                (model.data!.stats!.totalReviews ?? 0).toInt();
+
+            // ── Update Rating Breakdown ────────────────────────────────
+            if (model.data!.stats!.ratingBreakdown != null) {
+              ratingBreakdown.value =
+                  model.data!.stats!.ratingBreakdown!.toMap();
+            }
+          }
+
+          // ── Update Reviews List ──────────────────────────────────────
+          if (model.data!.reviews != null) {
+            reviews.value = model.data!.reviews!;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error fetching review profile: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 
   // Max count for progress bar normalization
-  int get maxRatingCount =>
-      ratingBreakdown.values.reduce((a, b) => a > b ? a : b);
+  int get maxRatingCount {
+    if (ratingBreakdown.values.isEmpty) return 1;
+    final max = ratingBreakdown.values.reduce((a, b) => a > b ? a : b);
+    return max > 0 ? max : 1;
+  }
 
   void onReadAllReviews() {
     Get.toNamed(RoutePath.reviewList);
+  }
+
+  // ── Helper: format createdAt to "time ago" string ──────────────────────────
+  static String formatTimeAgo(String? isoString) {
+    if (isoString == null || isoString.isEmpty) return '';
+    try {
+      final date = DateTime.parse(isoString);
+      final now = DateTime.now();
+      final diff = now.difference(date);
+
+      if (diff.inDays > 365) {
+        final years = (diff.inDays / 365).floor();
+        return '$years ${years == 1 ? 'Year' : 'Years'} ago';
+      } else if (diff.inDays > 30) {
+        final months = (diff.inDays / 30).floor();
+        return '$months ${months == 1 ? 'Month' : 'Months'} ago';
+      } else if (diff.inDays > 0) {
+        return '${diff.inDays} ${diff.inDays == 1 ? 'Day' : 'Days'} ago';
+      } else if (diff.inHours > 0) {
+        return '${diff.inHours} ${diff.inHours == 1 ? 'Hour' : 'Hours'} ago';
+      } else if (diff.inMinutes > 0) {
+        return '${diff.inMinutes} ${diff.inMinutes == 1 ? 'Min' : 'Mins'} ago';
+      } else {
+        return 'Just now';
+      }
+    } catch (_) {
+      return '';
+    }
   }
 }

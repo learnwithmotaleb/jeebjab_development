@@ -75,6 +75,9 @@ class ApiUrl {
   static String userGetReview(String userId) =>
       '$baseUrl/review/user/$userId?type=userToDriver';
 
+  static String reviewProfile(String userId) =>
+      '$baseUrl/review/user/$userId?type=userToDriver';
+
   //======================Chat All Endpoint====================
   static final String chatPost = '$baseUrl/chat/post-chat';
 
@@ -94,4 +97,15 @@ class ApiUrl {
   //======================Socket====================
   static String socketUrl({required String userID}) =>
       '$baseUrl?userId=$userID';
+
+  static String notifications({int page = 1, int limit = 10}) =>
+      '$baseUrl/notification?page=$page&limit=$limit';
+
+  static String deleteSingeNotification(String notificationId) =>
+      '$baseUrl/notification/$notificationId';
+  static String deleteAllNotification = '$baseUrl/notification/clear';
+
+  static String updateFcmToken = '$baseUrl/notification/fcm-token';//Patch Method
+  static String deleteFcmToken = '$baseUrl/notification/fcm-token';//Delete Method
+
 }

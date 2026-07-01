@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import '../presentation/screen/notification/controller/notification_controller.dart';
 import '../helper/local_db/local_db.dart';
 import '../core/routes/route_path.dart';
+import 'api_service.dart';
+import 'api_url.dart';
 
 /// ──────────────────────────────────────────────────────────────────────────────
 /// TOP-LEVEL BACKGROUND HANDLER
@@ -137,11 +139,10 @@ class FirebaseNotificationService {
 
     // Android 13+ explicit notification permission
     if (Platform.isAndroid) {
-      final androidPlugin =
-          _localNotifications
-              .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin
-              >();
+      final androidPlugin = _localNotifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       await androidPlugin?.requestNotificationsPermission();
     }
   }
@@ -175,11 +176,10 @@ class FirebaseNotificationService {
 
     // Create Android notification channels
     if (Platform.isAndroid) {
-      final androidPlugin =
-          _localNotifications
-              .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin
-              >();
+      final androidPlugin = _localNotifications
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       // Ride notifications channel
       await androidPlugin?.createNotificationChannel(
@@ -248,8 +248,26 @@ class FirebaseNotificationService {
     try {
       await SharePrefsHelper.saveFcmToken(token);
       debugPrint('💾 FCM token saved to SharedPreferences: $token');
+
+      // Check if user is logged in (auth token exists)
+      final userToken = SharePrefsHelper.getToken();
+      if (userToken != null && userToken.isNotEmpty) {
+        debugPrint('🌐 Sending updated FCM token to backend...');
+        final response = await ApiClient().patch(
+          url: ApiUrl.updateFcmToken,
+          body: {"fcmToken": token},
+          isToken: true,
+        );
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          debugPrint('✅ FCM token successfully updated on backend');
+        } else {
+          debugPrint(
+            '❌ Failed to update FCM token on backend: ${response.body}',
+          );
+        }
+      }
     } catch (e) {
-      debugPrint('❌ Failed to save FCM token locally: $e');
+      debugPrint('❌ Error in _saveTokenToServer: $e');
     }
   }
 
@@ -406,12 +424,12 @@ class FirebaseNotificationService {
           channel,
           _getChannelName(channel),
           channelDescription: _getChannelDesc(channel),
-          importance:
-              channel == _highPriorityChannelId
-                  ? Importance.max
-                  : Importance.high,
-          priority:
-              channel == _highPriorityChannelId ? Priority.max : Priority.high,
+          importance: channel == _highPriorityChannelId
+              ? Importance.max
+              : Importance.high,
+          priority: channel == _highPriorityChannelId
+              ? Priority.max
+              : Priority.high,
           showWhen: true,
           enableVibration: true,
           playSound: true,
@@ -599,7 +617,8 @@ class FirebaseNotificationService {
       // Ensure SharedPreferences helper is initialized (critical in background isolates)
       await SharePrefsHelper.init();
 
-      final id = data?['_id'] ?? DateTime.now().millisecondsSinceEpoch.toString();
+      final id =
+          data?['_id'] ?? DateTime.now().millisecondsSinceEpoch.toString();
       final type = data?['type'] ?? 'general';
 
       String subtitle = data?['subtitle'] ?? 'General';
@@ -629,7 +648,9 @@ class FirebaseNotificationService {
       };
 
       final existingJson = SharePrefsHelper.getLocalNotifications();
-      final list = existingJson.map((e) => jsonDecode(e) as Map<String, dynamic>).toList();
+      final list = existingJson
+          .map((e) => jsonDecode(e) as Map<String, dynamic>)
+          .toList();
 
       // Avoid duplicates
       list.removeWhere((e) => e['_id'] == id);

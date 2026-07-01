@@ -18,6 +18,27 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   final NotificationController controller = Get.put(NotificationController());
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 50) {
+      if (controller.isMoreDataAvailable && !controller.isLoadMore) {
+        controller.getNotificationRequest(isLoadMore: true);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +56,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
         actions: _buildAppBarActions(),
       ),
       body: Obx(() {
+        if (controller.isLoadingNotificationList.value && controller.localNotificationList.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (controller.localNotificationList.isEmpty) {
           return _buildEmptyState();
         }
         return RefreshIndicator(
           onRefresh: () async {
-            controller.loadLocalNotifications();
+            await controller.getNotificationRequest();
           },
           color: AppColors.primaryColor,
           child: SingleChildScrollView(
+            controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             child: _buildNotificationContent(),
           ),
@@ -60,6 +85,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         actions: _buildAppBarActions(),
       ),
       body: Obx(() {
+        if (controller.isLoadingNotificationList.value && controller.localNotificationList.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (controller.localNotificationList.isEmpty) {
           return _buildEmptyState();
         }
@@ -69,10 +97,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             constraints: const BoxConstraints(maxWidth: 800),
             child: RefreshIndicator(
               onRefresh: () async {
-                controller.loadLocalNotifications();
+                await controller.getNotificationRequest();
               },
               color: AppColors.primaryColor,
               child: SingleChildScrollView(
+                controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.symmetric(
                   horizontal: Dimensions.w(24),
@@ -169,6 +198,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ],
         SizedBox(height: Dimensions.h(20)),
+        if (controller.isLoadMore)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }
@@ -200,7 +236,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       child: NotificationCard(
         imagePath: item['imagePath'] ?? '',
         title: item['title'] ?? 'Notification',
-        subtitle: item['subtitle'] ?? 'General',
+        subtitle: item['subtitle'] ?? '',
         message: item['message'] ?? '',
         timeAgo: _formatTimeAgo(item['createdAt']),
         isRead: item['isRead'] ?? true,

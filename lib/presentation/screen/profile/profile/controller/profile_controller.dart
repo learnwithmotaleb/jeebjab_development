@@ -30,7 +30,7 @@ class ProfileMenuItem {
 
 class ProfileController extends GetxController {
   final ApiClient _apiClient = ApiClient();
-  
+
   var isLoading = false.obs;
   var userData = Rxn<UserModel>();
 
@@ -104,10 +104,16 @@ class ProfileController extends GetxController {
           message: AppStrings.areYourSureLogoutFrom.tr,
           onConfirm: () async {
             try {
+              // Delete FCM token from backend
+              await _apiClient.delete(
+                url: ApiUrl.deleteFcmToken,
+                isToken: true,
+              );
+
               await FirebaseAuth.instance.signOut();
               await g_auth.GoogleSignIn.instance.signOut();
             } catch (e) {
-              debugPrint("Error signing out from Firebase/Google: $e");
+              debugPrint("Error during sign out: $e");
             }
             await SharePrefsHelper.clearAll();
             Get.offAllNamed(RoutePath.login);

@@ -39,7 +39,9 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1000),
           child: Obx(
-                () => SingleChildScrollView(
+                () => controller.isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: Dimensions.h(24), horizontal: Dimensions.w(16)),
@@ -102,33 +104,48 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
                                 ),
                               ),
                               SizedBox(height: Dimensions.h(24)),
-                              ...controller.reviews.map(
-                                    (review) => Padding(
-                                  padding: EdgeInsets.only(bottom: Dimensions.h(16)),
-                                  child: ReviewCardWidget(review: review),
+                              if (controller.reviews.isEmpty)
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: Dimensions.h(40)),
+                                    child: Text(
+                                      'No reviews yet',
+                                      style: TextStyle(
+                                        fontSize: Dimensions.f(14),
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              else
+                                ...controller.reviews.map(
+                                      (review) => Padding(
+                                    padding: EdgeInsets.only(bottom: Dimensions.h(16)),
+                                    child: ReviewCardWidget(review: review),
+                                  ),
                                 ),
-                              ),
                               SizedBox(height: Dimensions.h(16)),
-                              Center(
-                                child: ElevatedButton(
-                                  onPressed: controller.onReadAllReviews,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primaryColor,
-                                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(32), vertical: Dimensions.h(14)),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(Dimensions.r(30)),
+                              if (controller.reviews.isNotEmpty)
+                                Center(
+                                  child: ElevatedButton(
+                                    onPressed: controller.onReadAllReviews,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primaryColor,
+                                      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(32), vertical: Dimensions.h(14)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(Dimensions.r(30)),
+                                      ),
                                     ),
-                                  ),
-                                  child: Text(
-                                    'Read All Reviews',
-                                    style: TextStyle(
-                                      fontSize: Dimensions.f(14),
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                    child: Text(
+                                      'Read All Reviews',
+                                      style: TextStyle(
+                                        fontSize: Dimensions.f(14),
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -150,7 +167,9 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(title: AppStrings.advertiser.tr),
       body: Obx(
-            () => SingleChildScrollView(
+            () => controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,29 +280,44 @@ class _ReviewProfileScreenState extends State<ReviewProfileScreen> {
               SizedBox(height: Dimensions.h(24)),
 
               // ── 5. Review Cards ─────────────────────────────────────────
-              ...controller.reviews.map(
-                    (review) => Padding(
-                  padding: EdgeInsets.only(bottom: Dimensions.h(12)),
-                  child: ReviewCardWidget(review: review),
+              if (controller.reviews.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: Dimensions.h(40)),
+                    child: Text(
+                      'No reviews yet',
+                      style: TextStyle(
+                        fontSize: Dimensions.f(14),
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ),
+                )
+              else
+                ...controller.reviews.map(
+                      (review) => Padding(
+                    padding: EdgeInsets.only(bottom: Dimensions.h(12)),
+                    child: ReviewCardWidget(review: review),
+                  ),
                 ),
-              ),
 
               SizedBox(height: Dimensions.h(8)),
 
               // ── 6. Read All Reviews Button ──────────────────────────────
-              Center(
-                  child: TextButton(
-                    onPressed: controller.onReadAllReviews,
-                    child: Text(
-                      'Read All Reviews',
-                      style: TextStyle(
-                        fontSize: Dimensions.f(14),
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primaryColor,
+              if (controller.reviews.isNotEmpty)
+                Center(
+                    child: TextButton(
+                      onPressed: controller.onReadAllReviews,
+                      child: Text(
+                        'Read All Reviews',
+                        style: TextStyle(
+                          fontSize: Dimensions.f(14),
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
 
 
               SizedBox(height: Dimensions.h(40)),

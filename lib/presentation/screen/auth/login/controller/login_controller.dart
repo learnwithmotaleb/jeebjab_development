@@ -29,6 +29,7 @@ class LoginController extends GetxController {
     emailController.text = "soniaai@yopmail.com";
     passwordController.text = "123456MMmm..";
   }
+
   @override
   void onClose() {
     emailController.dispose();
@@ -57,6 +58,7 @@ class LoginController extends GetxController {
         body: {
           "email": emailController.text.trim(),
           "password": passwordController.text,
+          "fcmToken": SharePrefsHelper.getFcmToken() ?? "",
         },
       );
 
@@ -153,9 +155,8 @@ class LoginController extends GetxController {
 
       if (idToken != null) {
         await SharePrefsHelper.saveToken(idToken);
-        await SharePrefsHelper.saveFcmToken(idToken);
         await SharePrefsHelper.saveRole(AppRole.USER);
-        
+
         debugPrint("========= FIREBASE GOOGLE LOGIN ID TOKEN =========");
         debugPrint(idToken);
         debugPrint("================================================");
@@ -217,7 +218,11 @@ class LoginController extends GetxController {
     try {
       final response = await apiClient.post(
         url: ApiUrl.socialLogin,
-        body: {"token": token, "provider": provider},
+        body: {
+          "token": token,
+          "provider": provider,
+          "fcmToken": SharePrefsHelper.getFcmToken() ?? "",
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
