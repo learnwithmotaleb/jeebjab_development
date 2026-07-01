@@ -131,47 +131,37 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     isLoading.value = true;
     try {
-      final g_auth.GoogleSignInAccount googleUser = await g_auth
-          .GoogleSignIn
-          .instance
-          .authenticate();
+      final g_auth.GoogleSignInAccount? googleUser =
+          await g_auth.GoogleSignIn.instance.authenticate();
+
+      if (googleUser == null) {
+        // User cancelled the sign-in
+        return;
+      }
 
       final g_auth.GoogleSignInAuthentication googleAuth =
-          googleUser.authentication;
-
-      // In v7+, accessToken requires explicit authorization
-      final g_auth.GoogleSignInClientAuthorization auth = await googleUser
-          .authorizationClient
-          .authorizeScopes(['email', 'profile']);
+          await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       final String? idToken = await userCredential.user?.getIdToken();
 
       if (idToken != null) {
-        await SharePrefsHelper.saveToken(idToken);
-        await SharePrefsHelper.saveRole(AppRole.USER);
-
         debugPrint("========= FIREBASE GOOGLE LOGIN ID TOKEN =========");
         debugPrint(idToken);
         debugPrint("================================================");
 
-        final userId = userCredential.user?.uid;
-        if (userId != null) {
-          await SharePrefsHelper.saveUserId(userId);
-        }
-
-        AppSnackBar.success("Logged in successfully", title: "Success");
-        Get.offAllNamed(RoutePath.bottomNav);
+        // Send token to backend API for social login
+        await _processSocialLogin(idToken, "google");
       }
     } catch (e, stackTrace) {
       debugPrint("Google Sign In Error: $e\n$stackTrace");
-      AppSnackBar.fail("Google Sign In failed: ${e.toString().split('\n')[0]}");
+      AppSnackBar.fail(
+          "Google Sign In failed: ${e.toString().split('\n')[0]}");
     } finally {
       isLoading.value = false;
     }

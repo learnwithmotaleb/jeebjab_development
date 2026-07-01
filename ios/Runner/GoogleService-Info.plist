@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>27682003976-gck1oprs66j0fbv56kca8ftvttqcmjqm.apps.googleusercontent.com</string>
+	<string>642681024764-fh4834269s301ft7fkj7bkv8toitjdjc.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.27682003976-gck1oprs66j0fbv56kca8ftvttqcmjqm</string>
+	<string>com.googleusercontent.apps.642681024764-fh4834269s301ft7fkj7bkv8toitjdjc</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>27682003976-5jl2gb5grq6abu7qpjur9l74rqbburm1.apps.googleusercontent.com</string>
+	<string>642681024764-qh13o1bul4lu1r8vtqt9u0pe3sd3ackj.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA84mZmjy9t9KR5y05gVUI09O3JmYAj_XU</string>
+	<string>AIzaSyC3_aabDBtZJ0AZYStp27dr3tKfQFEJ7gU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>27682003976</string>
+	<string>642681024764</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.titanumtech.jeebjab</string>
 	<key>PROJECT_ID</key>
-	<string>jeebjab-preprod</string>
+	<string>jeebjab-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>jeebjab-preprod.firebasestorage.app</string>
+	<string>jeebjab-dev.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:27682003976:ios:ee9ececba86a63cbe6c5bd</string>
+	<string>1:642681024764:ios:9e940630de12bf1a8ee779</string>
 </dict>
 </plist>

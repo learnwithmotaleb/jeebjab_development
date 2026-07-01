@@ -28,7 +28,7 @@ Future<void> main() async {
 
     await GoogleSignIn.instance.initialize(
       serverClientId:
-          '27682003976-i01hmvr50dmefj44b4tgn4n3g5oo5ngg.apps.googleusercontent.com',
+          '642681024764-iibeam5g8vtduael2uisiu14uf7qi25s.apps.googleusercontent.com',
     );
 
     DeviceUtils.lockDevicePortrait();
