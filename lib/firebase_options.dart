@@ -41,47 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAWoGgDFZJXOqdSA8mz2WCyWj4EJw2bWTc',
-    appId: '1:27682003976:web:ade6622e5438d943e6c5bd',
-    messagingSenderId: '27682003976',
-    projectId: 'jeebjab-preprod',
-    authDomain: 'jeebjab-preprod.firebaseapp.com',
-    storageBucket: 'jeebjab-preprod.firebasestorage.app',
+    apiKey: 'AIzaSyDbw7zUAFuIhcPihjj3tGTvsCTYYC-DXLc',
+    appId: '1:642681024764:web:b91b4193dfade7848ee779',
+    messagingSenderId: '642681024764',
+    projectId: 'jeebjab-dev',
+    authDomain: 'jeebjab-dev.firebaseapp.com',
+    storageBucket: 'jeebjab-dev.firebasestorage.app',
+    measurementId: 'G-9Q7KCLV5GC',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDefMD0XjWLkidJIucRFDkQf4YlrTccv60',
-    appId: '1:27682003976:android:b89ab70e050ba7b7e6c5bd',
-    messagingSenderId: '27682003976',
-    projectId: 'jeebjab-preprod',
-    storageBucket: 'jeebjab-preprod.firebasestorage.app',
+    apiKey: 'AIzaSyBMNUjcbssftN0DS0SY2yx4C60xIVxSsNc',
+    appId: '1:642681024764:android:0fc91269f87c2a478ee779',
+    messagingSenderId: '642681024764',
+    projectId: 'jeebjab-dev',
+    storageBucket: 'jeebjab-dev.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA84mZmjy9t9KR5y05gVUI09O3JmYAj_XU',
-    appId: '1:27682003976:ios:ee9ececba86a63cbe6c5bd',
-    messagingSenderId: '27682003976',
-    projectId: 'jeebjab-preprod',
-    storageBucket: 'jeebjab-preprod.firebasestorage.app',
+    apiKey: 'AIzaSyC3_aabDBtZJ0AZYStp27dr3tKfQFEJ7gU',
+    appId: '1:642681024764:ios:9e940630de12bf1a8ee779',
+    messagingSenderId: '642681024764',
+    projectId: 'jeebjab-dev',
+    storageBucket: 'jeebjab-dev.firebasestorage.app',
+    iosClientId: '642681024764-fh4834269s301ft7fkj7bkv8toitjdjc.apps.googleusercontent.com',
     iosBundleId: 'com.titanumtech.jeebjab',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA84mZmjy9t9KR5y05gVUI09O3JmYAj_XU',
-    appId: '1:27682003976:ios:2e6d60d78eb59e8ae6c5bd',
-    messagingSenderId: '27682003976',
-    projectId: 'jeebjab-preprod',
-    storageBucket: 'jeebjab-preprod.firebasestorage.app',
+    apiKey: 'AIzaSyC3_aabDBtZJ0AZYStp27dr3tKfQFEJ7gU',
+    appId: '1:642681024764:ios:b97032878d5367168ee779',
+    messagingSenderId: '642681024764',
+    projectId: 'jeebjab-dev',
+    storageBucket: 'jeebjab-dev.firebasestorage.app',
+    iosClientId: '642681024764-qn5oqb4plj1o12a4ur0dcthj1kns1srv.apps.googleusercontent.com',
     iosBundleId: 'com.lwm.jeebjab',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAWoGgDFZJXOqdSA8mz2WCyWj4EJw2bWTc',
-    appId: '1:27682003976:web:807c4fae938a0c82e6c5bd',
-    messagingSenderId: '27682003976',
-    projectId: 'jeebjab-preprod',
-    authDomain: 'jeebjab-preprod.firebaseapp.com',
-    storageBucket: 'jeebjab-preprod.firebasestorage.app',
+    apiKey: 'AIzaSyDbw7zUAFuIhcPihjj3tGTvsCTYYC-DXLc',
+    appId: '1:642681024764:web:46b2a8b44e66bdb18ee779',
+    messagingSenderId: '642681024764',
+    projectId: 'jeebjab-dev',
+    authDomain: 'jeebjab-dev.firebaseapp.com',
+    storageBucket: 'jeebjab-dev.firebasestorage.app',
+    measurementId: 'G-ZRX0GRQ30H',
   );
-
 }

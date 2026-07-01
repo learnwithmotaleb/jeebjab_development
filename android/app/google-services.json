@@ -1,45 +1,45 @@
 {
   "project_info": {
-    "project_number": "27682003976",
-    "project_id": "jeebjab-preprod",
-    "storage_bucket": "jeebjab-preprod.firebasestorage.app"
+    "project_number": "642681024764",
+    "project_id": "jeebjab-dev",
+    "storage_bucket": "jeebjab-dev.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:27682003976:android:b89ab70e050ba7b7e6c5bd",
+        "mobilesdk_app_id": "1:642681024764:android:0fc91269f87c2a478ee779",
         "android_client_info": {
           "package_name": "com.titanumtech.jeebjab"
         }
       },
       "oauth_client": [
         {
-          "client_id": "27682003976-5jl2gb5grq6abu7qpjur9l74rqbburm1.apps.googleusercontent.com",
+          "client_id": "642681024764-2hneqkq5nmnsh0gumvpn29hc4n00lu84.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.titanumtech.jeebjab",
-            "certificate_hash": "c2cdabb3b35e18984e6edc70e553bad1bb0588cc"
+            "certificate_hash": "8d1ea499e1a7a9e07987048d7d034c40a9c41d5d"
           }
         },
         {
-          "client_id": "27682003976-i01hmvr50dmefj44b4tgn4n3g5oo5ngg.apps.googleusercontent.com",
+          "client_id": "642681024764-iibeam5g8vtduael2uisiu14uf7qi25s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDefMD0XjWLkidJIucRFDkQf4YlrTccv60"
+          "current_key": "AIzaSyBMNUjcbssftN0DS0SY2yx4C60xIVxSsNc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "27682003976-i01hmvr50dmefj44b4tgn4n3g5oo5ngg.apps.googleusercontent.com",
+              "client_id": "642681024764-iibeam5g8vtduael2uisiu14uf7qi25s.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "27682003976-gck1oprs66j0fbv56kca8ftvttqcmjqm.apps.googleusercontent.com",
+              "client_id": "642681024764-fh4834269s301ft7fkj7bkv8toitjdjc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.titanumtech.jeebjab"

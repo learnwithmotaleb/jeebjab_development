@@ -164,11 +164,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     
-                    SizedBox(height: Dimensions.h(30)),
-                    // OR Text
+                    SizedBox(height: Dimensions.h(10)),
+                    // // OR Text
                     Center(
                       child: Text(
-                        AppStrings.signInWith.tr, 
+                        AppStrings.signInWith.tr,
                         style: AppTextStyles.body.copyWith(
                           fontSize: 14,
                           color: AppColors.blackColor,
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
 
-                    SizedBox(height: Dimensions.h(40)),
+                    SizedBox(height: Dimensions.h(20)),
                     Text(
                       AppStrings.dontHaveAnAccount.tr,
                       style: AppTextStyles.body.copyWith(
