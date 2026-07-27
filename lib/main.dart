@@ -26,6 +26,12 @@ Future<void> main() async {
 
     await FirebaseNotificationService().initialize();
 
+    String? fcmToken = await FirebaseNotificationService().getFCMToken();
+    if (fcmToken != null) {
+      await SharePrefsHelper.saveFcmToken(fcmToken);
+      debugPrint("FCM token explicitly saved in main.dart: $fcmToken");
+    }
+
     await GoogleSignIn.instance.initialize(
       serverClientId:
           '642681024764-iibeam5g8vtduael2uisiu14uf7qi25s.apps.googleusercontent.com',

@@ -7,3 +7,5 @@ build/
 *.jar
 *.keystore
 pubspec.lock
+local.properties
+Config.xcconfig

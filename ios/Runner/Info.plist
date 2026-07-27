@@ -81,5 +81,9 @@
     <key>FirebaseAppDelegateProxyEnabled</key>
     <true/>
 
+    <!-- Google Maps API Key from Config.xcconfig -->
+    <key>GoogleMapsApiKey</key>
+    <string>$(MAPS_API_KEY)</string>
+
 </dict>
 </plist>
