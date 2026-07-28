@@ -21,6 +21,18 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Fix for flutter_google_places_sdk_android 0.2.2 compileDebugKotlin failure:
+// that plugin's Kotlin source targets an older Place API
+// (Place.address / .latLng / .name as Kotlin properties). Without pinning,
+// Gradle resolves the newest com.google.android.libraries.places:places
+// (v4/v5, breaking API change) transitively, and the plugin fails to compile
+// against it. Forcing a compatible 3.x version fixes the build.
+configurations.all {
+    resolutionStrategy {
+        force("com.google.android.libraries.places:places:3.4.0")
+    }
+}
+
 android {
     namespace = "com.titanumtech.jeebjab"
     compileSdk = flutter.compileSdkVersion

@@ -24,8 +24,8 @@ class RecentAddressCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
         padding: EdgeInsets.symmetric(
-            horizontal: 16, 
-            vertical: isTablet ? 18 : 14
+          horizontal: 16,
+          vertical: isTablet ? 18 : 14,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -38,20 +38,40 @@ class RecentAddressCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: isTablet ? 8 : 6,
               offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Text(
-          address,
-          style: TextStyle(
-            fontSize: isTablet ? 16 : 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF1A1A2E),
-            height: 1.4,
-          ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.location_on,
+              size: isTablet ? 20 : 16,
+              color: isSelected
+                  ? AppColors.primaryColor
+                  : const Color(0xFFAAAAAA),
+            ),
+            SizedBox(width: isTablet ? 12 : 8),
+            Expanded(
+              child: Text(
+                address,
+                style: TextStyle(
+                  fontSize: isTablet ? 16 : 14,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF1A1A2E),
+                  height: 1.4,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_circle,
+                size: isTablet ? 20 : 16,
+                color: AppColors.primaryColor,
+              ),
+          ],
         ),
       ),
     );
