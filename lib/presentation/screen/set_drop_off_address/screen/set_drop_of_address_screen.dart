@@ -137,37 +137,40 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
 
                   SizedBox(height: Dimensions.h(24)),
 
-                  // ── Recent Used Address label ──────────────────────────
-                  Text(
-                    AppStrings.recentUsedAddress.tr,
-                    style: TextStyle(
-                      fontSize: Dimensions.f(14),
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.labelColor,
-                    ),
-                  ),
-
-                  SizedBox(height: Dimensions.h(12)),
-
-                  // ── Address List ──────────────────────────────────────
-                  Obx(
-                    () => Column(
-                      children: List.generate(
-                        controller.recentAddresses.length,
-                        (index) {
-                          final address = controller.recentAddresses[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: Dimensions.h(10)),
-                            child: RecentAddressCard(
-                              address: address,
-                              isSelected: controller.selectedAddressIndex.value == index,
-                              onTap: () => controller.selectRecentAddress(index, address),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  // ── Recent Used Address ──────────────────────────────
+                  Obx(() {
+                    if (controller.recentAddresses.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppStrings.recentUsedAddress.tr,
+                          style: TextStyle(
+                            fontSize: Dimensions.f(14),
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.labelColor,
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(12)),
+                        ...List.generate(
+                          controller.recentAddresses.length,
+                          (index) {
+                            final address = controller.recentAddresses[index];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: Dimensions.h(10)),
+                              child: RecentAddressCard(
+                                address: address,
+                                isSelected: controller.selectedAddressIndex.value == index,
+                                onTap: () => controller.selectRecentAddress(index, address),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),
@@ -306,37 +309,40 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
 
                       const SizedBox(height: 48),
 
-                      // ── Recent Used Address Header ──────────────────────────
-                      Text(
-                        AppStrings.recentUsedAddress.tr,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A2E),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // ── Address List ──────────────────────────────────────
-                      Obx(
-                        () => Column(
-                          children: List.generate(
-                            controller.recentAddresses.length,
-                            (index) {
-                              final address = controller.recentAddresses[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: RecentAddressCard(
-                                  address: address,
-                                  isSelected: controller.selectedAddressIndex.value == index,
-                                  onTap: () => controller.selectRecentAddress(index, address),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                      // ── Recent Used Address Header ───────────────────────
+                      Obx(() {
+                        if (controller.recentAddresses.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Recent Used Address",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1A1A2E),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ...List.generate(
+                              controller.recentAddresses.length,
+                              (index) {
+                                final address = controller.recentAddresses[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: RecentAddressCard(
+                                    address: address,
+                                    isSelected: controller.selectedAddressIndex.value == index,
+                                    onTap: () => controller.selectRecentAddress(index, address),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),

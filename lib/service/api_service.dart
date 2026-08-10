@@ -15,15 +15,15 @@ typedef ApiResult = Response;
 
 class ApiClient {
   static const defaultTimeout = Duration(seconds: 30);
+  // File uploads can be large — give them 2 minutes
+  static const multipartTimeout = Duration(minutes: 2);
 
   Future<Map<String, String>> _headers({
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
-    final headers = <String, String>{
-      "Content-Type": "application/json",
-    };
+    final headers = <String, String>{"Content-Type": "application/json"};
 
     // Basic Auth
     if (isBasic) {
@@ -49,15 +49,14 @@ class ApiClient {
     return headers;
   }
 
-
   /// ---------------- Master Request Handler ---------------------
   /// ---------------- Master Request Handler ---------------------
   Future<ApiResult> safeRequest(
-      Future<http.Response> Function() requestFn, {
-        required String url,
-        String method = "GET",
-        bool checkInternet = true,
-      }) async {
+    Future<http.Response> Function() requestFn, {
+    required String url,
+    String method = "GET",
+    bool checkInternet = true,
+  }) async {
     try {
       _logRequest(url, method);
 
@@ -78,7 +77,6 @@ class ApiClient {
 
       return _handleResponse(response);
     }
-
     // No internet
     on SocketException {
       if (Get.isRegistered<InternetController>()) {
@@ -86,23 +84,19 @@ class ApiClient {
       }
       return _handleException("No internet connection!");
     }
-
     // Timeout
     on TimeoutException {
       return _handleException("Request timeout. Please try again.");
     }
-
     // Client error
     on http.ClientException catch (e) {
       return _handleException("Client error: ${e.message}");
     }
-
     // Unknown error
     catch (e) {
       return _handleException("Unexpected error: $e");
     }
   }
-
 
   /// ---------------- Response Handler ---------------------------
   ApiResult _handleResponse(http.Response response) {
@@ -154,16 +148,11 @@ class ApiClient {
     print("GET Headers: $headers"); // Debug: check if token is included
 
     return safeRequest(
-          () async =>
-          http.get(
-            Uri.parse(url),
-            headers: headers,
-          ),
+      () async => http.get(Uri.parse(url), headers: headers),
       url: url,
       method: "GET",
     );
   }
-
 
   Future<ApiResult> post({
     required String url,
@@ -181,21 +170,21 @@ class ApiClient {
 
     print("POST Headers: $headers"); // Debug: check if token is included
     if (body != null) {
-      log.i("POST Body: ${jsonEncode(body)}"); // Print the body for the user to see
+      log.i(
+        "POST Body: ${jsonEncode(body)}",
+      ); // Print the body for the user to see
     }
 
     return safeRequest(
-          () async =>
-          http.post(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.post(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "POST",
     );
   }
-
 
   Future<ApiResult> put({
     required String url,
@@ -211,12 +200,11 @@ class ApiClient {
     );
 
     return safeRequest(
-          () async =>
-          http.put(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.put(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "PUT",
     );
@@ -236,12 +224,11 @@ class ApiClient {
     );
 
     return safeRequest(
-          () async =>
-          http.patch(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.patch(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "PATCH",
     );
@@ -249,7 +236,7 @@ class ApiClient {
 
   Future<ApiResult> delete({
     required String url,
-    Map<String, dynamic>? body,   // optional body
+    Map<String, dynamic>? body, // optional body
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
@@ -262,7 +249,7 @@ class ApiClient {
 
     // Use http.Request to send DELETE with body
     return safeRequest(
-          () async {
+      () async {
         final request = http.Request("DELETE", Uri.parse(url))
           ..headers.addAll(headers)
           ..body = jsonEncode(body ?? {}); // attach body if provided
@@ -275,12 +262,9 @@ class ApiClient {
     );
   }
 
-
-
-
   // ================================================================
-//                      MULTIPART Upload (Enhanced Logging)
-// ================================================================
+  //                      MULTIPART Upload (Enhanced Logging)
+  // ================================================================
   Future<ApiResult> multipart({
     required String url,
     required Map<String, String> fields,
@@ -296,7 +280,10 @@ class ApiClient {
 
       // Add headers
       final headers = await _headers(
-          isBasic: isBasic, isToken: isToken, customHeaders: customHeaders);
+        isBasic: isBasic,
+        isToken: isToken,
+        customHeaders: customHeaders,
+      );
       request.headers.addAll(headers);
       log.i("Request Headers: $headers");
 
@@ -313,13 +300,14 @@ class ApiClient {
           continue; // skip missing files
         }
 
-        final mimeTypeData = (lookupMimeType(file.path)?.split('/') ??
+        final mimeTypeData =
+            (lookupMimeType(file.path)?.split('/') ??
             ['application', 'octet-stream']);
         final contentType = MediaType(mimeTypeData[0], mimeTypeData[1]);
 
-        log.i("Adding file -> Key: ${file.key}, Path: ${file
-            .path}, MIME: ${mimeTypeData.join('/')}, Size: ${fileObj
-            .lengthSync()} bytes");
+        log.i(
+          "Adding file -> Key: ${file.key}, Path: ${file.path}, MIME: ${mimeTypeData.join('/')}, Size: ${fileObj.lengthSync()} bytes",
+        );
 
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -330,11 +318,13 @@ class ApiClient {
         );
       }
 
-      // Send request with timeout
-      final streamed = await request.send().timeout(ApiClient.defaultTimeout);
+      // Send request with extended timeout for file uploads
+      final streamed = await request.send().timeout(ApiClient.multipartTimeout);
 
-      // Convert streamed response to http.Response
-      final response = await http.Response.fromStream(streamed);
+      // Convert streamed response to http.Response (also timeout in case body is large)
+      final response = await http.Response.fromStream(
+        streamed,
+      ).timeout(ApiClient.multipartTimeout);
 
       log.i("Multipart Response Status: ${response.statusCode}");
       log.i("Multipart Response Body: ${response.body}");
@@ -364,7 +354,6 @@ class ApiClient {
     );
   }
 
-
   // ... your existing _headers, _logRequest, _handleResponse, etc.
 
   /// ---------------- PATCH with multipart & token -----------------
@@ -392,7 +381,7 @@ class ApiClient {
 
       if (imageFile != null && imageFile.existsSync()) {
         final mimeTypeData =
-        (lookupMimeType(imageFile.path)?.split('/') ??
+            (lookupMimeType(imageFile.path)?.split('/') ??
             ['application', 'octet-stream']);
 
         request.files.add(
@@ -404,17 +393,16 @@ class ApiClient {
         );
       }
 
-      final streamed = await request.send().timeout(defaultTimeout);
-      final response = await http.Response.fromStream(streamed);
+      final streamed = await request.send().timeout(multipartTimeout);
+      final response = await http.Response.fromStream(
+        streamed,
+      ).timeout(multipartTimeout);
 
       return _handleResponse(response);
     } catch (e) {
       return _handleException("PATCH Multipart Error: $e");
     }
   }
-
-
-
 
   Future<ApiResult> uploadMedicalImage({
     required String url,
@@ -425,13 +413,13 @@ class ApiClient {
     return multipart(
       url: url,
       fields: {},
-      files: [
-        MultipartFileData(
-          key: imageKey,
-          path: imageFile.path,
-        ),
-      ],
-      customHeaders: isToken ? {"Authorization": "Bearer ${await SharePrefsHelper.getToken() ?? ""}"} : null,
+      files: [MultipartFileData(key: imageKey, path: imageFile.path)],
+      customHeaders: isToken
+          ? {
+              "Authorization":
+                  "Bearer ${await SharePrefsHelper.getToken() ?? ""}",
+            }
+          : null,
     );
   }
 
@@ -439,10 +427,7 @@ class ApiClient {
     required String url,
     bool isToken = true,
   }) async {
-    return get(
-      url: url,
-      isToken: isToken,
-    );
+    return get(url: url, isToken: isToken);
   }
 
   Future<ApiResult> removeMedicalImage({
@@ -450,27 +435,16 @@ class ApiClient {
     required Map<String, dynamic> body,
     bool isToken = true,
   }) async {
-    return patch(
-      url: url,
-      body: body,
-      isToken: isToken,
-    );
+    return patch(url: url, body: body, isToken: isToken);
   }
-
-
-
-
-
 }
+
 /// ================= Multipart File Model ========================
 class MultipartFileData {
   final String key;
   final String path;
 
-  MultipartFileData({
-    required this.key,
-    required this.path,
-  });
+  MultipartFileData({required this.key, required this.path});
 
   String get mimeType => lookupMimeType(path) ?? "application/octet-stream";
 }

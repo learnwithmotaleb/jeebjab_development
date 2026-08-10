@@ -79,6 +79,12 @@ class InlineLabelField extends StatelessWidget {
                   color: AppColors.hintColor,
                 ),
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: Dimensions.h(isTablet ? 16 : 12),

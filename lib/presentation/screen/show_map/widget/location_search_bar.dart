@@ -70,6 +70,12 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
                   decoration: const InputDecoration(
                     hintText: "Search location...",
                     border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
+
                   ),
                   onChanged: controller.onSearchTextChanged,
                 ),

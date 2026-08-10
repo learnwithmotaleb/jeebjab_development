@@ -9,8 +9,8 @@ class ApiUrl {
   // static const String _mainDomain = "http://10.10.20.52:5001";
   // static const String _mainDomain = "http://51.21.196.205";
   // static const String _mainDomain = "http://10.10.20.52:5002";
-  static const String _mainDomain = "http://10.10.20.52:5002";
   // static const String _mainDomain = "http://10.10.20.52:5002";
+  static const String _mainDomain = "https://nc5cnwcx-5002.inc1.devtunnels.ms";
 
   static final String baseUrl = _mainDomain;
 

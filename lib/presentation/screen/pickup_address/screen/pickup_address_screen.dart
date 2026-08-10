@@ -37,7 +37,11 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
         actions: isEditMode
             ? [
                 IconButton(
-                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  icon: const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.primaryColor,
+                    size: 26,
+                  ),
                   tooltip: 'Save & Publish',
                   onPressed: controller.onSaveAndPublish,
                 ),
@@ -72,13 +76,19 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                     child: TextField(
                       controller: controller.addressController,
                       style: const TextStyle(
-                          fontSize: 14, color: Color(0xFF1A1A2E)),
+                        fontSize: 14,
+                        color: Color(0xFF1A1A2E),
+                      ),
                       decoration: InputDecoration(
                         hintText: AppStrings.enterPickUpAddress.tr,
                         hintStyle: const TextStyle(
-                            fontSize: 14, color: Color(0xFFAAAAAA)),
+                          fontSize: 14,
+                          color: Color(0xFFAAAAAA),
+                        ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         border: InputBorder.none,
                       ),
                     ),
@@ -92,7 +102,9 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -107,8 +119,11 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.location_on_outlined,
-                              size: 20, color: Color(0xFF1A1A2E)),
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 20,
+                            color: Color(0xFF1A1A2E),
+                          ),
                           const SizedBox(width: 10),
                           Text(
                             AppStrings.chooseOnMap.tr,
@@ -126,34 +141,43 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                   const SizedBox(height: 24),
 
                   // ── Recent Used Address ───────────────────────────────
-                  Text(
-                    AppStrings.recentUsedAddress.tr,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // ── Address List ──────────────────────────────────────
-                  Obx(() => Column(
-                        children: List.generate(
-                          controller.recentAddresses.length,
-                          (index) {
-                            final address = controller.recentAddresses[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: RecentAddressCard(
-                                address: address,
-                                isSelected: controller.selectedAddressIndex.value == index,
-                                onTap: () => controller.selectRecentAddress(index, address),
-                              ),
-                            );
-                          },
+                  Obx(() {
+                    if (controller.recentAddresses.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppStrings.recentUsedAddress.tr,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1A1A2E),
+                          ),
                         ),
-                      )),
+                        const SizedBox(height: 12),
+                        ...List.generate(controller.recentAddresses.length, (
+                          index,
+                        ) {
+                          final address = controller.recentAddresses[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: RecentAddressCard(
+                              address: address,
+                              isSelected:
+                                  controller.selectedAddressIndex.value ==
+                                  index,
+                              onTap: () => controller.selectRecentAddress(
+                                index,
+                                address,
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),
@@ -163,7 +187,9 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: AppButton(
-              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
+              label: isEditMode
+                  ? AppStrings.update.tr
+                  : AppStrings.continueButton.tr,
               height: 60,
               onPressed: controller.onContinue,
             ),
@@ -182,7 +208,11 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
         actions: isEditMode
             ? [
                 IconButton(
-                  icon: const Icon(Icons.check_rounded, color: AppColors.primaryColor, size: 26),
+                  icon: const Icon(
+                    Icons.check_rounded,
+                    color: AppColors.primaryColor,
+                    size: 26,
+                  ),
                   tooltip: 'Save & Publish',
                   onPressed: controller.onSaveAndPublish,
                 ),
@@ -233,16 +263,24 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                         child: TextField(
                           controller: controller.addressController,
                           style: const TextStyle(
-                              fontSize: 16, color: Color(0xFF1A1A2E)),
+                            fontSize: 16,
+                            color: Color(0xFF1A1A2E),
+                          ),
                           decoration: InputDecoration(
                             hintText: AppStrings.enterPickUpAddress.tr,
                             hintStyle: const TextStyle(
-                                fontSize: 16, color: Color(0xFFAAAAAA)),
+                              fontSize: 16,
+                              color: Color(0xFFAAAAAA),
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 18),
+                              horizontal: 20,
+                              vertical: 18,
+                            ),
                             border: InputBorder.none,
-                            prefixIcon:
-                                const Icon(Icons.search, color: Colors.grey),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -255,7 +293,9 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 18),
+                            horizontal: 20,
+                            vertical: 18,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
@@ -270,8 +310,11 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.location_on_outlined,
-                                  size: 24, color: AppColors.primaryColor),
+                              const Icon(
+                                Icons.location_on_outlined,
+                                size: 24,
+                                color: AppColors.primaryColor,
+                              ),
                               const SizedBox(width: 12),
                               Text(
                                 AppStrings.chooseOnMap.tr,
@@ -289,34 +332,45 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                       const SizedBox(height: 48),
 
                       // ── Recent Used Address Header ──────────────────────────
-                      Text(
-                        AppStrings.recentUsedAddress.tr,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A1A2E),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // ── Address List ──────────────────────────────────────
-                      Obx(() => Column(
-                            children: List.generate(
+                      Obx(() {
+                        if (controller.recentAddresses.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.recentUsedAddress.tr,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1A1A2E),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ...List.generate(
                               controller.recentAddresses.length,
                               (index) {
-                                final address = controller.recentAddresses[index];
+                                final address =
+                                    controller.recentAddresses[index];
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 12),
                                   child: RecentAddressCard(
                                     address: address,
-                                    isSelected: controller.selectedAddressIndex.value == index,
-                                    onTap: () => controller.selectRecentAddress(index, address),
+                                    isSelected:
+                                        controller.selectedAddressIndex.value ==
+                                        index,
+                                    onTap: () => controller.selectRecentAddress(
+                                      index,
+                                      address,
+                                    ),
                                   ),
                                 );
                               },
                             ),
-                          )),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -329,7 +383,9 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                   vertical: Dimensions.h(40),
                 ),
                 child: AppButton(
-                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
+                  label: isEditMode
+                      ? AppStrings.update.tr
+                      : AppStrings.continueButton.tr,
                   height: Dimensions.h(100),
                   onPressed: controller.onContinue,
                 ),

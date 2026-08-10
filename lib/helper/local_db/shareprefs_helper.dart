@@ -11,6 +11,6 @@ class SharePrefsKeys {
   static const String jobRequestPostId = 'job_request_post_id';
   static const String jobRequestStatus = 'job_request_status';
   static const String localNotifications = 'local_notifications';
-
-
+  static const String recentPickupAddresses = 'recent_pickup_addresses';
+  static const String recentDropOffAddresses = 'recent_drop_off_addresses';
 }

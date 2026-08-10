@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/helper/local_db/local_db.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
 
 class PickupAddressController extends GetxController {
@@ -16,11 +17,8 @@ class PickupAddressController extends GetxController {
   final RxDouble selectedLat = 0.0.obs;
   final RxDouble selectedLng = 0.0.obs;
 
-  // ── Recent addresses ──────────────────────────────────────────────────────
-  final RxList<String> recentAddresses = <String>[
-    'Abu Dhabi - 23052',
-    'Dubai Downtown - 10001',
-  ].obs;
+  // ── Recent addresses (loaded from local DB on init) ─────────────────────
+  final RxList<String> recentAddresses = <String>[].obs;
 
   @override
   void onInit() {
@@ -35,6 +33,25 @@ class PickupAddressController extends GetxController {
         selectedAddress.value = '';
       }
     });
+
+    _loadRecentAddresses();
+  }
+
+  void _loadRecentAddresses() {
+    final stored = SharePrefsHelper.getRecentPickupAddresses();
+    recentAddresses.assignAll(stored);
+  }
+
+  /// Saves the confirmed address to the pickup recent list (max 5, deduplicated).
+  void _saveToRecent(String address) {
+    final trimmed = address.trim();
+    if (trimmed.isEmpty) return;
+    final List<String> list = List<String>.from(recentAddresses);
+    list.remove(trimmed);
+    list.insert(0, trimmed);
+    if (list.length > 5) list.removeRange(5, list.length);
+    recentAddresses.assignAll(list);
+    SharePrefsHelper.saveRecentPickupAddresses(list);
   }
 
   void selectRecentAddress(int index, String address) {
@@ -90,6 +107,12 @@ class PickupAddressController extends GetxController {
       return;
     }
 
+    // Save whichever address is confirmed (map pick or manual text)
+    final String toSave = selectedAddress.value.isNotEmpty
+        ? selectedAddress.value
+        : addressController.text.trim();
+    _saveToRecent(toSave);
+
     final bool isEditMode = Get.arguments?['isEdit'] ?? false;
 
     if (isEditMode) {
@@ -105,6 +128,10 @@ class PickupAddressController extends GetxController {
           title: "Required");
       return;
     }
+    final String toSave = selectedAddress.value.isNotEmpty
+        ? selectedAddress.value
+        : addressController.text.trim();
+    _saveToRecent(toSave);
     Get.back(result: true); // returns true to trigger publish
   }
 

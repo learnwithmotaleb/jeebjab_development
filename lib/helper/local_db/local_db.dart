@@ -173,6 +173,34 @@ class SharePrefsHelper {
     await _prefs?.remove(SharePrefsKeys.localNotifications);
   }
 
+  // ================= RECENT PICKUP ADDRESSES =================
+
+  static Future<void> saveRecentPickupAddresses(List<String> list) async {
+    await _prefs?.setStringList(SharePrefsKeys.recentPickupAddresses, list);
+  }
+
+  static List<String> getRecentPickupAddresses() {
+    return _prefs?.getStringList(SharePrefsKeys.recentPickupAddresses) ?? [];
+  }
+
+  static Future<void> clearRecentPickupAddresses() async {
+    await _prefs?.remove(SharePrefsKeys.recentPickupAddresses);
+  }
+
+  // ================= RECENT DROP-OFF ADDRESSES =================
+
+  static Future<void> saveRecentDropOffAddresses(List<String> list) async {
+    await _prefs?.setStringList(SharePrefsKeys.recentDropOffAddresses, list);
+  }
+
+  static List<String> getRecentDropOffAddresses() {
+    return _prefs?.getStringList(SharePrefsKeys.recentDropOffAddresses) ?? [];
+  }
+
+  static Future<void> clearRecentDropOffAddresses() async {
+    await _prefs?.remove(SharePrefsKeys.recentDropOffAddresses);
+  }
+
   // ================= CLEAR ALL =================
 
   static Future<void> clearAll() async {
