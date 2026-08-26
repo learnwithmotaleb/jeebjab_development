@@ -37,27 +37,37 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         children: [
           // ── Scrollable Content ──────────────────────────────────────
           Expanded(
-            child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(10),
-                ),
-                child: Column(
-                  children: [
-                    // ── Driver Information Card ───────────────────────
-                    InfoSectionCard(
-                      sectionTitle: AppStrings.driverInformation.tr,
-                      data: controller.driverInfo,
-                    ),
+            child: Obx(() {
+              if (controller.isLoading.value && controller.driverInfo.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                    // ── Bank Information Card ─────────────────────────
-                    InfoSectionCard(
-                      sectionTitle:AppStrings.bankInformation.tr,
-                      data: controller.bankInfo,
+              return RefreshIndicator(
+                onRefresh: controller.getProfile,
+                child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Dimensions.w(10),
                     ),
+                    child: Column(
+                      children: [
+                        // ── Driver Information Card ───────────────────────
+                        InfoSectionCard(
+                          sectionTitle: AppStrings.driverInformation.tr,
+                          data: controller.driverInfo,
+                        ),
 
-                    SizedBox(height: Dimensions.h(24)),
-                  ],
-                )),
+                        // ── Bank Information Card ─────────────────────────
+                        InfoSectionCard(
+                          sectionTitle:AppStrings.bankInformation.tr,
+                          data: controller.bankInfo,
+                        ),
+
+                        SizedBox(height: Dimensions.h(24)),
+                      ],
+                    )),
+              );
+            }),
           ),
 
           // ── Edit Profile Button pinned bottom ───────────────────────
@@ -152,25 +162,27 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                       SizedBox(height: Dimensions.h(48)),
 
                       // ── Two Column Layout for Cards ─────────────────
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Left Column - Driver Information
-                          Expanded(
-                            child: InfoSectionCard(
-                              sectionTitle: AppStrings.driverInformation.tr,
-                              data: controller.driverInfo,
+                      Obx(
+                            () => Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Left Column - Driver Information
+                            Expanded(
+                              child: InfoSectionCard(
+                                sectionTitle: AppStrings.driverInformation.tr,
+                                data: controller.driverInfo,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: Dimensions.w(24)),
-                          // Right Column - Bank Information
-                          Expanded(
-                            child: InfoSectionCard(
-                              sectionTitle: AppStrings.bankInformation.tr,
-                              data: controller.bankInfo,
+                            SizedBox(width: Dimensions.w(24)),
+                            // Right Column - Bank Information
+                            Expanded(
+                              child: InfoSectionCard(
+                                sectionTitle: AppStrings.bankInformation.tr,
+                                data: controller.bankInfo,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
 
                       SizedBox(height: Dimensions.h(40)),

@@ -70,9 +70,12 @@ class EditableInfoSection extends StatelessWidget {
                       child: TextField(
                         controller: row.controller,
                         keyboardType: row.keyboardType,
+                        readOnly: row.readOnly,
                         style: TextStyle(
                           fontSize: Dimensions.f(12),
-                          color: AppColors.labelColor,
+                          color: row.readOnly
+                              ? AppColors.labelColor.withOpacity(0.5)
+                              : AppColors.labelColor,
                         ),
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -99,10 +102,12 @@ class EditableInfoRow {
   final String label;
   final TextEditingController controller;
   final TextInputType keyboardType;
+  final bool readOnly;
 
   EditableInfoRow({
     required this.label,
     required this.controller,
     this.keyboardType = TextInputType.text,
+    this.readOnly = false,
   });
 }

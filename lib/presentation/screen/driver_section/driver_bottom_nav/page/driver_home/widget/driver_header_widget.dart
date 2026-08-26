@@ -11,6 +11,8 @@ import '../controller/driver_home_controller.dart';
 class DriverHeaderWidget extends StatelessWidget {
   final String name;
   final String email;
+  final String avatarUrl;
+  final double rating;
   final int completedJobs;
   final double totalEarn;
   final VoidCallback onNotification;
@@ -20,6 +22,8 @@ class DriverHeaderWidget extends StatelessWidget {
     super.key,
     required this.name,
     required this.email,
+    required this.avatarUrl,
+    required this.rating,
     required this.completedJobs,
     required this.totalEarn,
     required this.onNotification,
@@ -61,7 +65,13 @@ class DriverHeaderWidget extends StatelessWidget {
                 },
                 child: CircleAvatar(
                   radius: Dimensions.w(28),
-                  backgroundImage: AssetImage(AppImages.profileImage),
+                  backgroundColor: Colors.white.withOpacity(0.25),
+                  backgroundImage:
+                      avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+                  child: avatarUrl.isEmpty
+                      ? Icon(Icons.person_rounded,
+                          size: Dimensions.w(28), color: Colors.white)
+                      : null,
                 ),
               ),
               SizedBox(width: Dimensions.w(12)),
@@ -87,21 +97,18 @@ class DriverHeaderWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ...List.generate(
-                          4,
+                          5,
                               (index) => Icon(
                             Icons.star_rounded,
-                            size: Dimensions.w(20),
-                            color: const Color(0xFFFFA500),
+                            size: Dimensions.w(index < rating.round() ? 20 : 18),
+                            color: index < rating.round()
+                                ? const Color(0xFFFFA500)
+                                : Colors.white.withOpacity(0.4),
                           ),
-                        ),
-                        Icon(
-                          Icons.star_rounded,
-                          size: Dimensions.w(18),
-                          color: Colors.white.withOpacity(0.4),
                         ),
                         SizedBox(width: Dimensions.w(4)),
                         Text(
-                          '4.7',
+                          rating.toStringAsFixed(2),
                           style: TextStyle(
                             fontSize: Dimensions.f(16),
                             fontWeight: FontWeight.w700,

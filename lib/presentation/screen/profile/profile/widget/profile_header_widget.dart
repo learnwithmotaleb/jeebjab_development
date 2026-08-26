@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
-import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 
@@ -82,7 +81,11 @@ class ProfileHeaderWidget extends StatelessWidget {
               backgroundColor: AppColors.whiteColor.withOpacity(0.1),
               backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
                   ? NetworkImage(imageUrl!)
-                  : AssetImage(imageAsset ?? AppImages.profileImage) as ImageProvider,
+                  : (imageAsset != null ? AssetImage(imageAsset!) : null),
+              child: (imageUrl == null || imageUrl!.isEmpty) && imageAsset == null
+                  ? Icon(Icons.person_rounded,
+                      size: Dimensions.w(38), color: AppColors.whiteColor)
+                  : null,
             ),
           ),
 
@@ -124,7 +127,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 }),
                 const SizedBox(width: 4),
                 Text(
-                  rating.toString(),
+                  rating!.toStringAsFixed(2),
                   style: TextStyle(
                     fontSize: Dimensions.f(14),
                     fontWeight: FontWeight.bold,

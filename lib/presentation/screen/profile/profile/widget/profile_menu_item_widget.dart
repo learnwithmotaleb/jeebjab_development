@@ -34,12 +34,7 @@ class ProfileMenuItemWidget extends StatelessWidget {
                 Dimensions.gapW(14),
 
                 // 🔹 Label
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: _textStyle,
-                  ),
-                ),
+                Expanded(child: Text(item.title, style: _textStyle)),
 
                 // 🔹 Arrow
                 if (item.iconColor == null)

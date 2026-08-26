@@ -32,67 +32,83 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Obx(() => DriverHeaderWidget(
-              name: 'Ziyn Ahmed',
-              email: 'ziynahmed@email.com',
-              completedJobs: controller.completedJobs.value,
-              totalEarn: controller.totalEarn.value,
-              onNotification: () => Get.toNamed(RoutePath.notification),
-              controller: controller,
-            )),
-            SizedBox(height: Dimensions.h(20)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              child: _buildSectionHeader(AppStrings.currentTask.tr, f: 16),
-            ),
-            SizedBox(height: Dimensions.h(12)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              child: Obx(() => Column(
-                children: controller.currentTasks
-                    .map((task) => CurrentTaskCard(
-                  task: task,
-                  onPickUp: () => controller.onPickUpTap(task),
-                  onOpenMap: () => controller.onOpenMap(task),
-                ))
-                    .toList(),
-              )),
-            ),
-            SizedBox(height: Dimensions.h(8)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              child: _buildSectionHeader(AppStrings.recentJob.tr, f: 16),
-            ),
-            SizedBox(height: Dimensions.h(12)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: Dimensions.w(12),
-                  mainAxisSpacing: Dimensions.h(12),
-                  childAspectRatio: 0.78,
+      body: Obx(() {
+        if (controller.isLoading.value && controller.name.value.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return RefreshIndicator(
+          onRefresh: controller.loadHomeData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Obx(() => DriverHeaderWidget(
+                  name: controller.name.value.isEmpty ? '...' : controller.name.value,
+                  email: '',
+                  avatarUrl: controller.avatarUrl.value,
+                  rating: controller.rating.value,
+                  completedJobs: controller.completedJobs.value,
+                  totalEarn: controller.totalEarn.value,
+                  onNotification: () => Get.toNamed(RoutePath.notification),
+                  controller: controller,
+                )),
+                SizedBox(height: Dimensions.h(20)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: _buildSectionHeader(AppStrings.currentTask.tr, f: 16),
                 ),
-                itemCount: controller.recentJobs.length,
-                itemBuilder: (_, index) {
-                  final job = controller.recentJobs[index];
-                  return RecentJobCard(
-                    job: job,
-                    onTap: () => controller.onRecentJobTap(job),
-                  );
-                },
-              ),
+                SizedBox(height: Dimensions.h(12)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: Obx(() => controller.currentTasks.isEmpty
+                      ? _buildEmptyState('No current tasks')
+                      : Column(
+                    children: controller.currentTasks
+                        .map((task) => CurrentTaskCard(
+                      task: task,
+                      onPickUp: () => controller.onPickUpTap(task),
+                      onOpenMap: () => controller.onOpenMap(task),
+                    ))
+                        .toList(),
+                  )),
+                ),
+                SizedBox(height: Dimensions.h(8)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: _buildSectionHeader(AppStrings.recentJob.tr, f: 16),
+                ),
+                SizedBox(height: Dimensions.h(12)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                  child: Obx(() => controller.recentJobs.isEmpty
+                      ? _buildEmptyState('No jobs nearby right now')
+                      : GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: Dimensions.w(12),
+                      mainAxisSpacing: Dimensions.h(12),
+                      childAspectRatio: 0.68,
+                    ),
+                    itemCount: controller.recentJobs.length,
+                    itemBuilder: (_, index) {
+                      final job = controller.recentJobs[index];
+                      return RecentJobCard(
+                        job: job,
+                        onTap: () => controller.onRecentJobTap(job),
+                      );
+                    },
+                  )),
+                ),
+                SizedBox(height: Dimensions.h(30)),
+              ],
             ),
-            SizedBox(height: Dimensions.h(30)),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -108,8 +124,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               children: [
                 // Header
                 Obx(() => DriverHeaderWidget(
-                  name: 'Ziyn Ahmed',
-                  email: 'ziynahmed@email.com',
+                  name: controller.name.value.isEmpty ? '...' : controller.name.value,
+                  email: '',
+                  avatarUrl: controller.avatarUrl.value,
+                  rating: controller.rating.value,
                   completedJobs: controller.completedJobs.value,
                   totalEarn: controller.totalEarn.value,
                   onNotification: () => Get.toNamed(RoutePath.notification),
@@ -155,7 +173,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                       crossAxisCount: 3, // Changed to 3 columns for tablet
                       crossAxisSpacing: Dimensions.w(20), // Increased spacing
                       mainAxisSpacing: Dimensions.h(20), // Increased spacing
-                      childAspectRatio: 0.78,
+                      childAspectRatio: 0.68,
                     ),
                     itemCount: controller.recentJobs.length,
                     itemBuilder: (_, index) {

@@ -14,6 +14,7 @@ import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_scree
 
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
+import '../../../profile/account_settings/driver_profile/screen/driver_profile_screen.dart';
 import '../controller/driver_bottom_nav_controller.dart';
 import 'package:get/get.dart';
 

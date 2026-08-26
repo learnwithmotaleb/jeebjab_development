@@ -39,7 +39,11 @@ class ApiUrl {
 
   // http://10.10.20.52:5001/auth/register
   static final String getUserProfile = '$baseUrl/user/user-profile';
+  static final String updateUserProfile = '$baseUrl/user/user-profile';
   static final String becomeDriver = '$baseUrl/user/become-driver';
+
+  static final String getDriverProfile = '$baseUrl/driver/profile';
+  static final String updateDriverProfile = '$baseUrl/driver/profile';
 
   static final String createPost = '$baseUrl/post';
   static final String updatePost = '$baseUrl/post/:id';
@@ -66,7 +70,6 @@ class ApiUrl {
   static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
 
-  //==========================
   static String acceptRequest(String id, String requestId) =>
       '$baseUrl/post/$id/requests/$requestId/accept';
 
@@ -105,7 +108,8 @@ class ApiUrl {
       '$baseUrl/notification/$notificationId';
   static String deleteAllNotification = '$baseUrl/notification/clear';
 
-  static String updateFcmToken = '$baseUrl/notification/fcm-token';//Patch Method
-  static String deleteFcmToken = '$baseUrl/notification/fcm-token';//Delete Method
-
+  static String updateFcmToken =
+      '$baseUrl/notification/fcm-token'; //Patch Method
+  static String deleteFcmToken =
+      '$baseUrl/notification/fcm-token'; //Delete Method
 }

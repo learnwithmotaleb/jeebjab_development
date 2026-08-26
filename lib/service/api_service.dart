@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:logger/logger.dart';
+import '../core/routes/route_path.dart';
 import '../helper/local_db/local_db.dart';
 import '../helper/no_internet/controller/no_internet_controller.dart';
+import '../helper/tost_message/show_snackbar.dart';
 
 final log = Logger();
 
@@ -56,6 +58,7 @@ class ApiClient {
     required String url,
     String method = "GET",
     bool checkInternet = true,
+    bool isToken = false,
   }) async {
     try {
       _logRequest(url, method);
@@ -75,7 +78,7 @@ class ApiClient {
         Get.find<InternetController>().setConnected();
       }
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     }
     // No internet
     on SocketException {
@@ -99,7 +102,7 @@ class ApiClient {
   }
 
   /// ---------------- Response Handler ---------------------------
-  ApiResult _handleResponse(http.Response response) {
+  ApiResult _handleResponse(http.Response response, {bool isToken = false}) {
     log.i("Response Code: ${response.statusCode}");
     log.i("Response Body: ${response.body}");
 
@@ -110,12 +113,46 @@ class ApiClient {
       decoded = response.body;
     }
 
+    // Token expired / invalid on an authenticated request -> force logout.
+    if (isToken &&
+        (response.statusCode == 401 || response.statusCode == 403)) {
+      _handleUnauthorized();
+    }
+
     return Response(
       statusCode: response.statusCode,
       body: decoded,
       bodyString: response.body,
       statusText: response.reasonPhrase,
     );
+  }
+
+  /// ---------------- Session Expiry Handler -----------------------
+  /// Guards against firing multiple times if several requests are
+  /// in-flight when the token expires.
+  static bool _isHandlingUnauthorized = false;
+
+  void _handleUnauthorized() {
+    if (_isHandlingUnauthorized) return;
+    _isHandlingUnauthorized = true;
+
+    log.w("Unauthorized (401/403) — session expired, logging out.");
+
+    Future(() async {
+      try {
+        await SharePrefsHelper.clearAll();
+      } catch (e) {
+        log.e("Error clearing local session on 401: $e");
+      }
+
+      if (Get.currentRoute != RoutePath.login) {
+        AppSnackBar.fail(
+          "Your session has expired. Please login again.",
+          title: "Session Expired",
+        );
+        Get.offAllNamed(RoutePath.login);
+      }
+    }).whenComplete(() => _isHandlingUnauthorized = false);
   }
 
   /// ---------------- Error Handler -------------------------------
@@ -151,6 +188,7 @@ class ApiClient {
       () async => http.get(Uri.parse(url), headers: headers),
       url: url,
       method: "GET",
+      isToken: isToken,
     );
   }
 
@@ -183,6 +221,7 @@ class ApiClient {
       ),
       url: url,
       method: "POST",
+      isToken: isToken,
     );
   }
 
@@ -207,6 +246,7 @@ class ApiClient {
       ),
       url: url,
       method: "PUT",
+      isToken: isToken,
     );
   }
 
@@ -231,6 +271,7 @@ class ApiClient {
       ),
       url: url,
       method: "PATCH",
+      isToken: isToken,
     );
   }
 
@@ -259,6 +300,7 @@ class ApiClient {
       },
       url: url,
       method: "DELETE",
+      isToken: isToken,
     );
   }
 
@@ -269,14 +311,15 @@ class ApiClient {
     required String url,
     required Map<String, String> fields,
     required List<MultipartFileData> files,
+    String method = "POST",
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
     try {
-      _logRequest(url, "MULTIPART");
+      _logRequest(url, "MULTIPART $method");
 
-      final request = http.MultipartRequest("POST", Uri.parse(url));
+      final request = http.MultipartRequest(method, Uri.parse(url));
 
       // Add headers
       final headers = await _headers(
@@ -329,7 +372,7 @@ class ApiClient {
       log.i("Multipart Response Status: ${response.statusCode}");
       log.i("Multipart Response Body: ${response.body}");
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     } catch (e) {
       log.e("Multipart Error: $e");
       return _handleException("Multipart Error: $e");
@@ -348,6 +391,28 @@ class ApiClient {
       url: url,
       fields: fields,
       files: files,
+      method: "POST",
+      isBasic: isBasic,
+      isToken: isToken,
+      customHeaders: customHeaders,
+    );
+  }
+
+  /// PATCH multipart with any number of named files (unlike [patchWithMultipart],
+  /// which only supports a single image under one fixed field key).
+  Future<ApiResult> patchMultipart({
+    required String url,
+    required Map<String, String> fields,
+    required List<MultipartFileData> files,
+    bool isBasic = false,
+    bool isToken = false,
+    Map<String, String>? customHeaders,
+  }) async {
+    return multipart(
+      url: url,
+      fields: fields,
+      files: files,
+      method: "PATCH",
       isBasic: isBasic,
       isToken: isToken,
       customHeaders: customHeaders,
@@ -361,6 +426,7 @@ class ApiClient {
     required String url,
     required Map<String, String> fields,
     File? imageFile,
+    String imageKey = "insurance_Photo", // ✅ default kept for back-compat
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
@@ -386,7 +452,7 @@ class ApiClient {
 
         request.files.add(
           await http.MultipartFile.fromPath(
-            "insurance_Photo", // ✅ correct key
+            imageKey,
             imageFile.path,
             contentType: MediaType(mimeTypeData[0], mimeTypeData[1]),
           ),
@@ -398,7 +464,7 @@ class ApiClient {
         streamed,
       ).timeout(multipartTimeout);
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     } catch (e) {
       return _handleException("PATCH Multipart Error: $e");
     }
@@ -414,6 +480,7 @@ class ApiClient {
       url: url,
       fields: {},
       files: [MultipartFileData(key: imageKey, path: imageFile.path)],
+      isToken: isToken,
       customHeaders: isToken
           ? {
               "Authorization":

@@ -1,12 +1,51 @@
 // lib/data/models/user_model.dart
 
+import '../../../../../service/api_url.dart';
+
+/// authId is populated (not just an id string) on both
+/// GET /user/user-profile and GET /driver/profile.
+class AuthModel {
+  final String? email;
+  final String? role; // "USER" | "DRIVER" | "ADMIN" | "SUPER_ADMIN"
+  final bool? isActive;
+  final bool? isBlocked;
+
+  AuthModel({
+    this.email,
+    this.role,
+    this.isActive,
+    this.isBlocked,
+  });
+
+  factory AuthModel.fromJson(Map<String, dynamic> json) => AuthModel(
+    email: json['email']?.toString(),
+    role: json['role']?.toString(),
+    isActive: json['isActive'] as bool?,
+    isBlocked: json['isBlocked'] as bool?,
+  );
+
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'role': role,
+    'isActive': isActive,
+    'isBlocked': isBlocked,
+  };
+}
+
 class UserModel {
   final String id;
-  final String authId;
+  final AuthModel? authId;
   final String name;
   final String email;
   final String? phoneNumber;
   final String? avatar;
+  final String? gender;
+  final DateTime? dateOfBirth;
+  final double ratingAsAdvertiser;
+  final int totalRatingsAsAdvertiser;
+  final String? activeMode; // "user" | "driver"
+  final bool isOnline;
+  final String? fcmToken;
   final bool isPhoneVerified;
   final String? defaultAddress;
   final DriverProfileModel? driverProfile;
@@ -16,24 +55,32 @@ class UserModel {
 
   UserModel({
     required this.id,
-    required this.authId,
+    this.authId,
     required this.name,
     required this.email,
     this.phoneNumber,
     this.avatar,
-    required this.isPhoneVerified,
+    this.gender,
+    this.dateOfBirth,
+    this.ratingAsAdvertiser = 0,
+    this.totalRatingsAsAdvertiser = 0,
+    this.activeMode,
+    this.isOnline = false,
+    this.fcmToken,
+    this.isPhoneVerified = false,
     this.defaultAddress,
     this.driverProfile,
-    required this.isDeleted,
+    this.isDeleted = false,
     this.createdAt,
     this.updatedAt,
   });
 
   /// Full avatar URL ready for Image.network()
   String? get avatarUrl =>
-      avatar != null ? 'http://$avatar' : null;
+      (avatar != null && avatar!.isNotEmpty) ? ApiUrl.buildImageUrl(avatar!) : null;
 
   bool get isDriver => driverProfile != null;
+  String? get role => authId?.role;
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     // ── unwrap envelope if needed ──────────────────────────
@@ -42,41 +89,59 @@ class UserModel {
         : json;
 
     return UserModel(
-      id:              d['_id']?.toString()          ?? '',
-      authId:          d['authId']?.toString()       ?? '',
-      name:            d['name']?.toString()         ?? '',
-      email:           d['email']?.toString()        ?? '',
-      phoneNumber:     d['phoneNumber']?.toString(),
-      avatar:          d['avatar']?.toString(),
-      isPhoneVerified: d['isPhoneVerified'] == true,
-      defaultAddress:  d['defaultAddress']?.toString(),
-      driverProfile:   d['driverProfile'] != null
+      id:                       d['_id']?.toString()          ?? '',
+      authId:                   d['authId'] is Map
+          ? AuthModel.fromJson(d['authId'] as Map<String, dynamic>)
+          : null,
+      name:                     d['name']?.toString()         ?? '',
+      email:                    d['email']?.toString()        ?? '',
+      phoneNumber:              d['phoneNumber']?.toString(),
+      avatar:                   d['avatar']?.toString(),
+      gender:                   d['gender']?.toString(),
+      dateOfBirth:              d['dateOfBirth'] != null
+          ? DateTime.tryParse(d['dateOfBirth'].toString())
+          : null,
+      ratingAsAdvertiser:       (d['ratingAsAdvertiser'] as num?)?.toDouble() ?? 0,
+      totalRatingsAsAdvertiser: (d['totalRatingsAsAdvertiser'] as num?)?.toInt() ?? 0,
+      activeMode:               d['activeMode']?.toString(),
+      isOnline:                 d['isOnline'] == true,
+      fcmToken:                 d['fcmToken']?.toString(),
+      isPhoneVerified:          d['isPhoneVerified'] == true,
+      defaultAddress:           d['defaultAddress']?.toString(),
+      driverProfile:            d['driverProfile'] != null
           ? DriverProfileModel.fromJson(
           d['driverProfile'] as Map<String, dynamic>)
           : null,
-      isDeleted:       d['isDeleted'] == true,
-      createdAt:       d['createdAt'] != null
+      isDeleted:                d['isDeleted'] == true,
+      createdAt:                d['createdAt'] != null
           ? DateTime.tryParse(d['createdAt'].toString())
           : null,
-      updatedAt:       d['updatedAt'] != null
+      updatedAt:                d['updatedAt'] != null
           ? DateTime.tryParse(d['updatedAt'].toString())
           : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    '_id':             id,
-    'authId':          authId,
-    'name':            name,
-    'email':           email,
-    'phoneNumber':     phoneNumber,
-    'avatar':          avatar,
-    'isPhoneVerified': isPhoneVerified,
-    'defaultAddress':  defaultAddress,
-    'driverProfile':   driverProfile?.toJson(),
-    'isDeleted':       isDeleted,
-    'createdAt':       createdAt?.toIso8601String(),
-    'updatedAt':       updatedAt?.toIso8601String(),
+    '_id':                       id,
+    'authId':                    authId?.toJson(),
+    'name':                      name,
+    'email':                     email,
+    'phoneNumber':                phoneNumber,
+    'avatar':                    avatar,
+    'gender':                    gender,
+    'dateOfBirth':               dateOfBirth?.toIso8601String(),
+    'ratingAsAdvertiser':        ratingAsAdvertiser,
+    'totalRatingsAsAdvertiser':  totalRatingsAsAdvertiser,
+    'activeMode':                activeMode,
+    'isOnline':                  isOnline,
+    'fcmToken':                  fcmToken,
+    'isPhoneVerified':           isPhoneVerified,
+    'defaultAddress':            defaultAddress,
+    'driverProfile':             driverProfile?.toJson(),
+    'isDeleted':                 isDeleted,
+    'createdAt':                 createdAt?.toIso8601String(),
+    'updatedAt':                 updatedAt?.toIso8601String(),
   };
 
   UserModel copyWith({
@@ -85,20 +150,29 @@ class UserModel {
     String? avatar,
     String? defaultAddress,
     DriverProfileModel? driverProfile,
+    bool? isOnline,
+    String? activeMode,
   }) {
     return UserModel(
-      id:              id,
-      authId:          authId,
-      name:            name            ?? this.name,
-      email:           email,
-      phoneNumber:     phoneNumber     ?? this.phoneNumber,
-      avatar:          avatar          ?? this.avatar,
-      isPhoneVerified: isPhoneVerified,
-      defaultAddress:  defaultAddress  ?? this.defaultAddress,
-      driverProfile:   driverProfile   ?? this.driverProfile,
-      isDeleted:       isDeleted,
-      createdAt:       createdAt,
-      updatedAt:       updatedAt,
+      id:                       id,
+      authId:                   authId,
+      name:                     name            ?? this.name,
+      email:                    email,
+      phoneNumber:              phoneNumber     ?? this.phoneNumber,
+      avatar:                   avatar          ?? this.avatar,
+      gender:                   gender,
+      dateOfBirth:              dateOfBirth,
+      ratingAsAdvertiser:       ratingAsAdvertiser,
+      totalRatingsAsAdvertiser: totalRatingsAsAdvertiser,
+      activeMode:               activeMode      ?? this.activeMode,
+      isOnline:                 isOnline        ?? this.isOnline,
+      fcmToken:                 fcmToken,
+      isPhoneVerified:          isPhoneVerified,
+      defaultAddress:           defaultAddress  ?? this.defaultAddress,
+      driverProfile:            driverProfile   ?? this.driverProfile,
+      isDeleted:                isDeleted,
+      createdAt:                createdAt,
+      updatedAt:                updatedAt,
     );
   }
 }
@@ -106,11 +180,11 @@ class UserModel {
 // lib/data/models/driver_profile_model.dart
 
 class DriverProfileModel {
-  final String driverType;        // "independent"
+  final String driverType;        // "independent" | "company"
   final String? companyId;
   final String? companyDriverId;
   final String companyName;
-  final String vehicleType;       // "motorcycle"
+  final String vehicleType;       // "motorcycle" | "car" | "van" | "truck"
   final String vehicleBrand;
   final String vehicleModel;
   final int vehicleYear;
@@ -125,6 +199,7 @@ class DriverProfileModel {
   final int totalRatings;
   final int totalDeliveries;
   final DateTime? lastLocationUpdatedAt;
+  final BankInfoModel? bankInfo;
 
   DriverProfileModel({
     required this.driverType,
@@ -146,6 +221,7 @@ class DriverProfileModel {
     required this.totalRatings,
     required this.totalDeliveries,
     this.lastLocationUpdatedAt,
+    this.bankInfo,
   });
 
   /// Quick approval helpers
@@ -182,6 +258,9 @@ class DriverProfileModel {
           ? DateTime.tryParse(
           json['lastLocationUpdatedAt'].toString())
           : null,
+      bankInfo:               json['bankInfo'] != null
+          ? BankInfoModel.fromJson(json['bankInfo'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -205,6 +284,33 @@ class DriverProfileModel {
     'totalRatings':          totalRatings,
     'totalDeliveries':       totalDeliveries,
     'lastLocationUpdatedAt': lastLocationUpdatedAt?.toIso8601String(),
+    'bankInfo':              bankInfo?.toJson(),
+  };
+}
+
+// lib/data/models/bank_info_model.dart
+
+class BankInfoModel {
+  final String? bankName;
+  final String? accountHolderName;
+  final String? accountNumber;
+
+  BankInfoModel({
+    this.bankName,
+    this.accountHolderName,
+    this.accountNumber,
+  });
+
+  factory BankInfoModel.fromJson(Map<String, dynamic> json) => BankInfoModel(
+    bankName:          json['bankName']?.toString(),
+    accountHolderName: json['accountHolderName']?.toString(),
+    accountNumber:     json['accountNumber']?.toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'bankName':          bankName,
+    'accountHolderName': accountHolderName,
+    'accountNumber':     accountNumber,
   };
 }
 
@@ -222,7 +328,7 @@ class DriverDocumentModel {
   });
 
   /// Full URL ready for Image.network()
-  String get fullUrl => 'http://$url';
+  String get fullUrl => ApiUrl.buildImageUrl(url);
 
   /// Human-readable label
   String get label {

@@ -83,8 +83,7 @@ class LoginController extends GetxController {
             if (authId != null) {
               final roleStr = authId['role'];
               if (roleStr != null) {
-                if (roleStr.toString().toUpperCase() == 'USER' ||
-                    roleStr.toString().toUpperCase() == 'USER') {
+                if (roleStr.toString().toUpperCase() == 'USER') {
                   await SharePrefsHelper.saveRole(AppRole.USER);
                 } else if (roleStr.toString().toUpperCase() == 'DRIVER') {
                   await SharePrefsHelper.saveRole(AppRole.DRIVER);

@@ -2,20 +2,28 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
-import 'package:jeebjab/utils/assets_image/app_images.dart';
 
 class AvatarPickerWidget extends StatelessWidget {
   final File? pickedImage;
+  final String? networkImageUrl;
   final VoidCallback onTap;
 
   const AvatarPickerWidget({
     super.key,
     required this.pickedImage,
+    this.networkImageUrl,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider? backgroundImage;
+    if (pickedImage != null) {
+      backgroundImage = FileImage(pickedImage!);
+    } else if (networkImageUrl != null && networkImageUrl!.isNotEmpty) {
+      backgroundImage = NetworkImage(networkImageUrl!);
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -25,9 +33,11 @@ class AvatarPickerWidget extends StatelessWidget {
           CircleAvatar(
             radius: Dimensions.w(44),
             backgroundColor: const Color(0xFFEEEEEE),
-            backgroundImage: pickedImage != null
-                ? FileImage(pickedImage!) as ImageProvider
-                : AssetImage(AppImages.profileImage),
+            backgroundImage: backgroundImage,
+            child: backgroundImage == null
+                ? Icon(Icons.person_rounded,
+                    size: Dimensions.w(44), color: Colors.grey)
+                : null,
           ),
 
           // ── Edit badge ─────────────────────────────────────────────

@@ -48,6 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: Obx(
                           () => AvatarPickerWidget(
                         pickedImage: controller.pickedImage.value,
+                        networkImageUrl: controller.existingAvatarUrl.value,
                         onTap: controller.pickImage,
                       ),
                     ),
@@ -105,10 +106,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Dimensions.w(16),
               Dimensions.h(24),
             ),
-            child: AppButton(
-              label: AppStrings.updateProfile.tr,
-              onPressed: controller.onUpdateProfile,
-              height: 65,
+            child: Obx(
+              () => AppButton(
+                label: AppStrings.updateProfile.tr,
+                onPressed: controller.onUpdateProfile,
+                isLoading: controller.isUpdating.value,
+                height: 65,
+              ),
             ),
           ),
           SizedBox(height: Dimensions.h(24)),
@@ -254,10 +258,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 constraints: BoxConstraints(maxWidth: 520),
                 child: SizedBox(
                   width: double.infinity,
-                  child: AppButton(
-                    label: AppStrings.updateProfile.tr,
-                    onPressed: controller.onUpdateProfile,
-                    height: Dimensions.h(100),
+                  child: Obx(
+                    () => AppButton(
+                      label: AppStrings.updateProfile.tr,
+                      onPressed: controller.onUpdateProfile,
+                      isLoading: controller.isUpdating.value,
+                      height: Dimensions.h(100),
+                    ),
                   ),
                 ),
               ),

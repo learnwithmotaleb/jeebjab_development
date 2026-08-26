@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 
-import '../controller/driver_home_controller.dart';
+import '../../../../../../../service/api_url.dart';
+import '../../../../../job/job_post/model/job_post_model.dart';
 
 class RecentJobCard extends StatelessWidget {
-  final RecentJob job;
+  final PostItem job;
   final VoidCallback onTap;
 
   const RecentJobCard({super.key, required this.job, required this.onTap});
 
   IconData get _icon {
-    switch (job.categoryIcon) {
-      case 'recycle':
+    switch (job.type) {
+      case 'recycling':
         return Icons.recycling_outlined;
       default:
         return Icons.inventory_2_outlined;
@@ -21,6 +22,10 @@ class RecentJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = (job.photo ?? '').isNotEmpty
+        ? ApiUrl.buildImageUrl(job.photo!)
+        : null;
+
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -33,14 +38,19 @@ class RecentJobCard extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 1,
-                  child: Image.network(
-                    job.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: const Color(0xFFE0E0E0),
-                      child: const Icon(Icons.image_outlined, color: Colors.grey),
-                    ),
-                  ),
+                  child: imageUrl != null
+                      ? Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: const Color(0xFFE0E0E0),
+                            child: const Icon(Icons.image_outlined, color: Colors.grey),
+                          ),
+                        )
+                      : Container(
+                          color: const Color(0xFFE0E0E0),
+                          child: const Icon(Icons.image_outlined, color: Colors.grey),
+                        ),
                 ),
                 // ── Category icon bottom-left ──────────────────────────
                 Positioned(
@@ -69,7 +79,7 @@ class RecentJobCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(Dimensions.r(6)),
                     ),
                     child: Text(
-                      'AED ${job.price.toInt()}',
+                      'AED ${job.price ?? 0}',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: Dimensions.f(11),
@@ -90,7 +100,7 @@ class RecentJobCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  job.title,
+                  job.title ?? '',
                   style: TextStyle(
                     fontSize: Dimensions.f(14),
                     fontWeight: FontWeight.w700,
@@ -101,28 +111,29 @@ class RecentJobCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: Dimensions.h(4)),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined, 
-                      size: Dimensions.f(12), 
-                      color: AppColors.greyColor,
-                    ),
-                    SizedBox(width: Dimensions.w(4)),
-                    Expanded(
-                      child: Text(
-                        job.distance,
-                        style: TextStyle(
-                          fontSize: Dimensions.f(11), 
-                          color: AppColors.greyColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                if (job.distanceKm != null)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: Dimensions.f(12),
+                        color: AppColors.greyColor,
                       ),
-                    ),
-                  ],
-                ),
+                      SizedBox(width: Dimensions.w(4)),
+                      Expanded(
+                        child: Text(
+                          '${job.distanceKm!.toStringAsFixed(1)} KM',
+                          style: TextStyle(
+                            fontSize: Dimensions.f(11),
+                            color: AppColors.greyColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

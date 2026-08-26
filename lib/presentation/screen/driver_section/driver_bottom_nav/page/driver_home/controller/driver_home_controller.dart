@@ -2,212 +2,124 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../../core/routes/route_path.dart';
-
-enum TaskStatus { pickUp, inTransit, delivered }
-
-class DriverTask {
-  final String id;
-  final String title;
-  final String person;
-  final String address;
-  final double price;
-  final String categoryIcon;
-  final Rx<TaskStatus> status;
-
-  DriverTask({
-    required this.id,
-    required this.title,
-    required this.person,
-    required this.address,
-    required this.price,
-    required this.categoryIcon,
-    TaskStatus initialStatus = TaskStatus.pickUp,
-  }) : status = initialStatus.obs;
-}
-
-class RecentJob {
-  final String title;
-  final String imageUrl;
-  final double price;
-  final String distance;
-  final String categoryIcon;
-
-  RecentJob({
-    required this.title,
-    required this.imageUrl,
-    required this.price,
-    required this.distance,
-    required this.categoryIcon,
-  });
-}
+import '../../../../../../../service/api_service.dart';
+import '../../../../../../../service/api_url.dart';
+import '../../../../../profile/profile/model/user_model.dart';
+import '../../../../../job/job_post/model/job_post_model.dart';
+import '../../task/model/DriverTaskModel.dart';
 
 class DriverHomeController extends GetxController {
-  // ── Stats ──────────────────────────────────────────────────────────────────
-  final RxInt completedJobs = 23.obs;
-  final RxDouble totalEarn = 2423.0.obs;
+  final ApiClient _apiClient = ApiClient();
 
-  // ── Activity Summary Period Selection ───────────────────────────────────────
+  final RxBool isLoading = false.obs;
+
+  // ── Header (from GET /driver/profile) ───────────────────────────────────
+  final RxString name = ''.obs;
+  final RxString avatarUrl = ''.obs; // empty = show placeholder asset
+  final RxDouble rating = 0.0.obs;
+  final RxInt completedJobs = 0.obs;
+
+  // No earnings/payout endpoint exists yet — kept at 0 until the backend
+  // exposes one. Do not wire this to a guessed URL.
+  final RxDouble totalEarn = 0.0.obs;
+
+  // ── Activity Summary Period Selection ───────────────────────────────────
   final RxString activityPeriod = 'Weekly'.obs;
   final List<String> periodOptions = ['Weekly', 'Monthly'];
 
-  // ── Current Tasks ──────────────────────────────────────────────────────────
-  final RxList<DriverTask> currentTasks = <DriverTask>[
-    DriverTask(
-      id: '1',
-      title: 'Dior Red Coat',
-      person: 'Cristian Dior',
-      address: 'Level Shoes District, Dubai Mall',
-      price: 148,
-      categoryIcon: 'move',
-      initialStatus: TaskStatus.pickUp,
-    ),
-    DriverTask(
-      id: '2',
-      title: 'Ducati Bike',
-      person: 'Cristian Dior',
-      address: 'Abu Dhabi - 2612, Level 2 - Door 6',
-      price: 148,
-      categoryIcon: 'move',
-      initialStatus: TaskStatus.delivered,
-    ),
-    DriverTask(
-      id: '3',
-      title: 'Plastic & Papers',
-      person: 'Cristian Dior',
-      address: 'Level Shoes District, Dubai Mall',
-      price: 148,
-      categoryIcon: 'recycle',
-      initialStatus: TaskStatus.pickUp,
-    ),
-  ].obs;
+  // ── Current Tasks (GET /driver/tasks?status=active) ─────────────────────
+  final RxList<Task> currentTasks = <Task>[].obs;
 
-  // ── Recent Jobs ────────────────────────────────────────────────────────────
-  final List<RecentJob> recentJobs = [
-    RecentJob(
-      title: 'Ducati Bike',
-      imageUrl:
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
-      price: 120,
-      distance: '3 KM',
-      categoryIcon: 'move',
-    ),
-    RecentJob(
-      title: 'Dior Red Coat',
-      imageUrl:
-      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400',
-      price: 120,
-      distance: '3 KM',
-      categoryIcon: 'move',
-    ),
-    RecentJob(
-      title: 'Bike',
-      imageUrl:
-      'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400',
-      price: 120,
-      distance: '3 KM',
-      categoryIcon: 'move',
-    ),
-    RecentJob(
-      title: 'Plastic & Paper',
-      imageUrl:
-      'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400',
-      price: 120,
-      distance: '3 KM',
-      categoryIcon: 'recycle',
-    ),
-  ];
+  // ── Recent Jobs (GET /post, same feed as the Jobs tab) ───────────────────
+  final RxList<PostItem> recentJobs = <PostItem>[].obs;
 
-  // ── Change Activity Period ──────────────────────────────────────────────────
+  @override
+  void onInit() {
+    super.onInit();
+    loadHomeData();
+  }
+
+  Future<void> loadHomeData() async {
+    isLoading.value = true;
+    await Future.wait([
+      _loadProfile(),
+      _loadCurrentTasks(),
+      _loadRecentJobs(),
+    ]);
+    isLoading.value = false;
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.getDriverProfile,
+        isToken: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final user = UserModel.fromJson(response.body);
+        name.value = user.name;
+        avatarUrl.value = user.avatarUrl ?? '';
+        rating.value = user.driverProfile?.averageRating ?? 0.0;
+        completedJobs.value = user.driverProfile?.totalDeliveries ?? 0;
+      }
+    } catch (e) {
+      debugPrint('Error loading driver profile for home: $e');
+    }
+  }
+
+  Future<void> _loadCurrentTasks() async {
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.getActiveTasks,
+        isToken: true,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final model = DriverTaskModel.fromJson(response.body);
+        // Home only has room for a couple — show the most recent ones.
+        currentTasks.assignAll((model.data?.tasks ?? []).take(3));
+      }
+    } catch (e) {
+      debugPrint('Error loading current tasks for home: $e');
+    }
+  }
+
+  Future<void> _loadRecentJobs() async {
+    try {
+      final url = Uri.parse(ApiUrl.getJobPost)
+          .replace(queryParameters: {'sort': 'nearest', 'limit': '4'})
+          .toString();
+      final response = await _apiClient.get(url: url, isToken: true);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final model = JobPostModel.fromJson(
+          response.body is Map<String, dynamic>
+              ? response.body as Map<String, dynamic>
+              : {},
+        );
+        recentJobs.assignAll(model.data?.posts ?? []);
+      }
+    } catch (e) {
+      debugPrint('Error loading recent jobs for home: $e');
+    }
+  }
+
+  // ── Change Activity Period ──────────────────────────────────────────────
   void setActivityPeriod(String period) {
     activityPeriod.value = period;
-    // TODO: Fetch data based on period selection
+    // TODO: Fetch stats for the selected period once a stats endpoint exists.
   }
 
-  // ── PickUp confirmation ────────────────────────────────────────────────────
-  void onPickUpTap(DriverTask task) {
-    Get.dialog(
-      Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Are You Sure',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF1A1A2E)),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Are You Sure, You Have Picked-Up ?',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        height: 46,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'No',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A2E)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.back();
-                        task.status.value = TaskStatus.inTransit;
-                      },
-                      child: Container(
-                        height: 46,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF17C5B5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'Yes',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: true,
-    );
+  // ── Task actions — real tasks only have active/completed at the API
+  // level (no in-transit step), so both actions just open Task Details,
+  // which already implements the documented completion flow.
+  void onPickUpTap(Task task) {
+    Get.toNamed(RoutePath.taskDetailsScreen, arguments: {'id': task.id});
   }
 
-  void onOpenMap(DriverTask task) {
-    // TODO: Get.toNamed(RoutePath.mapView, arguments: {'task': task});
-    Get.toNamed(RoutePath.postDetails, arguments: {'task': task});
+  void onOpenMap(Task task) {
+    Get.toNamed(RoutePath.taskDetailsScreen, arguments: {'id': task.id});
   }
 
-  void onRecentJobTap(RecentJob job) {
-    // TODO: Get.toNamed(RoutePath.categoryStatus, arguments: {'title': job.title});
-    Get.toNamed(RoutePath.postDetails, arguments: {'task': job});
+  void onRecentJobTap(PostItem job) {
+    Get.toNamed(RoutePath.postDetails, arguments: {'id': job.sId});
   }
 }
