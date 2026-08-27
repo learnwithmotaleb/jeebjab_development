@@ -28,6 +28,14 @@ class StatusDetailsController extends GetxController {
   RxString imagePath = "".obs;
   RxString status = "pending".obs; // "pending", "active", "completed"
 
+  // ── Route (for the "Open Map" / "Live Tracking" route view) ───────────────
+  RxString pickupAddress = "".obs;
+  RxString dropoffAddress = "".obs;
+  double? pickupLat;
+  double? pickupLng;
+  double? dropoffLat;
+  double? dropoffLng;
+
   // ── Driver Info ───────────────────────────────────────────────────────────
   RxString driverName = "".obs;
   RxString driverPhone = "".obs;
@@ -98,8 +106,12 @@ class StatusDetailsController extends GetxController {
       itemSubtype.value = data['type']?.toString().capitalizeFirst ?? "";
     }
 
-    trackingNumber.value =
-        data['_id']?.toString().substring(0, 10).toUpperCase() ?? "";
+    // jobId is the real backend reference number; older posts (created
+    // before it existed) don't have one, so fall back to a truncated _id.
+    final jobId = data['jobId']?.toString();
+    trackingNumber.value = (jobId != null && jobId.isNotEmpty)
+        ? jobId
+        : (data['_id']?.toString().substring(0, 10).toUpperCase() ?? "");
     status.value = data['status'] ?? "pending";
 
     // Date
@@ -116,6 +128,26 @@ class StatusDetailsController extends GetxController {
     // Image
     if (data['photos'] != null && (data['photos'] as List).isNotEmpty) {
       imagePath.value = ApiUrl.buildImageUrl(data['photos'][0].toString());
+    }
+
+    // Pickup / drop-off (for the route map)
+    final pickup = data['pickup'];
+    if (pickup != null) {
+      pickupAddress.value = pickup['address']?['text'] ?? "";
+      final coords = pickup['address']?['coordinates'];
+      pickupLat = (coords?['lat'] as num?)?.toDouble();
+      pickupLng = (coords?['lng'] as num?)?.toDouble();
+    }
+    final dropoff = data['dropoff'];
+    if (dropoff != null) {
+      dropoffAddress.value = dropoff['address']?['text'] ?? "";
+      final coords = dropoff['address']?['coordinates'];
+      dropoffLat = (coords?['lat'] as num?)?.toDouble();
+      dropoffLng = (coords?['lng'] as num?)?.toDouble();
+    } else {
+      dropoffAddress.value = "";
+      dropoffLat = null;
+      dropoffLng = null;
     }
 
     // Driver
@@ -161,7 +193,22 @@ class StatusDetailsController extends GetxController {
   }
 
   void onLiveTrackingPressed() {
-    Get.toNamed(RoutePath.showMap);
+    if (pickupLat == null || pickupLng == null) {
+      AppSnackBar.info("This job doesn't have a pickup location to show yet.");
+      return;
+    }
+    // Recycling posts only have a pickup — no drop-off at all — so only
+    // include it when it's actually there.
+    Get.toNamed(RoutePath.routeMap, arguments: {
+      'pickupLat': pickupLat,
+      'pickupLng': pickupLng,
+      'pickupAddress': pickupAddress.value,
+      if (dropoffLat != null && dropoffLng != null) ...{
+        'dropoffLat': dropoffLat,
+        'dropoffLng': dropoffLng,
+        'dropoffAddress': dropoffAddress.value,
+      },
+    });
   }
 
   void onRateServicePressed() {

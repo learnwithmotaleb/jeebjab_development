@@ -36,7 +36,7 @@ class SizeCardWidget extends StatelessWidget {
           boxShadow: isSelected
               ? [
             BoxShadow(
-              color: AppColors.primaryColor.withOpacity(0.15),
+              color: AppColors.primaryColor.withValues(alpha: 0.15),
               blurRadius: isTablet ? 12 : 8,
               offset: Offset(0, isTablet ? 4 : 3),
             ),
@@ -71,8 +71,8 @@ class SizeCardWidget extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.0),
-                      Colors.black.withOpacity(0.4),
+                      Colors.black.withValues(alpha: 0.0),
+                      Colors.black.withValues(alpha: 0.4),
                     ],
                   ),
                 ),
@@ -89,7 +89,7 @@ class SizeCardWidget extends StatelessWidget {
                         horizontal: isTablet ? 12 : 4, 
                         vertical: isTablet ? 6 : 2),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(isTablet ? 8 : 4),
                     ),
                     child: Text(

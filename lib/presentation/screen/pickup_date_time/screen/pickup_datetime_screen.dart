@@ -95,7 +95,7 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                           border: Border.all(color: const Color(0xFFE8E8E8)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha: 0.04),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),
@@ -229,7 +229,7 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                               border: Border.all(color: const Color(0xFFE8E8E8)),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
+                                  color: Colors.black.withValues(alpha: 0.04),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),

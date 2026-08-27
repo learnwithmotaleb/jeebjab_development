@@ -29,7 +29,7 @@ class ProfileHeaderWidget extends StatelessWidget {
           padding: EdgeInsets.all(Dimensions.r(4)),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: AppColors.primaryColor.withOpacity(0.2), width: 2),
+            border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.2), width: 2),
           ),
           child: CircleAvatar(
             radius: Dimensions.r(50),
@@ -74,7 +74,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(Dimensions.r(30)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               )

@@ -108,6 +108,8 @@ import 'package:jeebjab/presentation/screen/set_drop_off_address/controller/set_
 import 'package:jeebjab/presentation/screen/set_drop_off_address/screen/set_drop_of_address_screen.dart';
 import 'package:jeebjab/presentation/screen/show_map/controller/show_map_controller.dart';
 import 'package:jeebjab/presentation/screen/show_map/screen/show_map_screen.dart';
+import 'package:jeebjab/presentation/screen/show_map/controller/route_map_controller.dart';
+import 'package:jeebjab/presentation/screen/show_map/screen/route_map_screen.dart';
 import 'package:jeebjab/presentation/screen/status_details/controller/status_details_controller.dart';
 import 'package:jeebjab/presentation/screen/status_details/screen/status_details_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
@@ -363,6 +365,15 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(ShowMapController());
+      }),
+    ),
+
+   GetPage(
+      name: RoutePath.routeMap,
+      page: () =>  RouteMapScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(RouteMapController());
       }),
     ),
 

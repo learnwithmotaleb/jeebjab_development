@@ -25,6 +25,7 @@ class RoutePath {
   static const String statusDetails = '/StatusDetailsScreen';
   static const String chat = '/ChatScreen';
   static const String showMap = '/ShowMapScreen';
+  static const String routeMap = '/RouteMapScreen';
   static const String bottomNav = '/BottomNavScreen';
   static const String myPost = '/MyPostScreen';
   static const String postDetails = '/PostDetailsScreen';

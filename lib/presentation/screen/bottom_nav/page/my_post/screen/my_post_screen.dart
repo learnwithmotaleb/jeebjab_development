@@ -168,10 +168,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(isTablet ? 40 : 30),
-        border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+        border: Border.all(color: AppColors.greyColor.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -199,7 +199,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                     boxShadow: isSelected && isTablet
                         ? [
                       BoxShadow(
-                        color: AppColors.primaryColor.withOpacity(0.3),
+                        color: AppColors.primaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       )
@@ -214,7 +214,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       style: TextStyle(
                         color: isSelected
                             ? AppColors.whiteColor
-                            : AppColors.blackColor.withOpacity(0.7),
+                            : AppColors.blackColor.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w700,
                         fontSize: isTablet ? 15 : 13,
                       ),
@@ -237,7 +237,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
           Icon(
             Icons.inbox_rounded,
             size: 64,
-            color: AppColors.greyColor.withOpacity(0.4),
+            color: AppColors.greyColor.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(
@@ -261,7 +261,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
           Icon(
             Icons.wifi_off_rounded,
             size: 64,
-            color: AppColors.greyColor.withOpacity(0.4),
+            color: AppColors.greyColor.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(

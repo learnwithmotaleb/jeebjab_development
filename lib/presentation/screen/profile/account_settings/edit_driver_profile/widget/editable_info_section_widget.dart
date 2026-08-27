@@ -74,7 +74,7 @@ class EditableInfoSection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: Dimensions.f(12),
                           color: row.readOnly
-                              ? AppColors.labelColor.withOpacity(0.5)
+                              ? AppColors.labelColor.withValues(alpha: 0.5)
                               : AppColors.labelColor,
                         ),
                         decoration: InputDecoration(

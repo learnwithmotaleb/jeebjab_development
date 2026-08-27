@@ -108,6 +108,12 @@ class ApiUrl {
       '$baseUrl/notification/$notificationId';
   static String deleteAllNotification = '$baseUrl/notification/clear';
 
+  static String unreadNotificationCount = '$baseUrl/notification/count';
+  static String markNotificationAsRead(String notificationId) =>
+      '$baseUrl/notification/$notificationId/read'; //Patch Method
+  static String markAllNotificationsAsRead =
+      '$baseUrl/notification/read-all'; //Patch Method
+
   static String updateFcmToken =
       '$baseUrl/notification/fcm-token'; //Patch Method
   static String deleteFcmToken =

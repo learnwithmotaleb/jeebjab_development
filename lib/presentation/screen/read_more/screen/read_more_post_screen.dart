@@ -346,7 +346,7 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.w(24)),
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
             ),
             child: Center(
               child: Padding(
@@ -385,7 +385,7 @@ class _ReadMoreScreenState extends State<ReadMoreScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
               ),
               child: Center(
                 child: Text(

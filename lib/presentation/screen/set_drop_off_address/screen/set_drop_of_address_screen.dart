@@ -64,7 +64,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                       border: Border.all(color: const Color(0xFFE8E8E8)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -108,7 +108,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                         border: Border.all(color: const Color(0xFFE8E8E8)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
+                            color: Colors.black.withValues(alpha: 0.03),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -246,7 +246,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                           border: Border.all(color: const Color(0xFFE8E8E8)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: Colors.black.withValues(alpha: 0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -283,7 +283,7 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                             border: Border.all(color: const Color(0xFFE8E8E8)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: Colors.black.withValues(alpha: 0.03),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),

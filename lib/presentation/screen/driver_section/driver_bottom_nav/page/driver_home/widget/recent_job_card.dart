@@ -59,7 +59,7 @@ class RecentJobCard extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(Dimensions.w(5)),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.4),
+                      color: Colors.black.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(Dimensions.r(6)),
                     ),
                     child: Icon(_icon, color: Colors.white, size: Dimensions.w(14)),
@@ -75,7 +75,7 @@ class RecentJobCard extends StatelessWidget {
                       vertical: Dimensions.h(3),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(Dimensions.r(6)),
                     ),
                     child: Text(

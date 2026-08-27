@@ -105,13 +105,13 @@ class _FaqsScreenState extends State<FaqsScreen> {
               borderRadius: BorderRadius.circular(Dimensions.r(12)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
               border: Border.all(
-                color: AppColors.primaryColor.withOpacity(0.1),
+                color: AppColors.primaryColor.withValues(alpha: 0.1),
               ),
             ),
             child: Theme(
@@ -141,7 +141,7 @@ class _FaqsScreenState extends State<FaqsScreen> {
                       child: Text(
                         answer,
                         style: AppTextStyles.body.copyWith(
-                          color: AppColors.blackColor.withOpacity(0.75),
+                          color: AppColors.blackColor.withValues(alpha: 0.75),
                           height: lineHeight,
                           letterSpacing: 0.3,
                         ),
@@ -212,7 +212,7 @@ class _FaqsScreenState extends State<FaqsScreen> {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(Dimensions.r(20)),
                       ),
                       child: Icon(

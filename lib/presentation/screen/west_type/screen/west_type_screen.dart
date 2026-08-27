@@ -82,7 +82,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                 Transform.scale(
                   scale: 1.0, 
                   child: Switch(
-                    inactiveThumbColor: AppColors.greyColor.withOpacity(0.5),
+                    inactiveThumbColor: AppColors.greyColor.withValues(alpha: 0.5),
                     value: _showInfo,
                     onChanged: (value) {
                       setState(() {
@@ -268,7 +268,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey.withOpacity(0.1)),
+                    bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
                   ),
                 ),
                 padding: EdgeInsets.symmetric(
@@ -305,7 +305,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                       scale: 1.4,
                       child: Switch(
                         activeColor: AppColors.primaryColor,
-                        inactiveThumbColor: AppColors.greyColor.withOpacity(0.5),
+                        inactiveThumbColor: AppColors.greyColor.withValues(alpha: 0.5),
                         value: _showInfo,
                         onChanged: (value) {
                           setState(() {
@@ -373,7 +373,7 @@ class _WestTypeScreenState extends State<WestTypeScreen> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5),
                     ),

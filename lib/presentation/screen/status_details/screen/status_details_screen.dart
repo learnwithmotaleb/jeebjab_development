@@ -241,7 +241,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
                     controller.itemSubtype.value,
                     style: TextStyle(
                       fontSize: Dimensions.f(14),
-                      color: AppColors.blackColor.withOpacity(0.7),
+                      color: AppColors.blackColor.withValues(alpha: 0.7),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -271,7 +271,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
                       vertical: Dimensions.h(4),
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(Dimensions.r(4)),
                     ),
                     child: Text(
@@ -330,8 +330,8 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
       margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
       padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
-        border: Border.all(color: statusColor.withOpacity(0.5), width: 1.5),
+        color: statusColor.withValues(alpha: 0.1),
+        border: Border.all(color: statusColor.withValues(alpha: 0.5), width: 1.5),
         borderRadius: BorderRadius.circular(Dimensions.r(12)),
       ),
       child: Center(
@@ -349,7 +349,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
               style: TextStyle(
                 fontSize: Dimensions.f(15),
                 fontWeight: FontWeight.w700,
-                color: statusColor.withOpacity(0.9),
+                color: statusColor.withValues(alpha: 0.9),
                 letterSpacing: 0.5,
               ),
             ),

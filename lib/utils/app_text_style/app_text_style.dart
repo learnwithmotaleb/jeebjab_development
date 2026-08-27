@@ -29,7 +29,7 @@ class AppTextStyles {
     fontFamily: urbanist,
     fontSize: Dimensions.fs(14, tablet: 16, desktop: 18),
     fontWeight: FontWeight.w400,
-    color: AppColors.blackColor.withOpacity(0.6),
+    color: AppColors.blackColor.withValues(alpha: 0.6),
   );
 
   // 🔹 HINT

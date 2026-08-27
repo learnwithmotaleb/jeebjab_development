@@ -97,7 +97,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                       isDense: true,
                       // ✅ No focus border
                       contentPadding: EdgeInsets.all(15),
-                      fillColor: AppColors.greyColor.withOpacity(0.1),
+                      fillColor: AppColors.greyColor.withValues(alpha: 0.1),
                       filled: true,
                       // ✅ No visible border but radius 10
                       border: OutlineInputBorder(
@@ -227,7 +227,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                             vertical: Dimensions.h(24),
                             horizontal: Dimensions.w(20),
                           ),
-                          fillColor: AppColors.greyColor.withOpacity(0.1),
+                          fillColor: AppColors.greyColor.withValues(alpha: 0.1),
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(Dimensions.r(15)),

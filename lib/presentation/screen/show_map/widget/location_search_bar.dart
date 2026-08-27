@@ -53,7 +53,7 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -103,7 +103,7 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
                 color: AppColors.whiteColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)
                 ],
               ),
               child: const Center(
@@ -125,7 +125,7 @@ class _LocationSearchBarState extends State<LocationSearchBar> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),

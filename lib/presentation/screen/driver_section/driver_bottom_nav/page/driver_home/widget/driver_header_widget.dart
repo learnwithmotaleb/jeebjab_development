@@ -65,7 +65,7 @@ class DriverHeaderWidget extends StatelessWidget {
                 },
                 child: CircleAvatar(
                   radius: Dimensions.w(28),
-                  backgroundColor: Colors.white.withOpacity(0.25),
+                  backgroundColor: Colors.white.withValues(alpha: 0.25),
                   backgroundImage:
                       avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
                   child: avatarUrl.isEmpty
@@ -103,7 +103,7 @@ class DriverHeaderWidget extends StatelessWidget {
                             size: Dimensions.w(index < rating.round() ? 20 : 18),
                             color: index < rating.round()
                                 ? const Color(0xFFFFA500)
-                                : Colors.white.withOpacity(0.4),
+                                : Colors.white.withValues(alpha: 0.4),
                           ),
                         ),
                         SizedBox(width: Dimensions.w(4)),
@@ -230,7 +230,7 @@ class DriverHeaderWidget extends StatelessWidget {
                     Container(
                       width: 1,
                       height: Dimensions.h(40),
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                     ),
                     Expanded(
                       child: _StatItem(

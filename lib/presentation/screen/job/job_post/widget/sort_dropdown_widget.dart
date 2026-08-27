@@ -72,7 +72,7 @@ class _SortDropdownState extends State<SortDropdown> {
                       borderRadius: BorderRadius.circular(Dimensions.r(12)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.12),
+                          color: Colors.black.withValues(alpha: 0.12),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),

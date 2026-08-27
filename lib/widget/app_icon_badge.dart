@@ -11,7 +11,7 @@ class AppIconBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
-    final bg = (color ?? t.colorScheme.secondary).withOpacity(0.15);
+    final bg = (color ?? t.colorScheme.secondary).withValues(alpha: 0.15);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(

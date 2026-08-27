@@ -209,7 +209,7 @@ class _TaskScreenState extends State<TaskScreen> {
         borderRadius: BorderRadius.circular(Dimensions.r(16)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -220,7 +220,7 @@ class _TaskScreenState extends State<TaskScreen> {
           Container(
             padding: EdgeInsets.all(Dimensions.w(12)),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: Dimensions.w(24)),

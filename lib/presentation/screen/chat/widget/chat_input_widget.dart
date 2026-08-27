@@ -128,10 +128,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
         vertical: Dimensions.h(16),
       ),
       decoration: BoxDecoration(
-        color: Colors.amber.withOpacity(0.1),
+        color: Colors.amber.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(Dimensions.r(12)),
         border: Border.all(
-          color: Colors.amber.withOpacity(0.3),
+          color: Colors.amber.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -178,7 +178,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               leading: Container(
                 padding: EdgeInsets.all(Dimensions.w(8)),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.camera_alt_rounded, color: AppColors.primaryColor),
@@ -193,7 +193,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               leading: Container(
                 padding: EdgeInsets.all(Dimensions.w(8)),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.photo_library_rounded, color: AppColors.primaryColor),

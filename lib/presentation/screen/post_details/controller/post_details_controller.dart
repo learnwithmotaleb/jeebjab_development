@@ -4,6 +4,7 @@ import 'package:jeebjab/service/api_url.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../../../../core/routes/route_path.dart';
+import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../widget/app_share.dart';
 
 class PostDetailsController extends GetxController {
@@ -29,10 +30,14 @@ class PostDetailsController extends GetxController {
   // ── Pick-Up Info ──────────────────────────────────────────────────────────
   RxString pickupAddress = "".obs;
   RxList<String> pickupFeatures = <String>[].obs;
+  double? pickupLat;
+  double? pickupLng;
 
   // ── Delivery Info ─────────────────────────────────────────────────────────
   RxString deliveryAddress = "".obs;
   RxList<String> deliveryFeatures = <String>[].obs;
+  double? dropoffLat;
+  double? dropoffLng;
 
   // ── Advertiser Info ───────────────────────────────────────────────────────
   RxString advertiserName = "".obs;
@@ -112,16 +117,24 @@ class PostDetailsController extends GetxController {
     if (pickup != null) {
       pickupAddress.value = pickup['address']?['text'] ?? "";
       pickupFeatures.value = _buildFeatures(pickup['placement']);
+      final coords = pickup['address']?['coordinates'];
+      pickupLat = (coords?['lat'] as num?)?.toDouble();
+      pickupLng = (coords?['lng'] as num?)?.toDouble();
     }
-    
+
     // Delivery
     final dropoff = data['dropoff'];
     if (dropoff != null) {
       deliveryAddress.value = dropoff['address']?['text'] ?? "";
       deliveryFeatures.value = _buildFeatures(dropoff['placement']);
+      final coords = dropoff['address']?['coordinates'];
+      dropoffLat = (coords?['lat'] as num?)?.toDouble();
+      dropoffLng = (coords?['lng'] as num?)?.toDouble();
     } else {
       deliveryAddress.value = "";
       deliveryFeatures.value = [];
+      dropoffLat = null;
+      dropoffLng = null;
     }
     
     // Advertiser
@@ -150,12 +163,27 @@ class PostDetailsController extends GetxController {
     return list;
   }
 
-  void onOpenPickupMap() {
-    Get.toNamed(RoutePath.showMap);
-  }
+  void onOpenPickupMap() => _openRouteMap();
 
-  void onOpenDeliveryMap() {
-    Get.toNamed(RoutePath.showMap);
+  void onOpenDeliveryMap() => _openRouteMap();
+
+  void _openRouteMap() {
+    if (pickupLat == null || pickupLng == null) {
+      AppSnackBar.info("This job doesn't have a pickup location to show yet.");
+      return;
+    }
+    // Recycling posts only have a pickup — no drop-off at all — so only
+    // include it when it's actually there.
+    Get.toNamed(RoutePath.routeMap, arguments: {
+      'pickupLat': pickupLat,
+      'pickupLng': pickupLng,
+      'pickupAddress': pickupAddress.value,
+      if (dropoffLat != null && dropoffLng != null) ...{
+        'dropoffLat': dropoffLat,
+        'dropoffLng': dropoffLng,
+        'dropoffAddress': deliveryAddress.value,
+      },
+    });
   }
 
   void onShare() {

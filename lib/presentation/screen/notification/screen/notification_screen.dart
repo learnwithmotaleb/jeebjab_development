@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -27,7 +26,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 50) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 50) {
       if (controller.isMoreDataAvailable && !controller.isLoadMore) {
         controller.getNotificationRequest(isLoadMore: true);
       }
@@ -42,10 +42,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -56,7 +53,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         actions: _buildAppBarActions(),
       ),
       body: Obx(() {
-        if (controller.isLoadingNotificationList.value && controller.localNotificationList.isEmpty) {
+        if (controller.isLoadingNotificationList.value &&
+            controller.localNotificationList.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.localNotificationList.isEmpty) {
@@ -85,7 +83,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         actions: _buildAppBarActions(),
       ),
       body: Obx(() {
-        if (controller.isLoadingNotificationList.value && controller.localNotificationList.isEmpty) {
+        if (controller.isLoadingNotificationList.value &&
+            controller.localNotificationList.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.localNotificationList.isEmpty) {
@@ -119,10 +118,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
   List<Widget> _buildAppBarActions() {
     return [
       IconButton(
-        icon: const Icon(
-          Icons.delete_sweep_outlined,
-          color: Colors.redAccent,
-        ),
+        icon: const Icon(Icons.done_all_rounded, color: AppColors.primaryColor),
+        tooltip: 'Mark all as read',
+        onPressed: controller.markAllAsRead,
+      ),
+      IconButton(
+        icon: const Icon(Icons.delete_sweep_outlined, color: Colors.redAccent),
         tooltip: 'Clear All',
         onPressed: () {
           if (controller.localNotificationList.isEmpty) return;
@@ -220,15 +221,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
           vertical: Dimensions.h(8),
         ),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.9),
+          color: Colors.red.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(Dimensions.r(16)),
         ),
         alignment: Alignment.centerRight,
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-        child: const Icon(
-          Icons.delete_outline,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
       onDismissed: (direction) {
         controller.deleteNotification(id);
@@ -242,8 +240,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         isRead: item['isRead'] ?? true,
         onTap: () {
           controller.markAsRead(id);
-          // Standard action: route to statusDetails page
-          Get.toNamed(RoutePath.statusDetails);
+          controller.openRelatedItem(item);
         },
       ),
     );
@@ -276,7 +273,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Container(
               padding: EdgeInsets.all(Dimensions.w(24)),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.05),
+                color: AppColors.primaryColor.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
               child: Icon(

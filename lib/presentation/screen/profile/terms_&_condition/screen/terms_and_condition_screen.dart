@@ -84,7 +84,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
       return Text(
         controller.termsContent.value,
         style: AppTextStyles.body.copyWith(
-          color: AppColors.blackColor.withOpacity(0.75),
+          color: AppColors.blackColor.withValues(alpha: 0.75),
           height: lineHeight,
           letterSpacing: 0.3,
           fontSize: fontSize,
@@ -148,7 +148,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.1),
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(Dimensions.r(20)),
                       ),
                       child: Icon(

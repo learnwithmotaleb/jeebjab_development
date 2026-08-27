@@ -37,7 +37,7 @@ class BankCardItemWidget extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: Dimensions.r(8),
             offset: const Offset(0, 2),
           ),
@@ -120,7 +120,7 @@ class BankCardItemWidget extends StatelessWidget {
                   vertical: Dimensions.h(isTablet ? 8 : 6),
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(Dimensions.r(isTablet ? 20 : 16)),
                 ),
                 child: GestureDetector(
@@ -218,7 +218,7 @@ class BankCardItemWidget extends StatelessWidget {
         icon = Icon(
           Icons.credit_card,
           size: Dimensions.w(isTablet ? 28 : 24),
-          color: AppColors.primaryColor.withOpacity(0.6),
+          color: AppColors.primaryColor.withValues(alpha: 0.6),
         );
     }
 

@@ -73,7 +73,7 @@ class _ImageCarouselWidgetState extends State<ImageCarouselWidget> {
                     decoration: BoxDecoration(
                       color: isActive
                           ? AppColors.primaryColor
-                          : Colors.white.withOpacity(0.8),
+                          : Colors.white.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   );

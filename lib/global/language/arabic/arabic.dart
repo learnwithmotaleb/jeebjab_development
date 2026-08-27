@@ -297,7 +297,7 @@ Map<String, String> arabic = {
   AppStrings.selectOneHint: "يمكنك اختيار خيار واحد فقط",
   AppStrings.additional: "إضافي",
   AppStrings.needToMeet: "يلزم اللقاء",
-  AppStrings.canHelpCarry: "يمكن المساعدة في الحمل عند الاستلام",
+  // canHelpCarry's real text is set further below (Category Status Controller).
   AppStrings.selectBothHint: "يمكنك اختيار كلا الخيارين",
 
   // Pickup Floor Screen
@@ -360,7 +360,7 @@ Map<String, String> arabic = {
 
   // Pickup Address Strings
   AppStrings.pickupAddressTitle: "عنوان الاستلام",
-  AppStrings.photos: "الصور",
+  // photos is declared once more, further below (Category Status Controller).
 
   // Overview Publish Section
   AppStrings.cancel: "إلغاء",
@@ -377,7 +377,7 @@ Map<String, String> arabic = {
   // Notification Details
   AppStrings.details: "تفاصيل",
   AppStrings.trackingNumber: "رقم التتبع",
-  AppStrings.pending: "قيد الانتظار",
+  // pending shares pendingPost's text below — same map key.
   AppStrings.estimatedDeliveryTime: "الوقت المتوقع للتسليم ساعتين",
   AppStrings.delivered: "تم التوصيل",
   AppStrings.requestConfirmation: "تأكيد الطلب",
@@ -418,8 +418,8 @@ Map<String, String> arabic = {
 
   // Pick-Up Placement
   AppStrings.pickUpPlacement: "موقع الاستلام",
-  AppStrings.insideHouseApartment: "داخل المنزل/الشقة",
-  AppStrings.outsideHouseApartment: "خارج المنزل/الشقة",
+  // insideHouseApartment/outsideHouseApartment share insideHouse/outsideHouse's
+  // text above — same map keys, no separate entry needed here.
   AppStrings.noMeet: "لا لقاء",
   AppStrings.canHelp: "يمكن المساعدة",
 
@@ -444,10 +444,10 @@ Map<String, String> arabic = {
 
   // Button
   AppStrings.apply: "تطبيق",
-  AppStrings.preferredPickUp: "وقت الاستلام المفضل",
+  // preferredPickUp shares preferredPickupTime's text above; writeOtherInfo
+  // shares otherInfo's text above — same map keys, no separate entry needed.
   AppStrings.doYouHaveCampaignCode: "هل لديك رمز الحملة؟",
   AppStrings.otherUserHavePaidAround: "قام مستخدمون آخرون بالدفع تقريبًا",
-  AppStrings.writeOtherInfo: "اكتب معلومات أخرى",
   AppStrings.fitsInTheElevator: "يناسب المصعد",
   AppStrings.e36: "E36",
   AppStrings.droopOffFloorAndDoorCode: "طابق التسليم ورمز الباب",
@@ -488,8 +488,7 @@ Map<String, String> arabic = {
   AppStrings.statusDelivered: "تم التسليم",
 
   // Dummy Post Titles
-  AppStrings.moveDummy: "نقل",
-  AppStrings.recyclingDummy: "إعادة تدوير",
+  // moveDummy/recyclingDummy share move/recycling's text above — same map keys.
   AppStrings.furnitureDeliveryDummy: "توصيل أثاث",
   AppStrings.electronicsMoveDummy: "نقل إلكترونيات",
 
@@ -512,7 +511,7 @@ Map<String, String> arabic = {
 
   // Pickup Details Controller
   AppStrings.publishedHoursAgo: "نُشر منذ 3 ساعات",
-  AppStrings.medium: "متوسط",
+  // medium is declared once more, further below (Category Status Controller).
   AppStrings.insideTheHouse: "داخل المنزل",
   AppStrings.canHelpCarryAtDropOff: "يمكن المساعدة في الحمل عند التسليم",
 
@@ -549,9 +548,8 @@ Map<String, String> arabic = {
   // ── Add these lines inside the arabic map ────────────────────────────────
 
   // Overview Controller
-  AppStrings.empty: "فارغ",
-  AppStrings.insideMeetCanHelp: "داخل، مع لقاء، يمكن المساعدة",
-  AppStrings.outsideNoMeet: "خارج، بدون لقاء",
+  // empty/insideMeetCanHelp/outsideNoMeet are declared once more, further
+  // below (Category Status Controller) — that's the version actually used.
 
   // ── Add these lines inside the arabic map ────────────────────────────────
 
@@ -588,8 +586,8 @@ Map<String, String> arabic = {
   AppStrings.medium: "متوسط",
   AppStrings.insideMeetCanHelp: "بالداخل، لقاء، يمكن المساعدة",
   AppStrings.outsideNoMeet: "بالخارج، لا يوجد لقاء",
-  AppStrings.anytime: "في أي وقت",
-  AppStrings.needToMeet: "يلزم اللقاء",
+  // anytime/needToMeet are declared above too (Pickup/Placement screens);
+  // canHelpCarry's real text is set here — the shorter version wins.
   AppStrings.canHelpCarry: "يمكن المساعدة في الحمل",
   AppStrings.paymentMethod: "طريقة الدفع",
   AppStrings.types: "أنواع",

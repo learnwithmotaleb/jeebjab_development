@@ -418,8 +418,8 @@ Map<String, String> english = {
 
   // Pick-Up Placement
   AppStrings.pickUpPlacement: "Pick-Up Placement",
-  AppStrings.insideHouseApartment: "Inside The House/Apartment",
-  AppStrings.outsideHouseApartment: "Outside The House/Apartment",
+  // insideHouseApartment/outsideHouseApartment share insideHouse/outsideHouse's
+  // text below — same map key, so no separate entry needed here.
   AppStrings.noMeet: "No Meet",
   AppStrings.canHelp: "Can Help",
 
@@ -444,10 +444,10 @@ Map<String, String> english = {
 
   // Button
   AppStrings.apply: "Apply",
-  AppStrings.preferredPickUp: "Preferred Pick-Up Time",
+  // preferredPickUp shares preferredPickupTime's text below; writeOtherInfo
+  // shares otherInfo's text below — same map keys, no separate entry needed.
   AppStrings.doYouHaveCampaignCode: "Do You Have A Campaign Code?",
   AppStrings.otherUserHavePaidAround: "Other User Have Paid Around",
-  AppStrings.writeOtherInfo: "Write Other Info",
   AppStrings.fitsInTheElevator: "Fits In The Elevator",
   AppStrings.e36: "E36",
   AppStrings.droopOffFloorAndDoorCode: "Drop Off Floor & Door Code",
@@ -477,7 +477,7 @@ Map<String, String> english = {
   // ── Add these lines inside the english map ────────────────────────────────
 
   // My Post Controller
-  AppStrings.pendingPost: "Pending",
+  // pendingPost shares pending's text above — same map key.
   AppStrings.failedToLoadPosts: "Failed to load posts. Please try again.",
 
   // Post Status Labels
@@ -486,8 +486,7 @@ Map<String, String> english = {
   AppStrings.statusDelivered: "delivered",
 
   // Dummy Post Titles
-  AppStrings.moveDummy: "Move",
-  AppStrings.recyclingDummy: "Recycling",
+  // moveDummy/recyclingDummy share move/recycling's text above — same map keys.
   AppStrings.furnitureDeliveryDummy: "Furniture Delivery",
   AppStrings.electronicsMoveDummy: "Electronics Move",
 
@@ -504,7 +503,7 @@ Map<String, String> english = {
   // Notification Details Screen
   AppStrings.deleteSuccessfully: "Delete Successfully",
   AppStrings.rating: "Rating",
-  AppStrings.rating: "Open Map",
+  AppStrings.openMap: "Open Map",
   // ── Add these lines inside the english map ────────────────────────────────
 
   // Pickup Details Controller

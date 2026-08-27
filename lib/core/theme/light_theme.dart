@@ -56,7 +56,7 @@ final ThemeData lightTheme = ThemeData(
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       foregroundColor: AppColors.emergencyBlackColor,
-      side: BorderSide(color: AppColors.loginLogoRadiusColor.withOpacity(.5)),
+      side: BorderSide(color: AppColors.loginLogoRadiusColor.withValues(alpha: .5)),
       minimumSize: const Size(48, 48),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
@@ -70,7 +70,7 @@ final ThemeData lightTheme = ThemeData(
     filled: true,
     fillColor: AppColors.secondaryColor,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    hintStyle: TextStyle(color: AppColors.emergencyBlackColor.withOpacity(.6)),
+    hintStyle: TextStyle(color: AppColors.emergencyBlackColor.withValues(alpha: .6)),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: AppColors.bottomNavigationColor, width: 1),
@@ -114,7 +114,7 @@ final ThemeData lightTheme = ThemeData(
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: AppColors.bottomNavigationColor,
     selectedItemColor: AppColors.primaryColor,
-    unselectedItemColor: AppColors.emergencyBlackColor.withOpacity(.6),
+    unselectedItemColor: AppColors.emergencyBlackColor.withValues(alpha: .6),
     selectedIconTheme: const IconThemeData(size: 28),
     type: BottomNavigationBarType.fixed,
     elevation: 1,

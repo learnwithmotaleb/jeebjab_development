@@ -117,7 +117,7 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(Dimensions.r(20)),
                     ),
                     child: Icon(

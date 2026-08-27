@@ -45,7 +45,7 @@ class WasteItemTile extends StatelessWidget {
               height: isTablet ? 60 : Dimensions.w(44),
               decoration: BoxDecoration(
                 color: (!isNavigable && isSelected)
-                    ? AppColors.primaryColor.withOpacity(0.12)
+                    ? AppColors.primaryColor.withValues(alpha: 0.12)
                     : const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(isTablet ? 15 : Dimensions.r(10)),
               ),

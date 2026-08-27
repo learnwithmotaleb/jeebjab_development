@@ -144,7 +144,7 @@ class _CustomerVerificationScreenState
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(Dimensions.r(20)),
                     ),
                     child: Icon(
@@ -198,7 +198,7 @@ class _CustomerVerificationScreenState
                         activeColor: AppColors.primaryColor,
                         selectedColor: AppColors.primaryColor,
                         inactiveColor: AppColors.greyColor,
-                        activeFillColor: AppColors.primaryColor.withOpacity(0.05),
+                        activeFillColor: AppColors.primaryColor.withValues(alpha: 0.05),
                       ),
                       onCompleted: (v) => print("OTP Completed $v"),
                       beforeTextPaste: (_) => true,

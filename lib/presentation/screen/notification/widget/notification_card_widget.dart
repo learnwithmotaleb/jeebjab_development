@@ -33,7 +33,7 @@ class NotificationCard extends StatelessWidget {
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Dimensions.r(12)),
-        side: BorderSide(color: AppColors.greyColor.withOpacity(0.1), width: 1),
+        side: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.1), width: 1),
       ),
       child: InkWell(
         onTap: onTap,
@@ -99,7 +99,7 @@ class NotificationCard extends StatelessWidget {
                               timeAgo,
                               style: TextStyle(
                                 fontSize: Dimensions.f(12),
-                                color: AppColors.blackColor.withOpacity(0.6),
+                                color: AppColors.blackColor.withValues(alpha: 0.6),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -126,7 +126,7 @@ class NotificationCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: Dimensions.f(13),
                           fontWeight: FontWeight.w400,
-                          color: AppColors.blackColor.withOpacity(0.8),
+                          color: AppColors.blackColor.withValues(alpha: 0.8),
                         ),
                       ),
                       SizedBox(height: Dimensions.h(4)),
@@ -137,7 +137,7 @@ class NotificationCard extends StatelessWidget {
                       message,
                       style: TextStyle(
                         fontSize: Dimensions.f(13),
-                        color: AppColors.blackColor.withOpacity(0.8),
+                        color: AppColors.blackColor.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w700,
                         height: 1.3,
                       ),
@@ -158,10 +158,10 @@ class NotificationCard extends StatelessWidget {
     return Container(
       width: Dimensions.w(64),
       height: Dimensions.w(64),
-      color: AppColors.greyColor.withOpacity(0.1),
+      color: AppColors.greyColor.withValues(alpha: 0.1),
       child: Icon(
         Icons.notifications_none_rounded,
-        color: AppColors.primaryColor.withOpacity(0.5),
+        color: AppColors.primaryColor.withValues(alpha: 0.5),
         size: Dimensions.w(32),
       ),
     );

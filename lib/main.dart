@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jeebjab/presentation/screen/job/delivery/controller/delivery_controller.dart';
 import 'package:jeebjab/service/firebase_notification_service.dart';
+import 'package:jeebjab/service/google_map_services.dart';
 import 'package:jeebjab/service/socket_service.dart';
 import 'app.dart';
 import 'core/device_utls/device_utils.dart';
@@ -42,11 +44,16 @@ Future<void> main() async {
     debugPrint('Startup Error: $e');
   }
 
+  // ── Request location permission (geolocator built-in dialog) ──
+  await _requestLocationPermission();
+
+
   // MUST be outside try-catch
   Get.put(InternetController(), permanent: true);
   Get.put(LanguageController(), permanent: true);
   Get.put(DeliveryController(), permanent: true);
-
+  // Location permission is already granted above before this runs
+  Get.put(GoogleMapServices(), permanent: true);
   runApp(MyApp());
 
   Future.delayed(const Duration(seconds: 5), () async {
@@ -56,4 +63,18 @@ Future<void> main() async {
       debugPrint('Topic subscription skipped: $e');
     }
   });
+}
+/// Requests location permission using geolocator's native dialog.
+/// Notification permission is handled internally by the notification package.
+Future<void> _requestLocationPermission() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Opens device App Settings so user can enable manually
+    await Geolocator.openAppSettings();
+  }
 }

@@ -89,36 +89,21 @@ class MyPostController extends GetxController {
     }
   }
 
-  // ── Notification Detail Arguments per Status ──────────────────────────────
+  // ── Status Details Navigation Arguments ───────────────────────────────────
+  // Only 'id' actually matters — StatusDetailsController re-fetches the post
+  // by id and overwrites everything (including status) from the real API
+  // response. These extra fields are just a placeholder shown for the one
+  // frame before that fetch resolves, so they must match the real API
+  // status values (pending/active/completed), not the delivery-tracker
+  // step labels (in_transit/delivered) used elsewhere in the UI.
   Map<String, dynamic> buildDetailArguments(PostModel post) {
-    switch (post.status) {
-      case PostStatus.pending:
-        return {
-          'id': post.id,
-          'itemType': post.title,
-          'itemSubtype': post.category,
-          'itemDate': post.date,
-          'status': AppStrings.statusPending.tr,
-          'showAcceptButton': true,
-        };
-      case PostStatus.active:
-        return {
-          'id': post.id,
-          'itemType': post.title,
-          'itemSubtype': post.category,
-          'itemDate': post.date,
-          'status': AppStrings.statusInTransit.tr,
-          'showAcceptButton': false,
-        };
-      case PostStatus.completed:
-        return {
-          'id': post.id,
-          'itemType': post.title,
-          'itemSubtype': post.category,
-          'itemDate': post.date,
-          'status': AppStrings.statusDelivered.tr,
-          'showAcceptButton': false,
-        };
-    }
+    return {
+      'id': post.id,
+      'itemType': post.title,
+      'itemSubtype': post.category,
+      'itemDate': post.date,
+      'status': post.status.value,
+      'showAcceptButton': post.status == PostStatus.pending,
+    };
   }
 }

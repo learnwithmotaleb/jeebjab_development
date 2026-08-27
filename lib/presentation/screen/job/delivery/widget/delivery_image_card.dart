@@ -59,7 +59,7 @@ class DeliveryImageCard extends StatelessWidget {
                     vertical: Dimensions.h(6),
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
+                    color: Colors.black.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(Dimensions.r(6)),
                   ),
                   child: Text(
@@ -83,7 +83,7 @@ class DeliveryImageCard extends StatelessWidget {
                     vertical: Dimensions.h(6),
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
+                    color: Colors.black.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(Dimensions.r(6)),
                   ),
                   child: Text(

@@ -654,7 +654,7 @@ class _CircleIcon extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: color, width: 2.5),
-        color: color.withOpacity(0.07),
+        color: color.withValues(alpha: 0.07),
       ),
       child: Icon(icon, color: color, size: Dimensions.w(30)),
     );

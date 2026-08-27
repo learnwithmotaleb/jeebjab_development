@@ -29,11 +29,11 @@ class DeliveryTableWidget extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: AppColors.greyColor.withOpacity(0.2), width: 1.5),
+            border: Border.all(color: AppColors.greyColor.withValues(alpha: 0.2), width: 1.5),
             borderRadius: BorderRadius.circular(Dimensions.r(16)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -68,15 +68,15 @@ class DeliveryTableWidget extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(Dimensions.r(16)),
           decoration: BoxDecoration(
-            color: AppColors.greyColor.withOpacity(0.05),
+            color: AppColors.greyColor.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(Dimensions.r(12)),
-            border: Border.all(color: AppColors.greyColor.withOpacity(0.1)),
+            border: Border.all(color: AppColors.greyColor.withValues(alpha: 0.1)),
           ),
           child: Text(
             delivery.description,
             style: TextStyle(
               fontSize: Dimensions.f(14),
-              color: AppColors.blackColor.withOpacity(0.8),
+              color: AppColors.blackColor.withValues(alpha: 0.8),
               height: 1.6,
               fontWeight: FontWeight.w400,
             ),
@@ -90,7 +90,7 @@ class DeliveryTableWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: isLast ? null : Border(
-          bottom: BorderSide(color: AppColors.greyColor.withOpacity(0.15), width: 1),
+          bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.15), width: 1),
         ),
       ),
       child: IntrinsicHeight(
@@ -105,7 +105,7 @@ class DeliveryTableWidget extends StatelessWidget {
                   vertical: Dimensions.h(14),
                   horizontal: Dimensions.w(18),
                 ),
-                color: AppColors.greyColor.withOpacity(0.03),
+                color: AppColors.greyColor.withValues(alpha: 0.03),
                 child: Text(
                   label,
                   style: TextStyle(
@@ -120,7 +120,7 @@ class DeliveryTableWidget extends StatelessWidget {
             // ── Vertical Divider ──
             Container(
               width: 1,
-              color: AppColors.greyColor.withOpacity(0.15),
+              color: AppColors.greyColor.withValues(alpha: 0.15),
             ),
             
             // ── Value Column ──
@@ -136,7 +136,7 @@ class DeliveryTableWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: Dimensions.f(13),
                     fontWeight: FontWeight.w600,
-                    color: AppColors.blackColor.withOpacity(0.9),
+                    color: AppColors.blackColor.withValues(alpha: 0.9),
                   ),
                 ),
               ),

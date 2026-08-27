@@ -266,7 +266,7 @@ class _NoEntryIcon extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: Colors.red, width: isTablet ? 3.5 : 2.5),
-            color: Colors.red.withOpacity(0.05),
+            color: Colors.red.withValues(alpha: 0.05),
           ),
           child: Icon(icon, size: isTablet ? 36 : 28, color: Colors.red),
         ),

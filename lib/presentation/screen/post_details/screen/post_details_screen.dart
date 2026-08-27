@@ -283,7 +283,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 left: 12,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(

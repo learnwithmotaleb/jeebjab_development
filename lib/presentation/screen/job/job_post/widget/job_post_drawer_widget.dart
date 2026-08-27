@@ -249,7 +249,7 @@ class _JobPostDrawerState extends State<JobPostDrawer> {
                               inactiveTrackColor: const Color(0xFFE0E0E0),
                               thumbColor: AppColors.primaryColor,
                               overlayColor:
-                              AppColors.primaryColor.withOpacity(0.15),
+                              AppColors.primaryColor.withValues(alpha: 0.15),
                               trackHeight: 4,
                             ),
                             child: Slider(

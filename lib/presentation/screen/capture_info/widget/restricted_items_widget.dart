@@ -34,7 +34,7 @@ class RestrictedItemsWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.red.withOpacity(0.5),
+                  color: Colors.red.withValues(alpha: 0.5),
                   width: 3,
                 ),
               ),
@@ -44,7 +44,7 @@ class RestrictedItemsWidget extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     height: 3,
-                    color: Colors.red.withOpacity(0.5),
+                    color: Colors.red.withValues(alpha: 0.5),
                   ),
                 ),
               )

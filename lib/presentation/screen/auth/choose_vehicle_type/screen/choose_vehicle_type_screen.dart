@@ -68,7 +68,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                       },
                       borderSideColor: isSelected
                           ? AppColors.primaryColor
-                          : AppColors.whiteColor.withOpacity(0.5),
+                          : AppColors.whiteColor.withValues(alpha: 0.5),
                       borderRadius: 20,
                       backgroundColor:
                       isSelected ? AppColors.primaryColor : Colors.white,
@@ -117,7 +117,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
+                    color: AppColors.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Dimensions.r(20)),
                   ),
                   child: Icon(
@@ -177,7 +177,7 @@ class _ChooseVehicleTypeScreenState extends State<ChooseVehicleTypeScreen> {
                               ? AppColors.primaryColor
                               : AppColors.whiteColor,
                           border: Border.all(
-                            color: isSelected ? AppColors.primaryColor : AppColors.primaryColor.withOpacity(0.3),
+                            color: isSelected ? AppColors.primaryColor : AppColors.primaryColor.withValues(alpha: 0.3),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(Dimensions.r(16)),

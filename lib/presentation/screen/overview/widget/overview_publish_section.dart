@@ -25,7 +25,7 @@ class OverviewPublishSection extends StatelessWidget {
         boxShadow: isTablet
             ? [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -4),
           )
@@ -66,7 +66,7 @@ class OverviewPublishSection extends StatelessWidget {
               isLoading: controller.isLoading.value,
               backgroundColor: controller.canPublish
                   ? AppColors.primaryColor
-                  : AppColors.greyColor.withOpacity(0.5),
+                  : AppColors.greyColor.withValues(alpha: 0.5),
             )),
           ),
         ],

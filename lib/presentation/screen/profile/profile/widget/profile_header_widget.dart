@@ -74,11 +74,11 @@ class ProfileHeaderWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                  color: AppColors.whiteColor.withOpacity(0.4), width: 3),
+                  color: AppColors.whiteColor.withValues(alpha: 0.4), width: 3),
             ),
             child: CircleAvatar(
               radius: Dimensions.w(38),
-              backgroundColor: AppColors.whiteColor.withOpacity(0.1),
+              backgroundColor: AppColors.whiteColor.withValues(alpha: 0.1),
               backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
                   ? NetworkImage(imageUrl!)
                   : (imageAsset != null ? AssetImage(imageAsset!) : null),
@@ -107,7 +107,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             email,
             style: TextStyle(
               fontSize: Dimensions.f(13),
-              color: AppColors.whiteColor.withOpacity(0.85),
+              color: AppColors.whiteColor.withValues(alpha: 0.85),
             ),
           ),
           SizedBox(height: Dimensions.h(4)),
@@ -122,7 +122,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                   return Icon(
                     Icons.star_rounded,
                     size: 18,
-                    color: isFilled ? const Color(0xFFFFA500) : AppColors.whiteColor.withOpacity(0.5),
+                    color: isFilled ? const Color(0xFFFFA500) : AppColors.whiteColor.withValues(alpha: 0.5),
                   );
                 }),
                 const SizedBox(width: 4),

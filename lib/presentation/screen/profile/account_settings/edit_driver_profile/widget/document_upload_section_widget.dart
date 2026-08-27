@@ -58,7 +58,7 @@ class DocumentUploadSection extends StatelessWidget {
             "Only pick a file for a document you want to replace.",
             style: TextStyle(
               fontSize: Dimensions.f(11),
-              color: AppColors.labelColor.withOpacity(0.7),
+              color: AppColors.labelColor.withValues(alpha: 0.7),
             ),
           ),
           SizedBox(height: Dimensions.h(12)),

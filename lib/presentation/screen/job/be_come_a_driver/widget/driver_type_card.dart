@@ -108,7 +108,7 @@ class _DriverButton extends StatelessWidget {
           color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(Dimensions.r(30)),
           border: Border.all(
-            color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
+            color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
             width: isSelected ? 2 : 1,
           ),
         ),

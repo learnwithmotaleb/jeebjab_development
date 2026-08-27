@@ -32,7 +32,7 @@ class InlineLabelField extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE8E8E8)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: isTablet ? 8 : 6,
             offset: const Offset(0, 2),
           ),

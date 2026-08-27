@@ -54,7 +54,7 @@ class _CustomerJobPostScreenState extends State<CustomerJobPostScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
+                    color: AppColors.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(Dimensions.r(20)),
                   ),
                   child: Icon(
@@ -110,7 +110,7 @@ class _CustomerJobPostScreenState extends State<CustomerJobPostScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -191,7 +191,7 @@ class _CustomerJobPostScreenState extends State<CustomerJobPostScreen> {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
+            color: AppColors.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(Dimensions.r(12)),
           ),
           child: Icon(

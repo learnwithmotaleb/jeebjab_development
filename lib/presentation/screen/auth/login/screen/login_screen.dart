@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: AppColors.textFieldBackgroundColor,
         borderRadius: BorderRadius.circular(Dimensions.r(16)),
-        border: Border.all(color: AppColors.greyColor.withOpacity(0.1)),
+        border: Border.all(color: AppColors.greyColor.withValues(alpha: 0.1)),
       ),
       child: Center(
         child: Image.asset(
