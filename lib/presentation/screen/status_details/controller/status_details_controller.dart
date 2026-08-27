@@ -283,7 +283,7 @@ class StatusDetailsController extends GetxController {
         final chatData = response.body['data'];
         final chatId = chatData['_id'] ?? '';
         Get.toNamed(
-          RoutePath.chatList,
+          RoutePath.chat,
           arguments: {
             'chatId': chatId,
             'receiverId': targetReceiverId,
