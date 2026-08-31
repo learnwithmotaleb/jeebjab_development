@@ -23,71 +23,74 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-
   ChangePasswordController controller = Get.put(ChangePasswordController());
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: CommonAppBar(title: AppStrings.changePassword.tr),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                  children: [
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.changePassword.tr),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              children: [
+                SizedBox(height: Dimensions.h(20)),
 
-                    SizedBox(height: Dimensions.h(20),),
+                AppTextField(
+                  controller: controller.previousPassword,
+                  hint: AppStrings.previousPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => (v == null || v.isEmpty)
+                      ? "Old password is required"
+                      : null,
+                ),
+                SizedBox(height: Dimensions.h(12)),
 
-                    AppTextField(
-                      controller: controller.previousPassword,
-                      hint: AppStrings.previousPassword.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      obscure: true,
-                      validator: (v) => (v == null || v.isEmpty) ? "Old password is required" : null,
-                    ),
-                    SizedBox(height: Dimensions.h(12),),
+                AppTextField(
+                  controller: controller.newPassword,
+                  hint: AppStrings.newPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => (v == null || v.length < 6)
+                      ? "Minimum 6 characters"
+                      : null,
+                ),
+                SizedBox(height: Dimensions.h(12)),
 
-                    AppTextField(
-                      controller: controller.newPassword,
-                      hint: AppStrings.newPassword.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      obscure: true,
-                      validator: (v) => (v == null || v.length < 6) ? "Minimum 6 characters" : null,
-                    ),
-                    SizedBox(height: Dimensions.h(12),),
+                AppTextField(
+                  controller: controller.confirmPassword,
+                  hint: AppStrings.confirmPassword.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  obscure: true,
+                  validator: (v) => v != controller.newPassword.text
+                      ? "Passwords do not match"
+                      : null,
+                ),
 
-                    AppTextField(
-                      controller: controller.confirmPassword,
-                      hint: AppStrings.confirmPassword.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      obscure: true,
-                      validator: (v) => v != controller.newPassword.text ? "Passwords do not match" : null,
-                    ),
+                SizedBox(height: Dimensions.h(50)),
 
-                    SizedBox(height: Dimensions.h(50),),
-
-                    Obx(() => AppButton(
-                      label: AppStrings.changePassword.tr,
-                      isLoading: controller.isLoading.value,
-                      onPressed: () => controller.submit(),
-                      height: 65,
-                    ))
-                  ]
-              ),
+                Obx(
+                  () => AppButton(
+                    label: AppStrings.changePassword.tr,
+                    isLoading: controller.isLoading.value,
+                    onPressed: () => controller.submit(),
+                    height: 65,
+                  ),
+                ),
+              ],
             ),
           ),
-        )
+        ),
+      ),
     );
   }
 
@@ -111,102 +114,110 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   SizedBox(height: Dimensions.h(20)),
 
-                // ── Icon/Visual ──────────────────────────────────────
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                    ),
-                    child: Icon(
-                      Icons.lock_reset_outlined,
-                      size: 50,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: Dimensions.h(40)),
-
-                // ── Title ────────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.changePassword.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  // ── Icon/Visual ──────────────────────────────────────
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: Icon(
+                        Icons.lock_reset_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(12)),
+                  SizedBox(height: Dimensions.h(40)),
 
-                // ── Subtitle ────────────────────────────────────────
-                Center(
-                  child: Text(
-                    "Secure your account with a strong password",
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 15,
-                      color: Colors.grey[600],
+                  // ── Title ────────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.changePassword.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(40)),
+                  SizedBox(height: Dimensions.h(12)),
 
-                // ── Previous Password Field ────────────────────────
-                AppTextField(
-                  controller: controller.previousPassword,
-                  hint: AppStrings.previousPassword.tr,
-                  hintTextStyle: AppTextStyles.hint,
-                  obscure: true,
-                  validator: (v) => (v == null || v.isEmpty) ? "Old password is required" : null,
-                ),
-                SizedBox(height: Dimensions.h(18)),
+                  // ── Subtitle ────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      "Secure your account with a strong password",
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
 
-                // ── New Password Field ─────────────────────────────
-                AppTextField(
-                  controller: controller.newPassword,
-                  hint: AppStrings.newPassword.tr,
-                  hintTextStyle: AppTextStyles.hint,
-                  obscure: true,
-                  validator: (v) => (v == null || v.length < 6) ? "Minimum 6 characters" : null,
-                ),
-                SizedBox(height: Dimensions.h(18)),
+                  SizedBox(height: Dimensions.h(40)),
 
-                // ── Confirm Password Field ─────────────────────────
-                AppTextField(
-                  controller: controller.confirmPassword,
-                  hint: AppStrings.confirmPassword.tr,
-                  hintTextStyle: AppTextStyles.hint,
-                  obscure: true,
-                  validator: (v) => v != controller.newPassword.text ? "Passwords do not match" : null,
-                ),
+                  // ── Previous Password Field ────────────────────────
+                  AppTextField(
+                    controller: controller.previousPassword,
+                    hint: AppStrings.previousPassword.tr,
+                    hintTextStyle: AppTextStyles.hint,
+                    obscure: true,
+                    validator: (v) => (v == null || v.isEmpty)
+                        ? "Old password is required"
+                        : null,
+                  ),
+                  SizedBox(height: Dimensions.h(18)),
 
-                SizedBox(height: Dimensions.h(60)),
+                  // ── New Password Field ─────────────────────────────
+                  AppTextField(
+                    controller: controller.newPassword,
+                    hint: AppStrings.newPassword.tr,
+                    hintTextStyle: AppTextStyles.hint,
+                    obscure: true,
+                    validator: (v) => (v == null || v.length < 6)
+                        ? "Minimum 6 characters"
+                        : null,
+                  ),
+                  SizedBox(height: Dimensions.h(18)),
 
-                // ── Change Password Button ─────────────────────────
-                SizedBox(
-                  width: double.infinity,
-                  child: Obx(() => AppButton(
-                    label: AppStrings.changePassword.tr,
-                    height: Dimensions.h(100),
-                    isLoading: controller.isLoading.value,
-                    onPressed: () => controller.submit(),
-                  )),
-                ),
+                  // ── Confirm Password Field ─────────────────────────
+                  AppTextField(
+                    controller: controller.confirmPassword,
+                    hint: AppStrings.confirmPassword.tr,
+                    hintTextStyle: AppTextStyles.hint,
+                    obscure: true,
+                    validator: (v) => v != controller.newPassword.text
+                        ? "Passwords do not match"
+                        : null,
+                  ),
 
-                SizedBox(height: Dimensions.h(32)),
-              ],
+                  SizedBox(height: Dimensions.h(60)),
+
+                  // ── Change Password Button ─────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: Obx(
+                      () => AppButton(
+                        label: AppStrings.changePassword.tr,
+                        height: Dimensions.h(100),
+                        isLoading: controller.isLoading.value,
+                        onPressed: () => controller.submit(),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
             ),
           ),
         ),
       ),
-      )
     );
   }
 }

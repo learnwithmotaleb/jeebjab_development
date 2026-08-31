@@ -31,7 +31,7 @@ class EditableInfoSection extends StatelessWidget {
             style: TextStyle(
               fontSize: Dimensions.f(13),
               fontWeight: FontWeight.w500,
-              color:AppColors.primaryColor,
+              color: AppColors.primaryColor,
             ),
           ),
 
@@ -39,7 +39,7 @@ class EditableInfoSection extends StatelessWidget {
 
           // ── Field Rows ─────────────────────────────────────────────────
           ...rows.map(
-                (row) => Padding(
+            (row) => Padding(
               padding: EdgeInsets.only(bottom: Dimensions.h(10)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,8 +64,7 @@ class EditableInfoSection extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.circular(Dimensions.r(6)),
-                        border:
-                        Border.all(color: const Color(0xFFE8E8E8)),
+                        border: Border.all(color: const Color(0xFFE8E8E8)),
                       ),
                       child: TextField(
                         controller: row.controller,

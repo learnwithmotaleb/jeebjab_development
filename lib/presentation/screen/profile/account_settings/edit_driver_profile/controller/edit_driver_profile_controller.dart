@@ -70,11 +70,13 @@ class EditDriverProfileController extends GetxController {
           vehicleTypeController.text = driver.vehicleType;
           brandController.text = driver.vehicleBrand;
           modelController.text = driver.vehicleModel;
-          vehicleYearController.text =
-          driver.vehicleYear > 0 ? driver.vehicleYear.toString() : '';
+          vehicleYearController.text = driver.vehicleYear > 0
+              ? driver.vehicleYear.toString()
+              : '';
 
           bankNameController.text = driver.bankInfo?.bankName ?? '';
-          accountHolderController.text = driver.bankInfo?.accountHolderName ?? '';
+          accountHolderController.text =
+              driver.bankInfo?.accountHolderName ?? '';
           accountNumberController.text = driver.bankInfo?.accountNumber ?? '';
 
           for (final doc in driver.documents) {
@@ -107,11 +109,11 @@ class EditDriverProfileController extends GetxController {
 
   bool get isValid =>
       vehicleTypeController.text.trim().isNotEmpty ||
-          brandController.text.trim().isNotEmpty ||
-          modelController.text.trim().isNotEmpty ||
-          vehicleYearController.text.trim().isNotEmpty ||
-          licenseNumberController.text.trim().isNotEmpty ||
-          documentFiles.values.any((f) => f != null);
+      brandController.text.trim().isNotEmpty ||
+      modelController.text.trim().isNotEmpty ||
+      vehicleYearController.text.trim().isNotEmpty ||
+      licenseNumberController.text.trim().isNotEmpty ||
+      documentFiles.values.any((f) => f != null);
 
   Future<void> onUpdateProfile() async {
     if (!isValid) {
@@ -161,7 +163,8 @@ class EditDriverProfileController extends GetxController {
         AppSnackBar.success("Driver profile updated successfully");
       } else {
         final message = response.body is Map
-            ? (response.body['message']?.toString() ?? "Failed to update profile")
+            ? (response.body['message']?.toString() ??
+                  "Failed to update profile")
             : "Failed to update profile";
         AppSnackBar.fail(message);
       }

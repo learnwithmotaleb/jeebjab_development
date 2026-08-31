@@ -5,7 +5,6 @@ import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
-
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
   final String email;
@@ -74,7 +73,9 @@ class ProfileHeaderWidget extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                  color: AppColors.whiteColor.withValues(alpha: 0.4), width: 3),
+                color: AppColors.whiteColor.withValues(alpha: 0.4),
+                width: 3,
+              ),
             ),
             child: CircleAvatar(
               radius: Dimensions.w(38),
@@ -82,9 +83,13 @@ class ProfileHeaderWidget extends StatelessWidget {
               backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
                   ? NetworkImage(imageUrl!)
                   : (imageAsset != null ? AssetImage(imageAsset!) : null),
-              child: (imageUrl == null || imageUrl!.isEmpty) && imageAsset == null
-                  ? Icon(Icons.person_rounded,
-                      size: Dimensions.w(38), color: AppColors.whiteColor)
+              child:
+                  (imageUrl == null || imageUrl!.isEmpty) && imageAsset == null
+                  ? Icon(
+                      Icons.person_rounded,
+                      size: Dimensions.w(38),
+                      color: AppColors.whiteColor,
+                    )
                   : null,
             ),
           ),
@@ -122,7 +127,9 @@ class ProfileHeaderWidget extends StatelessWidget {
                   return Icon(
                     Icons.star_rounded,
                     size: 18,
-                    color: isFilled ? const Color(0xFFFFA500) : AppColors.whiteColor.withValues(alpha: 0.5),
+                    color: isFilled
+                        ? const Color(0xFFFFA500)
+                        : AppColors.whiteColor.withValues(alpha: 0.5),
                   );
                 }),
                 const SizedBox(width: 4),
@@ -140,4 +147,4 @@ class ProfileHeaderWidget extends StatelessWidget {
       ),
     );
   }
-}
+}

@@ -18,15 +18,11 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
-  final DriverProfileController controller =
-  Get.put(DriverProfileController());
+  final DriverProfileController controller = Get.put(DriverProfileController());
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -45,27 +41,26 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               return RefreshIndicator(
                 onRefresh: controller.getProfile,
                 child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Dimensions.w(10),
-                    ),
-                    child: Column(
-                      children: [
-                        // ── Driver Information Card ───────────────────────
-                        InfoSectionCard(
-                          sectionTitle: AppStrings.driverInformation.tr,
-                          data: controller.driverInfo,
-                        ),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(10)),
+                  child: Column(
+                    children: [
+                      // ── Driver Information Card ───────────────────────
+                      InfoSectionCard(
+                        sectionTitle: AppStrings.driverInformation.tr,
+                        data: controller.driverInfo,
+                      ),
 
-                        // ── Bank Information Card ─────────────────────────
-                        InfoSectionCard(
-                          sectionTitle:AppStrings.bankInformation.tr,
-                          data: controller.bankInfo,
-                        ),
+                      // ── Bank Information Card ─────────────────────────
+                      InfoSectionCard(
+                        sectionTitle: AppStrings.bankInformation.tr,
+                        data: controller.bankInfo,
+                      ),
 
-                        SizedBox(height: Dimensions.h(24)),
-                      ],
-                    )),
+                      SizedBox(height: Dimensions.h(24)),
+                    ],
+                  ),
+                ),
               );
             }),
           ),
@@ -79,9 +74,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               Dimensions.w(16),
               Dimensions.h(24),
             ),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-            ),
+            decoration: BoxDecoration(color: AppColors.whiteColor),
             child: AppButton(
               label: AppStrings.editProfile.tr,
               onPressed: controller.onEditProfile,
@@ -163,7 +156,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
                       // ── Two Column Layout for Cards ─────────────────
                       Obx(
-                            () => Row(
+                        () => Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Left Column - Driver Information
@@ -202,9 +195,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               Dimensions.w(48),
               Dimensions.h(32),
             ),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-            ),
+            decoration: BoxDecoration(color: AppColors.whiteColor),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 700),
@@ -219,7 +210,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ),
           ),
           SizedBox(height: Dimensions.h(20)),
-
         ],
       ),
     );

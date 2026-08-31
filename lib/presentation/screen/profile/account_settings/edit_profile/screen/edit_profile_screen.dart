@@ -23,10 +23,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -46,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // ── Avatar centered ──────────────────────────────────
                   Center(
                     child: Obx(
-                          () => AvatarPickerWidget(
+                      () => AvatarPickerWidget(
                         pickedImage: controller.pickedImage.value,
                         networkImageUrl: controller.existingAvatarUrl.value,
                         onTap: controller.pickImage,
@@ -147,8 +144,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           width: 100,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: AppColors.primaryColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              Dimensions.r(20),
+                            ),
                           ),
                           child: Icon(
                             Icons.person_outline,
@@ -192,7 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       // ── Avatar centered ──────────────────────────────
                       Center(
                         child: Obx(
-                              () => AvatarPickerWidget(
+                          () => AvatarPickerWidget(
                             pickedImage: controller.pickedImage.value,
                             onTap: controller.pickImage,
                           ),
@@ -300,7 +301,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             SizedBox(height: Dimensions.h(16)),
             ...controller.genders.map(
-                  (g) => ListTile(
+              (g) => ListTile(
                 title: Text(
                   g,
                   style: TextStyle(
@@ -310,12 +311,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 trailing: Obx(
-                      () => controller.selectedGender.value == g
+                  () => controller.selectedGender.value == g
                       ? Icon(
-                    Icons.check_rounded,
-                    color: AppColors.primaryColor,
-                    size: Dimensions.w(20),
-                  )
+                          Icons.check_rounded,
+                          color: AppColors.primaryColor,
+                          size: Dimensions.w(20),
+                        )
                       : const SizedBox.shrink(),
                 ),
                 onTap: () {

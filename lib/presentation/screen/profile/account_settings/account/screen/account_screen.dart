@@ -22,10 +22,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -34,9 +31,7 @@ class _AccountScreenState extends State<AccountScreen> {
       appBar: CommonAppBar(title: AppStrings.accountSetting.tr),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Dimensions.w(10),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(10)),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -47,7 +42,7 @@ class _AccountScreenState extends State<AccountScreen> {
               child: Column(
                 children: List.generate(
                   controller.menuItems.length,
-                      (index) => ProfileMenuItemWidget(
+                  (index) => ProfileMenuItemWidget(
                     item: controller.menuItems[index],
                     showDivider: index < controller.menuItems.length - 1,
                   ),
@@ -116,10 +111,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Text(
                     "Manage your account preferences and security",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   ),
                 ),
 
@@ -130,10 +122,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
                     borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                    border: Border.all(
-                      color: Colors.grey.shade200,
-                      width: 1,
-                    ),
+                    border: Border.all(color: Colors.grey.shade200, width: 1),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.05),
@@ -147,21 +136,15 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Column(
                       children: List.generate(
                         controller.menuItems.length,
-                            (index) => Column(
+                        (index) => Column(
                           children: [
                             ProfileMenuItemWidget(
                               item: controller.menuItems[index],
-                              showDivider:false,
+                              showDivider: false,
                             ),
                             if (index < controller.menuItems.length - 1)
-                              Divider(
-                                height: 1,
-                                color: Colors.grey.shade200,
-                              ),
+                              Divider(height: 1, color: Colors.grey.shade200),
                           ],
-
-
-
                         ),
                       ),
                     ),

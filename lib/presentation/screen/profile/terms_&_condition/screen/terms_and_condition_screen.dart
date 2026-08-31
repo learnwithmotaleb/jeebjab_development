@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
@@ -22,10 +23,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   /// ── Shared reactive content widget ──────────────────────────────────────
@@ -48,12 +46,18 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               children: [
-                Icon(Icons.error_outline, color: AppColors.emergencyColor, size: 48),
+                Icon(
+                  Icons.error_outline,
+                  color: AppColors.emergencyColor,
+                  size: 48,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   controller.errorMessage.value,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.body.copyWith(color: AppColors.emergencyColor),
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.emergencyColor,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextButton.icon(
@@ -80,15 +84,20 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
         );
       }
 
-      // Content state
-      return Text(
-        controller.termsContent.value,
-        style: AppTextStyles.body.copyWith(
-          color: AppColors.blackColor.withValues(alpha: 0.75),
-          height: lineHeight,
-          letterSpacing: 0.3,
-          fontSize: fontSize,
-        ),
+      // Content state — the API returns HTML markup, so render it as
+      // HTML instead of dumping the raw tags as plain text.
+      return Html(
+        data: controller.termsContent.value,
+        style: {
+          "body": Style(
+            margin: Margins.zero,
+            padding: HtmlPaddings.zero,
+            color: AppColors.blackColor.withValues(alpha: 0.75),
+            fontSize: fontSize != null ? FontSize(fontSize) : null,
+            lineHeight: LineHeight(lineHeight),
+            letterSpacing: 0.3,
+          ),
+        },
       );
     });
   }

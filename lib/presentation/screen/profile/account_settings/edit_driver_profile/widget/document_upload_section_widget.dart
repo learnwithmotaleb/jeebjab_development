@@ -82,10 +82,12 @@ class DocumentUploadSection extends StatelessWidget {
                         SizedBox(height: Dimensions.h(2)),
                         Text(
                           row.pickedFile != null
-                              ? row.pickedFile!.path.split(Platform.pathSeparator).last
+                              ? row.pickedFile!.path
+                                    .split(Platform.pathSeparator)
+                                    .last
                               : row.alreadyUploaded
-                                  ? "Uploaded"
-                                  : "Not uploaded",
+                              ? "Uploaded"
+                              : "Not uploaded",
                           style: TextStyle(
                             fontSize: Dimensions.f(11),
                             color: row.pickedFile != null
@@ -106,7 +108,9 @@ class DocumentUploadSection extends StatelessWidget {
                     onPressed: row.onPick,
                     icon: const Icon(Icons.upload_file_rounded, size: 16),
                     label: Text(
-                      row.pickedFile != null || row.alreadyUploaded ? "Change" : "Upload",
+                      row.pickedFile != null || row.alreadyUploaded
+                          ? "Change"
+                          : "Upload",
                       style: TextStyle(fontSize: Dimensions.f(12)),
                     ),
                   ),

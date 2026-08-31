@@ -21,36 +21,35 @@ class _BankCardScreenState extends State<BankCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(title: AppStrings.bankCard.tr),
-      body: Obx(() => SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: Dimensions.w(16),
-          vertical: Dimensions.h(16),
-        ),
-        child: Column(
-          children: [
-            //── Card List ─────────────────────────────────────────
-            ...controller.cards.map(
-                  (card) => Padding(
-                padding: EdgeInsets.only(bottom: Dimensions.h(12)),
-                child: BankCardItemWidget(
-                  card: card,
-                  onEdit: () => controller.onEditCard(card),
+      body: Obx(
+        () => SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(16),
+            vertical: Dimensions.h(16),
+          ),
+          child: Column(
+            children: [
+              //── Card List ─────────────────────────────────────────
+              ...controller.cards.map(
+                (card) => Padding(
+                  padding: EdgeInsets.only(bottom: Dimensions.h(12)),
+                  child: BankCardItemWidget(
+                    card: card,
+                    onEdit: () => controller.onEditCard(card),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
@@ -59,7 +58,7 @@ class _BankCardScreenState extends State<BankCardScreen> {
       backgroundColor: AppColors.whiteColor,
       appBar: CommonAppBar(title: AppStrings.bankCard.tr),
       body: Obx(
-            () => SingleChildScrollView(
+        () => SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(48),
             vertical: Dimensions.h(32),
@@ -111,10 +110,7 @@ class _BankCardScreenState extends State<BankCardScreen> {
                     child: Text(
                       "Manage your bank cards and payment methods",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                     ),
                   ),
 
@@ -123,37 +119,38 @@ class _BankCardScreenState extends State<BankCardScreen> {
                   // ── Card Grid Layout (2 Columns) ───────────────────
                   controller.cards.isEmpty
                       ? Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: Dimensions.h(40),
-                      ),
-                      child: Text(
-                        "No bank cards added yet",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ),
-                  )
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: Dimensions.h(40),
+                            ),
+                            child: Text(
+                              "No bank cards added yet",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                        )
                       : GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.6,
-                      crossAxisSpacing: Dimensions.w(24),
-                      mainAxisSpacing: Dimensions.h(24),
-                    ),
-                    itemCount: controller.cards.length,
-                    itemBuilder: (context, index) {
-                      final card = controller.cards[index];
-                      return BankCardItemWidget(
-                        card: card,
-                        onEdit: () => controller.onEditCard(card),
-                      );
-                    },
-                  ),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1.6,
+                                crossAxisSpacing: Dimensions.w(24),
+                                mainAxisSpacing: Dimensions.h(24),
+                              ),
+                          itemCount: controller.cards.length,
+                          itemBuilder: (context, index) {
+                            final card = controller.cards[index];
+                            return BankCardItemWidget(
+                              card: card,
+                              onEdit: () => controller.onEditCard(card),
+                            );
+                          },
+                        ),
 
                   SizedBox(height: Dimensions.h(40)),
                 ],

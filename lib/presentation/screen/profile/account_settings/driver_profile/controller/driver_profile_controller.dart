@@ -48,7 +48,8 @@ class DriverProfileController extends GetxController {
 
         bankInfo.value = {
           AppStrings.bankName.tr: driver?.bankInfo?.bankName ?? '-',
-          AppStrings.accountHolderName.tr: driver?.bankInfo?.accountHolderName ?? '-',
+          AppStrings.accountHolderName.tr:
+              driver?.bankInfo?.accountHolderName ?? '-',
           AppStrings.accountNumber.tr: driver?.bankInfo?.accountNumber ?? '-',
         };
       }

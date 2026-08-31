@@ -13,8 +13,7 @@ class ProfileLanguageController extends GetxController {
   void onInit() {
     super.onInit();
     // Load whatever language is currently active
-    selectedLanguage.value =
-    _languageController.isEnglish ? 'en' : 'ar';
+    selectedLanguage.value = _languageController.isEnglish ? 'en' : 'ar';
   }
 
   /// Called from UI when user taps a language row

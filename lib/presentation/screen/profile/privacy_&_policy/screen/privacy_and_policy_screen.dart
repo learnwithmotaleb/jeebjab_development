@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -25,10 +26,7 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   /// ── Shared body content (reactive) ─────────────────────────────────────
@@ -51,12 +49,18 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               children: [
-                Icon(Icons.error_outline, color: AppColors.emergencyColor, size: 48),
+                Icon(
+                  Icons.error_outline,
+                  color: AppColors.emergencyColor,
+                  size: 48,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   controller.errorMessage.value,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.body.copyWith(color: AppColors.emergencyColor),
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.emergencyColor,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextButton.icon(
@@ -83,15 +87,20 @@ class _PrivacyAndPolicyScreenState extends State<PrivacyAndPolicyScreen> {
         );
       }
 
-      // Content state
-      return Text(
-        controller.privacyContent.value,
-        style: AppTextStyles.body.copyWith(
-          color: AppColors.blackColor.withValues(alpha: 0.75),
-          height: lineHeight,
-          letterSpacing: 0.3,
-          fontSize: titleFontSize != null ? 15 : null,
-        ),
+      // Content state — the API returns HTML markup, so render it as
+      // HTML instead of dumping the raw tags as plain text.
+      return Html(
+        data: controller.privacyContent.value,
+        style: {
+          "body": Style(
+            margin: Margins.zero,
+            padding: HtmlPaddings.zero,
+            color: AppColors.blackColor.withValues(alpha: 0.75),
+            fontSize: FontSize(titleFontSize ?? 15),
+            lineHeight: LineHeight(lineHeight),
+            letterSpacing: 0.3,
+          ),
+        },
       );
     });
   }

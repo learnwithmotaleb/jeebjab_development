@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/service/api_url.dart';
 import 'package:jeebjab/utils/app_text_style/app_text_style.dart';
 import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
@@ -14,6 +16,8 @@ import 'package:jeebjab/widget/app_button.dart';
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../../../global/language/controller/language_controller.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
+import '../controller/home_controller.dart';
+import '../model/home_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,412 +27,105 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final lc = Get.find<LanguageController>(); // ← find, not put
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
+  }
+
+  // ── Star rating row — same visual style as before, now driven by the
+  // real rating value instead of a hardcoded 4-gold/1-white split.
+  List<Widget> _buildStars(double rating, {double size = 18}) {
+    final filled = rating.round().clamp(0, 5);
+    return List.generate(
+      5,
+      (index) => Icon(
+        Icons.star_rounded,
+        size: size,
+        color: index < filled ? const Color(0xFFFFA500) : AppColors.whiteColor,
+      ),
     );
+  }
+
+  ImageProvider _avatarImage(String? avatar) {
+    if (avatar != null && avatar.isNotEmpty) {
+      return NetworkImage(ApiUrl.resolveImageUrl(avatar));
+    }
+    return AssetImage(AppImages.profileImage);
   }
 
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: Dimensions.h(30),
-                horizontal: Dimensions.w(20),
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(Dimensions.w(30)),
-                  bottomRight: Radius.circular(Dimensions.w(30)),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Image.asset(AppImages.appLogo, width: 100, height: 100),
-                  SizedBox(height: Dimensions.h(15)),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: GestureDetector(
-                      onTap: () => Get.toNamed(RoutePath.profile),
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage(AppImages.profileImage),
-                      ),
-                    ),
-                    title: Text(
-                      "Abdul Motaleb",
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 18,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ...List.generate(4, (index) => const Icon(Icons.star_rounded, size: 18, color: Color(0xFFFFA500))),
-                        const Icon(Icons.star_rounded, size: 18, color: AppColors.whiteColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          "4.7",
-                          style: AppTextStyles.body.copyWith(
-                            color: AppColors.whiteColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.circular(1000),
-                      ),
-                      child: GestureDetector(
-                        onTap: () => Get.toNamed(RoutePath.notification),
-                        child: Icon(
-                          Icons.notifications_on,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      body: Obx(() {
+        if (controller.isLoading.value && controller.homeData.value == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            SizedBox(height: Dimensions.h(20)),
+        final home = controller.homeData.value;
 
-            // Stats Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex:1,
-                    child: _statCard(
-                      value: "30 Sec",
-                      label: AppStrings.averageResponse.tr,
-                      borderRadius: BorderRadius.only(
-                        topLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                        bottomLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                        topRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                        bottomRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: Dimensions.w(5)),
-                  Expanded(
-                    flex:1,
-                    child: _statCard(
-                      value: "1.3M",
-                      label: AppStrings.deliveriesAndPickups.tr,
-                      borderRadius: BorderRadius.only(
-                        topLeft: lc.isEnglish ? Radius.zero : Radius.zero,
-                        bottomLeft: lc.isEnglish ?Radius.zero : Radius.zero,
-                        topRight: lc.isEnglish ? Radius.zero : Radius.zero,
-                        bottomRight: lc.isEnglish ? Radius.zero : Radius.zero,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: Dimensions.w(5)),
-                  Expanded(
-                    flex:1,
-                    child: _statCard(
-                      value: "720,000",
-                      label: AppStrings.reduceCarRides.tr,
-                      borderRadius: BorderRadius.only(
-                        topRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                        bottomRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                        topLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                        bottomLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(20)),
-
-            // Welcome Text
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    AppStrings.welcomeToJibJab.tr,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 18,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  SizedBox(height: Dimensions.h(10)),
-                  Text(
-                    AppStrings.welcomeToJibJabSubTitle.tr,
-                    style: AppTextStyles.body,
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(30)),
-
-            // Banner Image
-            Stack(
+        return RefreshIndicator(
+          onRefresh: controller.fetchHome,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
               children: [
+                // Header
                 Container(
                   width: double.infinity,
-                  height: 180,
-                  margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  padding: EdgeInsets.symmetric(
+                    vertical: Dimensions.h(30),
+                    horizontal: Dimensions.w(20),
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                    image: DecorationImage(
-                      image: AssetImage(AppImages.homeImage1),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      AppStrings.lifeMakeEasier.tr,
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: Dimensions.h(20)),
-
-            // How it Works
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    AppStrings.howItWorks.tr,
-                    style: AppTextStyles.body.copyWith(
-                        color: AppColors.blackColor
-                    ),
-                  ),
-                  SizedBox(height: Dimensions.h(12)),
-                  Center(
-                    child: Text(
-                      AppStrings.howItWorksSteps.tr,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.body.copyWith(
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(20)),
-
-            // What's New
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Text(
-                AppStrings.whatsNew.tr,
-                style: AppTextStyles.title.copyWith(
-                  fontSize: 18,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(30)),
-
-            Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 180,
-                  margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                    image: DecorationImage(
-                      image: AssetImage(AppImages.homeImage1),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      AppStrings.lifeMakeEasier.tr,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: Dimensions.h(16)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Text(AppStrings.promoText.tr, textAlign: TextAlign.center),
-            ),
-
-            SizedBox(height: Dimensions.h(16)),
-
-            Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 180,
-                  margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                    image: DecorationImage(
-                      image: AssetImage(AppImages.homeImage1),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Text(
-                      AppStrings.lifeMakeEasier.tr,
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: Dimensions.h(16)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Text(AppStrings.promoText.tr, textAlign: TextAlign.center),
-            ),
-
-            SizedBox(height: Dimensions.h(16)),
-            Center(
-              child: TextButton(
-                onPressed: () => Get.toNamed(RoutePath.readMore),
-                child: Text(
-                  AppStrings.readMore.tr,
-                  style: AppTextStyles.body.copyWith(
                     color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(Dimensions.w(30)),
+                      bottomRight: Radius.circular(Dimensions.w(30)),
+                    ),
                   ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(30)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTablet() {
-    return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header - Enhanced for Tablet
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: Dimensions.h(40),
-                horizontal: Dimensions.w(48),
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(Dimensions.w(30)),
-                  bottomRight: Radius.circular(Dimensions.w(30)),
-                ),
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 800),
                   child: Column(
                     children: [
-                      Image.asset(AppImages.appLogo, width: 120, height: 120),
-                      SizedBox(height: Dimensions.h(24)),
+                      Image.asset(AppImages.appLogo, width: 100, height: 100),
+                      SizedBox(height: Dimensions.h(15)),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: GestureDetector(
                           onTap: () => Get.toNamed(RoutePath.profile),
                           child: CircleAvatar(
-                            radius: 32,
-                            backgroundImage: AssetImage(AppImages.profileImage),
+                            radius: 25,
+                            backgroundImage: _avatarImage(home?.user.avatar),
                           ),
                         ),
                         title: Text(
-                          "Abdul Motaleb",
+                          home?.user.name.isNotEmpty == true
+                              ? home!.user.name
+                              : "-",
                           style: AppTextStyles.title.copyWith(
-                            fontSize: 22,
+                            fontSize: 18,
                             color: AppColors.whiteColor,
                           ),
                         ),
                         subtitle: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            ...List.generate(4, (index) => const Icon(Icons.star_rounded, size: 20, color: Color(0xFFFFA500))),
-                            const Icon(Icons.star_rounded, size: 20, color: AppColors.whiteColor),
+                            ..._buildStars(home?.user.rating ?? 0),
                             const SizedBox(width: 4),
                             Text(
-                              "4.7",
+                              (home?.user.rating ?? 0).toStringAsFixed(1),
                               style: AppTextStyles.body.copyWith(
                                 color: AppColors.whiteColor,
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
                         trailing: Container(
-                          width: 48,
-                          height: 48,
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             borderRadius: BorderRadius.circular(1000),
@@ -438,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               Icons.notifications_on,
                               color: AppColors.primaryColor,
-                              size: 28,
                             ),
                           ),
                         ),
@@ -446,271 +142,438 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              ),
-            ),
 
-            SizedBox(height: Dimensions.h(40)),
+                SizedBox(height: Dimensions.h(20)),
 
-            // Stats Section - Better Layout
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 900),
+                // Stats Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Row(
                     children: [
                       Expanded(
+                        flex: 1,
                         child: _statCard(
-                          value: "30 Sec",
+                          value: home?.stats.averageResponse ?? '-',
                           label: AppStrings.averageResponse.tr,
                           borderRadius: BorderRadius.only(
-                            topLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                            bottomLeft: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                            topRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                            bottomRight: lc.isEnglish ? Radius.zero : const Radius.circular(30),
+                            topLeft: lc.isEnglish
+                                ? const Radius.circular(30)
+                                : Radius.zero,
+                            bottomLeft: lc.isEnglish
+                                ? const Radius.circular(30)
+                                : Radius.zero,
+                            topRight: lc.isEnglish
+                                ? Radius.zero
+                                : const Radius.circular(30),
+                            bottomRight: lc.isEnglish
+                                ? Radius.zero
+                                : const Radius.circular(30),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: Dimensions.w(5)),
                       Expanded(
+                        flex: 1,
                         child: _statCard(
-                          value: "1.3M",
+                          value: home?.stats.totalDeliveries ?? '-',
                           label: AppStrings.deliveriesAndPickups.tr,
-                          borderRadius: BorderRadius.zero,
+                          borderRadius: BorderRadius.only(
+                            topLeft: lc.isEnglish ? Radius.zero : Radius.zero,
+                            bottomLeft: lc.isEnglish
+                                ? Radius.zero
+                                : Radius.zero,
+                            topRight: lc.isEnglish ? Radius.zero : Radius.zero,
+                            bottomRight: lc.isEnglish
+                                ? Radius.zero
+                                : Radius.zero,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: Dimensions.w(5)),
                       Expanded(
+                        flex: 1,
                         child: _statCard(
-                          value: "720,000",
+                          value: home?.stats.reducedRides ?? '-',
                           label: AppStrings.reduceCarRides.tr,
                           borderRadius: BorderRadius.only(
-                            topRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                            bottomRight: lc.isEnglish ? const Radius.circular(30) : Radius.zero,
-                            topLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
-                            bottomLeft: lc.isEnglish ? Radius.zero : const Radius.circular(30),
+                            topRight: lc.isEnglish
+                                ? const Radius.circular(30)
+                                : Radius.zero,
+                            bottomRight: lc.isEnglish
+                                ? const Radius.circular(30)
+                                : Radius.zero,
+                            topLeft: lc.isEnglish
+                                ? Radius.zero
+                                : const Radius.circular(30),
+                            bottomLeft: lc.isEnglish
+                                ? Radius.zero
+                                : const Radius.circular(30),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
 
-            SizedBox(height: Dimensions.h(48)),
+                SizedBox(height: Dimensions.h(20)),
 
-            // Welcome Text
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 700),
+                // Welcome Text
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         AppStrings.welcomeToJibJab.tr,
                         style: AppTextStyles.title.copyWith(
-                          fontSize: 28,
+                          fontSize: 18,
                           color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: Dimensions.h(16)),
+                      SizedBox(height: Dimensions.h(10)),
                       Text(
                         AppStrings.welcomeToJibJabSubTitle.tr,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: 16,
-                        ),
+                        style: AppTextStyles.body,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
 
-            SizedBox(height: Dimensions.h(40)),
+                SizedBox(height: Dimensions.h(30)),
 
-            // Banner Image
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 800),
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                          image: DecorationImage(
-                            image: AssetImage(AppImages.homeImage1),
-                            fit: BoxFit.cover,
-                          ),
+                // Banner Image
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 180,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: Dimensions.w(20),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.w(20)),
+                        image: DecorationImage(
+                          image: AssetImage(AppImages.homeImage1),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Text(
-                            AppStrings.lifeMakeEasier.tr,
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.title.copyWith(
-                              fontSize: 22,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(40)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 900),
-                  child: Text(
-                    AppStrings.promoText.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 15,
                     ),
-                  ),
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Text(
+                          AppStrings.lifeMakeEasier.tr,
+                          style: AppTextStyles.title.copyWith(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
 
-            // How it Works
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 700),
+                SizedBox(height: Dimensions.h(20)),
+
+                // How it Works
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         AppStrings.howItWorks.tr,
-                        style: AppTextStyles.title.copyWith(
-                          fontSize: 20,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(16)),
-                      Text(
-                        AppStrings.howItWorksSteps.tr,
-                        textAlign: TextAlign.center,
                         style: AppTextStyles.body.copyWith(
-                          fontSize: 15,
-                          color: Colors.black87,
+                          color: AppColors.blackColor,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(48)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 800),
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.w(20)),
-                          image: DecorationImage(
-                            image: AssetImage(AppImages.homeImage1),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Text(
-                            AppStrings.lifeMakeEasier.tr,
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.title.copyWith(
-                              fontSize: 22,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      SizedBox(height: Dimensions.h(12)),
+                      Center(
+                        child: Text(
+                          AppStrings.howItWorksSteps.tr,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.body.copyWith(
+                            color: Colors.black87,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
 
-            // What's New
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 800),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
+                SizedBox(height: Dimensions.h(20)),
+
+                // What's New
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  child: Text(
+                    AppStrings.whatsNew.tr,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 18,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(30)),
+
+                if (home != null && home.whatsNew.isNotEmpty)
+                  _promoCard(home.whatsNew[0])
+                else
+                  _placeholderPromoCard(),
+
+                if (home != null && home.whatsNew.length > 1) ...[
+                  SizedBox(height: Dimensions.h(16)),
+                  _promoCard(home.whatsNew[1]),
+                ],
+
+                SizedBox(height: Dimensions.h(16)),
+                Center(
+                  child: TextButton(
+                    onPressed: () => Get.toNamed(
+                      RoutePath.readMore,
+                      arguments: home?.whatsNew ?? const <WhatsNewItemModel>[],
+                    ),
                     child: Text(
-                      AppStrings.whatsNew.tr,
-                      style: AppTextStyles.title.copyWith(
-                        fontSize: 24,
+                      AppStrings.readMore.tr,
+                      style: AppTextStyles.body.copyWith(
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-              ),
+
+                SizedBox(height: Dimensions.h(30)),
+              ],
             ),
+          ),
+        );
+      }),
+    );
+  }
 
-            SizedBox(height: Dimensions.h(32)),
+  Widget _buildTablet() {
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      body: Obx(() {
+        if (controller.isLoading.value && controller.homeData.value == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            // Promo Cards Grid
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 900),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 2.2,
-                      crossAxisSpacing: Dimensions.w(20),
-                      mainAxisSpacing: Dimensions.h(20),
+        final home = controller.homeData.value;
+
+        return RefreshIndicator(
+          onRefresh: controller.fetchHome,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                // Header - Enhanced for Tablet
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    vertical: Dimensions.h(40),
+                    horizontal: Dimensions.w(48),
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(Dimensions.w(30)),
+                      bottomRight: Radius.circular(Dimensions.w(30)),
                     ),
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return Stack(
+                  ),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 800),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            AppImages.appLogo,
+                            width: 120,
+                            height: 120,
+                          ),
+                          SizedBox(height: Dimensions.h(24)),
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: GestureDetector(
+                              onTap: () => Get.toNamed(RoutePath.profile),
+                              child: CircleAvatar(
+                                radius: 32,
+                                backgroundImage: _avatarImage(
+                                  home?.user.avatar,
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              home?.user.name.isNotEmpty == true
+                                  ? home!.user.name
+                                  : "-",
+                              style: AppTextStyles.title.copyWith(
+                                fontSize: 22,
+                                color: AppColors.whiteColor,
+                              ),
+                            ),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ..._buildStars(
+                                  home?.user.rating ?? 0,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  (home?.user.rating ?? 0).toStringAsFixed(1),
+                                  style: AppTextStyles.body.copyWith(
+                                    color: AppColors.whiteColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(1000),
+                              ),
+                              child: GestureDetector(
+                                onTap: () =>
+                                    Get.toNamed(RoutePath.notification),
+                                child: Icon(
+                                  Icons.notifications_on,
+                                  color: AppColors.primaryColor,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // Stats Section - Better Layout
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 900),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _statCard(
+                              value: home?.stats.averageResponse ?? '-',
+                              label: AppStrings.averageResponse.tr,
+                              borderRadius: BorderRadius.only(
+                                topLeft: lc.isEnglish
+                                    ? const Radius.circular(30)
+                                    : Radius.zero,
+                                bottomLeft: lc.isEnglish
+                                    ? const Radius.circular(30)
+                                    : Radius.zero,
+                                topRight: lc.isEnglish
+                                    ? Radius.zero
+                                    : const Radius.circular(30),
+                                bottomRight: lc.isEnglish
+                                    ? Radius.zero
+                                    : const Radius.circular(30),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _statCard(
+                              value: home?.stats.totalDeliveries ?? '-',
+                              label: AppStrings.deliveriesAndPickups.tr,
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _statCard(
+                              value: home?.stats.reducedRides ?? '-',
+                              label: AppStrings.reduceCarRides.tr,
+                              borderRadius: BorderRadius.only(
+                                topRight: lc.isEnglish
+                                    ? const Radius.circular(30)
+                                    : Radius.zero,
+                                bottomRight: lc.isEnglish
+                                    ? const Radius.circular(30)
+                                    : Radius.zero,
+                                topLeft: lc.isEnglish
+                                    ? Radius.zero
+                                    : const Radius.circular(30),
+                                bottomLeft: lc.isEnglish
+                                    ? Radius.zero
+                                    : const Radius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(48)),
+
+                // Welcome Text
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 700),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppStrings.welcomeToJibJab.tr,
+                            style: AppTextStyles.title.copyWith(
+                              fontSize: 28,
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.h(16)),
+                          Text(
+                            AppStrings.welcomeToJibJabSubTitle.tr,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.body.copyWith(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+
+                // Banner Image
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 800),
+                      child: Stack(
                         children: [
                           Container(
+                            width: double.infinity,
+                            height: 220,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Dimensions.w(20)),
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.w(20),
+                              ),
                               image: DecorationImage(
                                 image: AssetImage(AppImages.homeImage1),
                                 fit: BoxFit.cover,
@@ -727,7 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AppStrings.lifeMakeEasier.tr,
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.title.copyWith(
-                                  fontSize: 18,
+                                  fontSize: 22,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -735,32 +598,307 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ],
-                      );
-                    },
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 900),
+                      child: Text(
+                        AppStrings.promoText.tr,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.body.copyWith(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // How it Works
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 700),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppStrings.howItWorks.tr,
+                            style: AppTextStyles.title.copyWith(
+                              fontSize: 20,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: Dimensions.h(16)),
+                          Text(
+                            AppStrings.howItWorksSteps.tr,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.body.copyWith(
+                              fontSize: 15,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(48)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 800),
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 220,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.w(20),
+                              ),
+                              image: DecorationImage(
+                                image: AssetImage(AppImages.homeImage1),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Text(
+                                AppStrings.lifeMakeEasier.tr,
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.title.copyWith(
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // What's New
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 800),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.whatsNew.tr,
+                          style: AppTextStyles.title.copyWith(
+                            fontSize: 24,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(32)),
+
+                // Promo Cards Grid
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 900),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2.2,
+                          crossAxisSpacing: Dimensions.w(20),
+                          mainAxisSpacing: Dimensions.h(20),
+                        ),
+                        itemCount: home?.whatsNew.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final item = home!.whatsNew[index];
+                          return Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    Dimensions.w(20),
+                                  ),
+                                  image: DecorationImage(
+                                    image: item.image != null
+                                        ? NetworkImage(
+                                            ApiUrl.resolveImageUrl(item.image!),
+                                          )
+                                        : AssetImage(AppImages.homeImage1)
+                                              as ImageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
+                                    child: Text(
+                                      item.title,
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyles.title.copyWith(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(20)),
+
+                SizedBox(height: Dimensions.h(24)),
+
+                Center(
+                  child: AppButton(
+                    width: 200,
+                    height: 50,
+                    label: AppStrings.readMore.tr,
+                    onPressed: () => Get.toNamed(
+                      RoutePath.readMore,
+                      arguments: home?.whatsNew ?? const <WhatsNewItemModel>[],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: Dimensions.h(40)),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  // ── Promo card — same visual style as the original static blocks,
+  // now driven by a real WhatsNewItemModel.
+  Widget _promoCard(WhatsNewItemModel item) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 180,
+              margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(Dimensions.w(20)),
+                image: DecorationImage(
+                  image: item.image != null
+                      ? NetworkImage(ApiUrl.resolveImageUrl(item.image!))
+                      : AssetImage(AppImages.homeImage1) as ImageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    item.title,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.title.copyWith(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-
-            SizedBox(height: Dimensions.h(20)),
-
-
-
-            SizedBox(height: Dimensions.h(24)),
-
-            Center(
-              child: AppButton(
-                width: 200,
-                height: 50,
-                label: AppStrings.readMore.tr,
-                onPressed: () => Get.toNamed(RoutePath.readMore),
-              ),
-            ),
-
-            SizedBox(height: Dimensions.h(40)),
           ],
         ),
-      ),
+        SizedBox(height: Dimensions.h(16)),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+          child: Text(
+            item.description,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Shown only if the API returns no promos at all, keeping the
+  // section from collapsing to nothing.
+  Widget _placeholderPromoCard() {
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 180,
+          margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.w(20)),
+            image: DecorationImage(
+              image: AssetImage(AppImages.homeImage1),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Text(
+              AppStrings.lifeMakeEasier.tr,
+              style: AppTextStyles.title.copyWith(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -789,7 +927,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Container(
                 width: Dimensions.w(16),
-                height:  Dimensions.h(16),
+                height: Dimensions.h(16),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,

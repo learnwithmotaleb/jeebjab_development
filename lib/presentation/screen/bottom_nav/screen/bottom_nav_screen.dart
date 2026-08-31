@@ -6,12 +6,9 @@ import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
 import 'package:jeebjab/presentation/screen/job/customer_job_post/screen/customer_job_post_screen.dart';
-import 'package:jeebjab/presentation/screen/job/job_post/screen/job_post_screen.dart';
 import 'package:jeebjab/presentation/screen/profile/profile/screen/profile_screen.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
-import '../../../../core/enums/app_role.dart';
-import '../../../../helper/local_db/local_db.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../page/home/screen/home_screen.dart';
 
@@ -34,24 +31,14 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   // ruing development by motaleb
   List<Widget> get _pages => [
     const HomeScreen(),
-    _getJobPage(),
+    // BottomNavScreen is only ever reached in user mode — driver mode
+    // has its own DriverBottomNavScreen with its own Jobs tab — so the
+    // Jobs tab here is always the customer's own job-posting view.
+    CustomerJobPostScreen(),
     CreatePostScreen(),
     const MyPostScreen(),
     const ProfileScreen(),
   ];
-
-  Widget _getJobPage() {
-    final role = SharePrefsHelper.getRole();
-    if (role == AppRole.USER) {
-      return CustomerJobPostScreen();
-    } else if (role == AppRole.DRIVER) {
-      return const JobPostScreen();
-    } else {
-      return const JobPostScreen();
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {

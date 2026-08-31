@@ -22,10 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -119,9 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // ── 2. Menu Card Container ────────────────────────
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Dimensions.w(48),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
@@ -183,7 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         item: controller.menuItems[index],
                                         showDivider: false,
                                       ),
-                                      if (index < controller.menuItems.length - 1)
+                                      if (index <
+                                          controller.menuItems.length - 1)
                                         Divider(
                                           height: 1,
                                           color: Colors.grey.shade200,

@@ -5,11 +5,9 @@ import 'package:get/get.dart';
 import '../../../../../../service/api_service.dart';
 import '../../../../../../service/api_url.dart';
 
-
 import '../../../../../../helper/tost_message/show_snackbar.dart';
 
 class ChangePasswordController extends GetxController {
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController previousPassword = TextEditingController();
@@ -41,16 +39,23 @@ class ChangePasswordController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final message = response.body['message'] ?? "Password changed successfully!";
+        final message =
+            response.body['message'] ?? "Password changed successfully!";
         AppSnackBar.success(message, title: "Success");
 
         Get.close(2);
       } else {
-        final errorMessage = response.body['message'] ?? response.statusText ?? "Failed to change password. Please try again.";
+        final errorMessage =
+            response.body['message'] ??
+            response.statusText ??
+            "Failed to change password. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Error");
       }
     } catch (e) {
-      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+      AppSnackBar.fail(
+        "An unexpected error occurred. Please try again.",
+        title: "Error",
+      );
     } finally {
       isLoading.value = false;
     }

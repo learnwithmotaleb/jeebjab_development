@@ -19,76 +19,81 @@ class ContactAndSupportScreen extends StatefulWidget {
   const ContactAndSupportScreen({super.key});
 
   @override
-  State<ContactAndSupportScreen> createState() => _ContactAndSupportScreenState();
+  State<ContactAndSupportScreen> createState() =>
+      _ContactAndSupportScreenState();
 }
 
 class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
-
-  ContactAndSupportController controller = Get.put(ContactAndSupportController());
+  ContactAndSupportController controller = Get.put(
+    ContactAndSupportController(),
+  );
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   /// Mobile Layout
   Widget _buildMobile() {
     return Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: CommonAppBar(title: AppStrings.contactAndSupport.tr),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                  children: [
-                    SizedBox(height: Dimensions.h(10),),
+      backgroundColor: AppColors.whiteColor,
+      appBar: CommonAppBar(title: AppStrings.contactAndSupport.tr),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              children: [
+                SizedBox(height: Dimensions.h(10)),
 
-                    AppTextField(
-                      controller: controller.nameController,
-                      hint: AppStrings.enterName.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      validator: AppValidators.required(message: 'Name is required'),
-                    ),
-                    SizedBox(height: Dimensions.h(16),),
+                AppTextField(
+                  controller: controller.nameController,
+                  hint: AppStrings.enterName.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  validator: AppValidators.required(
+                    message: 'Name is required',
+                  ),
+                ),
+                SizedBox(height: Dimensions.h(16)),
 
-                    AppTextField(
-                      controller: controller.emailController,
-                      hint: AppStrings.enterEmail.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      validator: AppValidators.combine([
-                        AppValidators.required(message: 'Email is required'),
-                        AppValidators.email(),
-                      ]),
-                    ),
-                    SizedBox(height: Dimensions.h(16),),
+                AppTextField(
+                  controller: controller.emailController,
+                  hint: AppStrings.enterEmail.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  validator: AppValidators.combine([
+                    AppValidators.required(message: 'Email is required'),
+                    AppValidators.email(),
+                  ]),
+                ),
+                SizedBox(height: Dimensions.h(16)),
 
-                    AppTextField(
-                      controller: controller.descriptionController,
-                      hint: AppStrings.writeMessage.tr,
-                      hintTextStyle: AppTextStyles.hint,
-                      maxLines: 4,
-                      validator: AppValidators.required(message: 'Message is required'),
-                    ),
+                AppTextField(
+                  controller: controller.descriptionController,
+                  hint: AppStrings.writeMessage.tr,
+                  hintTextStyle: AppTextStyles.hint,
+                  maxLines: 4,
+                  validator: AppValidators.required(
+                    message: 'Message is required',
+                  ),
+                ),
 
-                    SizedBox(height: Dimensions.h(30),),
-                    Obx(() => AppButton(
-                      label: AppStrings.contact.tr,
-                      onPressed: controller.isLoading.value
-                          ? null
-                          : () => controller.submitContactSupport(),
-                      height: 65,
-                      isLoading: controller.isLoading.value,
-                    ))
-                  ]
-              ),
+                SizedBox(height: Dimensions.h(30)),
+                Obx(
+                  () => AppButton(
+                    label: AppStrings.contact.tr,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.submitContactSupport(),
+                    height: 65,
+                    isLoading: controller.isLoading.value,
+                  ),
+                ),
+              ],
             ),
           ),
-        )
+        ),
+      ),
     );
   }
 
@@ -184,15 +189,17 @@ class _ContactAndSupportScreenState extends State<ContactAndSupportScreen> {
                 SizedBox(height: Dimensions.h(48)),
 
                 // ── Contact Button ──────────────────────────────────
-                Obx(() => AppButton(
-                  label: AppStrings.contact.tr,
-                  onPressed: controller.isLoading.value
-                      ? null
-                      : () => controller.submitContactSupport(),
-                  height: Dimensions.h(100),
-                  isLoading: controller.isLoading.value,
-                  width: double.infinity,
-                )),
+                Obx(
+                  () => AppButton(
+                    label: AppStrings.contact.tr,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.submitContactSupport(),
+                    height: Dimensions.h(100),
+                    isLoading: controller.isLoading.value,
+                    width: double.infinity,
+                  ),
+                ),
 
                 SizedBox(height: Dimensions.h(32)),
               ],

@@ -25,10 +25,7 @@ class BankCardItemWidget extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            const Color(0xFFF8F8F8),
-          ],
+          colors: [Colors.white, const Color(0xFFF8F8F8)],
         ),
         borderRadius: BorderRadius.circular(Dimensions.r(isTablet ? 20 : 14)),
         border: Border.all(
@@ -121,7 +118,9 @@ class BankCardItemWidget extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(Dimensions.r(isTablet ? 20 : 16)),
+                  borderRadius: BorderRadius.circular(
+                    Dimensions.r(isTablet ? 20 : 16),
+                  ),
                 ),
                 child: GestureDetector(
                   onTap: onEdit,

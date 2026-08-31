@@ -18,9 +18,8 @@ class InfoSectionCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(Dimensions.w(10)),
       decoration: BoxDecoration(
-        color:AppColors.whiteColor,
+        color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(Dimensions.r(5)),
-
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +38,7 @@ class InfoSectionCard extends StatelessWidget {
 
           // ── Rows ──────────────────────────────────────────────────────
           ...data.entries.map(
-                (entry) => Padding(
+            (entry) => Padding(
               padding: EdgeInsets.only(bottom: Dimensions.h(5)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

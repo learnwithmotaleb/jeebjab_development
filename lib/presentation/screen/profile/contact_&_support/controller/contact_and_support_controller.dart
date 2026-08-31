@@ -44,10 +44,7 @@ class ContactAndSupportController extends GetxController {
       );
     } else {
       final msg = response.body?['message'] ?? 'Something went wrong';
-      ShowAppSnackBar.fail(
-        msg.toString(),
-        title: AppStrings.appName,
-      );
+      ShowAppSnackBar.fail(msg.toString(), title: AppStrings.appName);
     }
   }
 

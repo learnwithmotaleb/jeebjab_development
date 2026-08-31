@@ -23,10 +23,7 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -127,10 +124,7 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
                   child: Text(
                     "Select your preferred language",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   ),
                 ),
 
@@ -210,7 +204,9 @@ class _LanguageOptionRow extends StatelessWidget {
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(Dimensions.r(10)),
             border: Border.all(
-              color: isSelected ? AppColors.primaryColor : const Color(0xFFE0E0E0),
+              color: isSelected
+                  ? AppColors.primaryColor
+                  : const Color(0xFFE0E0E0),
             ),
           ),
           child: Row(
@@ -236,7 +232,9 @@ class _LanguageOptionRow extends StatelessWidget {
                     ? Icons.check_circle_outline_rounded
                     : Icons.radio_button_unchecked_rounded,
                 size: Dimensions.w(30),
-                color: isSelected ? AppColors.primaryColor : const Color(0xFFCCCCCC),
+                color: isSelected
+                    ? AppColors.primaryColor
+                    : const Color(0xFFCCCCCC),
               ),
             ],
           ),

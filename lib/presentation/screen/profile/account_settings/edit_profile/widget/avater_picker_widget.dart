@@ -35,8 +35,11 @@ class AvatarPickerWidget extends StatelessWidget {
             backgroundColor: const Color(0xFFEEEEEE),
             backgroundImage: backgroundImage,
             child: backgroundImage == null
-                ? Icon(Icons.person_rounded,
-                    size: Dimensions.w(44), color: Colors.grey)
+                ? Icon(
+                    Icons.person_rounded,
+                    size: Dimensions.w(44),
+                    color: Colors.grey,
+                  )
                 : null,
           ),
 

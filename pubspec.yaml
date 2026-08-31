@@ -57,6 +57,7 @@ dependencies:
   web_socket_channel: ^3.0.3
   geocoding: ^4.0.0
   uuid: ^4.6.0
+  flutter_html: ^3.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

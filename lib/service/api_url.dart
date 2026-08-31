@@ -22,6 +22,15 @@ class ApiUrl {
     return '$_mainDomain/$path';
   }
 
+  /// Some endpoints (e.g. whatsNew promos) may return an already-absolute
+  /// URL instead of a relative upload path — pass through as-is when so,
+  /// otherwise resolve it against the domain like [buildImageUrl].
+  static String resolveImageUrl(String path) {
+    return path.startsWith('http://') || path.startsWith('https://')
+        ? path
+        : buildImageUrl(path);
+  }
+
   // ════════════════════════════════════════════════════════
   //  AUTH
   // ════════════════════════════════════════════════════════
@@ -41,6 +50,7 @@ class ApiUrl {
   static final String getUserProfile = '$baseUrl/user/user-profile';
   static final String updateUserProfile = '$baseUrl/user/profile';
   static final String becomeDriver = '$baseUrl/user/become-driver';
+  static final String getUserHome = '$baseUrl/user/home';
 
   static final String getDriverProfile = '$baseUrl/driver/profile';
   static final String updateDriverProfile = '$baseUrl/driver/profile';
