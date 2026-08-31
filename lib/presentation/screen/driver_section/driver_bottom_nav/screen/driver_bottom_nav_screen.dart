@@ -6,6 +6,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/presentation/screen/bottom_nav/page/my_post/screen/my_post_screen.dart';
+import 'package:jeebjab/presentation/screen/chat/chat_list/screen/chat_list_screen.dart';
 import 'package:jeebjab/presentation/screen/create_post/screen/create_post_screen.dart';
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/driver_home/home/driver_home_screen.dart';
 import 'package:jeebjab/presentation/screen/driver_section/driver_bottom_nav/page/task/screen/task_screen.dart';
@@ -18,7 +19,6 @@ import '../../../profile/account_settings/driver_profile/screen/driver_profile_s
 import '../controller/driver_bottom_nav_controller.dart';
 import 'package:get/get.dart';
 
-
 class DriverBottomNavScreen extends StatefulWidget {
   const DriverBottomNavScreen({super.key});
 
@@ -27,14 +27,16 @@ class DriverBottomNavScreen extends StatefulWidget {
 }
 
 class _DriverBottomNavScreenState extends State<DriverBottomNavScreen> {
-  final DriverBottomNavController controller = Get.put(DriverBottomNavController());
+  final DriverBottomNavController controller = Get.put(
+    DriverBottomNavController(),
+  );
 
   final List<dynamic> _pages = [
     DriverHomeScreen(),
     JobPostScreen(),
     TaskScreen(),
+    ChatListScreen(),
     ProfileScreen(),
-
   ];
 
   @override
@@ -46,38 +48,45 @@ class _DriverBottomNavScreenState extends State<DriverBottomNavScreen> {
     return Scaffold(
       body: Obx(() => _pages[controller.selectedIndex.value]),
 
-      bottomNavigationBar: Obx(() => BottomNavigationBar(
-        currentIndex: controller.selectedIndex.value,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryColor,
-        unselectedItemColor: AppColors.greyColor,
-        showUnselectedLabels: true,
-        onTap: (index) {
-          controller.changeIndex(index);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: AppStrings.home.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.work_outline),
-            activeIcon: Icon(Icons.work),
-            label: AppStrings.jobs.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task_outlined),
-            activeIcon: Icon(Icons.task),
-            label: AppStrings.task.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: AppStrings.profile.tr,
-          ),
-        ],
-      )),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+          currentIndex: controller.selectedIndex.value,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: AppColors.primaryColor,
+          unselectedItemColor: AppColors.greyColor,
+          showUnselectedLabels: true,
+          onTap: (index) {
+            controller.changeIndex(index);
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: AppStrings.home.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work_outline),
+              activeIcon: Icon(Icons.work),
+              label: AppStrings.jobs.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.task_outlined),
+              activeIcon: Icon(Icons.task),
+              label: AppStrings.task.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble_outline),
+              activeIcon: Icon(Icons.chat_bubble),
+              label: AppStrings.chat.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: AppStrings.profile.tr,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

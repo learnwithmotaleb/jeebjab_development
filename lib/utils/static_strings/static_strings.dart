@@ -459,6 +459,7 @@ class AppStrings {
   static const String selectedPhotos = "Selected Photos";
   static const String myTask = 'My Task';
   static const String task = 'Task';
+  static const String chat = 'Chat';
   static const String activePost = 'Active';
   static const String completedPost = 'Completed';
 
