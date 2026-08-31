@@ -148,12 +148,14 @@ class LoginController extends GetxController {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       final String? idToken = await userCredential.user?.getIdToken();
+      final String? firebaseUid = userCredential.user?.uid;
+
+      debugPrint("========= FIREBASE GOOGLE LOGIN =========");
+      debugPrint("Firebase UID: $firebaseUid");
+      debugPrint("Firebase ID Token: $idToken");
+      debugPrint("==========================================");
 
       if (idToken != null) {
-        debugPrint("========= FIREBASE GOOGLE LOGIN ID TOKEN =========");
-        debugPrint(idToken);
-        debugPrint("================================================");
-
         // Send token to backend API for social login
         await _processSocialLogin(idToken, "google");
       }
