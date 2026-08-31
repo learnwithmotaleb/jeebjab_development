@@ -44,12 +44,18 @@ class RecentJobCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
                             color: const Color(0xFFE0E0E0),
-                            child: const Icon(Icons.image_outlined, color: Colors.grey),
+                            child: const Icon(
+                              Icons.image_outlined,
+                              color: Colors.grey,
+                            ),
                           ),
                         )
                       : Container(
                           color: const Color(0xFFE0E0E0),
-                          child: const Icon(Icons.image_outlined, color: Colors.grey),
+                          child: const Icon(
+                            Icons.image_outlined,
+                            color: Colors.grey,
+                          ),
                         ),
                 ),
                 // ── Category icon bottom-left ──────────────────────────
@@ -62,7 +68,11 @@ class RecentJobCard extends StatelessWidget {
                       color: Colors.black.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(Dimensions.r(6)),
                     ),
-                    child: Icon(_icon, color: Colors.white, size: Dimensions.w(14)),
+                    child: Icon(
+                      _icon,
+                      color: Colors.white,
+                      size: Dimensions.w(14),
+                    ),
                   ),
                 ),
                 // ── Price bottom-right ─────────────────────────────────

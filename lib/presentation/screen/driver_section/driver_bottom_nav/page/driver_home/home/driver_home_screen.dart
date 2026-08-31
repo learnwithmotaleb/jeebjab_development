@@ -23,10 +23,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -44,16 +41,20 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() => DriverHeaderWidget(
-                  name: controller.name.value.isEmpty ? '...' : controller.name.value,
-                  email: '',
-                  avatarUrl: controller.avatarUrl.value,
-                  rating: controller.rating.value,
-                  completedJobs: controller.completedJobs.value,
-                  totalEarn: controller.totalEarn.value,
-                  onNotification: () => Get.toNamed(RoutePath.notification),
-                  controller: controller,
-                )),
+                Obx(
+                  () => DriverHeaderWidget(
+                    name: controller.name.value.isEmpty
+                        ? '...'
+                        : controller.name.value,
+                    email: '',
+                    avatarUrl: controller.avatarUrl.value,
+                    rating: controller.rating.value,
+                    completedJobs: controller.completedJobs.value,
+                    totalEarn: controller.totalEarn.value,
+                    onNotification: () => Get.toNamed(RoutePath.notification),
+                    controller: controller,
+                  ),
+                ),
                 SizedBox(height: Dimensions.h(20)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
@@ -62,17 +63,22 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 SizedBox(height: Dimensions.h(12)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-                  child: Obx(() => controller.currentTasks.isEmpty
-                      ? _buildEmptyState('No current tasks')
-                      : Column(
-                    children: controller.currentTasks
-                        .map((task) => CurrentTaskCard(
-                      task: task,
-                      onPickUp: () => controller.onPickUpTap(task),
-                      onOpenMap: () => controller.onOpenMap(task),
-                    ))
-                        .toList(),
-                  )),
+                  child: Obx(
+                    () => controller.currentTasks.isEmpty
+                        ? _buildEmptyState('No current tasks')
+                        : Column(
+                            children: controller.currentTasks
+                                .map(
+                                  (task) => CurrentTaskCard(
+                                    task: task,
+                                    onPickUp: () =>
+                                        controller.onPickUpTap(task),
+                                    onOpenMap: () => controller.onOpenMap(task),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                  ),
                 ),
                 SizedBox(height: Dimensions.h(8)),
                 Padding(
@@ -82,26 +88,29 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 SizedBox(height: Dimensions.h(12)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-                  child: Obx(() => controller.recentJobs.isEmpty
-                      ? _buildEmptyState('No jobs nearby right now')
-                      : GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: Dimensions.w(12),
-                      mainAxisSpacing: Dimensions.h(12),
-                      childAspectRatio: 0.68,
-                    ),
-                    itemCount: controller.recentJobs.length,
-                    itemBuilder: (_, index) {
-                      final job = controller.recentJobs[index];
-                      return RecentJobCard(
-                        job: job,
-                        onTap: () => controller.onRecentJobTap(job),
-                      );
-                    },
-                  )),
+                  child: Obx(
+                    () => controller.recentJobs.isEmpty
+                        ? _buildEmptyState('No jobs nearby right now')
+                        : GridView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: Dimensions.w(12),
+                                  mainAxisSpacing: Dimensions.h(12),
+                                  childAspectRatio: 0.68,
+                                ),
+                            itemCount: controller.recentJobs.length,
+                            itemBuilder: (_, index) {
+                              final job = controller.recentJobs[index];
+                              return RecentJobCard(
+                                job: job,
+                                onTap: () => controller.onRecentJobTap(job),
+                              );
+                            },
+                          ),
+                  ),
                 ),
                 SizedBox(height: Dimensions.h(30)),
               ],
@@ -117,22 +126,28 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       backgroundColor: const Color(0xFFF5F6FA),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800), // Max width for tablet content
+          constraints: const BoxConstraints(
+            maxWidth: 800,
+          ), // Max width for tablet content
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
-                Obx(() => DriverHeaderWidget(
-                  name: controller.name.value.isEmpty ? '...' : controller.name.value,
-                  email: '',
-                  avatarUrl: controller.avatarUrl.value,
-                  rating: controller.rating.value,
-                  completedJobs: controller.completedJobs.value,
-                  totalEarn: controller.totalEarn.value,
-                  onNotification: () => Get.toNamed(RoutePath.notification),
-                  controller: controller,
-                )),
+                Obx(
+                  () => DriverHeaderWidget(
+                    name: controller.name.value.isEmpty
+                        ? '...'
+                        : controller.name.value,
+                    email: '',
+                    avatarUrl: controller.avatarUrl.value,
+                    rating: controller.rating.value,
+                    completedJobs: controller.completedJobs.value,
+                    totalEarn: controller.totalEarn.value,
+                    onNotification: () => Get.toNamed(RoutePath.notification),
+                    controller: controller,
+                  ),
+                ),
                 SizedBox(height: Dimensions.h(30)),
 
                 // Current Tasks Section
@@ -143,18 +158,24 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 SizedBox(height: Dimensions.h(20)),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
-                  child: Obx(() => Column(
-                    children: controller.currentTasks
-                        .map((task) => Padding(
-                      padding: EdgeInsets.only(bottom: Dimensions.h(12)),
-                      child: CurrentTaskCard(
-                        task: task,
-                        onPickUp: () => controller.onPickUpTap(task),
-                        onOpenMap: () => controller.onOpenMap(task),
-                      ),
-                    ))
-                        .toList(),
-                  )),
+                  child: Obx(
+                    () => Column(
+                      children: controller.currentTasks
+                          .map(
+                            (task) => Padding(
+                              padding: EdgeInsets.only(
+                                bottom: Dimensions.h(12),
+                              ),
+                              child: CurrentTaskCard(
+                                task: task,
+                                onPickUp: () => controller.onPickUpTap(task),
+                                onOpenMap: () => controller.onOpenMap(task),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                 ),
                 SizedBox(height: Dimensions.h(20)),
 

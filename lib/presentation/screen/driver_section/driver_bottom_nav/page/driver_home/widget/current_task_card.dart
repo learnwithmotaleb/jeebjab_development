@@ -95,13 +95,18 @@ class CurrentTaskCard extends StatelessWidget {
           if ((task.user?.name ?? '').isNotEmpty) ...[
             Row(
               children: [
-                Icon(Icons.person_outline_rounded,
-                    size: Dimensions.w(14), color: AppColors.greyColor),
+                Icon(
+                  Icons.person_outline_rounded,
+                  size: Dimensions.w(14),
+                  color: AppColors.greyColor,
+                ),
                 SizedBox(width: Dimensions.w(5)),
                 Text(
                   task.user!.name!,
                   style: TextStyle(
-                      fontSize: Dimensions.f(12), color: AppColors.greyColor),
+                    fontSize: Dimensions.f(12),
+                    color: AppColors.greyColor,
+                  ),
                 ),
               ],
             ),
@@ -112,14 +117,19 @@ class CurrentTaskCard extends StatelessWidget {
           if ((task.pickup?.address?.text ?? '').isNotEmpty)
             Row(
               children: [
-                Icon(Icons.location_on_outlined,
-                    size: Dimensions.w(14), color: AppColors.greyColor),
+                Icon(
+                  Icons.location_on_outlined,
+                  size: Dimensions.w(14),
+                  color: AppColors.greyColor,
+                ),
                 SizedBox(width: Dimensions.w(5)),
                 Expanded(
                   child: Text(
                     task.pickup!.address!.text!,
                     style: TextStyle(
-                        fontSize: Dimensions.f(12), color: AppColors.greyColor),
+                      fontSize: Dimensions.f(12),
+                      color: AppColors.greyColor,
+                    ),
                   ),
                 ),
               ],
@@ -147,7 +157,9 @@ class CurrentTaskCard extends StatelessWidget {
                     child: Text(
                       AppStrings.pickUp.tr,
                       style: TextStyle(
-                        fontSize: isTablet ? Dimensions.f(18) : Dimensions.f(13),
+                        fontSize: isTablet
+                            ? Dimensions.f(18)
+                            : Dimensions.f(13),
                         fontWeight: FontWeight.w700,
                         color: AppColors.primaryColor,
                       ),
@@ -171,7 +183,9 @@ class CurrentTaskCard extends StatelessWidget {
                     child: Text(
                       AppStrings.openMap.tr,
                       style: TextStyle(
-                        fontSize: isTablet ? Dimensions.f(18) : Dimensions.f(13),
+                        fontSize: isTablet
+                            ? Dimensions.f(18)
+                            : Dimensions.f(13),
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),

@@ -66,11 +66,15 @@ class DriverHeaderWidget extends StatelessWidget {
                 child: CircleAvatar(
                   radius: Dimensions.w(28),
                   backgroundColor: Colors.white.withValues(alpha: 0.25),
-                  backgroundImage:
-                      avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+                  backgroundImage: avatarUrl.isNotEmpty
+                      ? NetworkImage(avatarUrl)
+                      : null,
                   child: avatarUrl.isEmpty
-                      ? Icon(Icons.person_rounded,
-                          size: Dimensions.w(28), color: Colors.white)
+                      ? Icon(
+                          Icons.person_rounded,
+                          size: Dimensions.w(28),
+                          color: Colors.white,
+                        )
                       : null,
                 ),
               ),
@@ -98,9 +102,11 @@ class DriverHeaderWidget extends StatelessWidget {
                       children: [
                         ...List.generate(
                           5,
-                              (index) => Icon(
+                          (index) => Icon(
                             Icons.star_rounded,
-                            size: Dimensions.w(index < rating.round() ? 20 : 18),
+                            size: Dimensions.w(
+                              index < rating.round() ? 20 : 18,
+                            ),
                             color: index < rating.round()
                                 ? const Color(0xFFFFA500)
                                 : Colors.white.withValues(alpha: 0.4),
@@ -168,51 +174,53 @@ class DriverHeaderWidget extends StatelessWidget {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                    Obx(() => PopupMenuButton<String>(
-                      onSelected: (value) =>
-                          controller.setActivityPeriod(value),
-                      itemBuilder: (BuildContext context) =>
-                          controller.periodOptions
-                              .map((String choice) =>
-                              PopupMenuItem<String>(
+                    Obx(
+                      () => PopupMenuButton<String>(
+                        onSelected: (value) =>
+                            controller.setActivityPeriod(value),
+                        itemBuilder: (BuildContext context) => controller
+                            .periodOptions
+                            .map(
+                              (String choice) => PopupMenuItem<String>(
                                 value: choice,
                                 child: Text(choice),
-                              ))
-                              .toList(),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Dimensions.w(10),
-                          vertical: Dimensions.h(6),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius:
-                          BorderRadius.circular(Dimensions.r(6)),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
+                              ),
+                            )
+                            .toList(),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Dimensions.w(10),
+                            vertical: Dimensions.h(6),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              controller.activityPeriod.value,
-                              style: TextStyle(
-                                fontSize: Dimensions.f(12),
-                                fontWeight: FontWeight.w600,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(
+                              Dimensions.r(6),
+                            ),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                controller.activityPeriod.value,
+                                style: TextStyle(
+                                  fontSize: Dimensions.f(12),
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.greyColor,
+                                ),
+                              ),
+                              SizedBox(width: Dimensions.w(4)),
+                              Icon(
+                                Icons.arrow_drop_down,
+                                size: Dimensions.w(16),
                                 color: AppColors.greyColor,
                               ),
-                            ),
-                            SizedBox(width: Dimensions.w(4)),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              size: Dimensions.w(16),
-                              color: AppColors.greyColor,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    )),
+                    ),
                   ],
                 ),
 

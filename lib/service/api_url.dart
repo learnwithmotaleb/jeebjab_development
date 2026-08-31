@@ -81,6 +81,7 @@ class ApiUrl {
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
 
   static String getCompanyPublicList() => '$baseUrl/company/public/list';
+  static String getDriverHome() => '$baseUrl/driver/home';
 
   static String switchUserMode() => '$baseUrl/user/switch-mode';
 
