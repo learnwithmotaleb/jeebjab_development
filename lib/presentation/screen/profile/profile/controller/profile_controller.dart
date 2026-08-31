@@ -32,6 +32,7 @@ class ProfileController extends GetxController {
   final ApiClient _apiClient = ApiClient();
 
   var isLoading = false.obs;
+  var isSwitchingMode = false.obs;
   var userData = Rxn<UserModel>();
 
   @override
@@ -51,6 +52,9 @@ class ProfileController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final userModel = UserModel.fromJson(response.body);
         userData.value = userModel;
+        if (userModel.activeMode != null) {
+          await SharePrefsHelper.saveActiveMode(userModel.activeMode!);
+        }
       } else {
         // Handle error but don't show snackbar every time if it's a silent fetch
         // AppSnackBar.fail(response.body['message'] ?? "Failed to fetch profile");
@@ -60,6 +64,57 @@ class ProfileController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// Whether this account can operate in driver mode at all — only
+  /// once a become-driver request has actually been approved.
+  bool get canSwitchToDriverMode =>
+      userData.value?.driverProfile?.isApproved ?? false;
+
+  bool get isDriverMode => userData.value?.activeMode == 'driver';
+
+  Future<void> switchMode() async {
+    final switchingToDriver = !isDriverMode;
+
+    AppAlerts.confirm(
+      title: AppStrings.switchModeConfirmTitle.tr,
+      message: switchingToDriver
+          ? AppStrings.switchToDriverModeConfirm.tr
+          : AppStrings.switchToUserModeConfirm.tr,
+      onConfirm: () async {
+        isSwitchingMode.value = true;
+        try {
+          final response = await _apiClient.patch(
+            url: ApiUrl.switchUserMode(),
+            isToken: true,
+          );
+
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            await getProfile(); // refresh + persist the new activeMode
+            AppSnackBar.success(
+              response.body['message'] ??
+                  AppStrings.modeSwitchedSuccessfully.tr,
+              title: "Success",
+            );
+
+            Get.offAllNamed(
+              SharePrefsHelper.isDriverMode
+                  ? RoutePath.driverBottomNav
+                  : RoutePath.bottomNav,
+            );
+          } else {
+            AppSnackBar.fail(
+              response.body['message'] ?? "Failed to switch mode",
+            );
+          }
+        } catch (e) {
+          debugPrint("Error switching mode: $e");
+          AppSnackBar.fail("An unexpected error occurred");
+        } finally {
+          isSwitchingMode.value = false;
+        }
+      },
+    );
   }
 
   List<ProfileMenuItem> get menuItems => [

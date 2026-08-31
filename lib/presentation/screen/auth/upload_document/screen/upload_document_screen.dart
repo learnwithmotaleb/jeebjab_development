@@ -31,10 +31,7 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -46,14 +43,11 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-                AppStrings.uploadDocument.tr,
-                style: AppTextStyles.title
-            ),
+            Text(AppStrings.uploadDocument.tr, style: AppTextStyles.title),
             SizedBox(height: Dimensions.h(8)),
             Text(
-                AppStrings.uploadDocumentSubTitle.tr,
-                style: AppTextStyles.body
+              AppStrings.uploadDocumentSubTitle.tr,
+              style: AppTextStyles.body,
             ),
 
             SizedBox(height: Dimensions.h(20)),
@@ -79,20 +73,28 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
                     docType: 'insurance',
                     label: AppStrings.insurance.tr,
                   ),
+                  SizedBox(width: Dimensions.w(12)),
+                  UploadImageWidget(
+                    controller: controller,
+                    docType: 'id_proof',
+                    label: AppStrings.idProof.tr,
+                  ),
                 ],
               ),
             ),
 
             SizedBox(height: Dimensions.h(80)),
 
-            Obx(() => AppButton(
-              height: Dimensions.h(50),
-              label: AppStrings.continueButton.tr,
-              isLoading: controller.isLoading.value,
-              onPressed: () {
-                controller.submitBecomeDriver();
-              },
-            )),
+            Obx(
+              () => AppButton(
+                height: Dimensions.h(50),
+                label: AppStrings.continueButton.tr,
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.submitBecomeDriver();
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -179,6 +181,12 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
                       docType: 'insurance',
                       label: AppStrings.insurance.tr,
                     ),
+                    SizedBox(width: Dimensions.w(16)),
+                    UploadImageWidget(
+                      controller: controller,
+                      docType: 'id_proof',
+                      label: AppStrings.idProof.tr,
+                    ),
                   ],
                 ),
 
@@ -187,14 +195,16 @@ class _UploadDocumentScreenState extends State<UploadDocumentScreen> {
                 // ── Continue Button ──────────────────────────────────
                 SizedBox(
                   width: double.infinity,
-                  child: Obx(() => AppButton(
-                    height: Dimensions.h(100),
-                    label: AppStrings.continueButton.tr,
-                    isLoading: controller.isLoading.value,
-                    onPressed: () {
-                      controller.submitBecomeDriver();
-                    },
-                  )),
+                  child: Obx(
+                    () => AppButton(
+                      height: Dimensions.h(100),
+                      label: AppStrings.continueButton.tr,
+                      isLoading: controller.isLoading.value,
+                      onPressed: () {
+                        controller.submitBecomeDriver();
+                      },
+                    ),
+                  ),
                 ),
 
                 SizedBox(height: Dimensions.h(32)),

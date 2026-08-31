@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/core/enums/app_role.dart';
 import 'package:jeebjab/helper/local_db/local_db.dart';
+import 'package:jeebjab/helper/auth/session_sync_helper.dart';
 import 'package:jeebjab/service/api_service.dart';
 import 'package:jeebjab/service/api_url.dart';
 import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
@@ -95,17 +96,22 @@ class LoginController extends GetxController {
 
         final role = SharePrefsHelper.getRole();
 
+        // authId.role always stays "USER" on the backend — becoming a
+        // driver is a separate approved request, not a role change —
+        // so fetch the real activeMode ("user"/"driver") before routing.
+        await SessionSyncHelper.syncActiveMode(apiClient);
+
         AppSnackBar.success(
           body['message'] ?? "Log in successful",
           title: "Success",
         );
 
-        if (role == AppRole.USER) {
-          Get.offAllNamed(RoutePath.bottomNav);
-        } else if (role == AppRole.DRIVER) {
+        if (role == null) {
+          Get.offAllNamed(RoutePath.signup);
+        } else if (SharePrefsHelper.isDriverMode) {
           Get.offAllNamed(RoutePath.driverBottomNav);
         } else {
-          Get.offAllNamed(RoutePath.signup);
+          Get.offAllNamed(RoutePath.bottomNav);
         }
       } else {
         String errorMessage =
@@ -130,8 +136,10 @@ class LoginController extends GetxController {
   Future<void> signInWithGoogle() async {
     isLoading.value = true;
     try {
-      final g_auth.GoogleSignInAccount? googleUser =
-          await g_auth.GoogleSignIn.instance.authenticate();
+      final g_auth.GoogleSignInAccount? googleUser = await g_auth
+          .GoogleSignIn
+          .instance
+          .authenticate();
 
       if (googleUser == null) {
         // User cancelled the sign-in
@@ -145,8 +153,8 @@ class LoginController extends GetxController {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
       final String? idToken = await userCredential.user?.getIdToken();
       final String? firebaseUid = userCredential.user?.uid;
 
@@ -161,8 +169,7 @@ class LoginController extends GetxController {
       }
     } catch (e, stackTrace) {
       debugPrint("Google Sign In Error: $e\n$stackTrace");
-      AppSnackBar.fail(
-          "Google Sign In failed: ${e.toString().split('\n')[0]}");
+      AppSnackBar.fail("Google Sign In failed: ${e.toString().split('\n')[0]}");
     } finally {
       isLoading.value = false;
     }
@@ -210,9 +217,9 @@ class LoginController extends GetxController {
       final response = await apiClient.post(
         url: ApiUrl.socialLogin,
         body: {
-          "token": token,
-          "provider": provider,
+          "idToken": token,
           "fcmToken": SharePrefsHelper.getFcmToken() ?? "",
+          "role": "USER",
         },
       );
 
@@ -248,14 +255,16 @@ class LoginController extends GetxController {
         }
 
         final role = SharePrefsHelper.getRole();
+        await SessionSyncHelper.syncActiveMode(apiClient);
+
         AppSnackBar.success("Logged in successfully", title: "Success");
 
-        if (role == AppRole.USER) {
-          Get.offAllNamed(RoutePath.bottomNav);
-        } else if (role == AppRole.DRIVER) {
+        if (role == null) {
+          Get.offAllNamed(RoutePath.signup);
+        } else if (SharePrefsHelper.isDriverMode) {
           Get.offAllNamed(RoutePath.driverBottomNav);
         } else {
-          Get.offAllNamed(RoutePath.signup);
+          Get.offAllNamed(RoutePath.bottomNav);
         }
       } else {
         AppSnackBar.fail(response.body['message'] ?? "Social Login failed");

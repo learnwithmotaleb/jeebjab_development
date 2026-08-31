@@ -75,6 +75,16 @@ class AppStrings {
   static const String selectYourCompany = "Select Your Company";
   static const String id = "Id";
 
+  // Switch Mode (User <-> Driver)
+  static const String switchToDriverMode = "Switch to Driver Mode";
+  static const String switchToUserMode = "Switch to User Mode";
+  static const String switchModeConfirmTitle = "Switch Mode";
+  static const String switchToDriverModeConfirm =
+      "You're about to switch to Driver Mode. Continue?";
+  static const String switchToUserModeConfirm =
+      "You're about to switch to User Mode. Continue?";
+  static const String modeSwitchedSuccessfully = "Mode switched successfully";
+
   static const String jobs = "Jobs";
   static const String create = "Create";
   static const String myPost = "My Post";
@@ -599,6 +609,7 @@ class AppStrings {
   static const String drivingLicense = "Driving License";
   static const String insurance = "insurance";
   static const String vehicleRegistration = "Vehicle Registration";
+  static const String idProof = "ID Proof";
   static const String pleaseEnterBrand = "Please enter vehicle brand";
   static const String pleaseEnterModel = "Please enter vehicle model";
   static const String pleaseEnterYear = "Please enter vehicle year";

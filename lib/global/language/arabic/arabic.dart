@@ -183,6 +183,12 @@ Map<String, String> arabic = {
   AppStrings.driverInformation: "معلومات السائق",
   AppStrings.bankInformation: "المعلومات البنكية",
   AppStrings.updateProfile: "تحديث الملف الشخصي",
+  AppStrings.switchToDriverMode: "التبديل إلى وضع السائق",
+  AppStrings.switchToUserMode: "التبديل إلى وضع المستخدم",
+  AppStrings.switchModeConfirmTitle: "تبديل الوضع",
+  AppStrings.switchToDriverModeConfirm: "أنت على وشك التبديل إلى وضع السائق. متابعة؟",
+  AppStrings.switchToUserModeConfirm: "أنت على وشك التبديل إلى وضع المستخدم. متابعة؟",
+  AppStrings.modeSwitchedSuccessfully: "تم تبديل الوضع بنجاح",
 
   // Driver Profile
   AppStrings.edit: "تعديل",

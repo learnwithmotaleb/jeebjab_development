@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/widget/app_button.dart';
@@ -98,12 +99,15 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
 
             SizedBox(height: Dimensions.h(16)),
 
-            AppButton(
-              label: AppStrings.continueButton.tr,
-              onPressed: () {
-                controller.emailVerifyProcess();
-              },
-              height: Dimensions.h(60),
+            Obx(
+              () => AppButton(
+                label: AppStrings.continueButton.tr,
+                onPressed: () {
+                  controller.emailVerifyProcess();
+                },
+                height: Dimensions.h(60),
+                isLoading: controller.isLoading.value,
+              ),
             ),
 
             SizedBox(height: Dimensions.h(5)),
@@ -216,12 +220,15 @@ class _DriverVerificationScreenState extends State<DriverVerificationScreen> {
                   // Continue Button
                   SizedBox(
                     width: double.infinity,
-                    child: AppButton(
-                      label: AppStrings.continueButton.tr,
-                      onPressed: () {
-                        controller.emailVerifyProcess();
-                      },
-                      height: Dimensions.h(100),
+                    child: Obx(
+                      () => AppButton(
+                        label: AppStrings.continueButton.tr,
+                        onPressed: () {
+                          controller.emailVerifyProcess();
+                        },
+                        height: Dimensions.h(100),
+                        isLoading: controller.isLoading.value,
+                      ),
                     ),
                   ),
 

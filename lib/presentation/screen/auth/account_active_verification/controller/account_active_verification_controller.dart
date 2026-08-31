@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/routes/route_path.dart';
 import '../../../../../helper/local_db/local_db.dart';
+import '../../../../../helper/auth/session_sync_helper.dart';
 import '../../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
@@ -33,7 +34,10 @@ class AccountActiveVerificationController extends GetxController {
     }
 
     if (email.isEmpty) {
-      AppSnackBar.fail("Email address is missing. Please go back and try again.", title: "Error");
+      AppSnackBar.fail(
+        "Email address is missing. Please go back and try again.",
+        title: "Error",
+      );
       return;
     }
 
@@ -42,10 +46,7 @@ class AccountActiveVerificationController extends GetxController {
     try {
       final response = await apiClient.post(
         url: ApiUrl.accountActive,
-        body: {
-          "activationCode": otpController.text,
-          "email": email,
-        },
+        body: {"activationCode": otpController.text, "email": email},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -61,16 +62,28 @@ class AccountActiveVerificationController extends GetxController {
           }
         }
 
-        final message = response.body['message'] ?? "Activation code verified successfully.";
+        final message =
+            response.body['message'] ??
+            "Activation code verified successfully.";
         AppSnackBar.success(message, title: "Success");
+
+        // Freshly verified accounts start in user mode; keep the cached
+        // activeMode in sync for later screens (e.g. Account Setting).
+        await SessionSyncHelper.syncActiveMode(apiClient);
 
         Get.offAllNamed(RoutePath.bottomNav);
       } else {
-        String errorMessage = response.body['message'] ?? response.statusText ?? "Invalid code. Please try again.";
+        String errorMessage =
+            response.body['message'] ??
+            response.statusText ??
+            "Invalid code. Please try again.";
         AppSnackBar.fail(errorMessage, title: "Verification Failed");
       }
     } catch (e) {
-      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+      AppSnackBar.fail(
+        "An unexpected error occurred. Please try again.",
+        title: "Error",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -83,18 +96,25 @@ class AccountActiveVerificationController extends GetxController {
     try {
       final response = await apiClient.post(
         url: ApiUrl.accountActiveCodeResend,
-        body: {
-          "email": email,
-        },
+        body: {"email": email},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        AppSnackBar.success("Activation code resent to $email", title: "Success");
+        AppSnackBar.success(
+          "Activation code resent to $email",
+          title: "Success",
+        );
       } else {
-        AppSnackBar.fail("Failed to resend code. Please try again.", title: "Error");
+        AppSnackBar.fail(
+          "Failed to resend code. Please try again.",
+          title: "Error",
+        );
       }
     } catch (e) {
-      AppSnackBar.fail("An unexpected error occurred. Please try again.", title: "Error");
+      AppSnackBar.fail(
+        "An unexpected error occurred. Please try again.",
+        title: "Error",
+      );
     } finally {
       isLoadingResend.value = false;
     }

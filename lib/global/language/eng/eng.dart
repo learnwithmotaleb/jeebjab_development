@@ -182,6 +182,14 @@ Map<String, String> english = {
   AppStrings.driverInformation: "Driver Information",
   AppStrings.bankInformation: "Bank Information",
   AppStrings.updateProfile: "Update Profile",
+  AppStrings.switchToDriverMode: "Switch to Driver Mode",
+  AppStrings.switchToUserMode: "Switch to User Mode",
+  AppStrings.switchModeConfirmTitle: "Switch Mode",
+  AppStrings.switchToDriverModeConfirm:
+      "You're about to switch to Driver Mode. Continue?",
+  AppStrings.switchToUserModeConfirm:
+      "You're about to switch to User Mode. Continue?",
+  AppStrings.modeSwitchedSuccessfully: "Mode switched successfully",
 
   // Driver Profile
   AppStrings.edit: "Edit",

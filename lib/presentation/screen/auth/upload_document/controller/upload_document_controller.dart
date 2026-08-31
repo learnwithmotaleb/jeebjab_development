@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,11 +20,14 @@ class UploadDocumentController extends GetxController {
 
   var isLoading = false.obs;
 
-  // Track files for specific types
+  // Track files for specific types. Each is optional per the API —
+  // the field name sent to the backend matches the map key exactly
+  // (driving_license, vehicle_registration, insurance, id_proof).
   final RxMap<String, File?> documentFiles = <String, File?>{
     'driving_license': null,
     'vehicle_registration': null,
     'insurance': null,
+    'id_proof': null,
   }.obs;
 
   Future<void> pickImage(String docType) async {
@@ -39,55 +41,66 @@ class UploadDocumentController extends GetxController {
     documentFiles[docType] = null;
   }
 
-  bool get isAllUploaded => documentFiles.values.every((file) => file != null);
-
   Future<void> submitBecomeDriver() async {
-    // 1. Validate images
-    if (!isAllUploaded) {
-      AppSnackBar.fail(AppStrings.pleaseUploadAllDocuments.tr);
-      return;
-    }
-
     isLoading.value = true;
     try {
-      // 2. Collect data from all controllers
-      final becomeDriverCtrl = Get.find<BecomeDriverController>();
+      // 1. Collect data from all controllers. SelectCompanyController is only
+      // registered when the driver went through the company-onboarding
+      // wizard (DriverSignup → SelectCompany → VehicleType → ...); the
+      // separate "become a driver from Settings" flow registers
+      // BecomeDriverController instead, so support both entry points.
       final vehicleTypeCtrl = Get.find<ChooseVehicleTypeController>();
       final vehicleInfoCtrl = Get.find<VehicleInformationController>();
       final licenseCtrl = Get.find<LicenseNumberController>();
 
-      // 3. Prepare fields
+      final selectCompanyCtrl = Get.isRegistered<SelectCompanyController>()
+          ? Get.find<SelectCompanyController>()
+          : null;
+      final selectedCompany = selectCompanyCtrl?.selectedCompany.value;
+
+      final String driverType;
+      if (Get.isRegistered<BecomeDriverController>()) {
+        driverType = Get.find<BecomeDriverController>().selectedTypeString;
+      } else {
+        driverType = selectedCompany != null ? "company" : "independent";
+      }
+
+      // 2. Required fields
       Map<String, String> fields = {
-        'driverType': becomeDriverCtrl.selectedTypeString,
+        'driverType': driverType,
         'vehicleType': vehicleTypeCtrl.selectedVehicleType.toLowerCase(),
-        'vehicleBrand': vehicleInfoCtrl.vehicleBrand.text.trim(),
-        'vehicleModel': vehicleInfoCtrl.vehicleModel.text.trim(),
-        'vehicleYear': vehicleInfoCtrl.vehicleYear.text.trim(),
         'licenseNumber': licenseCtrl.licenseNumber.text.trim(),
       };
 
-      // Add company details if applicable
-      if (becomeDriverCtrl.selectedType.value == DriverType.company) {
-        try {
-          final selectCompanyCtrl = Get.find<SelectCompanyController>();
-          fields['companyName'] = selectCompanyCtrl.selectCompanyController.text.trim();
-          fields['companyDriverId'] = selectCompanyCtrl.idController.text.trim();
-          // Note: companyId could be added here if available in the controller
-        } catch (e) {
-          debugPrint("SelectCompanyController not found or error: $e");
-        }
+      // 3. Optional vehicle fields — only send when filled in
+      void addIfNotEmpty(String key, String value) {
+        if (value.isNotEmpty) fields[key] = value;
       }
 
-      // 4. Prepare files
+      addIfNotEmpty('vehicleBrand', vehicleInfoCtrl.vehicleBrand.text.trim());
+      addIfNotEmpty('vehicleModel', vehicleInfoCtrl.vehicleModel.text.trim());
+      addIfNotEmpty('vehicleYear', vehicleInfoCtrl.vehicleYear.text.trim());
+
+      // 4. Company details — required only when driverType is "company"
+      if (driverType == "company" && selectedCompany != null) {
+        fields['companyId'] = selectedCompany.id;
+        fields['companyName'] = selectedCompany.name;
+        // Note: the "ID" box on the select-company screen is an
+        // auto-filled, read-only display of the company's own _id
+        // (== companyId above) — there's no separate badge/employee ID
+        // input in this flow, so companyDriverId is left unsent.
+      }
+
+      // 5. Optional documents — each uploaded under its own field name
+      // (driving_license, vehicle_registration, insurance, id_proof).
       List<MultipartFileData> files = [];
       documentFiles.forEach((key, file) {
         if (file != null) {
-          // Use the key (e.g., 'driving_license') as the multipart field name
           files.add(MultipartFileData(key: key, path: file.path));
         }
       });
 
-      // 5. Call API
+      // 6. Call API
       final response = await _apiClient.postMultipart(
         url: ApiUrl.becomeDriver,
         fields: fields,
@@ -98,7 +111,8 @@ class UploadDocumentController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         AppAlerts.confirm(
           title: AppStrings.success.tr,
-          message: response.body['message'] ?? AppStrings.accountCreateSuccess.tr,
+          message:
+              response.body['message'] ?? AppStrings.accountCreateSuccess.tr,
           onConfirm: () {
             Get.offAllNamed(RoutePath.bottomNav);
           },

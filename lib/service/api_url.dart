@@ -39,7 +39,7 @@ class ApiUrl {
 
   // http://10.10.20.52:5001/auth/register
   static final String getUserProfile = '$baseUrl/user/user-profile';
-  static final String updateUserProfile = '$baseUrl/user/user-profile';
+  static final String updateUserProfile = '$baseUrl/user/profile';
   static final String becomeDriver = '$baseUrl/user/become-driver';
 
   static final String getDriverProfile = '$baseUrl/driver/profile';
@@ -69,6 +69,10 @@ class ApiUrl {
   static final getCompletedTasks = "$baseUrl/driver/tasks?status=completed";
   static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
+
+  static String getCompanyPublicList() => '$baseUrl/company/public/list';
+
+  static String switchUserMode() => '$baseUrl/user/switch-mode';
 
   static String acceptRequest(String id, String requestId) =>
       '$baseUrl/post/$id/requests/$requestId/accept';

@@ -114,8 +114,7 @@ class ApiClient {
     }
 
     // Token expired / invalid on an authenticated request -> force logout.
-    if (isToken &&
-        (response.statusCode == 401 || response.statusCode == 403)) {
+    if (isToken && (response.statusCode == 401 || response.statusCode == 403)) {
       _handleUnauthorized();
     }
 

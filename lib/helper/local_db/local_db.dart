@@ -33,7 +33,7 @@ class SharePrefsHelper {
     if (value == null) return null;
 
     return PostCategoryType.values.firstWhere(
-          (e) => e.name == value,
+      (e) => e.name == value,
       orElse: () => PostCategoryType.move,
     );
   }
@@ -63,7 +63,7 @@ class SharePrefsHelper {
     if (value == null) return null;
 
     return AppRole.values.firstWhere(
-          (e) => e.name == value,
+      (e) => e.name == value,
       orElse: () => AppRole.USER,
     );
   }
@@ -71,6 +71,23 @@ class SharePrefsHelper {
   static Future<void> clearRole() async {
     await _prefs?.remove(SharePrefsKeys.role);
   }
+
+  // ================= ACTIVE MODE (user | driver) =================
+  // authId.role from the backend always stays "USER" — becoming a
+  // driver is a separate approved request, not a role change — so
+  // which mode the app is currently operating in (user vs driver) is
+  // tracked here instead, sourced from GET /user/user-profile's
+  // `activeMode` field and kept in sync via PATCH /user/switch-mode.
+
+  static Future<void> saveActiveMode(String mode) async {
+    await _prefs?.setString(SharePrefsKeys.activeMode, mode);
+  }
+
+  static String getActiveMode() {
+    return _prefs?.getString(SharePrefsKeys.activeMode) ?? 'user';
+  }
+
+  static bool get isDriverMode => getActiveMode() == 'driver';
 
   // ================= TOKEN =================
 

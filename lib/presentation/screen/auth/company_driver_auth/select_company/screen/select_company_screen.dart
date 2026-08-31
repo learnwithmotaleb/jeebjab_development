@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import 'package:jeebjab/widget/show_snackbar.dart';
 
 import '../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
@@ -24,12 +25,24 @@ class SelectCompanyScreen extends StatefulWidget {
 class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
   final SelectCompanyController controller = Get.put(SelectCompanyController());
 
+  void _onContinue() {
+    final isValid = controller.formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
+
+    if (controller.selectedCompany.value == null) {
+      ShowAppSnackBar.fail(
+        "Please select your company",
+        title: "Select Company",
+      );
+      return;
+    }
+
+    Get.toNamed(RoutePath.vehicleType);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -42,52 +55,59 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
             horizontal: Dimensions.w(16),
             vertical: Dimensions.h(8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Title ───────────────────────────────────────────────
-              Text(
-                AppStrings.selectCompany.tr,
-                style: AppTextStyles.title.copyWith(
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Title ───────────────────────────────────────────────
+                Text(
+                  AppStrings.selectCompany.tr,
+                  style: AppTextStyles.title.copyWith(),
                 ),
-              ),
 
-              Text(
-                AppStrings.enterYourInformation.tr,
-                style: AppTextStyles.body.copyWith(
+                Text(
+                  AppStrings.enterYourInformation.tr,
+                  style: AppTextStyles.body.copyWith(),
                 ),
-              ),
 
-              SizedBox(height: Dimensions.h(30)),
+                SizedBox(height: Dimensions.h(30)),
 
-              // ── Company selector → opens bottom sheet ────────────────
-              BottomSheetTextField(
-                controller: controller.selectCompanyController,
-                label: AppStrings.selectYourCompany.tr,
-                items: controller.companyList, // ✅ from controller
-              ),
+                // ── Company selector → opens bottom sheet ────────────────
+                Obx(
+                  () => BottomSheetTextField(
+                    controller: controller.selectCompanyController,
+                    label: AppStrings.selectYourCompany.tr,
+                    items: controller.companyList,
+                    logos: controller.companies.map((e) => e.logo).toList(),
+                    isLoading: controller.isLoading.value,
+                    onItemSelected: controller.selectCompanyByName,
+                  ),
+                ),
 
-              SizedBox(height: Dimensions.h(16)),
+                SizedBox(height: Dimensions.h(16)),
 
-              // ── ID field ────────────────────────────────────────────
-              AppTextField(
-                controller: controller.idController,
-                hint: AppStrings.id.tr,
-                keyboardType: TextInputType.text,
-                validator: AppValidators.required(),
-                onTap: () {},
-              ),
+                // ── ID field ────────────────────────────────────────────
+                AppTextField(
+                  controller: controller.idController,
+                  hint: AppStrings.id.tr,
+                  keyboardType: TextInputType.text,
+                  validator: AppValidators.required(),
+                  readOnly: true,
+                  onTap: () {},
+                ),
 
-              SizedBox(height: Dimensions.h(50)),
+                SizedBox(height: Dimensions.h(50)),
 
-              // ── Continue button ──────────────────────────────────────
-              AppButton(
-                label: AppStrings.continueButton.tr,
-                height: Dimensions.h(50),
-                borderRadius: Dimensions.r(16),
-                onPressed: () => Get.toNamed(RoutePath.vehicleType),
-              ),
-            ],
+                // ── Continue button ──────────────────────────────────────
+                AppButton(
+                  label: AppStrings.continueButton.tr,
+                  height: Dimensions.h(50),
+                  borderRadius: Dimensions.r(16),
+                  onPressed: _onContinue,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,91 +126,100 @@ class _SelectCompanyScreenState extends State<SelectCompanyScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 520),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Dimensions.h(20)),
+            child: Form(
+              key: controller.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Dimensions.h(20)),
 
-                // ── Icon/Visual ──────────────────────────────────────
-                Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                    ),
-                    child: Icon(
-                      Icons.business_outlined,
-                      size: 50,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: Dimensions.h(40)),
-
-                // ── Title ────────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.selectCompany.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.title.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  // ── Icon/Visual ──────────────────────────────────────
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                      ),
+                      child: Icon(
+                        Icons.business_outlined,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(12)),
+                  SizedBox(height: Dimensions.h(40)),
 
-                // ── Subtitle ────────────────────────────────────────
-                Center(
-                  child: Text(
-                    AppStrings.enterYourInformation.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 15,
-                      color: Colors.grey[600],
+                  // ── Title ────────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.selectCompany.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.title.copyWith(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(40)),
+                  SizedBox(height: Dimensions.h(12)),
 
-                // ── Company selector → opens bottom sheet ────────────
-                BottomSheetTextField(
-                  controller: controller.selectCompanyController,
-                  label: AppStrings.selectYourCompany.tr,
-                  items: controller.companyList, // ✅ from controller
-                ),
-
-                SizedBox(height: Dimensions.h(18)),
-
-                // ── ID field ────────────────────────────────────────
-                AppTextField(
-                  controller: controller.idController,
-                  hint: AppStrings.id.tr,
-                  keyboardType: TextInputType.text,
-                  validator: AppValidators.required(),
-                  onTap: () {},
-                ),
-
-                SizedBox(height: Dimensions.h(60)),
-
-                // ── Continue button ──────────────────────────────────
-                SizedBox(
-                  width: double.infinity,
-                  child: AppButton(
-                    label: AppStrings.continueButton.tr,
-                    height: Dimensions.h(100),
-                    borderRadius: Dimensions.r(16),
-                    onPressed: () => Get.toNamed(RoutePath.vehicleType),
+                  // ── Subtitle ────────────────────────────────────────
+                  Center(
+                    child: Text(
+                      AppStrings.enterYourInformation.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: 15,
+                        color: Colors.grey[600],
+                      ),
+                    ),
                   ),
-                ),
 
-                SizedBox(height: Dimensions.h(32)),
-              ],
+                  SizedBox(height: Dimensions.h(40)),
+
+                  // ── Company selector → opens bottom sheet ────────────
+                  Obx(
+                    () => BottomSheetTextField(
+                      controller: controller.selectCompanyController,
+                      label: AppStrings.selectYourCompany.tr,
+                      items: controller.companyList,
+                      logos: controller.companies.map((e) => e.logo).toList(),
+                      isLoading: controller.isLoading.value,
+                      onItemSelected: controller.selectCompanyByName,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(18)),
+
+                  // ── ID field ────────────────────────────────────────
+                  AppTextField(
+                    controller: controller.idController,
+                    hint: AppStrings.id.tr,
+                    keyboardType: TextInputType.text,
+                    validator: AppValidators.required(),
+                    readOnly: true,
+                    onTap: () {},
+                  ),
+
+                  SizedBox(height: Dimensions.h(60)),
+
+                  // ── Continue button ──────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      label: AppStrings.continueButton.tr,
+                      height: Dimensions.h(100),
+                      borderRadius: Dimensions.r(16),
+                      onPressed: _onContinue,
+                    ),
+                  ),
+
+                  SizedBox(height: Dimensions.h(32)),
+                ],
+              ),
             ),
           ),
         ),

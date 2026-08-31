@@ -1,5 +1,6 @@
 class SharePrefsKeys {
   static const String role = "app_role";
+  static const String activeMode = "active_mode";
   static const String token = "user_token";
   static const String refreshToken = "refresh_token";
   static const String userId = "user_id";

@@ -27,8 +27,16 @@ class EditProfileController extends GetxController {
   final RxBool isUpdating = false.obs;
 
   // ── Gender picker ─────────────────────────────────────────────────────────
+  // Display labels shown in the picker vs. the exact enum values the
+  // backend expects (male | female | other | prefer_not_to_say).
   final RxString selectedGender = ''.obs;
-  final List<String> genders = ['Male', 'Female', 'Other'];
+  final List<String> genders = ['Male', 'Female', 'Other', 'Prefer not to say'];
+  static const Map<String, String> _genderApiValues = {
+    'Male': 'male',
+    'Female': 'female',
+    'Other': 'other',
+    'Prefer not to say': 'prefer_not_to_say',
+  };
 
   // ── DOB (kept as a real DateTime so we can send an ISO date to the API) ───
   DateTime? _selectedDob;
@@ -54,7 +62,15 @@ class EditProfileController extends GetxController {
         existingAvatarUrl.value = user.avatarUrl;
 
         if (user.gender != null && user.gender!.isNotEmpty) {
-          selectGender(user.gender!);
+          // The backend returns the lowercase enum value — map it back
+          // to the display label the picker uses.
+          final display = _genderApiValues.entries
+              .firstWhere(
+                (e) => e.value == user.gender,
+                orElse: () => MapEntry(user.gender!, user.gender!),
+              )
+              .key;
+          selectGender(display);
         }
 
         if (user.dateOfBirth != null) {
@@ -89,9 +105,7 @@ class EditProfileController extends GetxController {
       lastDate: DateTime.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFF17C5B5),
-          ),
+          colorScheme: const ColorScheme.light(primary: Color(0xFF17C5B5)),
         ),
         child: child!,
       ),
@@ -102,7 +116,7 @@ class EditProfileController extends GetxController {
   void _setDob(DateTime date) {
     _selectedDob = date;
     dobController.text =
-    '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().substring(2)}';
+        '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString().substring(2)}';
   }
 
   /// yyyy-MM-dd — the format the backend expects.
@@ -124,7 +138,9 @@ class EditProfileController extends GetxController {
     try {
       final fields = <String, String>{
         'name': nameController.text.trim(),
-        if (selectedGender.value.isNotEmpty) 'gender': selectedGender.value,
+        if (selectedGender.value.isNotEmpty)
+          'gender':
+              _genderApiValues[selectedGender.value] ?? selectedGender.value,
         if (_selectedDob != null) 'dateOfBirth': _dobForApi,
       };
 
@@ -132,7 +148,7 @@ class EditProfileController extends GetxController {
         url: ApiUrl.updateUserProfile,
         fields: fields,
         imageFile: pickedImage.value,
-        imageKey: 'avatar',
+        imageKey: 'profile_image',
         isToken: true,
       );
 
@@ -148,7 +164,8 @@ class EditProfileController extends GetxController {
         AppSnackBar.success("Profile updated successfully");
       } else {
         final message = response.body is Map
-            ? (response.body['message']?.toString() ?? "Failed to update profile")
+            ? (response.body['message']?.toString() ??
+                  "Failed to update profile")
             : "Failed to update profile";
         AppSnackBar.fail(message);
       }
