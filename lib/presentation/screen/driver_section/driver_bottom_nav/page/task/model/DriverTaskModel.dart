@@ -163,7 +163,7 @@ class Task {
     'price': price,
     'campaignCode': campaignCode,
     'acknowledged': acknowledged,
-    'status': status?.name,
+    'status': taskStatusToString(status),
     'assignedDriver': assignedDriver,
     'pickupGeo': pickupGeo?.toJson(),
     'dropoffGeo': dropoffGeo?.toJson(),

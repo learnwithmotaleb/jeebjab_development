@@ -1,21 +1,29 @@
 import 'dart:io';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
+import 'package:jeebjab/service/api_service.dart';
+import 'package:jeebjab/service/api_url.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
 
 import '../../../../../core/routes/route_path.dart';
 import '../../../driver_section/driver_bottom_nav/controller/driver_bottom_nav_controller.dart';
+import '../../../driver_section/driver_bottom_nav/page/task/controller/task_controller.dart';
 
+/// Snapshot of the task being delivered, for display only — populated by
+/// [DeliveryController.bindTask] from real `/driver/tasks` data right
+/// before the proof/upload flow starts.
 class DeliveryProof {
   final String imageUrl;
   final String category;
   final String title;
-  final String price;
-  final String currency;
+  final num price;
   final String description;
   final String size;
   final String deliveryLocation;
-  final String deliveryTime;
   final String publishedTime;
 
   DeliveryProof({
@@ -23,11 +31,9 @@ class DeliveryProof {
     required this.category,
     required this.title,
     required this.price,
-    required this.currency,
     required this.description,
     required this.size,
     required this.deliveryLocation,
-    required this.deliveryTime,
     required this.publishedTime,
   });
 
@@ -38,44 +44,72 @@ class DeliveryProof {
       category: category,
       title: title,
       price: price,
-      currency: currency,
       description: description,
       size: size,
       deliveryLocation: deliveryLocation,
-      deliveryTime: deliveryTime,
       publishedTime: publishedTime,
     );
   }
 }
 
 class DeliveryController extends GetxController {
-  // ── Delivery Proof Data ────────────────────────────────────────────────
+  final ApiClient _apiClient = ApiClient();
+  final ImagePicker _imagePicker = ImagePicker();
+
+  // ── The task this delivery flow is completing ──────────────────────────
+  // Set by bindTask() right when the driver taps "Deliver" — this
+  // controller is a permanent, app-wide singleton (see main.dart), so it
+  // carries this id through the Proof dialog → camera → DeliveryScreen
+  // navigation chain.
+  String _taskId = '';
+
   final RxBool isDeliveryMarked = false.obs;
+  final RxBool isSubmitting = false.obs;
   final Rx<File?> capturedImage = Rx<File?>(null);
 
   late DeliveryProof deliveryProof;
-  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void onInit() {
     super.onInit();
-    _initializeDeliveryData();
+    deliveryProof = _blankProof();
   }
 
-  void _initializeDeliveryData() {
+  DeliveryProof _blankProof() => DeliveryProof(
+    imageUrl: '',
+    category: '',
+    title: '',
+    price: 0,
+    description: '',
+    size: '',
+    deliveryLocation: '',
+    publishedTime: '',
+  );
+
+  /// Binds this flow to a real task before the proof/upload flow starts.
+  void bindTask({
+    required String taskId,
+    required String title,
+    required String category,
+    required num price,
+    required String description,
+    required String size,
+    required String deliveryLocation,
+    required String publishedTime,
+    String? imageUrl,
+  }) {
+    _taskId = taskId;
+    capturedImage.value = null;
+    isDeliveryMarked.value = false;
     deliveryProof = DeliveryProof(
-      imageUrl:
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500',
-      category: 'Move',
-      title: 'Ducati Bike',
-      price: '85',
-      currency: 'SAR',
-      description:
-      'To Manage Your Google Play Payment Screen, Open The Play Store App. Tap Your Profile Icon, And Select Payments & Subscriptions. From Here, You Can Manage Payment Methods (Credit Cards, PayPal, Balance), Update Billing And Subscription Info, And View Order History. You Can Also Add Backup Payment Methods For Smoother Transactions.',
-      size: 'Medium',
-      deliveryLocation: 'Level Shoes District, Dubai Mall',
-      deliveryTime: '04:30 Pm',
-      publishedTime: 'Published 3 Hours Ago',
+      imageUrl: imageUrl ?? '',
+      category: category,
+      title: title,
+      price: price,
+      description: description,
+      size: size,
+      deliveryLocation: deliveryLocation,
+      publishedTime: publishedTime,
     );
   }
 
@@ -126,30 +160,130 @@ class DeliveryController extends GetxController {
     deliveryProof = deliveryProof.copyWith(imageUrl: imagePath);
   }
 
-  // ── Mark as Delivered ──────────────────────────────────────────────────
-  void markAsDelivered() {
-    isDeliveryMarked.value = true;
-    AppAlerts.success(message: "Success Delivery");
-
-    // Switch to JobPostScreen in DriverBottomNav
-    try {
-      final DriverBottomNavController navSectionController = Get.find<DriverBottomNavController>();
-      navSectionController.changeIndex(1); // Set to JobPostScreen index
-    } catch (e) {
-      // If controller doesn't exist yet, we can't switch index this way, 
-      // but Get.offAllNamed will initialize it.
+  // ── Mark as Delivered — PATCH /driver/tasks/:id/status (multipart) ─────
+  // Required by the API: status=completed, lat, lng, completion_photo.
+  // address is optional but sent when available (a client-side reverse
+  // geocode) so the backend skips a paid lookup of its own.
+  Future<void> markAsDelivered() async {
+    if (_taskId.isEmpty) {
+      AppSnackBar.fail(AppStrings.failedToUpdateTaskStatus.tr);
+      return;
+    }
+    if (capturedImage.value == null) {
+      AppSnackBar.fail(AppStrings.completionPhotoRequired.tr);
+      return;
     }
 
-    // Navigate back to Driver Bottom Nav with Jobs tab active
-    Future.delayed(const Duration(seconds: 1), () {
-      Get.offAllNamed(RoutePath.driverBottomNav, arguments: 1);
-    });
+    isSubmitting.value = true;
+    try {
+      final position = await _currentPosition();
+      if (position == null) {
+        AppSnackBar.fail(AppStrings.locationRequiredForDelivery.tr);
+        return;
+      }
+
+      final address =
+          await _reverseGeocode(position) ?? deliveryProof.deliveryLocation;
+
+      final response = await _apiClient.patchMultipart(
+        url: ApiUrl.updateTaskStatus(_taskId),
+        fields: {
+          'status': 'completed',
+          'lat': position.latitude.toString(),
+          'lng': position.longitude.toString(),
+          if (address.isNotEmpty) 'address': address,
+        },
+        files: [
+          MultipartFileData(
+            key: 'completion_photo',
+            path: capturedImage.value!.path,
+          ),
+        ],
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        isDeliveryMarked.value = true;
+        AppAlerts.success(message: AppStrings.deliverySuccessfullyCompleted.tr);
+
+        // The task list isn't visible right now, but refresh it in the
+        // background so it's up to date (task moved to Completed) by the
+        // time the driver lands back on it below.
+        if (Get.isRegistered<TaskController>()) {
+          final taskController = Get.find<TaskController>();
+          taskController.fetchActiveTasks();
+          taskController.fetchCompletedTasks();
+        }
+
+        try {
+          Get.find<DriverBottomNavController>().changeIndex(1);
+        } catch (_) {
+          // Bottom nav controller not mounted yet — Get.offAllNamed below
+          // will rebuild it fresh with the Jobs tab already selected.
+        }
+
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          Get.offAllNamed(RoutePath.driverBottomNav, arguments: 1);
+        });
+      } else {
+        AppSnackBar.fail(
+          response.body['message'] ?? AppStrings.failedToUpdateTaskStatus.tr,
+        );
+      }
+    } catch (e) {
+      AppSnackBar.fail(AppStrings.failedToUpdateTaskStatus.tr);
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<Position?> _currentPosition() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return null;
+      }
+      return await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> _reverseGeocode(Position position) async {
+    try {
+      final placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks.isEmpty) return null;
+
+      final place = placemarks.first;
+      final parts = [
+        place.street,
+        place.subLocality,
+        place.locality,
+        place.country,
+      ].where((p) => p != null && p.isNotEmpty).toList();
+
+      return parts.isEmpty ? null : parts.join(', ');
+    } catch (_) {
+      return null;
+    }
   }
 
   // ── Reset for next delivery ────────────────────────────────────────────
   void reset() {
+    _taskId = '';
     isDeliveryMarked.value = false;
     capturedImage.value = null;
-    _initializeDeliveryData();
+    deliveryProof = _blankProof();
   }
 }

@@ -85,6 +85,19 @@ class AppStrings {
       "You're about to switch to User Mode. Continue?";
   static const String modeSwitchedSuccessfully = "Mode switched successfully";
 
+  // Driver Availability (Online <-> Offline)
+  static const String availability = "Availability";
+  static const String online = "Online";
+  static const String offline = "Offline";
+  static const String availabilityOnlineSubtitle =
+      "You're visible for new jobs";
+  static const String availabilityOfflineSubtitle =
+      "You won't receive new jobs";
+  static const String availabilityUpdatedSuccessfully =
+      "Availability updated successfully";
+  static const String failedToUpdateAvailability =
+      "Failed to update availability";
+
   static const String jobs = "Jobs";
   static const String create = "Create";
   static const String myPost = "My Post";
@@ -402,6 +415,23 @@ class AppStrings {
   static const String deliveredStep = "Delivered";
   static const String parcelHasBeenShipped = "Parcel Has Been Shipped";
   static const String liveTracking = "Live Tracking";
+
+  // Driver Task Status flow (PATCH /driver/tasks/:id/status)
+  static const String confirmPickedUpTitle = "Picked Up?";
+  static const String confirmPickedUpMessage = "Are you sure, you are picked-up?";
+  static const String confirmDeliverTitle = "Deliver?";
+  static const String confirmDeliverMessage =
+      "Are you sure, do you want to deliver?";
+  static const String taskStatusUpdatedSuccessfully =
+      "Task status updated successfully";
+  static const String failedToUpdateTaskStatus = "Failed to update task status";
+  static const String deliverySuccessfullyCompleted =
+      "Delivery Successfully Completed";
+  static const String completionPhotoRequired =
+      "Please add a photo as proof of delivery";
+  static const String locationRequiredForDelivery =
+      "Location permission is required to complete delivery";
+  static const String cancelled = "Cancelled";
   static const String rateYourService = "Rate Your Service";
   static const String delete = "Delete";
   static const String doYouWantToDelete = "Do you want to Delete";

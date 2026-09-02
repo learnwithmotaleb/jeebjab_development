@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../controller/delivery_controller.dart';
 
 class DeliveryTableWidget extends StatelessWidget {
@@ -44,10 +46,9 @@ class DeliveryTableWidget extends StatelessWidget {
             children: [
               _buildTableRow('Title', delivery.title),
               _buildTableRow('Category', delivery.category),
-              _buildTableRow('Price', '${delivery.currency} ${delivery.price}'),
+              _buildTableRow('Price', '${AppStrings.aed.tr} ${delivery.price}'),
               _buildTableRow('Size', delivery.size),
               _buildTableRow('Location', delivery.deliveryLocation),
-              _buildTableRow('Time', delivery.deliveryTime),
               _buildTableRow('Published', delivery.publishedTime, isLast: true),
             ],
           ),

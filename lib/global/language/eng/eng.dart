@@ -600,4 +600,26 @@ Map<String, String> english = {
   AppStrings.pleaseEnterYear: "Please enter vehicle year",
   AppStrings.pleaseEnterLicense: "Please enter license number",
   AppStrings.pleaseUploadAllDocuments: "Please upload all required documents",
+
+  // Driver Availability (Online/Offline)
+  AppStrings.availability: "Availability",
+  AppStrings.online: "Online",
+  AppStrings.offline: "Offline",
+  AppStrings.availabilityOnlineSubtitle: "You're visible for new jobs",
+  AppStrings.availabilityOfflineSubtitle: "You won't receive new jobs",
+  AppStrings.availabilityUpdatedSuccessfully: "Availability updated successfully",
+  AppStrings.failedToUpdateAvailability: "Failed to update availability",
+
+  // Driver Task Status flow
+  AppStrings.confirmPickedUpTitle: "Picked Up?",
+  AppStrings.confirmPickedUpMessage: "Are you sure, you are picked-up?",
+  AppStrings.confirmDeliverTitle: "Deliver?",
+  AppStrings.confirmDeliverMessage: "Are you sure, do you want to deliver?",
+  AppStrings.taskStatusUpdatedSuccessfully: "Task status updated successfully",
+  AppStrings.failedToUpdateTaskStatus: "Failed to update task status",
+  AppStrings.deliverySuccessfullyCompleted: "Delivery Successfully Completed",
+  AppStrings.completionPhotoRequired: "Please add a photo as proof of delivery",
+  AppStrings.locationRequiredForDelivery:
+      "Location permission is required to complete delivery",
+  AppStrings.cancelled: "Cancelled",
 };

@@ -49,12 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ImageProvider _avatarImage(String? avatar) {
-    if (avatar != null && avatar.isNotEmpty) {
-      return NetworkImage(ApiUrl.resolveImageUrl(avatar));
-    }
-    return AssetImage(AppImages.profileImage);
-  }
+  // GET /user/home doesn't return an avatar field at all, so this is
+  // always a hardcoded placeholder — the real photo only lives on the
+  // Profile screen (fetched from /user/user-profile).
+  ImageProvider _avatarImage(String? avatar) => AssetImage(AppImages.profileImage);
 
   Widget _buildMobile() {
     return Scaffold(

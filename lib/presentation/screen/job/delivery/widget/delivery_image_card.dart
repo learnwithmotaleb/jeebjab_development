@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/delivery_controller.dart';
 
@@ -87,7 +89,7 @@ class DeliveryImageCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Dimensions.r(6)),
                   ),
                   child: Text(
-                    '${delivery.currency} ${delivery.price}',
+                    '${AppStrings.aed.tr} ${delivery.price}',
                     style: TextStyle(
                       fontSize: Dimensions.f(12),
                       fontWeight: FontWeight.w700,

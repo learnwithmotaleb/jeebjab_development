@@ -7,6 +7,7 @@ import 'package:jeebjab/utils/assets_image/app_images.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
 import '../controller/profile_controller.dart';
+import '../widget/availability_toggle_widget.dart';
 import '../widget/profile_header_widget.dart';
 import '../widget/profile_menu_item_widget.dart';
 
@@ -50,6 +51,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
 
                 SizedBox(height: Dimensions.h(16)),
+
+                // ── Availability (Online/Offline) — driver mode only ──
+                if (controller.isDriverMode) ...[
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: Dimensions.w(10)),
+                    child: AvailabilityToggleWidget(
+                      isAvailable: controller.isAvailable.value,
+                      isLoading: controller.isTogglingAvailability.value,
+                      onChanged: controller.toggleAvailability,
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.h(16)),
+                ],
 
                 // ── 2. Menu Card ──────────────────────────────────────
                 Container(
@@ -112,7 +126,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   rating: user?.driverProfile?.averageRating,
                 ),
 
-                SizedBox(height: Dimensions.h(32)),
+                SizedBox(height: Dimensions.h(24)),
+
+                // ── Availability (Online/Offline) — driver mode only ──
+                if (controller.isDriverMode)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: AvailabilityToggleWidget(
+                          isAvailable: controller.isAvailable.value,
+                          isLoading: controller.isTogglingAvailability.value,
+                          onChanged: controller.toggleAvailability,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                SizedBox(height: Dimensions.h(8)),
 
                 // ── 2. Menu Card Container ────────────────────────
                 Padding(

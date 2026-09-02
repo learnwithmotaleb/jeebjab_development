@@ -47,7 +47,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               return Center(child: Text(controller.errorMessage.value));
             }
 
-            return SingleChildScrollView(
+            return RefreshIndicator(
+              onRefresh: controller.refreshTaskDetails,
+              child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -71,6 +74,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
 
                         const SizedBox(height: 8),
+                        const Divider(color: Color(0xFFEEEEEE)),
+                        const SizedBox(height: 8),
+
+                        // ── Real-time Status ──────────────────────
+                        _StatusTimelineSection(controller: controller),
+
+                        const SizedBox(height: 12),
                         const Divider(color: Color(0xFFEEEEEE)),
                         const SizedBox(height: 8),
 
@@ -143,6 +153,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ],
               ),
+              ),
             );
           }),
 
@@ -183,7 +194,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   return Center(child: Text(controller.errorMessage.value));
                 }
 
-                return SingleChildScrollView(
+                return RefreshIndicator(
+                  onRefresh: controller.refreshTaskDetails,
+                  child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -205,6 +219,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               publishedTime: controller.publishedTime.value.tr,
                               price: controller.itemPrice.value,
                             ),
+
+                            const SizedBox(height: 16),
+                            const Divider(color: Color(0xFFEEEEEE)),
+                            const SizedBox(height: 16),
+
+                            // ── Real-time Status ──────────────────────
+                            _StatusTimelineSection(controller: controller),
 
                             const SizedBox(height: 16),
                             const Divider(color: Color(0xFFEEEEEE)),
@@ -278,6 +299,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                       ),
                     ],
+                  ),
                   ),
                 );
               }),
@@ -466,6 +488,128 @@ class _ActionRowWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── Real-time Status Timeline ──────────────────────────────────────────────
+// Renders the pending → active → picked_up → in_transit → completed
+// progress from GET /driver/tasks/:id's `timeline` array. Steps already in
+// the array show their real note/timestamp; the rest show a generic
+// "what happens here" subtitle, greyed out.
+class _StatusTimelineSection extends StatelessWidget {
+  final TaskDetailsController controller;
+
+  const _StatusTimelineSection({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller.isCancelled) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+        decoration: BoxDecoration(
+          color: AppColors.redColor.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.cancel_outlined, color: AppColors.redColor, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              AppStrings.cancelled.tr,
+              style: const TextStyle(
+                color: AppColors.redColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final steps = controller.timelineSteps;
+    if (steps.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppStrings.liveTracking.tr,
+          style: TextStyle(
+            fontSize: Dimensions.isTablet ? 18 : 15,
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1A1A2E),
+          ),
+        ),
+        const SizedBox(height: 12),
+        for (int i = 0; i < steps.length; i++)
+          _TimelineStepItem(step: steps[i], isLast: i == steps.length - 1),
+      ],
+    );
+  }
+}
+
+class _TimelineStepItem extends StatelessWidget {
+  final TimelineStepDisplay step;
+  final bool isLast;
+
+  const _TimelineStepItem({required this.step, required this.isLast});
+
+  @override
+  Widget build(BuildContext context) {
+    final isCompleted = step.isCompleted;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Container(
+              width: Dimensions.w(24),
+              height: Dimensions.w(24),
+              decoration: BoxDecoration(
+                color: isCompleted ? const Color(0xFF00CBA9) : Colors.grey[200],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isCompleted ? Icons.check : Icons.circle_outlined,
+                size: Dimensions.f(12),
+                color: isCompleted ? Colors.white : Colors.grey[500],
+              ),
+            ),
+            if (!isLast)
+              Container(
+                width: 1.5,
+                height: Dimensions.h(40),
+                color: isCompleted ? const Color(0xFF00CBA9) : Colors.grey[200],
+              ),
+          ],
+        ),
+        SizedBox(width: Dimensions.w(16)),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                step.title,
+                style: TextStyle(
+                  fontSize: Dimensions.f(14),
+                  fontWeight: FontWeight.w700,
+                  color: isCompleted ? Colors.black : Colors.grey[500],
+                ),
+              ),
+              Text(
+                step.subtitle,
+                style: TextStyle(
+                  fontSize: Dimensions.f(12),
+                  color: isCompleted ? Colors.grey[600] : Colors.grey[400],
+                ),
+              ),
+              if (!isLast) SizedBox(height: Dimensions.h(10)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

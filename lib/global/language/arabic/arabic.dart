@@ -600,5 +600,26 @@ Map<String, String> arabic = {
   AppStrings.wasteType: "نوع النفايات",
   AppStrings.wasteCategories: "فئات النفايات",
 
+  // Driver Availability (Online/Offline)
+  AppStrings.availability: "التوفر",
+  AppStrings.online: "متصل",
+  AppStrings.offline: "غير متصل",
+  AppStrings.availabilityOnlineSubtitle: "أنت ظاهر لطلبات جديدة",
+  AppStrings.availabilityOfflineSubtitle: "لن تتلقى طلبات جديدة",
+  AppStrings.availabilityUpdatedSuccessfully: "تم تحديث حالة التوفر بنجاح",
+  AppStrings.failedToUpdateAvailability: "فشل تحديث حالة التوفر",
+
+  // Driver Task Status flow
+  AppStrings.confirmPickedUpTitle: "تم الاستلام؟",
+  AppStrings.confirmPickedUpMessage: "هل أنت متأكد أنك استلمت الطرد؟",
+  AppStrings.confirmDeliverTitle: "توصيل؟",
+  AppStrings.confirmDeliverMessage: "هل أنت متأكد أنك تريد التوصيل؟",
+  AppStrings.taskStatusUpdatedSuccessfully: "تم تحديث حالة المهمة بنجاح",
+  AppStrings.failedToUpdateTaskStatus: "فشل تحديث حالة المهمة",
+  AppStrings.deliverySuccessfullyCompleted: "تم التوصيل بنجاح",
+  AppStrings.completionPhotoRequired: "الرجاء إضافة صورة كإثبات للتوصيل",
+  AppStrings.locationRequiredForDelivery: "يلزم إذن الموقع لإتمام التوصيل",
+  AppStrings.cancelled: "ملغى",
+
 
 };

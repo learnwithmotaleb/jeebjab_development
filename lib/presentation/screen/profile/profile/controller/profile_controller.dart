@@ -35,6 +35,10 @@ class ProfileController extends GetxController {
   var isSwitchingMode = false.obs;
   var userData = Rxn<UserModel>();
 
+  // ── Driver Availability (Online / Offline) ─────────────────────────
+  var isAvailable = false.obs;
+  var isTogglingAvailability = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -44,14 +48,21 @@ class ProfileController extends GetxController {
   Future<void> getProfile() async {
     isLoading.value = true;
     try {
+      // Same UserModel shape comes back from both endpoints (see the
+      // model's own note) — driver mode is read from `driver/profile`
+      // so driver-only fields (isAvailable, documents, etc.) stay fresh,
+      // otherwise the plain user profile is used.
       final response = await _apiClient.get(
-        url: ApiUrl.getUserProfile,
+        url: SharePrefsHelper.isDriverMode
+            ? ApiUrl.getDriverProfile
+            : ApiUrl.getUserProfile,
         isToken: true,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final userModel = UserModel.fromJson(response.body);
         userData.value = userModel;
+        isAvailable.value = userModel.driverProfile?.isAvailable ?? false;
         if (userModel.activeMode != null) {
           await SharePrefsHelper.saveActiveMode(userModel.activeMode!);
         }
@@ -90,7 +101,13 @@ class ProfileController extends GetxController {
           );
 
           if (response.statusCode == 200 || response.statusCode == 201) {
-            await getProfile(); // refresh + persist the new activeMode
+            // Persist the new mode *before* refetching so getProfile()
+            // hits the right endpoint (driver/profile vs user-profile)
+            // instead of the stale, pre-switch one.
+            await SharePrefsHelper.saveActiveMode(
+              switchingToDriver ? 'driver' : 'user',
+            );
+            await getProfile(); // refresh with server-confirmed data
             AppSnackBar.success(
               response.body['message'] ??
                   AppStrings.modeSwitchedSuccessfully.tr,
@@ -115,6 +132,45 @@ class ProfileController extends GetxController {
         }
       },
     );
+  }
+
+  /// PATCH /driver/availability — flips isAvailable each call.
+  /// Only approved drivers can go online, so this is only wired up
+  /// from the UI when [isDriverMode] is true.
+  Future<void> toggleAvailability() async {
+    if (isTogglingAvailability.value) return;
+
+    final previous = isAvailable.value;
+    isAvailable.value = !previous; // optimistic
+    isTogglingAvailability.value = true;
+    try {
+      final response = await _apiClient.patch(
+        url: ApiUrl.toggleDriverAvailability,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.body['data'];
+        if (data is Map && data['isAvailable'] != null) {
+          isAvailable.value = data['isAvailable'] == true;
+        }
+        AppSnackBar.success(
+          AppStrings.availabilityUpdatedSuccessfully.tr,
+          title: "Success",
+        );
+      } else {
+        isAvailable.value = previous; // revert on failure
+        AppSnackBar.fail(
+          response.body['message'] ?? AppStrings.failedToUpdateAvailability.tr,
+        );
+      }
+    } catch (e) {
+      isAvailable.value = previous; // revert on failure
+      debugPrint("Error toggling availability: $e");
+      AppSnackBar.fail(AppStrings.failedToUpdateAvailability.tr);
+    } finally {
+      isTogglingAvailability.value = false;
+    }
   }
 
   List<ProfileMenuItem> get menuItems => [

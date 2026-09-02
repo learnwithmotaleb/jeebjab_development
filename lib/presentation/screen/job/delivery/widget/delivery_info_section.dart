@@ -51,15 +51,6 @@ class DeliveryInfoSection extends StatelessWidget {
           value: delivery.deliveryLocation,
           iconData: Icons.location_on_outlined,
         ),
-
-        SizedBox(height: Dimensions.h(12)),
-
-        // ── Delivery Time ─────────────────────────────────────────────
-        _InfoRow(
-          label: 'Delivery Time',
-          value: delivery.deliveryTime,
-          iconData: Icons.access_time_outlined,
-        ),
       ],
     );
   }

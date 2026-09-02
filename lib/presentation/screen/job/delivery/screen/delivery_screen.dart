@@ -38,10 +38,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
-    );
+    return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
   Widget _buildMobile() {
@@ -71,9 +68,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     SizedBox(height: Dimensions.h(20)),
 
                     // ── Table Section ──────────────────────────────────
-                    DeliveryTableWidget(
-                      delivery: controller.deliveryProof,
-                    ),
+                    DeliveryTableWidget(delivery: controller.deliveryProof),
 
                     SizedBox(height: Dimensions.h(20)),
                   ],
@@ -89,30 +84,41 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
               ),
               child: SizedBox(
                 width: double.infinity,
-                child: Obx(() => ElevatedButton(
-                  onPressed: controller.isDeliveryMarked.value
-                      ? null
-                      : () => controller.markAsDelivered(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    disabledBackgroundColor: AppColors.primaryColor,
-                    padding: EdgeInsets.symmetric(
-                      vertical: Dimensions.h(16),
+                child: Obx(
+                  () => ElevatedButton(
+                    onPressed:
+                        (controller.isDeliveryMarked.value ||
+                            controller.isSubmitting.value)
+                        ? null
+                        : () => controller.markAsDelivered(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      disabledBackgroundColor: AppColors.primaryColor,
+                      padding: EdgeInsets.symmetric(vertical: Dimensions.h(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                      ),
+                      elevation: 0,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                    ),
-                    elevation: 0,
+                    child: controller.isSubmitting.value
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            AppStrings.delivered.tr,
+                            style: TextStyle(
+                              fontSize: Dimensions.f(16),
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
-                  child: Text(
-                    'Delivered',
-                    style: TextStyle(
-                      fontSize: Dimensions.f(16),
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                )),
+                ),
               ),
             ),
           ],
@@ -151,20 +157,20 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         SizedBox(height: Dimensions.h(32)),
 
                         // ── Table Section ────────────────────────────
-                        DeliveryTableWidget(
-                          delivery: controller.deliveryProof,
-                        ),
+                        DeliveryTableWidget(delivery: controller.deliveryProof),
 
                         SizedBox(height: Dimensions.h(32)),
 
                         // ── Delivered Button ────────────────────────
-                        Obx(() => AppButton(label: AppStrings.delivery.tr,
-                          onPressed: controller.isDeliveryMarked.value
-                              ? null
-                              : () => controller.markAsDelivered(),
-                          height: Dimensions.h(100),
-
-                        )
+                        Obx(
+                          () => AppButton(
+                            label: AppStrings.delivered.tr,
+                            isLoading: controller.isSubmitting.value,
+                            onPressed: controller.isDeliveryMarked.value
+                                ? null
+                                : () => controller.markAsDelivered(),
+                            height: Dimensions.h(100),
+                          ),
                         ),
 
                         SizedBox(height: Dimensions.h(32)),

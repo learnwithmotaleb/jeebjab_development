@@ -77,6 +77,8 @@ class _TaskScreenState extends State<TaskScreen> {
                         isActive: controller.isActiveTab.value,
                         onPickedUp: () => controller.onPickedUp(item),
                         onOpenMap: () => controller.onOpenMap(item),
+                        isPickUpLoading:
+                            controller.updatingTaskId.value == item.id,
                         onTap: () => Get.toNamed(RoutePath.taskDetailsScreen, arguments: {
           'id': item.id,
           'itemType': item.title,
@@ -181,6 +183,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             isActive: controller.isActiveTab.value,
                             onPickedUp: () => controller.onPickedUp(item),
                             onOpenMap: () => controller.onOpenMap(item),
+                            isPickUpLoading:
+                                controller.updatingTaskId.value == item.id,
                             margin: EdgeInsets.zero,
                           );
                         },

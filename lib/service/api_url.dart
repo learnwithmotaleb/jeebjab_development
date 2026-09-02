@@ -54,6 +54,8 @@ class ApiUrl {
 
   static final String getDriverProfile = '$baseUrl/driver/profile';
   static final String updateDriverProfile = '$baseUrl/driver/profile';
+  static final String toggleDriverAvailability =
+      '$baseUrl/driver/availability'; //Patch Method
 
   static final String createPost = '$baseUrl/post';
   static final String updatePost = '$baseUrl/post/:id';
@@ -79,6 +81,10 @@ class ApiUrl {
   static final getCompletedTasks = "$baseUrl/driver/tasks?status=completed";
   static final getCancelledTasks = "$baseUrl/driver/tasks?status=cancelled";
   static String getTaskDetails(String id) => '$baseUrl/driver/tasks/$id';
+  static String updateTaskStatus(String id) =>
+      '$baseUrl/driver/tasks/$id/status'; //Patch Method — json {status} for
+  // picked_up/in_transit, multipart (status, lat, lng, address,
+  // completion_photo) for completed.
 
   static String getCompanyPublicList() => '$baseUrl/company/public/list';
   static String getDriverHome() => '$baseUrl/driver/home';

@@ -1,11 +1,31 @@
 import 'package:get/get.dart';
 
+import '../../../../../../../core/enums/task.dart';
 import '../../../../../../../core/routes/route_path.dart';
 import '../../../../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../../../../service/api_service.dart';
 import '../../../../../../../service/api_url.dart';
 import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../widget/app_share.dart';
+
+/// One row of the real-time status timeline (see `timeline` on
+/// GET /driver/tasks/:id and PATCH /driver/tasks/:id/status). Steps not
+/// reached yet are still shown, greyed out, using a generic subtitle.
+class TimelineStepDisplay {
+  final int step;
+  final String title;
+  final String subtitle;
+  final bool isCompleted;
+  final String? timestamp;
+
+  TimelineStepDisplay({
+    required this.step,
+    required this.title,
+    required this.subtitle,
+    required this.isCompleted,
+    this.timestamp,
+  });
+}
 
 class TaskDetailsController extends GetxController{
 
@@ -45,11 +65,20 @@ class TaskDetailsController extends GetxController{
   RxDouble advertiserRating = 0.0.obs;
   RxString advertiserImage = "".obs;
 
+  // ── Real-time Status (pending → active → picked_up → in_transit →
+  // completed) ─────────────────────────────────────────────────────────────
+  Rx<TaskStatus?> taskStatus = Rx<TaskStatus?>(null);
+  RxList<TimelineStepDisplay> timelineSteps = <TimelineStepDisplay>[].obs;
+
+  bool get isCancelled => taskStatus.value == TaskStatus.cancelled;
+
   @override
   void onInit() {
     super.onInit();
     _loadArguments();
   }
+
+  String? _taskId;
 
   void _loadArguments() {
     if (Get.arguments != null) {
@@ -62,9 +91,16 @@ class TaskDetailsController extends GetxController{
       itemPrice.value = (args['price'] ?? 0).toDouble();
 
       if (id != null) {
+        _taskId = id;
         fetchPostDetails(id);
       }
     }
+  }
+
+  /// Re-fetches this task so the status/timeline reflect the latest state —
+  /// used for pull-to-refresh on the details screen.
+  Future<void> refreshTaskDetails() async {
+    if (_taskId != null) await fetchPostDetails(_taskId!);
   }
 
   Future<void> fetchPostDetails(String id) async {
@@ -152,6 +188,42 @@ class TaskDetailsController extends GetxController{
     if (data['createdAt'] != null) {
       publishedTime.value = data['createdAt'].toString().substring(0, 10);
     }
+
+    // Status + real-time timeline
+    taskStatus.value = taskStatusFromString(data['status']?.toString());
+    timelineSteps.value = _buildTimelineSteps(data['timeline'] as List?);
+  }
+
+  // Canonical 4-step flow the backend's `timeline` array fills in as the
+  // task progresses (see PATCH /driver/tasks/:id/status) — steps not
+  // reached yet just show as upcoming/pending with a generic subtitle.
+  List<TimelineStepDisplay> _buildTimelineSteps(List<dynamic>? rawTimeline) {
+    final defaults = [
+      (1, AppStrings.requestConfirmation.tr, AppStrings.wePickUpYourProductSoon.tr),
+      (2, AppStrings.pickup.tr, AppStrings.parcelHasBeenPickedUp.tr),
+      (3, AppStrings.inTransit.tr, AppStrings.onTheWaySoonDelivered.tr),
+      (4, AppStrings.delivered.tr, AppStrings.parcelHasBeenShipped.tr),
+    ];
+
+    final byStep = <int, Map<String, dynamic>>{};
+    for (final entry in rawTimeline ?? const []) {
+      if (entry is Map) {
+        final step = (entry['step'] as num?)?.toInt();
+        if (step != null) byStep[step] = Map<String, dynamic>.from(entry);
+      }
+    }
+
+    return defaults.map((d) {
+      final (step, defaultTitle, defaultSubtitle) = d;
+      final actual = byStep[step];
+      return TimelineStepDisplay(
+        step: step,
+        title: defaultTitle,
+        subtitle: actual?['note']?.toString() ?? defaultSubtitle,
+        isCompleted: actual != null,
+        timestamp: actual?['timestamp']?.toString(),
+      );
+    }).toList();
   }
 
   List<String> _buildFeatures(Map<String, dynamic>? placement) {

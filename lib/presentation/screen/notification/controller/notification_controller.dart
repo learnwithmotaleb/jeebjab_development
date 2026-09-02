@@ -8,6 +8,7 @@ import '../../../../service/api_service.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
 import '../../../../core/routes/route_path.dart';
 import '../../bottom_nav/page/my_post/model/my_post_model.dart';
+import '../../driver_section/driver_bottom_nav/page/task/model/DriverTaskModel.dart';
 
 class NotificationController extends GetxController {
   static NotificationController get to => Get.find();
@@ -331,79 +332,120 @@ class NotificationController extends GetxController {
 
   // ── Open the item a notification is about ────────────────────────────────
   //
-  // STOPGAP: the backend notification payload carries no postId/status link
+  // STOPGAP: the backend notification payload carries no postId/taskId link
   // at all (confirmed live — only _id/toId/title/message/isRead/timestamps).
-  // "New Job Request" messages are the one exception: they embed the job's
-  // *title* in quotes, e.g. `soniaai wants to take your job "nice"`. This
-  // extracts that title and matches it against the user's own posts to
-  // resolve a real id, then opens Status Details with it.
+  // The one thing notifications about a job DO embed is its *title*, in
+  // quotes — e.g. `soniaai wants to take your job "nice"` for a job-poster
+  // notification. This extracts that title and matches it first against the
+  // driver's own tasks (so a driver tapping a task-status notification lands
+  // on that task's real-time status), then against the user's own posts.
   //
-  // This is fragile by construction: if two of the user's posts share a
-  // title, it opens the first match, which may be the wrong one; if the
-  // title text ever changes shape server-side, extraction breaks silently.
-  // It should be replaced the moment the backend adds a real postId field
-  // to notifications.
+  // This is fragile by construction: if two items share a title, it opens
+  // the first match, which may be the wrong one; if the message text ever
+  // changes shape server-side, extraction breaks silently. It should be
+  // replaced the moment the backend adds a real id field to notifications.
   final RxBool isResolvingNotification = false.obs;
 
   Future<void> openRelatedItem(Map<String, dynamic> item) async {
-    final title = (item['title'] ?? '').toString();
     final message = (item['message'] ?? '').toString();
-
-    if (title != 'New Job Request') {
-      AppSnackBar.info("This notification isn't linked to an item yet.");
-      return;
-    }
-
     final match = RegExp(r'"([^"]+)"').firstMatch(message);
-    final jobTitle = match?.group(1)?.trim();
-    if (jobTitle == null || jobTitle.isEmpty) {
-      AppSnackBar.info("Couldn't work out which job this refers to.");
-      return;
-    }
+    final quotedTitle = match?.group(1)?.trim();
 
     if (isResolvingNotification.value) return;
     isResolvingNotification.value = true;
     try {
-      final responses = await Future.wait([
-        ApiClient().get(url: ApiUrl.getPendingPosts, isToken: true),
-        ApiClient().get(url: ApiUrl.getActivePosts, isToken: true),
-        ApiClient().get(url: ApiUrl.getCompletedPosts, isToken: true),
-      ]);
+      if (quotedTitle != null && quotedTitle.isNotEmpty) {
+        // A driver's own tasks are the more likely match while they're
+        // actively driving — try that side first, then fall back to the
+        // job-poster side (also tried the other way round if the account
+        // isn't currently in driver mode).
+        final tryDriverFirst = SharePrefsHelper.isDriverMode;
 
-      PostModel? found;
-      for (final response in responses) {
-        if (response.statusCode != 200) continue;
-        final List postsJson = response.body['data']['posts'] ?? [];
-        for (final json in postsJson) {
-          final post = PostModel.fromJson(json);
-          if (post.title.trim().toLowerCase() == jobTitle.toLowerCase()) {
-            found = post;
-            break;
-          }
+        if (tryDriverFirst && await _openMatchingDriverTask(quotedTitle)) {
+          return;
         }
-        if (found != null) break;
+        if (await _openMatchingPost(quotedTitle)) return;
+        if (!tryDriverFirst && await _openMatchingDriverTask(quotedTitle)) {
+          return;
+        }
       }
 
-      if (found != null) {
-        Get.toNamed(
-          RoutePath.statusDetails,
-          arguments: {
-            'id': found.id,
-            'itemType': found.title,
-            'itemSubtype': found.category,
-            'itemDate': found.date,
-            'status': found.status.value,
-            'showAcceptButton': found.status == PostStatus.pending,
-          },
-        );
-      } else {
-        AppSnackBar.info('Could not find the related post "$jobTitle".');
+      // Nothing resolvable from the text — for a driver, at least land them
+      // somewhere useful: their live task list, which shows every task's
+      // current status.
+      if (SharePrefsHelper.isDriverMode) {
+        Get.toNamed(RoutePath.driverBottomNav, arguments: 1);
+        return;
       }
+
+      AppSnackBar.info("This notification isn't linked to an item yet.");
     } catch (e) {
       debugPrint('Error resolving notification target: $e');
-      AppSnackBar.error('Could not open the related post.');
+      AppSnackBar.error('Could not open the related item.');
     } finally {
       isResolvingNotification.value = false;
     }
+  }
+
+  /// Matches [jobTitle] against the user's own posts (pending/active/
+  /// completed) and opens Status Details on a hit. Returns whether it did.
+  Future<bool> _openMatchingPost(String jobTitle) async {
+    final responses = await Future.wait([
+      ApiClient().get(url: ApiUrl.getPendingPosts, isToken: true),
+      ApiClient().get(url: ApiUrl.getActivePosts, isToken: true),
+      ApiClient().get(url: ApiUrl.getCompletedPosts, isToken: true),
+    ]);
+
+    for (final response in responses) {
+      if (response.statusCode != 200) continue;
+      final List postsJson = response.body['data']['posts'] ?? [];
+      for (final json in postsJson) {
+        final post = PostModel.fromJson(json);
+        if (post.title.trim().toLowerCase() == jobTitle.toLowerCase()) {
+          Get.toNamed(
+            RoutePath.statusDetails,
+            arguments: {
+              'id': post.id,
+              'itemType': post.title,
+              'itemSubtype': post.category,
+              'itemDate': post.date,
+              'status': post.status.value,
+              'showAcceptButton': post.status == PostStatus.pending,
+            },
+          );
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Matches [jobTitle] against the driver's own tasks (active/completed)
+  /// and opens Task Details — with its real-time status timeline — on a
+  /// hit. Returns whether it did.
+  Future<bool> _openMatchingDriverTask(String jobTitle) async {
+    final responses = await Future.wait([
+      ApiClient().get(url: ApiUrl.getActiveTasks, isToken: true),
+      ApiClient().get(url: ApiUrl.getCompletedTasks, isToken: true),
+    ]);
+
+    for (final response in responses) {
+      if (response.statusCode != 200) continue;
+      final model = DriverTaskModel.fromJson(response.body);
+      for (final task in model.data?.tasks ?? const <Task>[]) {
+        if ((task.title ?? '').trim().toLowerCase() == jobTitle.toLowerCase()) {
+          Get.toNamed(
+            RoutePath.taskDetailsScreen,
+            arguments: {
+              'id': task.id,
+              'itemType': task.title,
+              'price': task.price,
+            },
+          );
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

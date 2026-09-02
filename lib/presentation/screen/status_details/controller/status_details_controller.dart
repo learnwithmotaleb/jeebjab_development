@@ -199,16 +199,19 @@ class StatusDetailsController extends GetxController {
     }
     // Recycling posts only have a pickup — no drop-off at all — so only
     // include it when it's actually there.
-    Get.toNamed(RoutePath.routeMap, arguments: {
-      'pickupLat': pickupLat,
-      'pickupLng': pickupLng,
-      'pickupAddress': pickupAddress.value,
-      if (dropoffLat != null && dropoffLng != null) ...{
-        'dropoffLat': dropoffLat,
-        'dropoffLng': dropoffLng,
-        'dropoffAddress': dropoffAddress.value,
+    Get.toNamed(
+      RoutePath.routeMap,
+      arguments: {
+        'pickupLat': pickupLat,
+        'pickupLng': pickupLng,
+        'pickupAddress': pickupAddress.value,
+        if (dropoffLat != null && dropoffLng != null) ...{
+          'dropoffLat': dropoffLat,
+          'dropoffLng': dropoffLng,
+          'dropoffAddress': dropoffAddress.value,
+        },
       },
-    });
+    );
   }
 
   void onRateServicePressed() {
