@@ -94,7 +94,10 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
             // Back button
             SafeArea(
               child: Padding(
-                padding: EdgeInsets.only(top: Dimensions.h(8), left: Dimensions.w(16)),
+                padding: EdgeInsetsDirectional.only(
+                  top: Dimensions.h(8),
+                  start: Dimensions.w(16),
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,

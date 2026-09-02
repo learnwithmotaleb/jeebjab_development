@@ -70,6 +70,14 @@ class ApiUrl {
   static final String getJobPost = '$baseUrl/post';
   static String getJobPostDetails(String id) => '$baseUrl/post/$id';
 
+  static String updateJobPostDetails(String id) =>
+      '$baseUrl/post/$id'; //Update Job Post Path Mehtod
+
+  static String cancelJobPost(String id) =>
+      '$baseUrl/post/$id/cancel'; //Pathc Method
+  static String rejectJobRequest(String id, String requestId) =>
+      '$baseUrl/post/$id/requests/$requestId/reject'; //Patch Method
+
   //================Request Status=======================
 
   static String postSendJobRequest(String id) =>

@@ -249,9 +249,34 @@ class StatusDetailsController extends GetxController {
 
   void onDeletePressed() {
     AppAlerts.deleteAd(
-      onYes: () {
-        print('Delete confirmed');
-        // Add actual delete logic here
+      onYes: () async {
+        if (postId.value.isEmpty) return;
+        try {
+          isLoading.value = true;
+          final response = await _apiClient.patch(
+            url: ApiUrl.cancelJobPost(postId.value),
+            isToken: true,
+          );
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            // Navigate back *before* the snackbar — Get.snackbar and
+            // Get.back() both drive GetX's overlay/route stack, and firing
+            // them together races the snackbar's own transition, silently
+            // swallowing the pop. The snackbar still shows fine on
+            // whichever screen we land back on.
+            Get.back(); // the post is gone — leave its status details
+            AppSnackBar.success(
+              response.body['message'] ?? "Post cancelled successfully",
+            );
+          } else {
+            AppSnackBar.fail(
+              response.body['message'] ?? "Failed to cancel post",
+            );
+          }
+        } catch (e) {
+          AppSnackBar.fail("An error occurred: $e");
+        } finally {
+          isLoading.value = false;
+        }
       },
     );
   }

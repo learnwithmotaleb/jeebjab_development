@@ -61,9 +61,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                   }),
 
                   // ── Back Button ──────────────────────────────────────
-                  Positioned(
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
                     top: 16,
-                    left: 16,
+                    start: 16,
                     child: GestureDetector(
                       onTap: controller.onBack,
                       child: Container(
@@ -83,9 +84,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                   ),
 
                   // ── Close Button ─────────────────────────────────────
-                  Positioned(
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
                     top: 16,
-                    right: 16,
+                    end: 16,
                     child: GestureDetector(
                       onTap: controller.onBack,
                       child: Container(
@@ -228,9 +230,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                   }),
 
                   // ── Back Button ──────────────────────────────────────
-                  Positioned(
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
                     top: 16,
-                    left: 16,
+                    start: 16,
                     child: GestureDetector(
                       onTap: controller.onBack,
                       child: Container(
@@ -250,9 +253,10 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
                   ),
 
                   // ── Close Button ─────────────────────────────────────
-                  Positioned(
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
                     top: 16,
-                    right: 16,
+                    end: 16,
                     child: GestureDetector(
                       onTap: controller.onBack,
                       child: Container(

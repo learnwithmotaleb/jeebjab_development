@@ -141,7 +141,7 @@ class _NotAllowScreenState extends State<NotAllowScreen> {
         leading: GestureDetector(
           onTap: () => Get.back(),
           child: const Padding(
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsetsDirectional.only(start: 20),
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
               color: Colors.black,
