@@ -49,18 +49,31 @@ class MessageModel {
     required this.updatedAt,
   });
 
+  // Handles both the REST list shape (full {_id, name} sender/receiver
+  // objects) and a flatter live-socket payload (e.g. plain senderId/
+  // receiverId strings, missing _id/updatedAt) — a socket event that
+  // doesn't match the REST shape used to throw here and get swallowed
+  // silently, which is why a message a receiver was live in the chat for
+  // never showed up until they left and reopened it.
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
-    id: json['_id'],
-    sender: MessageUserModel.fromJson(json['sender']),
-    receiver: MessageUserModel.fromJson(json['receiver']),
-    chatId: json['chatId'],
-    message: json['message'] ?? '',
-    messageType: json['messageType'] ?? 'text',
-    fileUrl: json['fileUrl'],
-    isRead: json['isRead'] ?? false,
-    createdAt: json['createdAt'],
-    updatedAt: json['updatedAt'],
+    id: json['_id']?.toString() ??
+        DateTime.now().millisecondsSinceEpoch.toString(),
+    sender: _parseUser(json['sender'], json['senderId']),
+    receiver: _parseUser(json['receiver'], json['receiverId']),
+    chatId: json['chatId']?.toString() ?? '',
+    message: json['message']?.toString() ?? '',
+    messageType: json['messageType']?.toString() ?? 'text',
+    fileUrl: json['fileUrl']?.toString(),
+    isRead: json['isRead'] == true,
+    createdAt: json['createdAt']?.toString() ?? DateTime.now().toIso8601String(),
+    updatedAt: json['updatedAt']?.toString() ?? DateTime.now().toIso8601String(),
   );
+
+  static MessageUserModel _parseUser(dynamic raw, dynamic fallbackId) {
+    if (raw is Map) return MessageUserModel.fromJson(Map<String, dynamic>.from(raw));
+    final id = raw?.toString() ?? fallbackId?.toString() ?? '';
+    return MessageUserModel(id: id, name: '');
+  }
 
   Map<String, dynamic> toJson() => {
     '_id': id,
@@ -119,8 +132,8 @@ class MessageUserModel {
   });
 
   factory MessageUserModel.fromJson(Map<String, dynamic> json) => MessageUserModel(
-    id: json['_id'],
-    name: json['name'] ?? '',
+    id: json['_id']?.toString() ?? '',
+    name: json['name']?.toString() ?? '',
   );
 
   Map<String, dynamic> toJson() => {

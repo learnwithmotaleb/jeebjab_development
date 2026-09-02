@@ -599,6 +599,10 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
                           : "",
                       rating: (driver.rating ?? 0.0).toDouble(),
                       showAcceptButton: request.status == 'pending',
+                      // Only chat with a driver once you've actually
+                      // accepted their offer — not while it's still one
+                      // of several pending bids.
+                      isMessageEnabled: request.status == 'accepted',
                       onMessage: () => controller.onMessagePressed(
                         receiverId: driver.id ?? '',
                       ),

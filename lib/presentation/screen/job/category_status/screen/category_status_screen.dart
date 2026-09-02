@@ -191,9 +191,10 @@ class _CategoryStatusScreenState extends State<CategoryStatusScreen> {
                     ),
 
                   // ── Back button overlay ─────────────────────────────
-                  Positioned(
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
                     top: 40,
-                    left: 12,
+                    start: 12,
                     child: GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(

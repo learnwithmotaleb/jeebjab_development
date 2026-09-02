@@ -110,7 +110,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: themeController.initialized
+        themeMode: themeController.isInitialized.value
             ? themeController.mode.value
             : ThemeMode.system,
         translations: Language(),

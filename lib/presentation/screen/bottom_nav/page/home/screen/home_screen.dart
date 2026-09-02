@@ -49,10 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // GET /user/home doesn't return an avatar field at all, so this is
-  // always a hardcoded placeholder — the real photo only lives on the
-  // Profile screen (fetched from /user/user-profile).
-  ImageProvider _avatarImage(String? avatar) => AssetImage(AppImages.profileImage);
+  // GET /user/home doesn't return an avatar field at all, so the real
+  // photo is fetched separately by the controller (from
+  // /user/user-profile) — this just picks between that and the
+  // placeholder asset.
+  ImageProvider _avatarImage() {
+    final avatar = controller.avatarUrl.value;
+    return avatar.isNotEmpty
+        ? NetworkImage(avatar)
+        : AssetImage(AppImages.profileImage);
+  }
 
   Widget _buildMobile() {
     return Scaffold(
@@ -94,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () => Get.toNamed(RoutePath.profile),
                           child: CircleAvatar(
                             radius: 25,
-                            backgroundImage: _avatarImage(home?.user.avatar),
+                            backgroundImage: _avatarImage(),
                           ),
                         ),
                         title: Text(
@@ -403,9 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () => Get.toNamed(RoutePath.profile),
                               child: CircleAvatar(
                                 radius: 32,
-                                backgroundImage: _avatarImage(
-                                  home?.user.avatar,
-                                ),
+                                backgroundImage: _avatarImage(),
                               ),
                             ),
                             title: Text(

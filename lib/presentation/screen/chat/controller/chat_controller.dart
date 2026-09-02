@@ -43,19 +43,88 @@ class ChatController extends GetxController {
     _listenToMessages();
   }
 
+  // Per the Chat Socket.io API: the server echoes a sent message back on
+  // the SAME event name it's sent on — 'send_message' — to both sender
+  // and receiver, wrapped as {success, statusCode, message, data: {...}}.
+  // 'new_message'/'receive_message' aren't part of that contract; kept
+  // as a harmless fallback in case a differently-named event is also
+  // emitted somewhere.
   void _listenToMessages() {
-    SocketApi.on('new_message', (data) {
-      debugPrint("📥 Socket [new_message] received: $data");
-      if (data['chatId'] == chatId.value) {
-        messages.insert(0, MessageModel.fromJson(data as Map<String, dynamic>));
-      }
+    SocketApi.on('send_message', _handleIncomingSocketMessage);
+    SocketApi.on('new_message', _handleIncomingSocketMessage);
+    SocketApi.on('receive_message', _handleIncomingSocketMessage);
+    SocketApi.on('message_seen', _handleSeenReceipt);
+    SocketApi.on('error_response', (data) {
+      debugPrint("🔴 Chat socket error_response: $data");
     });
+  }
 
-    SocketApi.on('receive_message', (data) {
-      debugPrint("📥 Socket [receive_message] received: $data");
-      if (data['chatId'] == chatId.value) {
-        messages.insert(0, MessageModel.fromJson(data as Map<String, dynamic>));
+  // The real message sits under `data` on the socket envelope
+  // ({success, statusCode, message, data: {...}}) — reading fields off
+  // the envelope itself (as this used to) meant `chatId` was always
+  // null, so every incoming message failed the chat-match check and was
+  // silently dropped. That's why a message only ever showed up after
+  // leaving and reopening the chat (which reloads via the REST endpoint
+  // instead). Unwrapped now, with a fallback to the raw payload in case
+  // it ever arrives unwrapped.
+  void _handleIncomingSocketMessage(dynamic data) {
+    try {
+      if (data is! Map) return;
+      final envelope = Map<String, dynamic>.from(data);
+      final payload = envelope['data'] is Map
+          ? Map<String, dynamic>.from(envelope['data'])
+          : envelope;
+
+      final incomingChatId = payload['chatId']?.toString().trim() ?? '';
+      if (incomingChatId != chatId.value.trim()) return;
+
+      final message = MessageModel.fromJson(payload);
+      if (messages.any((m) => m.id == message.id)) return;
+
+      messages.insert(0, message);
+      scrollToBottom();
+
+      // We're live in this chat right now — tell the sender we've seen
+      // it immediately instead of waiting for the next time it's opened.
+      if (!message.isMine(currentUserId)) {
+        _markMessagesSeen();
       }
+    } catch (e) {
+      debugPrint("⚠️ Failed to parse incoming socket message: $e | data=$data");
+    }
+  }
+
+  // {chatId, seenBy} — fired to the ORIGINAL sender once the other side
+  // has read the chat. Flips isRead on our own sent messages so the
+  // read-receipt tick actually reflects reality instead of staying
+  // permanently "sent".
+  void _handleSeenReceipt(dynamic data) {
+    try {
+      if (data is! Map) return;
+      final payload = Map<String, dynamic>.from(data);
+      if ((payload['chatId']?.toString().trim() ?? '') != chatId.value.trim()) {
+        return;
+      }
+
+      for (var i = 0; i < messages.length; i++) {
+        final m = messages[i];
+        if (m.isMine(currentUserId) && !m.isRead) {
+          messages[i] = m.copyWith(isRead: true);
+        }
+      }
+    } catch (e) {
+      debugPrint("⚠️ Failed to parse message_seen payload: $e | data=$data");
+    }
+  }
+
+  // Tells the server (and, in real time, the other participant) that we've
+  // read this chat. Safe to call repeatedly — it's a no-op server-side
+  // once nothing is left unread.
+  void _markMessagesSeen() {
+    if (chatId.value.isEmpty || receiverId.value.isEmpty) return;
+    SocketApi.emit('message_seen', {
+      'chatId': chatId.value,
+      'senderId': receiverId.value,
     });
   }
 
@@ -74,8 +143,6 @@ class ChatController extends GetxController {
       driverImage.value = args['driverImage'] ?? AppImages.profileImage;
     }
 
-    // TODO: Connect WebSocket here once chatId is ready
-    // TODO: Load message history from API
     loadMessages();
   }
 
@@ -92,6 +159,9 @@ class ChatController extends GetxController {
       if (response.statusCode == 200) {
         final result = GetMessageModel.fromJson(response.body);
         messages.assignAll(result.data);
+        // We just opened/refreshed this chat — mark whatever's unread as
+        // seen and let the other side know in real time.
+        _markMessagesSeen();
       }
     } catch (e) {
       debugPrint("Failed to load messages: $e");
@@ -100,6 +170,12 @@ class ChatController extends GetxController {
     }
   }
 
+  // Sends over the socket only — the message is added to the list once
+  // the server echoes it back via 'send_message' (it fires to the sender
+  // too, per the API), rather than inserted optimistically here. The
+  // socket's own contract IS the source of truth for both sides; keeping
+  // a separate local-only copy risked showing up twice once the echo
+  // path started actually working.
   void sendMessage() {
     if (deliveryStatus.value == 'completed') {
       Get.snackbar(
@@ -116,27 +192,25 @@ class ChatController extends GetxController {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
-    // Optimistically add the message to the UI
-    final newMessage = MessageModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      sender: MessageUserModel(id: currentUserId, name: 'You'),
-      receiver: MessageUserModel(id: receiverId.value, name: driverName.value),
-      chatId: chatId.value,
-      message: text,
-      messageType: 'text',
-      isRead: false,
-      createdAt: DateTime.now().toIso8601String(),
-      updatedAt: DateTime.now().toIso8601String(),
-    );
+    if (!SocketApi.isConnected) {
+      Get.snackbar(
+        'Not Connected',
+        'Reconnecting… please try sending again in a moment.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.amber[700],
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
 
-    messages.insert(0, newMessage);
     messageController.clear();
 
-    // Emit via WebSocket
     SocketApi.emit('send_message', {
       'chatId': chatId.value,
       'receiverId': receiverId.value,
       'message': text,
+      'messageType': 'text',
     });
   }
 
@@ -166,26 +240,19 @@ class ChatController extends GetxController {
         final fileUrl = data['fileUrl'];
         final messageType = data['messageType'];
 
-        // Optimistically add the message to the UI
-        final newMessage = MessageModel(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          sender: MessageUserModel(id: currentUserId, name: 'You'),
-          receiver: MessageUserModel(
-            id: receiverId.value,
-            name: driverName.value,
-          ),
-          chatId: chatId.value,
-          message: '',
-          fileUrl: fileUrl,
-          messageType: messageType,
-          isRead: false,
-          createdAt: DateTime.now().toIso8601String(),
-          updatedAt: DateTime.now().toIso8601String(),
-        );
+        if (!SocketApi.isConnected) {
+          Get.snackbar(
+            'Not Connected',
+            'Uploaded, but not connected to send it — try again in a moment.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.amber[700],
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2),
+          );
+          return;
+        }
 
-        messages.insert(0, newMessage);
-
-        // Emit via WebSocket
+        // Added to the list once the server echoes it back — see sendMessage().
         SocketApi.emit('send_message', {
           'chatId': chatId.value,
           'receiverId': receiverId.value,
@@ -239,8 +306,11 @@ class ChatController extends GetxController {
 
   @override
   void onClose() {
+    SocketApi.off('send_message');
     SocketApi.off('new_message');
     SocketApi.off('receive_message');
+    SocketApi.off('message_seen');
+    SocketApi.off('error_response');
     messageController.dispose();
     scrollController.dispose();
     super.onClose();

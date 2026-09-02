@@ -107,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         );
       }),
-      centerTitle: true,
+      centerTitle: false,
       elevation: 0,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),

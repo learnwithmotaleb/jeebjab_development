@@ -158,9 +158,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           }),
 
           // ── Back Button Overlay ─────────────────────────────────────
-          Positioned(
+          Positioned.directional(
+            textDirection: Directionality.of(context),
             top: 40,
-            left: 12,
+            start: 12,
             child: IconButton(
               onPressed: () {
                 Get.back();
@@ -305,9 +306,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               }),
 
               // ── Back Button Overlay ─────────────────────────────────────
-              Positioned(
+              Positioned.directional(
+                textDirection: Directionality.of(context),
                 top: 40,
-                left: 12,
+                start: 12,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.2),
