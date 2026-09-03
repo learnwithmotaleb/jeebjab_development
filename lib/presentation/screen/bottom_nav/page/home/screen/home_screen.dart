@@ -51,13 +51,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // GET /user/home doesn't return an avatar field at all, so the real
   // photo is fetched separately by the controller (from
-  // /user/user-profile) — this just picks between that and the
-  // placeholder asset.
-  ImageProvider _avatarImage() {
+  // /user/user-profile). No avatar set → a plain person icon, same as
+  // the Profile screen's own fallback — not the bundled stock-photo
+  // asset, which reads as a real uploaded picture when it isn't one.
+  Widget _buildAvatar({required double radius}) {
     final avatar = controller.avatarUrl.value;
-    return avatar.isNotEmpty
-        ? NetworkImage(avatar)
-        : AssetImage(AppImages.profileImage);
+    final hasAvatar = avatar.isNotEmpty;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: AppColors.whiteColor.withValues(alpha: 0.15),
+      backgroundImage: hasAvatar ? NetworkImage(avatar) : null,
+      child: hasAvatar
+          ? null
+          : Icon(
+              Icons.person_rounded,
+              size: radius,
+              color: AppColors.whiteColor,
+            ),
+    );
   }
 
   Widget _buildMobile() {
@@ -98,10 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         contentPadding: EdgeInsets.zero,
                         leading: GestureDetector(
                           onTap: () => Get.toNamed(RoutePath.profile),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: _avatarImage(),
-                          ),
+                          child: _buildAvatar(radius: 25),
                         ),
                         title: Text(
                           home?.user.name.isNotEmpty == true
@@ -407,10 +415,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             contentPadding: EdgeInsets.zero,
                             leading: GestureDetector(
                               onTap: () => Get.toNamed(RoutePath.profile),
-                              child: CircleAvatar(
-                                radius: 32,
-                                backgroundImage: _avatarImage(),
-                              ),
+                              child: _buildAvatar(radius: 32),
                             ),
                             title: Text(
                               home?.user.name.isNotEmpty == true

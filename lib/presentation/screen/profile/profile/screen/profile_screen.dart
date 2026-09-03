@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileHeaderWidget(
                   name: user?.name ?? "...",
                   email: user?.email ?? "...",
-                  imageUrl: user?.avatar,
+                  imageUrl: user?.avatarUrl,
                   rating: user?.driverProfile?.averageRating,
                 ),
 
@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileHeaderWidget(
                   name: user?.name ?? "...",
                   email: user?.email ?? "...",
-                  imageUrl: user?.avatar,
+                  imageUrl: user?.avatarUrl,
                   rating: user?.driverProfile?.averageRating,
                 ),
 
