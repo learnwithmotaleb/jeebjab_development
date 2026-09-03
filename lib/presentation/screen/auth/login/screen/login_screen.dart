@@ -133,7 +133,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       focusNode: controller.passwordFocus,
                       hint: AppStrings.enterPassword.tr,
                       obscure: true,
-                      validator: AppValidators.password(min: 6),
+                      // Login checks an existing password, not setting a
+                      // new one — the strong-password rules (uppercase/
+                      // number/special char) belong on Signup/Reset, not
+                      // here. Enforcing them here would reject a correct
+                      // login for any account whose password predates
+                      // those rules or was set without them.
+                      validator: AppValidators.required(
+                        message: 'Enter your password',
+                      ),
                       onSubmitted: () {
                         controller.submit();
                       },
