@@ -37,16 +37,21 @@ class _CustomerVerificationScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobile: _buildMobile(),
-      tablet: _buildTablet(),
+    // OTP verification can't be backed out of — no app-bar back arrow, no
+    // hardware/gesture back either. The user finishes it or resends.
+    return PopScope(
+      canPop: false,
+      child: ResponsiveLayout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet(),
+      ),
     );
   }
 
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr),
+      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr, showBack: false),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -126,7 +131,7 @@ class _CustomerVerificationScreenState
   Widget _buildTablet() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr),
+      appBar: CommonAppBar(title: AppStrings.verifyYourAccount.tr, showBack: false),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: Dimensions.w(48)),

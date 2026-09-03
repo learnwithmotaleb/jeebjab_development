@@ -67,7 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 controller: controller.newPasswordController,
                 focusNode: controller.newPasswordFocus,
                 obscure: true,
-                validator: AppValidators.required(),
+                validator: AppValidators.password(),
                 hint: AppStrings.enterYourNewPassword.tr,
               ),
 
@@ -168,7 +168,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     controller: controller.newPasswordController,
                     focusNode: controller.newPasswordFocus,
                     obscure: true,
-                    validator: AppValidators.required(),
+                    validator: AppValidators.password(),
                     hint: AppStrings.enterYourNewPassword.tr,
                   ),
 

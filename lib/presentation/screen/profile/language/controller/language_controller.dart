@@ -9,9 +9,19 @@ class ProfileLanguageController extends GetxController {
 
   final LanguageController _languageController = Get.find<LanguageController>();
 
+  // This screen is shared by two entry points: onboarding ("Create
+  // Account" on Login, no arguments — proceeds to Signup after applying)
+  // and Profile's own "Language" menu item (passes fromProfile: true —
+  // should return to Profile instead, not detour through signup).
+  bool fromProfile = false;
+
   @override
   void onInit() {
     super.onInit();
+    final args = Get.arguments;
+    if (args is Map) {
+      fromProfile = args['fromProfile'] == true;
+    }
     // Load whatever language is currently active
     selectedLanguage.value = _languageController.isEnglish ? 'en' : 'ar';
   }

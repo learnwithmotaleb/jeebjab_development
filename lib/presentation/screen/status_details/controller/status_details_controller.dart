@@ -281,8 +281,14 @@ class StatusDetailsController extends GetxController {
     );
   }
 
-  void onReschedulePressed() {
-    Get.toNamed(RoutePath.pickupDateTime);
+  Future<void> onReschedulePressed() async {
+    final updated = await Get.toNamed(
+      RoutePath.pickupDateTime,
+      arguments: {'postId': postId.value},
+    );
+    if (updated == true) {
+      fetchStatusDetails(postId.value);
+    }
   }
 
   /// Call POST /chat/post-chat with the given [receiverId].

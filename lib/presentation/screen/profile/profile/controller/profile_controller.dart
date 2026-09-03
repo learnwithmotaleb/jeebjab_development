@@ -182,7 +182,10 @@ class ProfileController extends GetxController {
     ProfileMenuItem(
       title: AppStrings.language.tr,
       icon: Icons.language_outlined,
-      onTap: () => Get.toNamed(RoutePath.profileLanguage),
+      onTap: () => Get.toNamed(
+        RoutePath.profileLanguage,
+        arguments: {'fromProfile': true},
+      ),
     ),
     ProfileMenuItem(
       title: AppStrings.contactAndSupport.tr,

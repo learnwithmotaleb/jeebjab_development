@@ -137,10 +137,15 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
           // ── Continue Button pinned bottom ───────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            child: AppButton(
-              label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
-              onPressed: controller.onContinue,
-              height: 60,
+            child: Obx(
+              () => AppButton(
+                label: (isEditMode || controller.isRescheduleMode)
+                    ? AppStrings.update.tr
+                    : AppStrings.continueButton.tr,
+                isLoading: controller.isSaving.value,
+                onPressed: controller.onContinue,
+                height: 60,
+              ),
             ),
           ),
           SizedBox(height: Dimensions.h(20)),
@@ -274,11 +279,14 @@ class _PickupDatetimeScreenState extends State<PickupDatetimeScreen> {
                   horizontal: Dimensions.w(48),
                   vertical: Dimensions.h(40),
                 ),
-                child: AppButton(
-                  label: isEditMode ? AppStrings.update.tr : AppStrings.continueButton.tr,
+                child: Obx(() => AppButton(
+                  label: (isEditMode || controller.isRescheduleMode)
+                      ? AppStrings.update.tr
+                      : AppStrings.continueButton.tr,
+                  isLoading: controller.isSaving.value,
                   onPressed: controller.onContinue,
                   height: Dimensions.h(100),
-                ),
+                )),
               ),
                SizedBox(height: Dimensions.h(30)),
             ],

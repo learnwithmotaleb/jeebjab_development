@@ -119,7 +119,13 @@ class _SortDropdownState extends State<SortDropdown> {
 
   @override
   void dispose() {
-    _close();
+    // Don't route through _close() here — it calls setState(), and the
+    // element is already defunct by the time dispose() runs (that's the
+    // 'Failed assertion: _lifecycleState != _ElementLifecycle.defunct'
+    // crash). Just remove the overlay directly; no rebuild is needed for
+    // a widget that's being torn down anyway.
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     super.dispose();
   }
 

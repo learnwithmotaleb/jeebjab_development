@@ -17,6 +17,7 @@ class DriverHeaderWidget extends StatelessWidget {
   final double totalEarn;
   final VoidCallback onNotification;
   final DriverHomeController controller;
+  final int unreadCount;
 
   const DriverHeaderWidget({
     super.key,
@@ -28,6 +29,7 @@ class DriverHeaderWidget extends StatelessWidget {
     required this.totalEarn,
     required this.onNotification,
     required this.controller,
+    this.unreadCount = 0,
   });
 
   @override
@@ -127,20 +129,62 @@ class DriverHeaderWidget extends StatelessWidget {
                 ),
               ),
 
-              // ── Notification bell ─────────────────────────────────────
+              // ── Notification bell — white ring around a small red pill
+              // keeps the count legible over either the white circle or
+              // the teal header behind it ────────────────────────────────
               GestureDetector(
                 onTap: onNotification,
-                child: Container(
+                child: SizedBox(
                   width: Dimensions.w(40),
                   height: Dimensions.w(40),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.notifications_outlined,
-                    color: AppColors.primaryColor,
-                    size: Dimensions.w(20),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: Dimensions.w(40),
+                        height: Dimensions.w(40),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.notifications_outlined,
+                          color: AppColors.primaryColor,
+                          size: Dimensions.w(20),
+                        ),
+                      ),
+                      if (unreadCount > 0)
+                        Positioned(
+                          top: -Dimensions.w(3),
+                          right: -Dimensions.w(3),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.w(5),
+                              vertical: Dimensions.w(1),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: Dimensions.w(17),
+                              minHeight: Dimensions.w(17),
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.redColor,
+                              borderRadius: BorderRadius.circular(Dimensions.w(40)),
+                              border: Border.all(color: Colors.white, width: 1.5),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              unreadCount > 9 ? '9+' : '$unreadCount',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: Dimensions.w(10),
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

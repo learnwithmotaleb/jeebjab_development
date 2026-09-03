@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/service/api_service.dart';
+import 'package:jeebjab/service/api_url.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
 
 enum PickupType { regular, priority, scheduled, anytime }
@@ -15,6 +20,22 @@ class TimeSlot {
 }
 
 class PickupDatetimeController extends GetxController {
+  final ApiClient _apiClient = ApiClient();
+
+  // ── Reschedule mode: reached from Status Details' "Reschedule" button on
+  // an existing pending post, rather than the create-post wizard. Distinct
+  // from the wizard's own `isEdit` argument (editing this step before
+  // publishing, no id/API call involved).
+  String? postId;
+  bool get isRescheduleMode => postId != null && postId!.isNotEmpty;
+  final RxBool isSaving = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    postId = Get.arguments?['postId']?.toString();
+  }
+
   // ── Selected option ───────────────────────────────────────────────────────
   final Rx<PickupType> selectedType = PickupType.regular.obs;
 
@@ -69,12 +90,63 @@ class PickupDatetimeController extends GetxController {
       return;
     }
 
+    if (isRescheduleMode) {
+      onUpdateSchedule();
+      return;
+    }
+
     final bool isEditMode = Get.arguments?['isEdit'] ?? false;
 
     if (isEditMode) {
       Get.back();
     } else {
       Get.toNamed(RoutePath.pickupAddress);
+    }
+  }
+
+  // Reschedule mode — PATCH /post/:id with just the new dateTimeSlot,
+  // partial update per the API contract (only fields you want to change).
+  Future<void> onUpdateSchedule() async {
+    if (postId == null || postId!.isEmpty || isSaving.value) return;
+
+    isSaving.value = true;
+    try {
+      final Map<String, dynamic> dateTimeSlot = {
+        "slotType": selectedType.value.name,
+        "scheduledDate": selectedType.value == PickupType.scheduled
+            ? selectedSlot.value.split('_').first // 'today' or 'tomorrow'
+            : null,
+        "scheduledTime": selectedType.value == PickupType.scheduled
+            ? selectedSlot.value.split('_').last // e.g. '01:00-01:30'
+            : null,
+      };
+
+      final response = await _apiClient.patchMultipart(
+        url: ApiUrl.updateJobPostDetails(postId!),
+        fields: {
+          'data': jsonEncode({"dateTimeSlot": dateTimeSlot}),
+        },
+        files: const [],
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Navigate back before the snackbar — see AppSnackBar's own note
+        // on why firing them together races Get.back() on GetX's overlay
+        // stack and can swallow the toast.
+        Get.back(result: true);
+        AppSnackBar.success(
+          response.body['message'] ?? AppStrings.postUpdatedSuccessfully.tr,
+        );
+      } else {
+        AppSnackBar.fail(
+          response.body['message'] ?? AppStrings.failedToUpdatePost.tr,
+        );
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isSaving.value = false;
     }
   }
 

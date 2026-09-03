@@ -16,6 +16,7 @@ import 'package:jeebjab/widget/app_button.dart';
 import '../../../../../../core/responsive_layout/responsive_layout.dart';
 import '../../../../../../global/language/controller/language_controller.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
+import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import '../controller/home_controller.dart';
 import '../model/home_model.dart';
 
@@ -29,6 +30,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final lc = Get.find<LanguageController>(); // ← find, not put
   final HomeController controller = Get.put(HomeController());
+  // permanent: shared with the Notification screen so the unread badge
+  // here stays live without re-fetching every time Home rebuilds.
+  final NotificationController notificationController =
+      Get.put(NotificationController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +73,69 @@ class _HomeScreenState extends State<HomeScreen> {
               size: radius,
               color: AppColors.whiteColor,
             ),
+    );
+  }
+
+  // Unread badge on the bell — a white ring around a small red pill keeps
+  // it legible sitting on either the white circle or the teal header
+  // behind it, instead of the default Badge widget's count spilling past
+  // both edges.
+  Widget _buildNotificationBell({required double size, required double iconSize}) {
+    return GestureDetector(
+      onTap: () => Get.toNamed(RoutePath.notification),
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: size,
+              height: size,
+              decoration: const BoxDecoration(
+                color: AppColors.whiteColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications_on,
+                color: AppColors.primaryColor,
+                size: iconSize,
+              ),
+            ),
+            Obx(() {
+              final count = notificationController.unreadCount.value;
+              if (count <= 0) return const SizedBox.shrink();
+              return Positioned(
+                top: -size * 0.08,
+                right: -size * 0.08,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size * 0.12,
+                    vertical: size * 0.02,
+                  ),
+                  constraints: BoxConstraints(minWidth: size * 0.42, minHeight: size * 0.42),
+                  decoration: BoxDecoration(
+                    color: AppColors.redColor,
+                    borderRadius: BorderRadius.circular(size),
+                    border: Border.all(color: AppColors.whiteColor, width: 1.5),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    count > 9 ? '9+' : '$count',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontSize: size * 0.24,
+                      fontWeight: FontWeight.bold,
+                      height: 1,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 
@@ -135,21 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        trailing: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(1000),
-                          ),
-                          child: GestureDetector(
-                            onTap: () => Get.toNamed(RoutePath.notification),
-                            child: Icon(
-                              Icons.notifications_on,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        ),
+                        trailing: _buildNotificationBell(size: 40, iconSize: 24),
                       ),
                     ],
                   ),
@@ -444,23 +498,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            trailing: Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(1000),
-                              ),
-                              child: GestureDetector(
-                                onTap: () =>
-                                    Get.toNamed(RoutePath.notification),
-                                child: Icon(
-                                  Icons.notifications_on,
-                                  color: AppColors.primaryColor,
-                                  size: 28,
-                                ),
-                              ),
-                            ),
+                            trailing: _buildNotificationBell(size: 48, iconSize: 28),
                           ),
                         ],
                       ),

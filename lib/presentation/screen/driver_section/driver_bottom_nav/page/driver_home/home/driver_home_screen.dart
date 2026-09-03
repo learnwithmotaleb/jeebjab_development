@@ -4,6 +4,7 @@ import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
+import 'package:jeebjab/presentation/screen/notification/controller/notification_controller.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 import '../controller/driver_home_controller.dart';
@@ -20,6 +21,10 @@ class DriverHomeScreen extends StatefulWidget {
 
 class _DriverHomeScreenState extends State<DriverHomeScreen> {
   final DriverHomeController controller = Get.put(DriverHomeController());
+  // permanent: shared with the Notification screen so the unread badge
+  // here stays live without re-fetching every time Home rebuilds.
+  final NotificationController notificationController =
+      Get.put(NotificationController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +57,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                     completedJobs: controller.completedJobs.value,
                     totalEarn: controller.totalEarn.value,
                     onNotification: () => Get.toNamed(RoutePath.notification),
+                    unreadCount: notificationController.unreadCount.value,
                     controller: controller,
                   ),
                 ),
@@ -145,6 +151,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                     completedJobs: controller.completedJobs.value,
                     totalEarn: controller.totalEarn.value,
                     onNotification: () => Get.toNamed(RoutePath.notification),
+                    unreadCount: notificationController.unreadCount.value,
                     controller: controller,
                   ),
                 ),

@@ -62,7 +62,11 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
               height: 65,
               onPressed: () async {
                 await lsc.applyLanguage();
-                Get.toNamed(RoutePath.signup);
+                if (lsc.fromProfile) {
+                  Get.back();
+                } else {
+                  Get.toNamed(RoutePath.signup);
+                }
               },
             ),
           ],
@@ -158,7 +162,11 @@ class _ProfileLanguageScreenState extends State<ProfileLanguageScreen> {
                     height: Dimensions.h(100),
                     onPressed: () async {
                       await lsc.applyLanguage();
-                      Get.toNamed(RoutePath.signup);
+                      if (lsc.fromProfile) {
+                        Get.back();
+                      } else {
+                        Get.toNamed(RoutePath.signup);
+                      }
                     },
                   ),
                 ),

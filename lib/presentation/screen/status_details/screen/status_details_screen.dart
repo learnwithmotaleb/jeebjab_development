@@ -381,6 +381,17 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
 
   // ── Stepper Section ───────────────────────────────────────────────────────
   Widget _buildStepperSection({EdgeInsetsGeometry? margin}) {
+    // The post's own status is only pending → active → completed — there's
+    // no confirmed picked-up/in-transit value at this level (that finer
+    // detail only exists on the driver's own /driver/tasks resource).
+    // So: "Request Confirmation" reflects whether a driver has actually
+    // been assigned (was hardcoded `true`, which is what showed it
+    // confirmed even with zero driver requests) — and Pickup/In Transit,
+    // which can't be told apart from "active" alone, only light up once
+    // the job is genuinely completed instead of the instant it's assigned.
+    final hasDriver = controller.status.value != 'pending';
+    final isDone = controller.status.value == 'completed';
+
     return Container(
       margin: margin ?? EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
       child: Column(
@@ -389,32 +400,28 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
             icon: Icons.assignment_turned_in_outlined,
             title: AppStrings.requestConfirmation.tr,
             subtitle: AppStrings.wePickUpYourProductSoon.tr,
-            isCompleted: true,
+            isCompleted: hasDriver,
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.local_shipping_outlined,
             title: AppStrings.pickup.tr,
             subtitle: AppStrings.parcelHasBeenPickedUp.tr,
-            isCompleted:
-                controller.status.value == 'active' ||
-                controller.status.value == 'completed',
+            isCompleted: isDone,
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.trending_up,
             title: AppStrings.inTransit.tr,
             subtitle: AppStrings.onTheWaySoonDelivered.tr,
-            isCompleted:
-                controller.status.value == 'active' ||
-                controller.status.value == 'completed',
+            isCompleted: isDone,
             isLast: false,
           ),
           _buildStepItem(
             icon: Icons.task_alt_rounded,
             title: AppStrings.delivered.tr,
             subtitle: AppStrings.parcelHasBeenShipped.tr,
-            isCompleted: controller.status.value == 'completed',
+            isCompleted: isDone,
             isLast: true,
           ),
         ],
