@@ -139,14 +139,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     SizedBox(height: Dimensions.h(30)),
-                    Obx(() => AppButton(
-                      height: Dimensions.h(55),
-                      label: AppStrings.signIn.tr,
-                      isLoading: controller.isLoading.value,
-                      onPressed: () {
-                        controller.submit();
-                      },
-                    )),
+                    Obx(
+                      () => AppButton(
+                        height: Dimensions.h(55),
+                        label: AppStrings.signIn.tr,
+                        isLoading: controller.isLoading.value,
+                        onPressed: () {
+                          controller.submit();
+                        },
+                      ),
+                    ),
                     SizedBox(height: Dimensions.h(12)),
                     Align(
                       alignment: Alignment.centerRight,
@@ -163,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: Dimensions.h(10)),
                     // // OR Text
                     Center(
@@ -172,20 +174,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: AppTextStyles.body.copyWith(
                           fontSize: 14,
                           color: AppColors.blackColor,
-                        )
-                      )
+                        ),
+                      ),
                     ),
                     SizedBox(height: Dimensions.h(12)),
 
                     // Social login buttons (Full Width)
-
                     if (PlatformHelper.isAndroid) ...[
                       SizedBox(height: Dimensions.h(12)),
                       GestureDetector(
                         onTap: () => controller.signInWithGoogle(),
                         child: _socialLoginButton(AppImages.google),
                       ),
-
                     ],
 
                     if (PlatformHelper.isIOS) ...[
@@ -239,12 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
         border: Border.all(color: AppColors.greyColor.withValues(alpha: 0.1)),
       ),
       child: Center(
-        child: Image.asset(
-          asset,
-          width: 32,
-          height: 32,
-          fit: BoxFit.contain,
-        ),
+        child: Image.asset(asset, width: 32, height: 32, fit: BoxFit.contain),
       ),
     );
   }
