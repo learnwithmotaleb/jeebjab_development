@@ -112,6 +112,7 @@ import 'package:jeebjab/presentation/screen/show_map/controller/route_map_contro
 import 'package:jeebjab/presentation/screen/show_map/screen/route_map_screen.dart';
 import 'package:jeebjab/presentation/screen/status_details/controller/status_details_controller.dart';
 import 'package:jeebjab/presentation/screen/status_details/screen/status_details_screen.dart';
+import 'package:jeebjab/presentation/screen/edit_post/screen/edit_post_screen.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/controller/welcome_controller.dart';
 import 'package:jeebjab/presentation/screen/welcome_screen/screen/welcome_screen.dart';
 import 'package:jeebjab/presentation/screen/west_type/controller/west_type_controller.dart';
@@ -346,6 +347,12 @@ class AppRouter {
       binding: BindingsBuilder(() {
         Get.put(StatusDetailsController());
       }),
+    ),
+
+   GetPage(
+      name: RoutePath.editPost,
+      page: () => const EditPostScreen(),
+      transition: Transition.rightToLeft,
     ),
 
 

@@ -23,6 +23,7 @@ class RoutePath {
   static const String readMore = '/ReadMoreScreen';
   static const String notification = '/NotificationScreen';
   static const String statusDetails = '/StatusDetailsScreen';
+  static const String editPost = '/EditPostScreen';
   static const String chat = '/ChatScreen';
   static const String showMap = '/ShowMapScreen';
   static const String routeMap = '/RouteMapScreen';

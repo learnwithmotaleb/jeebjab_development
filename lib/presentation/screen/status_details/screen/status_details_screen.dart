@@ -28,11 +28,31 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
     return ResponsiveLayout(mobile: _buildMobile(), tablet: _buildTablet());
   }
 
+  // Edit is only ever allowed while the post is pending — PATCH /post/:id
+  // itself enforces this server-side too ("Only pending posts can be edited").
+  Widget _buildEditAction() {
+    return Obx(() {
+      if (controller.status.value != 'pending') return const SizedBox.shrink();
+      return IconButton(
+        icon: const Icon(Icons.edit_outlined, color: AppColors.blackColor),
+        onPressed: () async {
+          final updated = await Get.toNamed(
+            RoutePath.editPost,
+            arguments: {'id': controller.postId.value},
+          );
+          if (updated == true) {
+            controller.fetchStatusDetails(controller.postId.value);
+          }
+        },
+      );
+    });
+  }
+
   /// Tablet Layout
   Widget _buildTablet() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.details.tr),
+      appBar: CommonAppBar(title: AppStrings.details.tr, actions: [_buildEditAction()]),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
@@ -133,7 +153,7 @@ class _StatusDetailsScreenState extends State<StatusDetailsScreen> {
   Widget _buildMobile() {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      appBar: CommonAppBar(title: AppStrings.details.tr),
+      appBar: CommonAppBar(title: AppStrings.details.tr, actions: [_buildEditAction()]),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

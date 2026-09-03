@@ -621,5 +621,14 @@ Map<String, String> arabic = {
   AppStrings.locationRequiredForDelivery: "يلزم إذن الموقع لإتمام التوصيل",
   AppStrings.cancelled: "ملغى",
 
+  // Edit Post
+  AppStrings.editPost: "تعديل الإعلان",
+  AppStrings.updatePost: "تحديث الإعلان",
+  AppStrings.price: "السعر",
+  AppStrings.postUpdatedSuccessfully: "تم تحديث الإعلان بنجاح",
+  AppStrings.failedToUpdatePost: "فشل تحديث الإعلان",
+  AppStrings.thisPostCanNoLongerBeEdited: "لم يعد بالإمكان تعديل هذا الإعلان",
+  AppStrings.addPhoto: "إضافة صورة",
+
 
 };

@@ -622,4 +622,13 @@ Map<String, String> english = {
   AppStrings.locationRequiredForDelivery:
       "Location permission is required to complete delivery",
   AppStrings.cancelled: "Cancelled",
+
+  // Edit Post
+  AppStrings.editPost: "Edit Post",
+  AppStrings.updatePost: "Update Post",
+  AppStrings.price: "Price",
+  AppStrings.postUpdatedSuccessfully: "Post updated successfully",
+  AppStrings.failedToUpdatePost: "Failed to update post",
+  AppStrings.thisPostCanNoLongerBeEdited: "This post can no longer be edited",
+  AppStrings.addPhoto: "Add Photo",
 };

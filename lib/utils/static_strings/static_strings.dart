@@ -432,6 +432,16 @@ class AppStrings {
   static const String locationRequiredForDelivery =
       "Location permission is required to complete delivery";
   static const String cancelled = "Cancelled";
+
+  // Edit Post (PATCH /post/:id — pending only)
+  static const String editPost = "Edit Post";
+  static const String updatePost = "Update Post";
+  static const String price = "Price";
+  static const String postUpdatedSuccessfully = "Post updated successfully";
+  static const String failedToUpdatePost = "Failed to update post";
+  static const String thisPostCanNoLongerBeEdited =
+      "This post can no longer be edited";
+  static const String addPhoto = "Add Photo";
   static const String rateYourService = "Rate Your Service";
   static const String delete = "Delete";
   static const String doYouWantToDelete = "Do you want to Delete";
