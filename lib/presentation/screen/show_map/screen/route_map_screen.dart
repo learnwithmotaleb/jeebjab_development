@@ -45,7 +45,8 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
                   markerId: const MarkerId('pickup'),
                   position: controller.pickupPosition,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueGreen),
+                    BitmapDescriptor.hueGreen,
+                  ),
                   infoWindow: InfoWindow(
                     title: 'Pick-Up',
                     snippet: controller.pickupAddress.value,
@@ -56,7 +57,8 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
                     markerId: const MarkerId('dropoff'),
                     position: controller.dropoffPosition!,
                     icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueRed),
+                      BitmapDescriptor.hueRed,
+                    ),
                     infoWindow: InfoWindow(
                       title: 'Drop-Off',
                       snippet: controller.dropoffAddress.value,
@@ -67,7 +69,8 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
                     markerId: const MarkerId('my_location'),
                     position: controller.myLocation.value!,
                     icon: BitmapDescriptor.defaultMarkerWithHue(
-                        BitmapDescriptor.hueAzure),
+                      BitmapDescriptor.hueAzure,
+                    ),
                     infoWindow: const InfoWindow(title: 'You are here'),
                   ),
               },
@@ -78,6 +81,9 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
                     points: controller.routePoints,
                     color: AppColors.primaryColor,
                     width: 5,
+                    startCap: Cap.roundCap,
+                    endCap: Cap.roundCap,
+                    jointType: JointType.round,
                   ),
                 if (controller.myLocationRoutePoints.length > 1)
                   Polyline(
@@ -85,7 +91,9 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
                     points: controller.myLocationRoutePoints,
                     color: Colors.blueAccent,
                     width: 4,
-                    patterns: [PatternItem.dash(12), PatternItem.gap(8)],
+                    startCap: Cap.roundCap,
+                    endCap: Cap.roundCap,
+                    jointType: JointType.round,
                   ),
               },
               padding: EdgeInsets.only(bottom: Dimensions.h(190)),
@@ -126,6 +134,25 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
               const Center(child: CircularProgressIndicator()),
 
             Positioned(
+              top: MediaQuery.paddingOf(context).top + 16,
+              right: 16,
+              child: FloatingActionButton.small(
+                heroTag: 'refresh_current_route',
+                tooltip: 'Refresh current location route',
+                onPressed: controller.isLoadingMyLocation.value
+                    ? null
+                    : controller.refreshCurrentRoute,
+                child: controller.isLoadingMyLocation.value
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.my_location),
+              ),
+            ),
+
+            Positioned(
               bottom: 0,
               left: 0,
               right: 0,
@@ -144,13 +171,19 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_off_outlined,
-                size: Dimensions.w(56), color: AppColors.greyColor),
+            Icon(
+              Icons.location_off_outlined,
+              size: Dimensions.w(56),
+              color: AppColors.greyColor,
+            ),
             SizedBox(height: Dimensions.h(16)),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: Dimensions.f(15), color: AppColors.blackColor),
+              style: TextStyle(
+                fontSize: Dimensions.f(15),
+                color: AppColors.blackColor,
+              ),
             ),
             SizedBox(height: Dimensions.h(24)),
             TextButton(

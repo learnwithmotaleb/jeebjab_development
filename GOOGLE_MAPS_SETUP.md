@@ -71,3 +71,13 @@ Finally, we load the key from the bundle in `ios/Runner/AppDelegate.swift`:
 let mapsApiKey = Bundle.main.object(forInfoDictionaryKey: "GoogleMapsApiKey") as? String ?? ""
 GMSServices.provideAPIKey(mapsApiKey)
 ```
+
+## Driving route polylines
+
+The route screen now uses Routes API `computeRoutes` for current location to pickup and pickup to drop-off. Places resolves addresses; it does not calculate road routes. Roads API is not required for this flow.
+
+Enable Routes API and billing in the Google Cloud project and authorize Routes API on the credential used for these requests. A Maps SDK-only key cannot authorize this REST call. Supply a separate credential using `--dart-define=GOOGLE_ROUTES_API_KEY=YOUR_KEY`, or the existing `GOOGLE_MAPS_API_KEY` configuration. For production, route web-service requests through a backend with a restricted server credential; do not remove restrictions from the native Maps SDK key.
+
+The request uses traffic-aware driving, alternative routes, and high-quality encoded polylines. The app selects the lowest returned duration; ETA is an estimate, not a guarantee. Failures retain location markers and show Retry instead of an invented road line/time. The location button refreshes GPS and the route to pickup; this is a route preview, not turn-by-turn navigation.
+
+Validate on Android and iOS with GPS enabled: select pickup and drop-off, confirm both route segments follow roads, disable networking and retry, then restore networking. HTTP 403 in the route diagnostic requires checking API enablement, billing, and credential restrictions.

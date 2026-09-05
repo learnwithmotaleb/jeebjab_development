@@ -19,7 +19,8 @@ class AutocompletePrediction {
     return AutocompletePrediction(
       placeId: json['place_id'] as String? ?? '',
       fullText: json['description'] as String? ?? '',
-      primaryText: json['structured_formatting']?['main_text'] as String? ??
+      primaryText:
+          json['structured_formatting']?['main_text'] as String? ??
           json['description'] as String? ??
           '',
       secondaryText:
@@ -45,7 +46,7 @@ class GooglePlacesService {
   static final GooglePlacesService instance = GooglePlacesService._();
 
   // Inject at build time: flutter run --dart-define=GOOGLE_MAPS_API_KEY=xxxx
-  String get _apiKey {
+  String get apiKey {
     const key = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
     return key.isNotEmpty ? key : 'AIzaSyBCYhLFH245ocR2fJj6GnSzSMfC9X90mv0';
   }
@@ -54,8 +55,9 @@ class GooglePlacesService {
     if (input.trim().isEmpty) return [];
     try {
       final url = Uri.parse(
-          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${Uri.encodeComponent(input)}&key=$_apiKey');
-      final response = await http.get(url);
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${Uri.encodeComponent(input)}&key=$apiKey',
+      );
+      final response = await http.get(url).timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) return [];
 
       final data = jsonDecode(response.body);
@@ -72,8 +74,9 @@ class GooglePlacesService {
   Future<PlaceLatLng?> placeDetails(String placeId) async {
     try {
       final url = Uri.parse(
-          'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry&key=$_apiKey');
-      final response = await http.get(url);
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry&key=$apiKey',
+      );
+      final response = await http.get(url).timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) return null;
 
       final data = jsonDecode(response.body);

@@ -32,6 +32,24 @@ class RouteInfoCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (controller.routeError.value.isNotEmpty ||
+                controller.locationError.value.isNotEmpty) ...[
+              Text(
+                [
+                  controller.routeError.value,
+                  controller.locationError.value,
+                ].where((text) => text.isNotEmpty).join('\n'),
+              ),
+              TextButton.icon(
+                onPressed:
+                    controller.isLoading.value ||
+                        controller.isLoadingMyLocation.value
+                    ? null
+                    : controller.retryRoutes,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry route'),
+              ),
+            ],
             _AddressRow(
               dotColor: const Color(0xFF34A853),
               label: 'Pick-Up',
@@ -66,8 +84,11 @@ class RouteInfoCard extends StatelessWidget {
               SizedBox(height: Dimensions.h(12)),
               Row(
                 children: [
-                  Icon(Icons.my_location_rounded,
-                      size: Dimensions.w(16), color: Colors.blueAccent),
+                  Icon(
+                    Icons.my_location_rounded,
+                    size: Dimensions.w(16),
+                    color: Colors.blueAccent,
+                  ),
                   SizedBox(width: Dimensions.w(6)),
                   Text(
                     'From your location',
@@ -114,8 +135,11 @@ class _DistanceDurationRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.route_outlined,
-            size: Dimensions.w(18), color: AppColors.primaryColor),
+        Icon(
+          Icons.route_outlined,
+          size: Dimensions.w(18),
+          color: AppColors.primaryColor,
+        ),
         SizedBox(width: Dimensions.w(6)),
         Text(
           distanceText.isEmpty ? '—' : distanceText,
@@ -126,8 +150,11 @@ class _DistanceDurationRow extends StatelessWidget {
           ),
         ),
         SizedBox(width: Dimensions.w(20)),
-        Icon(Icons.schedule_rounded,
-            size: Dimensions.w(18), color: AppColors.primaryColor),
+        Icon(
+          Icons.schedule_rounded,
+          size: Dimensions.w(18),
+          color: AppColors.primaryColor,
+        ),
         SizedBox(width: Dimensions.w(6)),
         Text(
           durationText.isEmpty ? '—' : durationText,

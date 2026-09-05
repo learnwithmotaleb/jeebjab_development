@@ -30,7 +30,6 @@ class GoogleMapServices extends GetxService {
   void onInit() {
     super.onInit();
     fetchCurrentLocation();
-    _startLocationStream();
   }
 
   @override
@@ -40,6 +39,7 @@ class GoogleMapServices extends GetxService {
   }
 
   void _startLocationStream() {
+    if (_positionStreamSubscription != null) return;
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 10, // Updates only when moving >= 10 meters
@@ -51,6 +51,7 @@ class GoogleMapServices extends GetxService {
             // 1. Update current location state
             currentLat.value = position.latitude;
             currentLng.value = position.longitude;
+            isLocationReady.value = true;
 
             // 2. Broadcast to the server if a delivery is active.
             // Per the Notification/Socket API docs, live driver location is a
@@ -67,27 +68,40 @@ class GoogleMapServices extends GetxService {
             // would broadcast a driver's location even when they're not on
             // an active job.
           },
+          onError: (Object error) {
+            isLocationReady.value = false;
+          },
         );
   }
 
   /// Fetches the real device GPS position and updates [currentLat]/[currentLng].
   Future<void> fetchCurrentLocation() async {
     try {
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        isLocationReady.value = false;
+        return;
+      }
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if (permission == LocationPermission.deniedForever) return;
+      if (permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.denied) {
+        isLocationReady.value = false;
+        return;
+      }
 
       final Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 15),
         ),
       );
 
       currentLat.value = position.latitude;
       currentLng.value = position.longitude;
       isLocationReady.value = true;
+      _startLocationStream();
 
       // Also update camera position to real location
       initialCameraPosition.value = CameraPosition(
@@ -98,8 +112,7 @@ class GoogleMapServices extends GetxService {
       // Animate map if already open
       animateCameraTo(LatLng(position.latitude, position.longitude));
     } catch (_) {
-      // Falls back to default Westchester coordinates
-      isLocationReady.value = true;
+      isLocationReady.value = false;
     }
   }
 

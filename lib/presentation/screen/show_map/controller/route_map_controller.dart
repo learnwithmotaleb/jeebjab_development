@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -7,10 +7,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../service/google_map_services.dart';
+import '../../../../service/google_routes_service.dart';
 
 /// Shows a job's location on the map. Most jobs have both a pickup and a
 /// drop-off (e.g. "move" posts) — those get two markers, a polyline between
-/// them, and the real driving distance/duration from Google Directions.
+/// them, and traffic-aware driving distance/duration from Google Routes.
 /// Recycling posts only have a pickup (no drop-off at all), so this falls
 /// back to a single-marker view centered on that point — no polyline, no
 /// distance/duration, and no "missing route" error, since there was never
@@ -24,10 +25,9 @@ class RouteMapController extends GetxController {
   final Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
 
-  String get _googleMapsApiKey {
-    const key = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
-    return key.isNotEmpty ? key : 'AIzaSyBCYhLFH245ocR2fJj6GnSzSMfC9X90mv0';
-  }
+  final http.Client _routeClient = http.Client();
+  final RxString routeError = ''.obs;
+  final RxString locationError = ''.obs;
 
   late final LatLng pickupPosition;
   LatLng? dropoffPosition;
@@ -39,7 +39,7 @@ class RouteMapController extends GetxController {
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   final RxString distanceText = ''.obs;
   final RxString durationText = ''.obs;
-  final RxBool isApproximate = false.obs; // true when using the fallback straight line
+  final RxBool isApproximate = false.obs;
 
   // ── From the device's current location to the pickup point ─────────────
   final Rxn<LatLng> myLocation = Rxn<LatLng>();
@@ -55,17 +55,16 @@ class RouteMapController extends GetxController {
   bool _hasValidPickup = false;
 
   CameraPosition get initialCameraPosition => CameraPosition(
-        target: _hasValidPickup
-            ? (hasDropoff
-                ? LatLng(
-                    (pickupPosition.latitude + dropoffPosition!.latitude) / 2,
-                    (pickupPosition.longitude + dropoffPosition!.longitude) /
-                        2,
-                  )
-                : pickupPosition)
-            : const LatLng(23.746466, 90.376015),
-        zoom: hasDropoff ? 12 : 15,
-      );
+    target: _hasValidPickup
+        ? (hasDropoff
+              ? LatLng(
+                  (pickupPosition.latitude + dropoffPosition!.latitude) / 2,
+                  (pickupPosition.longitude + dropoffPosition!.longitude) / 2,
+                )
+              : pickupPosition)
+        : const LatLng(23.746466, 90.376015),
+    zoom: hasDropoff ? 12 : 15,
+  );
 
   @override
   void onInit() {
@@ -114,18 +113,19 @@ class RouteMapController extends GetxController {
 
   Future<void> _fetchDirections() async {
     isLoading.value = true;
+    routeError.value = '';
     final result = await _requestDirections(pickupPosition, dropoffPosition!);
+    if (isClosed) return;
     if (result != null) {
       distanceText.value = result.distanceText;
       durationText.value = result.durationText;
       routePoints.assignAll(result.points);
       isApproximate.value = false;
     } else {
-      _useFallbackLine(pickupPosition, dropoffPosition!,
-          points: routePoints,
-          distance: distanceText,
-          duration: durationText,
-          approximate: isApproximate);
+      routePoints.clear();
+      distanceText.value = '';
+      durationText.value = '';
+      routeError.value = 'Driving route unavailable. Please retry.';
     }
     isLoading.value = false;
     _fitBoundsToRoute();
@@ -139,28 +139,39 @@ class RouteMapController extends GetxController {
     final mapService = Get.find<GoogleMapServices>();
 
     isLoadingMyLocation.value = true;
+    locationError.value = '';
     try {
       if (!mapService.isLocationReady.value) {
         await mapService.fetchCurrentLocation();
       }
-      if (!mapService.isLocationReady.value) return;
+      if (!mapService.isLocationReady.value) {
+        myLocation.value = null;
+        myLocationRoutePoints.clear();
+        myLocationDistanceText.value = '';
+        myLocationDurationText.value = '';
+        locationError.value =
+            'Current location unavailable. Enable GPS and location permission.';
+        return;
+      }
 
-      final current =
-          LatLng(mapService.currentLat.value, mapService.currentLng.value);
+      final current = LatLng(
+        mapService.currentLat.value,
+        mapService.currentLng.value,
+      );
       myLocation.value = current;
 
       final result = await _requestDirections(current, pickupPosition);
+      if (isClosed) return;
       if (result != null) {
         myLocationDistanceText.value = result.distanceText;
         myLocationDurationText.value = result.durationText;
         myLocationRoutePoints.assignAll(result.points);
         myLocationIsApproximate.value = false;
       } else {
-        _useFallbackLine(current, pickupPosition,
-            points: myLocationRoutePoints,
-            distance: myLocationDistanceText,
-            duration: myLocationDurationText,
-            approximate: myLocationIsApproximate);
+        myLocationRoutePoints.clear();
+        myLocationDistanceText.value = '';
+        myLocationDurationText.value = '';
+        locationError.value = 'Route to pickup unavailable. Please retry.';
       }
     } catch (e) {
       debugPrint('Error loading my-location route: $e');
@@ -170,108 +181,43 @@ class RouteMapController extends GetxController {
     }
   }
 
-  /// Calls Google Directions for [origin] → [destination]. Returns null on
-  /// any failure (network, no route found, bad response) so callers can
-  /// fall back to a straight line instead of leaving the UI blank.
-  Future<_DirectionsResult?> _requestDirections(
-      LatLng origin, LatLng destination) async {
+  Future<DrivingRoute?> _requestDirections(
+    LatLng origin,
+    LatLng destination,
+  ) async {
     try {
-      final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/directions/json'
-        '?origin=${origin.latitude},${origin.longitude}'
-        '&destination=${destination.latitude},${destination.longitude}'
-        '&key=$_googleMapsApiKey',
-      );
-      final response = await http.get(url);
-      if (response.statusCode != 200) return null;
-
-      final data = jsonDecode(response.body);
-      final routes = data['routes'] as List?;
-      if (data['status'] != 'OK' || routes == null || routes.isEmpty) {
-        debugPrint('Directions API returned: ${data['status']}');
-        return null;
-      }
-
-      final legs = routes[0]['legs'] as List?;
-      final leg = (legs != null && legs.isNotEmpty) ? legs[0] : null;
-      final poly = routes[0]['overview_polyline']?['points'] as String?;
-      if (poly == null || poly.isEmpty) return null;
-
-      return _DirectionsResult(
-        distanceText: leg?['distance']?['text'] ?? '',
-        durationText: leg?['duration']?['text'] ?? '',
-        points: _decodePolyline(poly),
-      );
+      return await GoogleRoutesService(
+        _routeClient,
+      ).drivingRoute(origin, destination);
     } catch (e) {
-      debugPrint('Error fetching directions: $e');
+      locationError.value = 'Current location route unavailable. Please retry.';
+      debugPrint('Driving route failed: $e');
       return null;
     }
   }
 
-  /// Straight line between two points, with a haversine-based distance and
-  /// a rough time estimate — used only when Directions is unavailable.
-  void _useFallbackLine(
-    LatLng from,
-    LatLng to, {
-    required RxList<LatLng> points,
-    required RxString distance,
-    required RxString duration,
-    required RxBool approximate,
-  }) {
-    points.assignAll([from, to]);
-    final km = _haversineKm(from, to);
-    distance.value = '${km.toStringAsFixed(1)} km';
-    // Rough average city driving speed — clearly marked as approximate in the UI.
-    final minutes = (km / 30 * 60).round().clamp(1, 999);
-    duration.value = '~$minutes min';
-    approximate.value = true;
-  }
-
-  double _haversineKm(LatLng a, LatLng b) {
-    const earthRadiusKm = 6371.0;
-    final dLat = _degToRad(b.latitude - a.latitude);
-    final dLng = _degToRad(b.longitude - a.longitude);
-    final la1 = _degToRad(a.latitude);
-    final la2 = _degToRad(b.latitude);
-    final h = sin(dLat / 2) * sin(dLat / 2) +
-        cos(la1) * cos(la2) * sin(dLng / 2) * sin(dLng / 2);
-    final c = 2 * atan2(sqrt(h), sqrt(1 - h));
-    return earthRadiusKm * c;
-  }
-
-  double _degToRad(double deg) => deg * (pi / 180);
-
-  /// Standard Google encoded-polyline decoder.
-  List<LatLng> _decodePolyline(String encoded) {
-    final List<LatLng> points = [];
-    int index = 0;
-    final int len = encoded.length;
-    int lat = 0;
-    int lng = 0;
-
-    while (index < len) {
-      int shift = 0;
-      int result = 0;
-      int b;
-      do {
-        b = encoded.codeUnitAt(index++) - 63;
-        result |= (b & 0x1f) << shift;
-        shift += 5;
-      } while (b >= 0x20);
-      lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-      shift = 0;
-      result = 0;
-      do {
-        b = encoded.codeUnitAt(index++) - 63;
-        result |= (b & 0x1f) << shift;
-        shift += 5;
-      } while (b >= 0x20);
-      lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-      points.add(LatLng(lat / 1e5, lng / 1e5));
+  Future<void> retryRoutes() async {
+    if (!_hasValidPickup || isLoading.value || isLoadingMyLocation.value) {
+      return;
     }
-    return points;
+    await Future.wait([
+      if (hasDropoff) _fetchDirections(),
+      _loadMyLocationRoute(),
+    ]);
+  }
+
+  Future<void> refreshCurrentRoute() async {
+    if (!_hasValidPickup || isLoadingMyLocation.value) return;
+    if (Get.isRegistered<GoogleMapServices>()) {
+      await Get.find<GoogleMapServices>().fetchCurrentLocation();
+    }
+    if (!isClosed) await _loadMyLocationRoute();
+  }
+
+  @override
+  void onClose() {
+    _routeClient.close();
+    super.onClose();
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -290,6 +236,8 @@ class RouteMapController extends GetxController {
 
     final points = [
       pickupPosition,
+      ...routePoints,
+      ...myLocationRoutePoints,
       if (hasDropoff) dropoffPosition!,
       if (myLocation.value != null) myLocation.value!,
     ];
@@ -326,17 +274,4 @@ class RouteMapController extends GetxController {
       debugPrint('Error moving map camera: $e');
     }
   }
-}
-
-/// Plain result holder for a single Directions API call.
-class _DirectionsResult {
-  final String distanceText;
-  final String durationText;
-  final List<LatLng> points;
-
-  _DirectionsResult({
-    required this.distanceText,
-    required this.durationText,
-    required this.points,
-  });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/app_colors/app_colors.dart';
 import '../controller/no_internet_controller.dart';
 
 
@@ -39,6 +40,41 @@ class InternetWrapper extends StatelessWidget {
                     Text("Please check your internet",style: AppTextStyles.body.copyWith(
                         decoration: TextDecoration.none
                     )),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: controller.isChecking.value
+                          ? null
+                          : () => controller.retryConnection(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                      icon: controller.isChecking.value
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.refresh),
+                      label: Text(
+                        controller.isChecking.value ? 'Checking...' : 'Retry',
+                      ),
+                    ),
+                    if (controller.retryMessage.value.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          controller.retryMessage.value,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.body.copyWith(
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
