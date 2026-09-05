@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
+import 'package:jeebjab/utils/static_strings/static_strings.dart';
 
 class IWillPayController extends GetxController {
-  final TextEditingController priceController = TextEditingController(text: r'$120');
+  // Currency is app-wide SAR (AppStrings.currency) — kept as a plain numeric
+  // field with the currency shown via the field's suffix, not baked into the text.
+  final TextEditingController priceController = TextEditingController(text: '120');
   final RxInt price = 120.obs;
 
   // ── Suggested range from other users ────────────────────────────────────
   final int minSuggested = 60;
   final int maxSuggested = 100;
+
+  String get currency => AppStrings.currency;
 
   @override
   void onInit() {
@@ -23,37 +28,25 @@ class IWillPayController extends GetxController {
     // Extract only digits
     String numeric = text.replaceAll(RegExp(r'[^0-9]'), '');
 
-    if (numeric.isEmpty) {
-      // Keep at least the dollar sign
-      if (text != r'$') {
-        priceController.value = const TextEditingValue(
-          text: r'$',
-          selection: TextSelection.collapsed(offset: 1),
-        );
-      }
-      price.value = 0;
-    } else {
-      String newText = r'$' + numeric;
-      if (text != newText) {
-        priceController.value = TextEditingValue(
-          text: newText,
-          selection: TextSelection.collapsed(offset: newText.length),
-        );
-      }
-      price.value = int.tryParse(numeric) ?? 0;
+    if (numeric != text) {
+      priceController.value = TextEditingValue(
+        text: numeric,
+        selection: TextSelection.collapsed(offset: numeric.length),
+      );
     }
+    price.value = int.tryParse(numeric) ?? 0;
   }
 
   void increment() {
     price.value++;
-    priceController.text = r'$' + price.value.toString();
+    priceController.text = price.value.toString();
     _moveCursorToEnd();
   }
 
   void decrement() {
     if (price.value > 1) {
       price.value--;
-      priceController.text = r'$' + price.value.toString();
+      priceController.text = price.value.toString();
       _moveCursorToEnd();
     }
   }

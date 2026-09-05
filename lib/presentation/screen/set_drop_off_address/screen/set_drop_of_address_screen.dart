@@ -5,6 +5,7 @@ import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/presentation/screen/set_drop_off_address/controller/set_drop_of_address_controller.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import 'package:jeebjab/widget/address_predictions_list.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -90,6 +91,12 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                       ),
                     ),
                   ),
+
+                  // ── Live address suggestions (Google Places) ──────────
+                  Obx(() => AddressPredictionsList(
+                        predictions: controller.predictions.toList(),
+                        onSelect: controller.selectPrediction,
+                      )),
 
                   SizedBox(height: Dimensions.h(10)),
 
@@ -267,6 +274,12 @@ class _SetDropOfAddressScreenState extends State<SetDropOfAddressScreen> {
                           ),
                         ),
                       ),
+
+                      // ── Live address suggestions (Google Places) ──────────
+                      Obx(() => AddressPredictionsList(
+                            predictions: controller.predictions.toList(),
+                            onSelect: controller.selectPrediction,
+                          )),
 
                       const SizedBox(height: 16),
 

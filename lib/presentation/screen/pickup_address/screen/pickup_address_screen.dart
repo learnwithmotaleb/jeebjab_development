@@ -4,6 +4,7 @@ import 'package:jeebjab/core/responsive_layout/dimensions.dart';
 import 'package:jeebjab/core/responsive_layout/responsive_layout.dart';
 import 'package:jeebjab/utils/app_colors/app_colors.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
+import 'package:jeebjab/widget/address_predictions_list.dart';
 import 'package:jeebjab/widget/app_button.dart';
 import 'package:jeebjab/widget/custom_appbar.dart';
 
@@ -91,6 +92,14 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                         ),
                         border: InputBorder.none,
                       ),
+                    ),
+                  ),
+
+                  // ── Live address suggestions (Google Places) ──────────
+                  Obx(
+                    () => AddressPredictionsList(
+                      predictions: controller.predictions.toList(),
+                      onSelect: controller.selectPrediction,
                     ),
                   ),
 
@@ -282,6 +291,14 @@ class _PickupAddressScreenState extends State<PickupAddressScreen> {
                               color: Colors.grey,
                             ),
                           ),
+                        ),
+                      ),
+
+                      // ── Live address suggestions (Google Places) ──────────
+                      Obx(
+                        () => AddressPredictionsList(
+                          predictions: controller.predictions.toList(),
+                          onSelect: controller.selectPrediction,
                         ),
                       ),
 

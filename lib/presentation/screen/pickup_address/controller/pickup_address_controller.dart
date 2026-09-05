@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
 import 'package:jeebjab/helper/local_db/local_db.dart';
+import 'package:jeebjab/service/google_places_service.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
 
 class PickupAddressController extends GetxController {
@@ -20,6 +23,15 @@ class PickupAddressController extends GetxController {
   // ── Recent addresses (loaded from local DB on init) ─────────────────────
   final RxList<String> recentAddresses = <String>[].obs;
 
+  // ── Live Places Autocomplete suggestions as the user types ───────────────
+  final RxList<AutocompletePrediction> predictions =
+      <AutocompletePrediction>[].obs;
+  final RxBool isSearching = false.obs;
+  Timer? _debounce;
+  // Set right before we programmatically overwrite addressController.text
+  // (after picking a suggestion) so that write doesn't re-trigger a search.
+  bool _suppressNextSearch = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -32,10 +44,50 @@ class PickupAddressController extends GetxController {
         selectedAddressIndex.value = -1;
         selectedAddress.value = '';
       }
+
+      if (_suppressNextSearch) {
+        _suppressNextSearch = false;
+        return;
+      }
+      _onQueryChanged(addressController.text);
     });
 
     _loadRecentAddresses();
   }
+
+  void _onQueryChanged(String text) {
+    if (text.trim().isEmpty) {
+      predictions.clear();
+      isSearching.value = false;
+      return;
+    }
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      isSearching.value = true;
+      final results = await GooglePlacesService.instance.autocomplete(text);
+      predictions.assignAll(results);
+      isSearching.value = false;
+    });
+  }
+
+  /// User tapped a suggestion from the dropdown — resolve its coordinates
+  /// via Place Details so the real lat/lng (not a placeholder) gets saved.
+  Future<void> selectPrediction(AutocompletePrediction prediction) async {
+    _suppressNextSearch = true;
+    addressController.text = prediction.fullText;
+    selectedAddress.value = prediction.fullText;
+    selectedAddressIndex.value = -1;
+    predictions.clear();
+
+    final details =
+        await GooglePlacesService.instance.placeDetails(prediction.placeId);
+    if (details != null) {
+      selectedLat.value = details.lat;
+      selectedLng.value = details.lng;
+    }
+  }
+
+  void clearPredictions() => predictions.clear();
 
   void _loadRecentAddresses() {
     final stored = SharePrefsHelper.getRecentPickupAddresses();
@@ -137,6 +189,7 @@ class PickupAddressController extends GetxController {
 
   @override
   void onClose() {
+    _debounce?.cancel();
     addressController.dispose();
     super.onClose();
   }

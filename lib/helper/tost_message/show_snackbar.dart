@@ -23,6 +23,9 @@ class AppSnackBar {
       title: title,
       backgroundColor: AppColors.emergencyColor,
       textColor: AppColors.whiteColor,
+      // Backend validation messages (e.g. price-range errors) run longer than
+      // typical toasts — give the user enough time to actually read them.
+      duration: const Duration(seconds: 5),
     );
   }
 

@@ -70,9 +70,24 @@ class MessageModel {
   );
 
   static MessageUserModel _parseUser(dynamic raw, dynamic fallbackId) {
-    if (raw is Map) return MessageUserModel.fromJson(Map<String, dynamic>.from(raw));
-    final id = raw?.toString() ?? fallbackId?.toString() ?? '';
-    return MessageUserModel(id: id, name: '');
+    final primary = raw is Map
+        ? MessageUserModel.fromJson(Map<String, dynamic>.from(raw))
+        : MessageUserModel(id: _userId(raw), name: '');
+    if (primary.id.isNotEmpty) return primary;
+
+    final fallback = fallbackId is Map
+        ? MessageUserModel.fromJson(Map<String, dynamic>.from(fallbackId))
+        : MessageUserModel(id: _userId(fallbackId), name: '');
+    return MessageUserModel(
+      id: fallback.id,
+      name: primary.name.isNotEmpty ? primary.name : fallback.name,
+    );
+  }
+
+  static String _userId(dynamic value) {
+    if (value is! String) return '';
+    final id = value.trim();
+    return id == 'null' ? '' : id;
   }
 
   Map<String, dynamic> toJson() => {
@@ -114,7 +129,18 @@ class MessageModel {
       );
 
   // ── Helpers
-  bool isMine(String currentUserId) => sender.id == currentUserId;
+  static int compareNewestFirst(MessageModel a, MessageModel b) {
+    final aTime = DateTime.tryParse(a.createdAt);
+    final bTime = DateTime.tryParse(b.createdAt);
+    if (aTime == null) return bTime == null ? 0 : 1;
+    if (bTime == null) return -1;
+    return bTime.compareTo(aTime);
+  }
+
+  bool isMine(String currentUserId) {
+    final userId = _userId(currentUserId);
+    return userId.isNotEmpty && _userId(sender.id) == userId;
+  }
   bool get isImage => messageType == 'image';
   bool get isFile => messageType == 'file';
   bool get isAudio => messageType == 'audio';
@@ -132,7 +158,9 @@ class MessageUserModel {
   });
 
   factory MessageUserModel.fromJson(Map<String, dynamic> json) => MessageUserModel(
-    id: json['_id']?.toString() ?? '',
+    id: MessageModel._userId(json['_id']).isNotEmpty
+        ? MessageModel._userId(json['_id'])
+        : MessageModel._userId(json['id']),
     name: json['name']?.toString() ?? '',
   );
 

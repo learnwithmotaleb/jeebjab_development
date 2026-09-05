@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/presentation/screen/capture_info/controller/capture_info_controller.dart';
 import 'package:jeebjab/presentation/screen/create_post/controller/create_post_controller.dart';
@@ -145,6 +146,32 @@ class OverviewController extends GetxController {
     acknowledgePickup.value = value;
   }
 
+  /// Real coordinates when the user picked a spot on the map; otherwise
+  /// forward-geocodes the typed/recent address text as a fallback (e.g. a
+  /// "recent address" tap resets lat/lng to 0.0). Only falls back to (0, 0)
+  /// if geocoding itself fails — never silently substitutes an unrelated
+  /// placeholder location.
+  Future<Map<String, double>> _resolveCoordinates(
+      String address, double lat, double lng) async {
+    if (lat != 0.0 || lng != 0.0) {
+      return {"lat": lat, "lng": lng};
+    }
+    if (address.trim().isNotEmpty) {
+      try {
+        final locations = await locationFromAddress(address);
+        if (locations.isNotEmpty) {
+          return {
+            "lat": locations.first.latitude,
+            "lng": locations.first.longitude,
+          };
+        }
+      } catch (e) {
+        log.e("Error geocoding address '$address': $e");
+      }
+    }
+    return {"lat": 0.0, "lng": 0.0};
+  }
+
   // ── Publish Post Logic ────────────────────────────────────────────────────
   Future<void> publishPost() async {
     if (!canPublish) {
@@ -175,6 +202,22 @@ class OverviewController extends GetxController {
       final placementDropCtrl = Get.isRegistered<PlacementDropOffController>() ? Get.find<PlacementDropOffController>() : null;
       final dropFloorCtrl = Get.isRegistered<DropOffFloorController>() ? Get.find<DropOffFloorController>() : null;
 
+      // ── Resolve Real Coordinates ──────────────────────────────────────────
+      // Uses the lat/lng the user actually picked on the map (or geocodes
+      // the address text as a fallback) instead of a fixed placeholder.
+      final pickupCoords = await _resolveCoordinates(
+        pickupAddrCtrl.addressController.text,
+        pickupAddrCtrl.selectedLat.value,
+        pickupAddrCtrl.selectedLng.value,
+      );
+      final Map<String, double>? dropoffCoords = dropAddrCtrl == null
+          ? null
+          : await _resolveCoordinates(
+              dropAddrCtrl.addressController.text,
+              dropAddrCtrl.selectedLat.value,
+              dropAddrCtrl.selectedLng.value,
+            );
+
       // ── Prepare Data Map ──────────────────────────────────────────────────
       final Map<String, dynamic> postData = {
         "type": createPostCtrl.selectedCategory.value?.type.name ?? "move",
@@ -185,7 +228,7 @@ class OverviewController extends GetxController {
         "pickup": {
           "address": {
             "text": pickupAddrCtrl.addressController.text,
-            "coordinates": {"lat": 25.1972, "lng": 55.2744} // Placeholder: Should be from Map
+            "coordinates": pickupCoords,
           },
           "placement": {
             "placement": placementPickupCtrl.selectedPlacement.value
@@ -206,7 +249,7 @@ class OverviewController extends GetxController {
         "dropoff": dropAddrCtrl == null ? null : {
           "address": {
             "text": dropAddrCtrl.addressController.text,
-            "coordinates": {"lat": 24.4539, "lng": 54.3773} // Placeholder: Should be from Map
+            "coordinates": dropoffCoords,
           },
           "placement": {
             "placement": placementDropCtrl?.selectedPlacement.value

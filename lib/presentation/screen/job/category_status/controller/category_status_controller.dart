@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:jeebjab/core/routes/route_path.dart';
+import 'package:jeebjab/helper/tost_message/show_snackbar.dart';
 import 'package:jeebjab/utils/static_strings/static_strings.dart';
 import 'package:jeebjab/widget/confirmataion_alert.dart';
 import 'package:jeebjab/service/api_service.dart';
@@ -30,8 +31,12 @@ class CategoryStatusController extends GetxController {
   RxList<String> images = <String>[].obs;
   RxString pickupAddress = ''.obs;
   RxList<String> pickupFeatures = <String>[].obs;
+  double? pickupLat;
+  double? pickupLng;
   RxString deliveryAddress = ''.obs;
   RxList<String> deliveryFeatures = <String>[].obs;
+  double? dropoffLat;
+  double? dropoffLng;
   RxString advertiserName = ''.obs;
   RxDouble advertiserRating = 0.0.obs;
   RxString advertiserImage =
@@ -61,15 +66,15 @@ class CategoryStatusController extends GetxController {
     final cat = args['category'] ?? 'move';
     if (cat == 'recycle') {
       category.value = PostCategory.recycle;
-      itemType.value = AppStrings.recycling.tr;
+      itemType.value = args['title'] ?? AppStrings.recycling.tr;
       itemSubtype.value = AppStrings.plasticAndPaper.tr;
       itemPrice.value = 260.0;
       preferredPickupTime.value = AppStrings.asap.tr;
       images.value = ['https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600'];
     } else {
       category.value = PostCategory.move;
-      itemType.value = AppStrings.move.tr;
-      itemSubtype.value = args['itemSubtype'] ?? 'Ducati Bike';
+      itemType.value = args['title'] ?? args['itemSubtype'] ?? 'Ducati Bike';
+      itemSubtype.value = AppStrings.move.tr;
       itemPrice.value = (args['price'] ?? 85).toDouble();
     }
     size.value = args['size'] ?? AppStrings.medium.tr;
@@ -103,26 +108,31 @@ class CategoryStatusController extends GetxController {
   }
 
   void _mapPostData(Map<String, dynamic> data) {
-    // Category
+    // itemType is the big bold heading on screen — it must be the post's
+    // actual title (matching post_details_controller's convention), not the
+    // category label. itemSubtype carries the category-specific line below it.
     final typeStr = data['type'] ?? '';
+    final String title = (data['title'] as String?) ?? '';
+
     if (typeStr == 'recycling') {
       category.value = PostCategory.recycle;
-      itemType.value = AppStrings.recycling.tr;
-      itemSubtype.value = data['wasteType'] is List
+      itemType.value = title.isNotEmpty ? title : AppStrings.recycling.tr;
+      itemSubtype.value = data['wasteType'] is List &&
+              (data['wasteType'] as List).isNotEmpty
           ? (data['wasteType'] as List).join(', ')
-          : data['wasteType']?.toString() ?? AppStrings.plasticAndPaper.tr;
+          : AppStrings.recycling.tr;
     } else if (typeStr == 'buy_for_me') {
       category.value = PostCategory.buyForMe;
-      itemType.value = AppStrings.buyForMe.tr;
-      itemSubtype.value = data['title'] ?? '';
+      itemType.value = title.isNotEmpty ? title : AppStrings.buyForMe.tr;
+      itemSubtype.value = AppStrings.buyForMe.tr;
     } else if (typeStr == 'give_away') {
       category.value = PostCategory.giveAway;
-      itemType.value = AppStrings.giveAway.tr;
-      itemSubtype.value = data['title'] ?? '';
+      itemType.value = title.isNotEmpty ? title : AppStrings.giveAway.tr;
+      itemSubtype.value = AppStrings.giveAway.tr;
     } else {
       category.value = PostCategory.move;
-      itemType.value = AppStrings.move.tr;
-      itemSubtype.value = data['title'] ?? '';
+      itemType.value = title.isNotEmpty ? title : AppStrings.move.tr;
+      itemSubtype.value = AppStrings.move.tr;
     }
 
     itemPrice.value = (data['price'] ?? 0).toDouble();
@@ -152,10 +162,16 @@ class CategoryStatusController extends GetxController {
     final pickup = data['pickup'];
     pickupAddress.value = pickup?['address']?['text'] ?? '';
     pickupFeatures.value = _buildFeatures(pickup?['placement']);
+    final pickupCoords = pickup?['address']?['coordinates'];
+    pickupLat = (pickupCoords?['lat'] as num?)?.toDouble();
+    pickupLng = (pickupCoords?['lng'] as num?)?.toDouble();
 
     final dropoff = data['dropoff'];
     deliveryAddress.value = dropoff?['address']?['text'] ?? '';
     deliveryFeatures.value = _buildFeatures(dropoff?['placement']);
+    final dropoffCoords = dropoff?['address']?['coordinates'];
+    dropoffLat = (dropoffCoords?['lat'] as num?)?.toDouble();
+    dropoffLng = (dropoffCoords?['lng'] as num?)?.toDouble();
 
     final user = data['user'];
     advertiserName.value = user?['name'] ?? '';
@@ -184,6 +200,9 @@ class CategoryStatusController extends GetxController {
     }
 
     debugPrint('🔘 Button: ${hasActiveRequest.value ? "Cancel Request" : "Send Request"} | driverRequest=$driverReq');
+
+    debugPrint('📌 Mapped → title=${data['title']} | type=$typeStr | '
+        'pickup=($pickupLat, $pickupLng) | dropoff=($dropoffLat, $dropoffLng)');
   }
 
   List<String> _buildFeatures(Map<String, dynamic>? p) {
@@ -246,8 +265,31 @@ class CategoryStatusController extends GetxController {
     }
   }
 
-  void onOpenPickupMap() => Get.toNamed(RoutePath.showMap);
-  void onOpenDeliveryMap() => Get.toNamed(RoutePath.showMap);
+  void onOpenPickupMap() => _openRouteMap();
+  void onOpenDeliveryMap() => _openRouteMap();
+
+  // Read-only view of the job's location(s): driver's current position plus
+  // the pickup/drop-off markers and route — not the address *picker* screen
+  // (RoutePath.showMap), which has a search bar and "Confirm Location" and
+  // is meant for setting an address, not viewing an existing one.
+  void _openRouteMap() {
+    if (pickupLat == null || pickupLng == null) {
+      AppSnackBar.info("This job doesn't have a pickup location to show yet.");
+      return;
+    }
+    // Recycling posts only have a pickup — no drop-off at all — so only
+    // include it when it's actually there.
+    Get.toNamed(RoutePath.routeMap, arguments: {
+      'pickupLat': pickupLat,
+      'pickupLng': pickupLng,
+      'pickupAddress': pickupAddress.value,
+      if (dropoffLat != null && dropoffLng != null) ...{
+        'dropoffLat': dropoffLat,
+        'dropoffLng': dropoffLng,
+        'dropoffAddress': deliveryAddress.value,
+      },
+    });
+  }
 
   void onDelivery() {
     AppAlerts.confirm(

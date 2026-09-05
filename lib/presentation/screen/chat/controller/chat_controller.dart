@@ -25,6 +25,12 @@ class ChatController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   String currentUserId = '';
 
+  // Per-handler unsubscribe callbacks from SocketApi.on — used instead of
+  // SocketApi.off(event) so closing this screen only removes THIS
+  // controller's listeners, not ChatListController's (which listens on
+  // the same event names to keep the chat list live).
+  final List<Function()> _socketUnsubs = [];
+
   // ── Delivery / driver status ───────────────────────────────────────────────
   RxString deliveryStatus = 'pending'.obs; // pending, active, completed
   RxString driverName = 'Driver'.obs;
@@ -50,13 +56,15 @@ class ChatController extends GetxController {
   // as a harmless fallback in case a differently-named event is also
   // emitted somewhere.
   void _listenToMessages() {
-    SocketApi.on('send_message', _handleIncomingSocketMessage);
-    SocketApi.on('new_message', _handleIncomingSocketMessage);
-    SocketApi.on('receive_message', _handleIncomingSocketMessage);
-    SocketApi.on('message_seen', _handleSeenReceipt);
-    SocketApi.on('error_response', (data) {
-      debugPrint("🔴 Chat socket error_response: $data");
-    });
+    _socketUnsubs.addAll([
+      SocketApi.on('send_message', _handleIncomingSocketMessage),
+      SocketApi.on('new_message', _handleIncomingSocketMessage),
+      SocketApi.on('receive_message', _handleIncomingSocketMessage),
+      SocketApi.on('message_seen', _handleSeenReceipt),
+      SocketApi.on('error_response', (data) {
+        debugPrint("🔴 Chat socket error_response: $data");
+      }),
+    ]);
   }
 
   // The real message sits under `data` on the socket envelope
@@ -81,7 +89,24 @@ class ChatController extends GetxController {
       final message = MessageModel.fromJson(payload);
       if (messages.any((m) => m.id == message.id)) return;
 
+      // Swap in for our own optimistic placeholder (inserted immediately on
+      // send, see sendMessage()) instead of adding a second bubble for the
+      // same message once the server confirms it.
+      final pendingIndex = messages.indexWhere((m) =>
+          m.id.startsWith('temp_') &&
+          m.chatId == message.chatId &&
+          m.sender.id == message.sender.id &&
+          m.message == message.message &&
+          m.fileUrl == message.fileUrl);
+      if (pendingIndex != -1) {
+        messages[pendingIndex] = message;
+        _sortMessages();
+        if (!message.isMine(currentUserId)) _markMessagesSeen();
+        return;
+      }
+
       messages.insert(0, message);
+      _sortMessages();
       scrollToBottom();
 
       // We're live in this chat right now — tell the sender we've seen
@@ -159,6 +184,7 @@ class ChatController extends GetxController {
       if (response.statusCode == 200) {
         final result = GetMessageModel.fromJson(response.body);
         messages.assignAll(result.data);
+        _sortMessages();
         // We just opened/refreshed this chat — mark whatever's unread as
         // seen and let the other side know in real time.
         _markMessagesSeen();
@@ -170,12 +196,37 @@ class ChatController extends GetxController {
     }
   }
 
-  // Sends over the socket only — the message is added to the list once
-  // the server echoes it back via 'send_message' (it fires to the sender
-  // too, per the API), rather than inserted optimistically here. The
-  // socket's own contract IS the source of truth for both sides; keeping
-  // a separate local-only copy risked showing up twice once the echo
-  // path started actually working.
+  void _sortMessages() {
+    // The reversed ListView expects newest first, regardless of API order.
+    messages.sort(MessageModel.compareNewestFirst);
+  }
+
+  // Shows the message immediately (optimistic) instead of waiting for the
+  // server's 'send_message' echo — that round-trip is real latency, and
+  // the user's own message should appear the instant they hit send. The
+  // temp_-prefixed id lets _handleIncomingSocketMessage recognize the
+  // eventual echo as confirmation of THIS message and swap it in by
+  // updating this same entry in place, rather than showing it twice.
+  MessageModel _optimisticMessage({
+    required String text,
+    String messageType = 'text',
+    String? fileUrl,
+  }) {
+    final now = DateTime.now().toIso8601String();
+    return MessageModel(
+      id: 'temp_${DateTime.now().microsecondsSinceEpoch}',
+      sender: MessageUserModel(id: currentUserId, name: ''),
+      receiver: MessageUserModel(id: receiverId.value, name: ''),
+      chatId: chatId.value,
+      message: text,
+      messageType: messageType,
+      fileUrl: fileUrl,
+      isRead: false,
+      createdAt: now,
+      updatedAt: now,
+    );
+  }
+
   void sendMessage() {
     if (deliveryStatus.value == 'completed') {
       Get.snackbar(
@@ -205,6 +256,9 @@ class ChatController extends GetxController {
     }
 
     messageController.clear();
+
+    messages.insert(0, _optimisticMessage(text: text));
+    scrollToBottom();
 
     SocketApi.emit('send_message', {
       'chatId': chatId.value,
@@ -252,7 +306,16 @@ class ChatController extends GetxController {
           return;
         }
 
-        // Added to the list once the server echoes it back — see sendMessage().
+        messages.insert(
+          0,
+          _optimisticMessage(
+            text: '',
+            messageType: messageType ?? 'image',
+            fileUrl: fileUrl,
+          ),
+        );
+        scrollToBottom();
+
         SocketApi.emit('send_message', {
           'chatId': chatId.value,
           'receiverId': receiverId.value,
@@ -306,11 +369,10 @@ class ChatController extends GetxController {
 
   @override
   void onClose() {
-    SocketApi.off('send_message');
-    SocketApi.off('new_message');
-    SocketApi.off('receive_message');
-    SocketApi.off('message_seen');
-    SocketApi.off('error_response');
+    for (final unsub in _socketUnsubs) {
+      unsub();
+    }
+    _socketUnsubs.clear();
     messageController.dispose();
     scrollController.dispose();
     super.onClose();

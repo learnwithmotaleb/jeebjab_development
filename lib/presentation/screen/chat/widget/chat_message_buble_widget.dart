@@ -87,25 +87,27 @@ class ChatMessageBubble extends StatelessWidget {
                                     'Bearer ${SharePrefsHelper.getToken() ?? ""}',
                               },
                               fit: BoxFit.contain,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value:
-                                        loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                              loadingProgress
-                                                  .expectedTotalBytes!
-                                        : null,
-                                    strokeWidth: 2,
-                                    color: isSender
-                                        ? Colors.white
-                                        : AppColors.primaryColor,
-                                  ),
-                                );
-                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value:
+                                            loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                            : null,
+                                        strokeWidth: 2,
+                                        color: isSender
+                                            ? Colors.white
+                                            : AppColors.primaryColor,
+                                      ),
+                                    );
+                                  },
                               errorBuilder: (context, error, stackTrace) =>
                                   const Center(
                                     child: Icon(
@@ -118,7 +120,11 @@ class ChatMessageBubble extends StatelessWidget {
                         ),
 
                       // ── Everything else gets the actual padding ───────
-                      if (!hasImage || message.message.isNotEmpty)
+                      // Only when there's actually something to show —
+                      // text, or a non-image attachment — never an empty
+                      // padded box for a message with neither.
+                      if (message.message.isNotEmpty ||
+                          (!hasImage && message.fileUrl != null))
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: Dimensions.w(10),
@@ -188,7 +194,11 @@ class ChatMessageBubble extends StatelessWidget {
           // ── Time + read-tick — outside the bubble entirely, as a small
           // caption on the same side as the bubble ─────────────────────
           Padding(
-            padding: EdgeInsets.only(top: Dimensions.h(4), left: Dimensions.w(4), right: Dimensions.w(4)),
+            padding: EdgeInsets.only(
+              top: Dimensions.h(4),
+              left: Dimensions.w(4),
+              right: Dimensions.w(4),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -205,7 +215,9 @@ class ChatMessageBubble extends StatelessWidget {
                 if (isSender) ...[
                   SizedBox(width: Dimensions.w(4)),
                   Icon(
-                    message.isRead ? Icons.done_all_rounded : Icons.done_rounded,
+                    message.isRead
+                        ? Icons.done_all_rounded
+                        : Icons.done_rounded,
                     size: Dimensions.f(14),
                     color: message.isRead
                         ? AppColors.primaryColor
@@ -269,11 +281,8 @@ class _FullScreenImageView extends StatelessWidget {
               'Authorization': 'Bearer ${SharePrefsHelper.getToken() ?? ""}',
             },
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => const Icon(
-              Icons.broken_image,
-              color: Colors.white54,
-              size: 48,
-            ),
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.broken_image, color: Colors.white54, size: 48),
           ),
         ),
       ),

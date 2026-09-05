@@ -95,18 +95,38 @@ class SocketApi {
   static void emit(String event, dynamic data) {
     if (socket != null && socket!.connected) {
       socket!.emit(event, data);
-      debugPrint('📤 Emitted [$event]: $data');
+      debugPrint('📤 Emitted [$event]: ${_shorten(data)}');
     } else {
       debugPrint('⚠️ Emit failed — socket not connected.');
     }
   }
 
   // ─── Listen to Event ──────────────────────────────────────────
-  static void on(String event, Function(dynamic) handler) {
-    socket?.on(event, (data) {
-      debugPrint('📥 Received [$event]: $data');
+  // Returns the unsubscribe callback for THIS handler only. Multiple
+  // callers can listen to the same event name (e.g. ChatController and
+  // ChatListController both listen to 'send_message') — the underlying
+  // EventEmitter appends listeners rather than replacing them, so that's
+  // fine. But `off(event)` with no handler wipes every listener for that
+  // event regardless of who registered it, which would silently kill a
+  // sibling controller's listener. Callers should store and invoke this
+  // returned function on their own onClose instead of calling off(event)
+  // directly, so each caller only ever removes its own handler.
+  static Function() on(String event, Function(dynamic) handler) {
+    void wrapped(dynamic data) {
+      debugPrint('📥 Received [$event]: ${_shorten(data)}');
       handler(data);
-    });
+    }
+
+    return socket?.on(event, wrapped) ?? () {};
+  }
+
+  // ─── Log helper ───────────────────────────────────────────────
+  // Printing a whole payload (a chat message list, a large attachment
+  // reference, etc.) synchronously on every single socket message is a
+  // real, measurable source of main-thread jank — cap it instead.
+  static String _shorten(dynamic data) {
+    final str = data.toString();
+    return str.length > 200 ? '${str.substring(0, 200)}…' : str;
   }
 
   // ─── Remove Listener ──────────────────────────────────────────

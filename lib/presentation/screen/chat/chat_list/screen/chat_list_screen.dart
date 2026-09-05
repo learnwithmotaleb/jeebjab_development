@@ -7,13 +7,23 @@ import '../controller/chat_list_controller.dart';
 import '../model/chat_list_model.dart';
 import '../widget/chat_list_widget.dart';
 
-class ChatListScreen extends StatelessWidget {
+class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final ctrl = Get.put(ChatListController());
+  State<ChatListScreen> createState() => _ChatListScreenState();
+}
 
+class _ChatListScreenState extends State<ChatListScreen> {
+  // Created once per screen instance — NOT inside build(), which used to
+  // spawn (and register, discarding the old one) a brand-new controller on
+  // every rebuild (e.g. the search field's keyboard toggling), silently
+  // dropping whatever chatList state/socket updates the previous instance
+  // had and re-registering duplicate socket listeners each time.
+  final ChatListController ctrl = Get.put(ChatListController());
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CommonAppBar(title: 'Messages'),
@@ -53,11 +63,7 @@ class ChatListScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.wifi_off,
-                        size: 48,
-                        color: Colors.grey,
-                      ),
+                      const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
                       const SizedBox(height: 12),
                       Text(
                         ctrl.errorMessage.value,

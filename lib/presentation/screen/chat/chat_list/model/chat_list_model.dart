@@ -1,4 +1,4 @@
-// lib/models/chat_list_model.dart
+import '../../model/get_message_model.dart';
 
 class ChatListModel {
   final int statusCode;
@@ -320,18 +320,21 @@ class LastMessageModel {
     required this.updatedAt,
   });
 
-  factory LastMessageModel.fromJson(Map<String, dynamic> json) => LastMessageModel(
-    id: json['_id'],
-    sender: json['sender'],
-    receiver: json['receiver'],
-    chatId: json['chatId'],
-    message: json['message'],
-    messageType: json['messageType'] ?? 'text',
-    fileUrl: json['fileUrl'],
-    isRead: json['isRead'] ?? false,
-    createdAt: json['createdAt'],
-    updatedAt: json['updatedAt'],
-  );
+  factory LastMessageModel.fromJson(Map<String, dynamic> json) {
+    final message = MessageModel.fromJson(json);
+    return LastMessageModel(
+      id: message.id,
+      sender: message.sender.id,
+      receiver: message.receiver.id,
+      chatId: message.chatId,
+      message: message.message,
+      messageType: message.messageType,
+      fileUrl: message.fileUrl,
+      isRead: message.isRead,
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     '_id': id,

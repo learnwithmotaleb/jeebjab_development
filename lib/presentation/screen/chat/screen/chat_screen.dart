@@ -135,6 +135,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: controller.messages.length,
                 itemBuilder: (context, index) {
                   final message = controller.messages[index];
+                  // Nothing to show (no text, no image, no file) — some
+                  // stray/legacy records have neither; render nothing
+                  // instead of an empty bubble.
+                  if (message.message.trim().isEmpty &&
+                      message.fileUrl == null) {
+                    return const SizedBox.shrink();
+                  }
                   return ChatMessageBubble(message: message);
                 },
               ),

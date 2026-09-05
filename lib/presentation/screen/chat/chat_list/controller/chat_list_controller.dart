@@ -18,6 +18,12 @@ class ChatListController extends GetxController with WidgetsBindingObserver {
 
   String currentUserId = '';
 
+  // Per-handler unsubscribe callbacks from SocketApi.on — used instead of
+  // SocketApi.off(event) so closing this controller only removes THIS
+  // controller's listeners, not ChatController's (which listens on the
+  // same event names while a chat is open).
+  final List<Function()> _socketUnsubs = [];
+
   // ── Filtered list based on search ─────────────────────────────────────────
   List<ChatModel> get filteredChats {
     if (searchQuery.value.isEmpty) return chatList;
@@ -52,21 +58,41 @@ class ChatListController extends GetxController with WidgetsBindingObserver {
   }
 
   // ── Listen to socket for instant last-message updates ─────────────────────
+  // Per the Chat Socket.io API (see ChatController), the server actually
+  // echoes a sent message back on 'send_message' — to sender AND receiver —
+  // not on 'new_message'/'receive_message'. Those two were the only ones
+  // wired here, so this handler never fired for real traffic and the list
+  // fell back to full GET refetches (e.g. after leaving a chat) instead of
+  // updating instantly off the socket. 'new_message'/'receive_message' are
+  // kept as harmless fallbacks in case either is ever emitted too.
   void _listenToSocketMessages() {
-    SocketApi.on('new_message', (data) {
-      debugPrint('📋 ChatList: new_message received');
-      _updateChatWithNewMessage(data);
-    });
-
-    SocketApi.on('receive_message', (data) {
-      debugPrint('📋 ChatList: receive_message received');
-      _updateChatWithNewMessage(data);
-    });
+    _socketUnsubs.addAll([
+      SocketApi.on('send_message', (data) {
+        debugPrint('📋 ChatList: send_message received');
+        _updateChatWithNewMessage(data);
+      }),
+      SocketApi.on('new_message', (data) {
+        debugPrint('📋 ChatList: new_message received');
+        _updateChatWithNewMessage(data);
+      }),
+      SocketApi.on('receive_message', (data) {
+        debugPrint('📋 ChatList: receive_message received');
+        _updateChatWithNewMessage(data);
+      }),
+    ]);
   }
 
+  // The real message sits under `data` on the socket envelope
+  // ({success, statusCode, message, data: {...}}) — same shape
+  // ChatController unwraps. Falling back to the raw payload covers the
+  // unlikely case it ever arrives unwrapped.
   void _updateChatWithNewMessage(dynamic data) {
     try {
-      final msgData = data as Map<String, dynamic>;
+      if (data is! Map) return;
+      final envelope = Map<String, dynamic>.from(data);
+      final msgData = envelope['data'] is Map
+          ? Map<String, dynamic>.from(envelope['data'])
+          : envelope;
       final chatId = msgData['chatId'] as String?;
       if (chatId == null) return;
 
@@ -181,8 +207,10 @@ class ChatListController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
-    SocketApi.off('new_message');
-    SocketApi.off('receive_message');
+    for (final unsub in _socketUnsubs) {
+      unsub();
+    }
+    _socketUnsubs.clear();
     super.onClose();
   }
 }

@@ -1,37 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:http/http.dart' as http;
+import 'package:jeebjab/service/google_places_service.dart';
 
-class AutocompletePrediction {
-  final String placeId;
-  final String fullText;
-  final String primaryText;
-  final String secondaryText;
-
-  AutocompletePrediction({
-    required this.placeId,
-    required this.fullText,
-    required this.primaryText,
-    required this.secondaryText,
-  });
-
-  factory AutocompletePrediction.fromJson(Map<String, dynamic> json) {
-    return AutocompletePrediction(
-      placeId: json['place_id'] as String? ?? '',
-      fullText: json['description'] as String? ?? '',
-      primaryText: json['structured_formatting']?['main_text'] as String? ??
-          json['description'] as String? ??
-          '',
-      secondaryText:
-          json['structured_formatting']?['secondary_text'] as String? ?? '',
-    );
-  }
-}
+export 'package:jeebjab/service/google_places_service.dart'
+    show AutocompletePrediction;
 
 class ShowMapController extends GetxController {
   final Completer<GoogleMapController> mapController =
@@ -225,27 +201,9 @@ class ShowMapController extends GetxController {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       isSearching.value = true;
-      try {
-        final url = Uri.parse(
-            'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${Uri.encodeComponent(text)}&key=$_googleMapsApiKey');
-        final response = await http.get(url);
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          if (data['status'] == 'OK' && data['predictions'] != null) {
-            final list = (data['predictions'] as List)
-                .map((p) => AutocompletePrediction.fromJson(p))
-                .toList();
-            predictions.assignAll(list);
-          } else {
-            predictions.clear();
-          }
-        }
-      } catch (e) {
-        debugPrint("Error fetching predictions: $e");
-      } finally {
-        isSearching.value = false;
-      }
+      final results = await GooglePlacesService.instance.autocomplete(text);
+      predictions.assignAll(results);
+      isSearching.value = false;
     });
   }
 
@@ -254,24 +212,13 @@ class ShowMapController extends GetxController {
     predictions.clear();
     FocusManager.instance.primaryFocus?.unfocus();
 
-    try {
-      final url = Uri.parse(
-          'https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction.placeId}&fields=geometry&key=$_googleMapsApiKey');
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['status'] == 'OK' && data['result'] != null) {
-          final location = data['result']['geometry']?['location'];
-          if (location != null) {
-            final latLng = LatLng((location['lat'] as num).toDouble(),
-                (location['lng'] as num).toDouble());
-            await updateMarkerPosition(latLng);
-            await moveToLocation(latLng);
-          }
-        }
-      }
-    } catch (e) {
+    final details =
+        await GooglePlacesService.instance.placeDetails(prediction.placeId);
+    if (details != null) {
+      final latLng = LatLng(details.lat, details.lng);
+      await updateMarkerPosition(latLng);
+      await moveToLocation(latLng);
+    } else {
       Get.snackbar("Error", "Could not fetch place details.");
     }
   }

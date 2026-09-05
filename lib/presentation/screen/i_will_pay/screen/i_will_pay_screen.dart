@@ -70,7 +70,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                          TextSpan(text: AppStrings.otherUserHavePaidAround.tr),
                         TextSpan(
                           text:
-                              '  ${controller.minSuggested} - ${controller.maxSuggested}',
+                              '  ${controller.minSuggested} - ${controller.maxSuggested} ${controller.currency}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryColor,
@@ -97,6 +97,12 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                       isDense: true,
                       // ✅ No focus border
                       contentPadding: EdgeInsets.all(15),
+                      suffixText: controller.currency,
+                      suffixStyle: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.greyColor,
+                        fontWeight: FontWeight.w600,
+                      ),
                       fillColor: AppColors.greyColor.withValues(alpha: 0.1),
                       filled: true,
                       // ✅ No visible border but radius 10
@@ -199,7 +205,7 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                             TextSpan(text: AppStrings.otherUserHavePaidAround.tr),
                             TextSpan(
                               text:
-                              '  ${controller.minSuggested} - ${controller.maxSuggested}',
+                              '  ${controller.minSuggested} - ${controller.maxSuggested} ${controller.currency}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.primaryColor,
@@ -226,6 +232,12 @@ class _IWillPayScreenState extends State<IWillPayScreen> {
                           contentPadding: EdgeInsets.symmetric(
                             vertical: Dimensions.h(24),
                             horizontal: Dimensions.w(20),
+                          ),
+                          suffixText: controller.currency,
+                          suffixStyle: TextStyle(
+                            fontSize: Dimensions.f(18),
+                            color: AppColors.greyColor,
+                            fontWeight: FontWeight.w600,
                           ),
                           fillColor: AppColors.greyColor.withValues(alpha: 0.1),
                           filled: true,

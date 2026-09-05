@@ -87,8 +87,14 @@ class WestTypeController extends GetxController {
 
   // ── Continue button action ────────────────────────
   void onContinue() {
-    Get.toNamed(RoutePath.iWillPay);
+    final bool isEditMode = Get.arguments?['isEdit'] ?? false;
 
+    if (isEditMode) {
+      // Return to Overview so its `.then()` callback refreshes wasteType/wasteCount
+      Get.back();
+    } else {
+      Get.toNamed(RoutePath.iWillPay);
+    }
   }
 
   // ── Add new waste item (future) ───────────────────
