@@ -17,6 +17,17 @@ import 'helper/no_internet/controller/no_internet_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // This app registers every controller with Get.put() directly inside
+  // each screen's State (never via Bindings/GetBuilder). GetX's default
+  // SmartManagement.full doesn't know about that pattern and can dispose
+  // a controller — and the TextEditingController/FocusNode fields on it —
+  // while it's still needed mid-navigation-transition or mid-rebuild,
+  // which is exactly the "FocusNode was used after being disposed" /
+  // "_lifecycleState != _ElementLifecycle.defunct" crashes seen in
+  // testing. onlyBuilder is GetX's own recommended setting for apps that
+  // manage dependencies manually like this one does.
+  Get.smartManagement = SmartManagement.onlyBuilder;
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
